@@ -10,18 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Developer {
 
     @Id
     @GeneratedValue
     private Long id;
     private String name;
-    private String profileUrl;
-    private String avatarUrl;
-
+    private String githubUrl;
+    private int totalCommits;
 
 }

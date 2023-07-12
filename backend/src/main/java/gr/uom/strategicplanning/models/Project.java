@@ -9,26 +9,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Project {
+
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    private String owner;
-    @OneToMany(mappedBy = "project")
-    private Collection<Developer> contributors;
-    @OneToMany(mappedBy = "project")
+    private String repoUrl;
+    private int forks;
+    private int stars;
+    @OneToMany
     private Collection<Commit> commits;
-    private Integer forks;
-    private Integer stars;
-    private String gitUrl;
+    private int totalDevelopers;
+    private int totalCommits;
+    private int totalLoC;
+    private int totalFiles;
+    @OneToMany
+    private Collection<Language> languages;
+    private int totalLanguages;
+    @OneToMany
+    private Set<Developer> developers;
 
 }

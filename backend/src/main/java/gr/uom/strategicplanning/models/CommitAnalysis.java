@@ -15,14 +15,18 @@ import java.util.Collection;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectAnalysis {
+public class CommitAnalysis {
 
     @Id
     private Long id;
     @OneToMany
     private Collection<CodeSmell> codeSmells;
     private float technicalDebt;
-    private float techDebtPerLoC;
+    private int totalFiles;
+    private int totalLoC;
     private int totalCodeSmells;
-    
+    private float techDebtPerLoC;
+    @OneToMany
+    private Collection<Language> languages;
+    private int totalLanguages;
 }

@@ -13,16 +13,22 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Commit {
+public class OrganizationAnalysis {
+
 
     @Id
     @GeneratedValue
     private Long id;
-    private String hash;
+    private String orgName;
+    private Date analysisDate;
     @OneToOne
-    private Developer developer;
-    private Date commitDate;
+    private GeneralStats generalStats;
     @OneToOne
-    private CommitAnalysis commitAnalysis;
-
+    private TechDebtStats techDebtStats;
+    @OneToOne
+    private ActivityStats activityStats;
+    @OneToOne
+    private Project mostStarredProject;
+    @OneToOne
+    private Project mostForkedProject;
 }

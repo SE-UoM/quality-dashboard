@@ -8,23 +8,29 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Organization {
+public class GeneralStats {
 
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    @OneToMany
-    private List<User> users;
-    @OneToMany(mappedBy = "organization")
-    private List<Project> projects;
+    private int totalProjects;
+    private int totalLanguages;
+    @ManyToMany
+    private List<Language> languages;
+    @ManyToMany
+    private Map <Integer, Language> languageMap;
+    private int totalCommits;
+    private int totalFiles;
+    private int totalLinesOfCode;
+    private int totalDevs;
 
 }

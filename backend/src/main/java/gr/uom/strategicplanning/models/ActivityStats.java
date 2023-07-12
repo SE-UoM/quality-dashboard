@@ -6,23 +6,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.Collection;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectAnalysis {
-
+public class ActivityStats {
+    
     @Id
+    @GeneratedValue
     private Long id;
-    @OneToMany
-    private Collection<CodeSmell> codeSmells;
-    private float technicalDebt;
-    private float techDebtPerLoC;
-    private int totalCodeSmells;
+    private float commitsPerDay;
+    private float locAddedPerDay;
+    private float filesAddedPerDay;
+    private float projectsAddedPerDay;
+    private float averageLoC;
     
 }

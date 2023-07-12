@@ -16,6 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class User {
+    
     @Id
     @GeneratedValue
     private Long id;
