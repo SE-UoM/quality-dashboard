@@ -29,8 +29,6 @@ public class Project {
     private Collection<Commit> commits;
     private int totalDevelopers;
     private int totalCommits;
-    private int totalLoC;
-    private int totalFiles;
     @OneToMany
     private Collection<Language> languages;
     private int totalLanguages;

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -22,7 +23,14 @@ public class Commit {
     @OneToOne
     private Developer developer;
     private Date commitDate;
-    @OneToOne
-    private CommitAnalysis commitAnalysis;
-
+    @OneToMany
+    private Collection<CodeSmell> codeSmells;
+    private float technicalDebt;
+    private int totalFiles;
+    private int totalLoC;
+    private int totalCodeSmells;
+    private float techDebtPerLoC;
+    @OneToMany
+    private Collection<Language> languages;
+    private int totalLanguages;
 }

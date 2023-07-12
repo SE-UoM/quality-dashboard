@@ -27,7 +27,7 @@ public class GeneralStats {
     @ManyToMany
     private List<Language> languages;
     @ManyToMany
-    private Map <Integer, Language> languageMap;
+    private Map <Integer, Language> topLanguages;
     private int totalCommits;
     private int totalFiles;
     private int totalLinesOfCode;
