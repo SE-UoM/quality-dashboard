@@ -81,9 +81,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        if (user!=null) {
-            return user.getVerified();
-        }
-        return true;
+        return false;
     }
+
 }
