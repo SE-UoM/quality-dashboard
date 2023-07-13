@@ -1,6 +1,8 @@
-package gr.uom.strategicplanning.logic.github;
+package gr.uom.strategicplanning.analysis.github;
 
-import gr.uom.strategicplanning.logic.HttpClient;
+import com.google.gson.Gson;
+import com.nimbusds.jose.shaded.json.JSONObject;
+import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.Language;
 import gr.uom.strategicplanning.models.Project;
 
@@ -20,20 +22,24 @@ public class GithubApiClient extends HttpClient {
      * @param project the Project object to populate with project data
      * @throws IOException if an I/O error occurs during the API request
      */
-    public Map<String, String> fetchProjectData(Project project) throws IOException {
+    public void fetchProjectData(Project project) throws IOException {
         String repoUrl = project.getRepoUrl();
 
         String username = extractUsername(repoUrl);
         String repoName = extractRepoName(repoUrl);
         String apiUrl = buildApiUrl(username, repoName);
 
-        Map<String, String> projectData = super.sendGetRequest(apiUrl);
+        System.out.println("Fetching data for " + repoUrl + "...");
+        String response = sendGetRequest(apiUrl);
 
-        return projectData;
+        Gson gson = new Gson();
+        Map<String, Object> map = gson.fromJson(response, Map.class);
+        JSONObject jsonObject = new JSONObject(map);
+
+
     }
 
     public static void main(String[] args) throws IOException {
-        // Github only allows 60 requests per hour for unauthenticated users.
 
         Project project1 = new Project();
         project1.setRepoUrl("https://github.com/StanGirard/quivr");
