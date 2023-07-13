@@ -1,22 +1,21 @@
 package gr.uom.strategicplanning.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Project {
 
     @Id
@@ -30,9 +29,9 @@ public class Project {
     private int totalDevelopers;
     private int totalCommits;
     @OneToMany
-    private Collection<Language> languages;
+    private Collection<Language> languages = new ArrayList<>();
     private int totalLanguages;
     @OneToMany
-    private Set<Developer> developers;
+    private Set<Developer> developers = new HashSet<>();
 
 }
