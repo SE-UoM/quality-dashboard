@@ -19,9 +19,9 @@ public class Organization {
     @GeneratedValue
     private Long id;
     private String name;
-    @OneToMany
+    @OneToMany(mappedBy = "organization")
     private List<User> users;
-    @OneToMany
+    @OneToMany(mappedBy = "organization")
     private List<Project> projects;
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;

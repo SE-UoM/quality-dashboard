@@ -2,10 +2,7 @@ package gr.uom.strategicplanning.models;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,17 +18,19 @@ public class Project {
     @Id
     @GeneratedValue
     private Long id;
+    @ManyToOne
+    private Organization organization;
     private String repoUrl;
     private int forks;
     private int stars;
-    @OneToMany
+    @OneToMany(mappedBy = "project")
     private Collection<Commit> commits;
     private int totalDevelopers;
     private int totalCommits;
-    @OneToMany
+    @OneToMany(mappedBy = "project")
     private Collection<Language> languages = new ArrayList<>();
     private int totalLanguages;
-    @OneToMany
+    @OneToMany(mappedBy = "project")
     private Set<Developer> developers = new HashSet<>();
 
 }

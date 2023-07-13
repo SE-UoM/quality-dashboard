@@ -1,6 +1,9 @@
 package gr.uom.strategicplanning.repositories;
 
+import gr.uom.strategicplanning.models.OrganizationAnalysis;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OrganizationAnalysisRepository extends JpaRepository {
+@Repository
+public interface OrganizationAnalysisRepository extends JpaRepository<OrganizationAnalysis, Long> {
 }

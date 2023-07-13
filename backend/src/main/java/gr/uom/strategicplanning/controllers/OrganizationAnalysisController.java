@@ -14,12 +14,9 @@ import java.util.Optional;
 @RequestMapping("/organization-analysis")
 public class OrganizationAnalysisController {
 
-    private final OrganizationAnalysisRepository organizationAnalysisRepository;
-
     @Autowired
-    public OrganizationAnalysisController(OrganizationAnalysisRepository organizationAnalysisRepository) {
-        this.organizationAnalysisRepository = organizationAnalysisRepository;
-    }
+    private OrganizationAnalysisRepository organizationAnalysisRepository;
+
 
     @GetMapping
     public ResponseEntity<List<OrganizationAnalysis>> getAllOrganizationAnalysis() {

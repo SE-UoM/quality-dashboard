@@ -14,12 +14,8 @@ import java.util.Optional;
 @RequestMapping("/projects")
 public class ProjectController {
 
-    private final ProjectRepository projectRepository;
-
     @Autowired
-    public ProjectController(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-    }
+    private ProjectRepository projectRepository;
 
     @GetMapping
     public ResponseEntity<List<Project>> getAllProjects() {

@@ -14,12 +14,8 @@ import java.util.Optional;
 @RequestMapping("/techDebtStats")
 public class TechDebtStatsController {
 
-    private final TechDebtStatsRepository techDebtStatsRepository;
-
     @Autowired
-    public TechDebtStatsController(TechDebtStatsRepository techDebtStatsRepository) {
-        this.techDebtStatsRepository = techDebtStatsRepository;
-    }
+    private TechDebtStatsRepository techDebtStatsRepository;
 
     @GetMapping
     public ResponseEntity<List<TechDebtStats>> getAllTechDebtStats() {

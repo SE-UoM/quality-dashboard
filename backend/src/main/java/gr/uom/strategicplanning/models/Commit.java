@@ -33,4 +33,6 @@ public class Commit {
     @OneToMany
     private Collection<Language> languages;
     private int totalLanguages;
+    @ManyToOne
+    private Project project;
 }
