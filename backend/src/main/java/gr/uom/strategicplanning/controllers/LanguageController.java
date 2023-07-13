@@ -14,12 +14,8 @@ import java.util.Optional;
 @RequestMapping("/languages")
 public class LanguageController {
 
-    private final LanguageRepository languageRepository;
-
     @Autowired
-    public LanguageController(LanguageRepository languageRepository) {
-        this.languageRepository = languageRepository;
-    }
+    private LanguageRepository languageRepository;
 
     @GetMapping
     public ResponseEntity<List<Language>> getAllLanguages() {

@@ -16,7 +16,7 @@ public class Config {
         return args -> {
             Optional<User> userOptional = userRepository.findByEmail("admin@uom.gr");
             if(!userOptional.isPresent()){
-                User admin = new User("Admin","admin@uom.gr","admin");
+                User admin = new User(1L, "admin", "admin@uom.gr", "admin", "admin", true, null);
                 userService.createUser(admin);
             }
         };

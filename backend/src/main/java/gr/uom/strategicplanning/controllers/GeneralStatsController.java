@@ -14,12 +14,8 @@ import java.util.Optional;
 @RequestMapping("/general-stats")
 public class GeneralStatsController {
 
-    private final GeneralStatsRepository generalStatsRepository;
-
     @Autowired
-    public GeneralStatsController(GeneralStatsRepository generalStatsRepository) {
-        this.generalStatsRepository = generalStatsRepository;
-    }
+    private GeneralStatsRepository generalStatsRepository;
 
     @GetMapping
     public ResponseEntity<List<GeneralStats>> getAllGeneralStats() {

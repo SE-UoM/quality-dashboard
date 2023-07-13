@@ -14,12 +14,8 @@ import java.util.Optional;
 @RequestMapping("/commits")
 public class CommitController {
 
-    private final CommitRepository commitRepository;
-
     @Autowired
-    public CommitController(CommitRepository commitRepository) {
-        this.commitRepository = commitRepository;
-    }
+    private CommitRepository commitRepository;
 
     @GetMapping
     public ResponseEntity<List<Commit>> getAllCommits() {

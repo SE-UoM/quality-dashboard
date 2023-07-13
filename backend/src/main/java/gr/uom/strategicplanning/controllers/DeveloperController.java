@@ -14,12 +14,8 @@ import java.util.Optional;
 @RequestMapping("/developers")
 public class DeveloperController {
 
-    private final DeveloperRepository developerRepository;
-
     @Autowired
-    public DeveloperController(DeveloperRepository developerRepository) {
-        this.developerRepository = developerRepository;
-    }
+    private DeveloperRepository developerRepository;
 
     @GetMapping
     public ResponseEntity<List<Developer>> getAllDevelopers() {

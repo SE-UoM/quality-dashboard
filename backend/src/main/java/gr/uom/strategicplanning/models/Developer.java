@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Getter
@@ -22,5 +23,7 @@ public class Developer {
     private String name;
     private String githubUrl;
     private int totalCommits;
+    @ManyToOne
+    private Project project;
 
 }

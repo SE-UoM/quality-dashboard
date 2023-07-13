@@ -14,13 +14,9 @@ import java.util.Optional;
 @RequestMapping("/code-smells")
 public class CodeSmellController {
 
-    private final CodeSmellRepository codeSmellRepository;
-
     @Autowired
-    public CodeSmellController(CodeSmellRepository codeSmellRepository) {
-        this.codeSmellRepository = codeSmellRepository;
-    }
-
+    private CodeSmellRepository codeSmellRepository;
+    
     @GetMapping
     public ResponseEntity<List<CodeSmell>> getAllCodeSmells() {
         List<CodeSmell> codeSmells = codeSmellRepository.findAll();

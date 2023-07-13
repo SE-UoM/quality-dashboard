@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserPrivilegedController {
 
     @Autowired
-    UserPrivilegedService userPrivilegedService;
+    private UserPrivilegedService userPrivilegedService;
 
     @PutMapping("/verify")
     User verifyUser(@RequestParam String email){

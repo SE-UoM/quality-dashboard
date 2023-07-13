@@ -11,12 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/activity-stats")
 public class ActivityStatsController {
 
-    private final ActivityStatsRepository activityStatsRepository;
-
     @Autowired
-    public ActivityStatsController(ActivityStatsRepository activityStatsRepository) {
-        this.activityStatsRepository = activityStatsRepository;
-    }
+    private ActivityStatsRepository activityStatsRepository;
+
 
     @PostMapping
     public ResponseEntity<ActivityStats> createActivityStats(@RequestBody ActivityStats activityStats) {
