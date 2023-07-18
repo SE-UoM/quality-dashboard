@@ -2,8 +2,8 @@ package gr.uom.strategicplanning.analysis.github;
 
 import com.google.gson.Gson;
 import com.nimbusds.jose.shaded.json.JSONObject;
+import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
-import gr.uom.strategicplanning.models.Language;
 import gr.uom.strategicplanning.models.Project;
 
 import java.io.IOException;
@@ -30,13 +30,14 @@ public class GithubApiClient extends HttpClient {
         String apiUrl = buildApiUrl(username, repoName);
 
         System.out.println("Fetching data for " + repoUrl + "...");
-        String response = sendGetRequest(apiUrl);
+        Response response = sendGetRequest(apiUrl);
+
+        String responseBodyString = response.body().string();
 
         Gson gson = new Gson();
-        Map<String, Object> map = gson.fromJson(response, Map.class);
+        Map<String, Object> map = gson.fromJson(responseBodyString, Map.class);
+
         JSONObject jsonObject = new JSONObject(map);
-
-
     }
 
     public static void main(String[] args) throws IOException {
