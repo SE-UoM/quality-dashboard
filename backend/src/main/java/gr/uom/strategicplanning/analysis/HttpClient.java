@@ -14,7 +14,6 @@ public abstract class HttpClient {
     private OkHttpClient client = new OkHttpClient();
     private Gson gson = new Gson();
 
-
     /**
      * Sends an HTTP GET request to the specified URL and returns the response body as a string.
      *
@@ -22,7 +21,7 @@ public abstract class HttpClient {
      * @return the response body as a string
      * @throws IOException if an I/O error occurs during the request
      */
-    public String sendGetRequest(String url) throws IOException {
+    public Response sendGetRequest(String url) throws IOException {
         client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -33,7 +32,7 @@ public abstract class HttpClient {
                 .newCall(request)
                 .execute();
 
-        return response.body().string();
+        return response;
     }
 
 }
