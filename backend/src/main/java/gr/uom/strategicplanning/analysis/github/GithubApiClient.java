@@ -1,13 +1,14 @@
 package gr.uom.strategicplanning.analysis.github;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
+import com.google.gson.internal.LinkedTreeMap;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
+import gr.uom.strategicplanning.models.Developer;
 import gr.uom.strategicplanning.models.Project;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -15,6 +16,11 @@ import java.util.Map;
  */
 public class GithubApiClient extends HttpClient {
     private final String GITHUB_API_URL = "https://api.github.com/repos";
+    public static final int COMMITS_THRESHOLD = 50;
+
+    private String projectSpecificUrl;
+
+    private JSONObject jsonObject;
 
     /**
      * Fetches project data from the GitHub API and populates the provided Project object with the retrieved information.
@@ -27,17 +33,17 @@ public class GithubApiClient extends HttpClient {
 
         String username = extractUsername(repoUrl);
         String repoName = extractRepoName(repoUrl);
-        String apiUrl = buildApiUrl(username, repoName);
+        this.projectSpecificUrl = buildApiUrl(username, repoName);
 
         System.out.println("Fetching data for " + repoUrl + "...");
-        Response response = sendGetRequest(apiUrl);
+        Response response = sendGetRequest(this.projectSpecificUrl);
 
         String responseBodyString = response.body().string();
 
         Gson gson = new Gson();
         Map<String, Object> map = gson.fromJson(responseBodyString, Map.class);
 
-        JSONObject jsonObject = new JSONObject(map);
+        this.jsonObject = new JSONObject(map);
     }
 
     public static void main(String[] args) throws IOException {
@@ -45,26 +51,48 @@ public class GithubApiClient extends HttpClient {
         Project project1 = new Project();
         project1.setRepoUrl("https://github.com/StanGirard/quivr");
 
-        Project project2 = new Project();
-        project2.setRepoUrl("https://github.com/StanGirard/quivr");
+        GithubApiClient client = new GithubApiClient();
+        client.fetchProjectData(project1);
 
-        Project project3 = new Project();
-        project3.setRepoUrl("https://github.com/StanGirard/quivr");
+        String projectName = client.getProjectName();
+        float projectForks = client.getProjectForks();
+        Developer projectDeveloper = client.getProjectDeveloper();
 
-        // Fetch data for each project
-        Arrays.asList(project1, project2, project3).parallelStream().forEach(p -> {
-            try {
-                GithubApiClient githubApiClient = new GithubApiClient();
-                githubApiClient.fetchProjectData(p);
+        client.getProjectCommitsNumber();
 
-                // Log the project data
-                System.out.println(p + "\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        System.out.println(projectName);
+        System.out.println(projectForks);
+        System.out.println(projectDeveloper);
+    }
 
+    public void getProjectCommitsNumber() throws IOException {
+        // implement commits number
+        System.out.println("Implement commits number");
+        System.out.println("Not Implemented Yet");
+    }
 
+    public String getProjectName() {
+        return jsonObject.get("name").toString();
+    }
+
+    public float getProjectForks() {
+        return jsonObject.getAsNumber("forks_count").floatValue();
+    }
+
+    public Developer getProjectDeveloper() {
+        Developer developer = new Developer();
+
+        System.out.println(jsonObject.get("owner"));
+
+        LinkedTreeMap map = (LinkedTreeMap) jsonObject.get("owner");
+
+        String devName = map.get("login").toString();
+        String devUrl = map.get("html_url").toString();
+
+        developer.setName(devName);
+        developer.setGithubUrl(devUrl);
+
+        return developer;
     }
 
     private String extractUsername(String repoUrl) {
