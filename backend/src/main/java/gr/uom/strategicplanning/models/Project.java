@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models;
 
+import gr.uom.strategicplanning.enums.ProjectStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,5 +33,16 @@ public class Project {
     private int totalLanguages;
     @OneToMany(mappedBy = "project")
     private Set<Developer> developers = new HashSet<>();
+    private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
+
+    public boolean canBeAnalyzed() {
+        if (this.totalCommits >= OrganizationAnalysis.COMMITS_THRESHOLD) {
+            this.status = ProjectStatus.ANALYSIS_TO_BE_REVIEWED;
+            return false;
+        }
+
+        this.status = ProjectStatus.ANALYSIS_NOT_STARTED;
+        return true;
+    }
 
 }
