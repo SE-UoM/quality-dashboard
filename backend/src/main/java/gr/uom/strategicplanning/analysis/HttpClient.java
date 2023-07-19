@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public abstract class HttpClient {
     private OkHttpClient client = new OkHttpClient();
-    private Gson gson = new Gson();
+    protected Gson gson = new Gson();
 
     /**
      * Sends an HTTP GET request to the specified URL and returns the response body as a string.
