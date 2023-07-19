@@ -13,8 +13,9 @@ public class AnalysisService {
         githubApiClient.fetchProjectData(project);
     }
 
-    public void getCommitsCount(Project project) throws Exception {
-        githubApiClient.fetchProjectData(project);
+    public void startAnalysis(Project project) throws Exception {
+        //TODO: Configure sonarqube analysis
+
     }
 
 }

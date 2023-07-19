@@ -1,5 +1,7 @@
 package gr.uom.strategicplanning.analysis.github;
 
+import com.nimbusds.jose.shaded.json.JSONObject;
+import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.Project;
 import org.eclipse.egit.github.core.Repository;
@@ -10,17 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * The GithubApiClient class extends the HttpClient class and provides methods to fetch project data from the GitHub API.
  */
 public class GithubApiClient extends HttpClient {
-    public final int COMMITS_THRESHOLD = 50;
-
     public RepositoryService repoService = new RepositoryService();
     public CommitService commitService = new CommitService();
     public Repository repository = new Repository();
-    public RestTemplate restTemplate = new RestTemplate();
 
 
     /**
@@ -38,27 +38,31 @@ public class GithubApiClient extends HttpClient {
 
         project.setTotalCommits(this.captureTotalCommits());
         project.setForks(this.repository.getForks());
-        project.setStars(getStargazersCount(username, repoName));
+        project.setStars(this.getTotalStars());
     }
 
     /**
      * Retrieves the number of stargazers for a GitHub repository.
      *
-     * @param username the username of the repository owner
-     * @param repoName the name of the repository
      * @return the number of stargazers for the repository, or 0 if an error occurs
      * @throws Exception if an error occurs during the API request
      */
-    public int getStargazersCount(String username, String repoName) throws Exception {
-        String url = String.format("https://api.github.com/repos/%s/%s/stargazers", username, repoName);
-        ResponseEntity response = this.restTemplate.getForEntity(url, Void.class);
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            // TODO : check if this is the correct way to get the number of stargazers
-            return response.getBody().toString().split("\n").length;
-        } else {
-            return 0;
-        }
+    public int getTotalStars() throws IOException {
+        String repoName = this.repository.getName();
+        String username = this.repository.getOwner().getLogin();
+
+        String url = String.format("https://api.github.com/repos/%s/%s", username, repoName);
+        Response response = this.sendGetRequest(url);
+
+        // Convert response to JSONObject
+        Map<String, Object> jsonMap = this.gson.fromJson(response.body().string(), Map.class);
+        JSONObject jsonObject = new JSONObject(jsonMap);
+
+        // Get total stars
+        Number starsFloat = jsonObject.getAsNumber("stargazers_count");
+
+        return starsFloat.intValue();
     }
 
     /**
