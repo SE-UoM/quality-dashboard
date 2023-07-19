@@ -36,7 +36,7 @@ public class Project {
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
 
     public boolean canBeAnalyzed() {
-        if (this.totalCommits >= 50) {
+        if (this.totalCommits >= OrganizationAnalysis.COMMITS_THRESHOLD) {
             this.status = ProjectStatus.ANALYSIS_TO_BE_REVIEWED;
             return false;
         }

@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrganizationAnalysis {
+    public static final int COMMITS_THRESHOLD = 50;
 
 
     @Id
