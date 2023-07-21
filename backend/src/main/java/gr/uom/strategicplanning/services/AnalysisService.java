@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
+import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalyzer;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.Project;
 import org.eclipse.jgit.api.CreateBranchCommand;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Service
 public class AnalysisService {
 
-    private SonarApiClient sonarApiClient = new SonarApiClient();
+    private SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
     private GithubApiClient githubApiClient = new GithubApiClient();
 
     public void fetchGithubData(Project project) throws Exception {
@@ -33,14 +34,14 @@ public class AnalysisService {
         String name = split[split.length - 1];
 
         cloneRepository(project.getRepoUrl());
-        sonarApiClient.startSonarAnalysis(owner, name);
+        sonarAnalyzer.beginAnalysis(project, owner, name);
         deleteRepository(project.getRepoUrl());
     }
 
     public void cloneRepository(String url) throws Exception {
         Git.cloneRepository()
                 .setURI(url)
-                .setDirectory(new File(System.getProperty("user" + ".dir") + "/repos"))
+                .setDirectory(new File(System.getProperty("user" + ".dir") + "/repos" + "/" + extractRepoName(url)))
                 .call();
     }
 

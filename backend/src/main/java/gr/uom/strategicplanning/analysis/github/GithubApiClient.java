@@ -36,6 +36,7 @@ public class GithubApiClient extends HttpClient {
 
         this.repository = repoService.getRepository(username, repoName);
 
+        project.setName(repoName);
         project.setTotalCommits(this.captureTotalCommits());
         project.setForks(this.repository.getForks());
         project.setStars(this.getTotalStars());

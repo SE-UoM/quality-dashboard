@@ -7,4 +7,5 @@ public enum ProjectStatus {
     ANALYSIS_SKIPPED,
     ANALYSIS_TO_BE_REVIEWED,
     ANALYSIS_NOT_STARTED,
+    ANALYSIS_STARTED
 }
