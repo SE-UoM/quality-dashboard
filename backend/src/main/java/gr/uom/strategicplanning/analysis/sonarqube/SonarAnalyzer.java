@@ -1,45 +1,50 @@
 package gr.uom.strategicplanning.analysis.sonarqube;
 
+import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.Project;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.sonarsource.scanner.api.EmbeddedScanner;
 import org.sonarsource.scanner.api.StdOutLogOutput;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SonarAnalyzer {
+    private SonarScanner sonarScanner;
 
-    private EmbeddedScanner sonarScanner;
+    public SonarAnalyzer() {
+        this.sonarScanner = new SonarScanner("dashboard-scanner", "1.0");
+    }
 
-    private Map<String,String> props;
-
-    public void beginAnalysis(Project project, String owner, String name) {
+    public void analyzeProject(Project project) throws Exception {
         project.setStatus(ProjectStatus.ANALYSIS_STARTED);
+
+        GithubApiClient.cloneRepository(project);
+
         buildProps(project);
-        initSonarAnalysis(project);
+
+        sonarScanner.start();
         project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
-        executeAnalysis(project, props);
+        sonarScanner.execute();
+
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
+        GithubApiClient.deleteRepository(project);
     }
 
     private void buildProps(Project project){
-        this.props = new HashMap<>();
-        props.put("sonar.projectKey", project.getName());
-        props.put("sonar.sources", "./repos/" + project.getName());
-        props.put("sonar.host.url", "http://localhost:9000");
-        props.put("sonar.login", "admin");
-        props.put("sonar.password", "admin");
+        sonarScanner.addProperty("sonar.projectKey", project.getName());
+        sonarScanner.addProperty("sonar.sources", "./repos/" + project.getName());
     }
 
-    private void initSonarAnalysis(Project project){
-        sonarScanner = EmbeddedScanner.create("dashboard-scanner", "1.0", new StdOutLogOutput());
-        sonarScanner.addGlobalProperties(props);
-        sonarScanner.start();
-    }
+    public static void main(String[] args) throws Exception {
+        SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
+        Project project = new Project();
+        project.setName("test");
+        project.setRepoUrl("https://github.com/RayVentura/ShortGPT");
 
-    private void executeAnalysis(Project project, Map<String,String> props){
-        sonarScanner.execute(props);
+        sonarAnalyzer.analyzeProject(project);
     }
-
 }
