@@ -1,6 +1,5 @@
 package gr.uom.strategicplanning.analysis.github;
 
-import com.nimbusds.jose.shaded.json.JSONObject;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.Project;
@@ -8,9 +7,7 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.jgit.api.Git;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +60,7 @@ public class GithubApiClient extends HttpClient {
         JSONObject jsonObject = new JSONObject(jsonMap);
 
         // Get total stars
-        Number starsFloat = jsonObject.getAsNumber("stargazers_count");
+        Number starsFloat = jsonObject.getNumber("stargazers_count");
 
         return starsFloat.intValue();
     }
