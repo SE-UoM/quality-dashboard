@@ -7,10 +7,12 @@ import gr.uom.strategicplanning.models.Project;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.jgit.api.Git;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -112,5 +114,18 @@ public class GithubApiClient extends HttpClient {
      */
     private int captureTotalCommits() throws Exception {
         return this.commitService.getCommits(repository).size();
+    }
+
+    public static void deleteRepository(Project project) throws Exception {
+        String repoName = project.getName();
+        File file = new File(System.getProperty("user" + ".dir") + "/repos/" + repoName);
+        file.delete();
+    }
+
+    public static void cloneRepository(Project project) throws Exception {
+        Git.cloneRepository()
+                .setURI(project.getRepoUrl())
+                .setDirectory(new File(System.getProperty("user" + ".dir") + "/repos" + "/" + project.getName()))
+                .call();
     }
 }
