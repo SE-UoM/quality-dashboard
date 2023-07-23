@@ -116,12 +116,24 @@ public class GithubApiClient extends HttpClient {
         return this.commitService.getCommits(repository).size();
     }
 
+    /**
+     * Deletes the cloned repository associated with the project.
+     *
+     * @param project The Project object representing the project whose repository is to be deleted.
+     * @throws Exception if an error occurs during the deletion process
+     */
     public static void deleteRepository(Project project) throws Exception {
         String repoName = project.getName();
         File file = new File(System.getProperty("user" + ".dir") + "/repos/" + repoName);
         file.delete();
     }
 
+    /**
+     * Clones the repository associated with the project to a local directory.
+     *
+     * @param project The Project object representing the project whose repository is to be cloned.
+     * @throws Exception if an error occurs during the cloning process
+     */
     public static void cloneRepository(Project project) throws Exception {
         Git.cloneRepository()
                 .setURI(project.getRepoUrl())
