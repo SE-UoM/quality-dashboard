@@ -20,7 +20,6 @@ import java.util.Map;
 
 @Service
 public class AnalysisService {
-
     private SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
     private GithubApiClient githubApiClient = new GithubApiClient();
 
@@ -29,31 +28,6 @@ public class AnalysisService {
     }
 
     public void startAnalysis(Project project) throws Exception {
-        String[] split = project.getRepoUrl().split("/");
-        String owner = split[split.length - 2];
-        String name = split[split.length - 1];
-
-        cloneRepository(project.getRepoUrl());
-        sonarAnalyzer.beginAnalysis(project, owner, name);
-        deleteRepository(project.getRepoUrl());
+        sonarAnalyzer.analyzeProject(project);
     }
-
-    public void cloneRepository(String url) throws Exception {
-        Git.cloneRepository()
-                .setURI(url)
-                .setDirectory(new File(System.getProperty("user" + ".dir") + "/repos" + "/" + extractRepoName(url)))
-                .call();
-    }
-
-    public void deleteRepository(String url) throws Exception {
-        String repoName = extractRepoName(url);
-        File file = new File(System.getProperty("user" + ".dir") + "/repos/" + repoName);
-        file.delete();
-    }
-
-    private String extractRepoName(String url) {
-        String[] split = url.split("/");
-        return split[split.length - 1];
-    }
-
 }
