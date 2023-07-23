@@ -27,4 +27,11 @@ public class Language {
     @ManyToOne
     private Project project;
 
+    public Language(String name) {
+        this.name = name;
+    }
+
+    public boolean is(String language) {
+        return this.name.equals(language);
+    }
 }

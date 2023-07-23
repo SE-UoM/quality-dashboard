@@ -1,19 +1,27 @@
 package gr.uom.strategicplanning.analysis.github;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
+import gr.uom.strategicplanning.models.Language;
 import gr.uom.strategicplanning.models.Project;
+import gr.uom.strategicplanning.repositories.LanguageRepository;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.jgit.api.Git;
+import org.springframework.asm.TypeReference;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -23,6 +31,7 @@ public class GithubApiClient extends HttpClient {
     public RepositoryService repoService = new RepositoryService();
     public CommitService commitService = new CommitService();
     public Repository repository = new Repository();
+    public LanguageRepository languageRepository;
 
 
     /**
@@ -42,7 +51,37 @@ public class GithubApiClient extends HttpClient {
         project.setTotalCommits(this.captureTotalCommits());
         project.setForks(this.repository.getForks());
         project.setStars(this.getTotalStars());
+        project.setLanguages(extractLanguages(project));
     }
+
+    private Collection<Language> extractLanguages(Project project) {
+        Collection<Language> listLanguages = new ArrayList<>();
+//        Collection<Language> allLanguages = languageRepository.findAll();
+        Collection<Language> allLanguages = new ArrayList<>();
+        String[] split = project.getRepoUrl().split("/");
+        String owner = split[split.length - 2];
+        String name = split[split.length - 1];
+
+        String url2 = "https://api.github.com/repos/" + owner + "/" + name + "/languages";
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Map> response = restTemplate.getForEntity(url2, Map.class);
+        Map<String, Integer> map = response.getBody();
+
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            for (Language language : allLanguages) {
+                if (!language.getName().equals(entry.getKey())) {
+                    Language newLanguage = new Language();
+                    language.setName(entry.getKey());
+                    listLanguages.add(newLanguage);
+                } else {
+                    listLanguages.add(language);
+                }
+            }
+        }
+
+        return listLanguages;
+    }
+
 
     /**
      * Retrieves the number of stargazers for a GitHub repository.
