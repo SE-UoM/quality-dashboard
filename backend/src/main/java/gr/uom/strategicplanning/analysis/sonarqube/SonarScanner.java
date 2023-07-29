@@ -65,6 +65,10 @@ public class SonarScanner {
      * Executes the SonarQube scanner to analyze the project with the configured properties.
      */
     public void execute() {
-        this.scanner.execute(this.sonarProperties);
+        try {
+            this.scanner.execute(this.sonarProperties);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -48,6 +48,13 @@ public class SonarAnalyzer {
         project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
 
         // Execute the SonarQube analysis.
+        // THIS LINE BREAKS THE ANALYSIS WHEN WE CALL THE API TO START THE ANALYSIS
+        // HOWEVER, IF WE COMMENT THIS LINE, THE ANALYSIS IS SUCCESSFUL
+        // HOW CAN WE FIX THIS?
+        // THE ANALYSIS IS SUCCESSFUL IF WE RUN IT FROM THIS CLASSES MAIN METHOD
+        // BUT IT FAILS WHEN WE CALL IT FROM THE API
+        // THE ERROR IS: javax.management.InstanceAlreadyExistsException: DefaultDomain:application=
+        System.out.println("Executing sonarScanner.execute()");
         sonarScanner.execute();
 
         // Set the analysis status to completed and delete the cloned repository.
@@ -95,7 +102,7 @@ public class SonarAnalyzer {
     public static void main(String[] args) throws Exception {
         SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
         Project project = new Project();
-        project.setRepoUrl("https://github.com/GeorgeApos/rcheck");
+        project.setRepoUrl("https://github.com/GeorgeApos/code_metadata_extractor");
 
         GithubApiClient githubApiClient = new GithubApiClient();
         githubApiClient.fetchProjectData(project);
