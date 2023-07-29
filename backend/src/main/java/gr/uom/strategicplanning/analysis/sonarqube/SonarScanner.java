@@ -36,7 +36,7 @@ public class SonarScanner {
      * - sonar.password: admin1
      */
     private void initProps() {
-        this.sonarProperties.put("sonar.host.url", "http://localhost:9000");
+        this.sonarProperties.put("sonar.host.url", SonarApiClient.SONARQUBE_URL);
         this.sonarProperties.put("sonar.login", "admin");
         this.sonarProperties.put("sonar.password", "admin1");
         this.sonarProperties.put("sonar.scm.disabled", "true");
