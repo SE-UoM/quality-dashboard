@@ -1,7 +1,5 @@
 package gr.uom.strategicplanning.analysis.github;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.shaded.json.JSONObject;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.Language;
@@ -11,10 +9,7 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.jgit.api.Git;
-import org.springframework.asm.TypeReference;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -102,7 +97,7 @@ public class GithubApiClient extends HttpClient {
         JSONObject jsonObject = new JSONObject(jsonMap);
 
         // Get total stars
-        Number starsFloat = jsonObject.getAsNumber("stargazers_count");
+        Number starsFloat = jsonObject.getNumber("stargazers_count");
 
         return starsFloat.intValue();
     }

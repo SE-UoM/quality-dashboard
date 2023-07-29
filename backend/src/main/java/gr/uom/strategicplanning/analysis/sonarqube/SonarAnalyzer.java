@@ -60,6 +60,8 @@ public class SonarAnalyzer {
         // Set the analysis status to completed and delete the cloned repository.
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
         GithubApiClient.deleteRepository(project);
+
+        System.getLogger("SonarAnalyzer").log(System.Logger.Level.INFO, "Analysis completed for project: " + project.getName());
     }
 
     /**
