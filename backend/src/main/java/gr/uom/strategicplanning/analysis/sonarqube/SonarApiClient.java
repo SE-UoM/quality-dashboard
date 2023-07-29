@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.Commit;
 import gr.uom.strategicplanning.models.Language;
 import gr.uom.strategicplanning.models.Project;
+import gr.uom.strategicplanning.models.ProjectStats;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -24,11 +25,11 @@ public class SonarApiClient extends HttpClient {
     public static final String LOGIN_USERNAME = "admin";
     public static final String LOGIN_PASSWORD = "admin1";
 
-    public static final String SONARQUBE_AUTH_URL = SONARQUBE_URL + "/api/authentication/login" +
+    public final String SONARQUBE_AUTH_URL = SONARQUBE_URL + "/api/authentication/login" +
             "?login=" + LOGIN_USERNAME + "&password=" + LOGIN_PASSWORD;
 
-    public static final String ISSUES_SEARCH_URL = SONARQUBE_URL + "/api/issues/search?ps=500&componentKeys=";
-    public static final String LANGUAGES_URL = SONARQUBE_URL + "/api/measures/component?metricKeys=ncloc_language_distribution&component=";
+    public final String ISSUES_SEARCH_URL = SONARQUBE_URL + "/api/issues/search?ps=500&componentKeys=";
+    public final String LANGUAGES_URL = SONARQUBE_URL + "/api/measures/component?metricKeys=ncloc_language_distribution&component=";
     
     private final int ARRAY_INDEX = 0;
     private final String EMPTY_PARAM = "";
@@ -50,16 +51,16 @@ public class SonarApiClient extends HttpClient {
 
 
         // Update the project
-        Commit commit = new Commit();
-        commit.setTotalCodeSmells(totalCodeSmells);
-        commit.setTotalFiles(totalFiles);
-        commit.setTechnicalDebt(effortInMins);
-        commit.setTotalLoC(totalLines);
-        commit.calculateTechDebtPerLoC();
-        commit.setLanguages(languageDistribution);
-        commit.setProject(project);
+        ProjectStats projectStats = new ProjectStats();
+        projectStats.setTotalLoC(totalLines);
+        projectStats.setTotalFiles(totalFiles);
+        projectStats.setTotalCodeSmells(totalCodeSmells);
+        projectStats.setTechDebt(effortInMins);
+        projectStats.calculateTechDebtPerLoC();
+        projectStats.setTotalLanguages(languageDistribution.size());
 
-        project.addCommit(commit);
+        project.setProjectStats(projectStats);
+
 
         System.out.println("Project: " + System.lineSeparator() + project);
     }
