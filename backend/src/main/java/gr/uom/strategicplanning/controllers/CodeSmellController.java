@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.models.CodeSmell;
+import gr.uom.strategicplanning.models.domain.CodeSmell;
 import gr.uom.strategicplanning.repositories.CodeSmellRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

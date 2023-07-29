@@ -3,10 +3,9 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
-import gr.uom.strategicplanning.models.Commit;
-import gr.uom.strategicplanning.models.Language;
-import gr.uom.strategicplanning.models.Project;
-import gr.uom.strategicplanning.models.ProjectStats;
+import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.models.TechDebtStats;
+import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.TechDebtStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

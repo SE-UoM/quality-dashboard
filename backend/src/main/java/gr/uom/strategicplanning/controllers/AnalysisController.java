@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.models.Project;
+import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import gr.uom.strategicplanning.services.AnalysisService;

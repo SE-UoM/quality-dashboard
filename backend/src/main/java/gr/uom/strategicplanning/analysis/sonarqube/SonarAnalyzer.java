@@ -2,16 +2,10 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.enums.ProjectStatus;
-import gr.uom.strategicplanning.models.Language;
-import gr.uom.strategicplanning.models.Project;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.sonarsource.scanner.api.EmbeddedScanner;
-import org.sonarsource.scanner.api.StdOutLogOutput;
+import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.Project;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A utility class for analyzing projects with SonarQube.

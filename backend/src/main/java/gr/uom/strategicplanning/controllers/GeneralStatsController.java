@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.models.GeneralStats;
+import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.repositories.GeneralStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

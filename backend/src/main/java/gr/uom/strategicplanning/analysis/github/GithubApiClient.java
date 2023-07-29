@@ -2,8 +2,8 @@ package gr.uom.strategicplanning.analysis.github;
 
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
-import gr.uom.strategicplanning.models.Language;
-import gr.uom.strategicplanning.models.Project;
+import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.CommitService;
