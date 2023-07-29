@@ -1,9 +1,6 @@
 package gr.uom.strategicplanning.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +12,7 @@ import javax.persistence.ManyToOne;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Language {
     
     @Id
@@ -23,6 +21,7 @@ public class Language {
     private String name;
     private String version;
     private String imageUrl;
+    private Number linesOfCode;
 
     @ManyToOne
     private Project project;
