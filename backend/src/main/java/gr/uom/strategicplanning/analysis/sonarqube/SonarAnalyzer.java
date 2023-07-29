@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.enums.ProjectStatus;
+import gr.uom.strategicplanning.models.Language;
 import gr.uom.strategicplanning.models.Project;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -60,8 +61,29 @@ public class SonarAnalyzer {
      * @param project The Project object representing the project to be analyzed.
      */
     private void buildProps(Project project) {
-        sonarScanner.addProperty("sonar.projectKey", project.getName());
-        sonarScanner.addProperty("sonar.sources", "./repos/" + project.getName());
+       sonarScanner.addProperty("sonar.projectKey", project.getName());
+       sonarScanner.addProperty("sonar.sources", "./repos/" + project.getName());
+
+       for (Language language : project.getLanguages()) {
+           if (language.is("Java")) {
+               sonarScanner.addProperty("sonar.java.binaries", "./repos/" + project.getName());
+           } else if (language.is("C") || language.is("C++")) {
+               execBuildWrapper(project);
+               sonarScanner.addProperty("sonar.cfamily.build-wrapper", "./repos/" + project.getName() + "/build-wrapper-win-x86-64.exe");
+               sonarScanner.addProperty("sonar.cfamily.build-wrapper-output", "./repos/" + project.getName());
+           }
+       }
+    }
+
+    private void execBuildWrapper(Project project) {
+        try {
+            ProcessBuilder builder = new ProcessBuilder("./repos/" + project.getName() + "/build-wrapper-win-x86-64.exe", "--out-dir", "./repos/" + project.getName(), "./repos/" + project.getName() + "/build.bat");
+            builder.directory(new File("./repos/" + project.getName()));
+            Process process = builder.start();
+            process.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -73,8 +95,10 @@ public class SonarAnalyzer {
     public static void main(String[] args) throws Exception {
         SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
         Project project = new Project();
-        project.setName("test");
-        project.setRepoUrl("https://github.com/RayVentura/ShortGPT");
+        project.setRepoUrl("https://github.com/GeorgeApos/rcheck");
+
+        GithubApiClient githubApiClient = new GithubApiClient();
+        githubApiClient.fetchProjectData(project);
 
         // Analyze the test project.
         sonarAnalyzer.analyzeProject(project);
