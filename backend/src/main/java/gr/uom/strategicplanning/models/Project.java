@@ -26,7 +26,7 @@ public class Project {
     private int forks;
     private int stars;
     @OneToMany(mappedBy = "project")
-    private Collection<Commit> commits;
+    private Collection<Commit> commits = new ArrayList<>();
     private int totalDevelopers;
     private int totalCommits;
     @OneToMany(mappedBy = "project")
@@ -46,4 +46,8 @@ public class Project {
         return true;
     }
 
+    public void addCommit(Commit commit) {
+        this.commits.add(commit);
+        commit.setProject(this);
+    }
 }
