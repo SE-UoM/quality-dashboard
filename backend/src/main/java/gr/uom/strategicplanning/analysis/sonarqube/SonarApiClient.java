@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
 public class SonarApiClient extends HttpClient {
     private Response loginResponse;
     public static final String SONARQUBE_URL = "http://localhost:9000";
