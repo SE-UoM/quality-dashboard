@@ -1,5 +1,6 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.stats;
 
+import gr.uom.strategicplanning.models.domain.Project;
 import lombok.*;
 
 import javax.persistence.Entity;

@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.models.Language;
+import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

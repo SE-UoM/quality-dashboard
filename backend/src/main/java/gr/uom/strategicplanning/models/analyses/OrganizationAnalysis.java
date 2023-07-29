@@ -1,5 +1,9 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.analyses;
 
+import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.stats.ActivityStats;
+import gr.uom.strategicplanning.models.stats.GeneralStats;
+import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

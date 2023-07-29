@@ -1,4 +1,4 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.domain;
 
 import lombok.*;
 

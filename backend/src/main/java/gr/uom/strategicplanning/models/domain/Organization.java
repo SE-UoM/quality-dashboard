@@ -1,5 +1,7 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.domain;
 
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
+import gr.uom.strategicplanning.models.users.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

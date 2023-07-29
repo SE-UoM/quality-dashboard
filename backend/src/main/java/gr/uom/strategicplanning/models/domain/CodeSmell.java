@@ -1,4 +1,4 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,15 +14,15 @@ import javax.persistence.Id;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActivityStats {
-    
+public class CodeSmell {
+
     @Id
     @GeneratedValue
     private Long id;
-    private float commitsPerDay;
-    private float locAddedPerDay;
-    private float filesAddedPerDay;
-    private float projectsAddedPerDay;
-    private float averageLoC;
-    
+    private String name;
+    private String severityLevel;
+    private int line;
+    private int remediationTime;
+    private String description;
+
 }

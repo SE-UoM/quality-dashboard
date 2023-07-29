@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.models.Commit;
+import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.repositories.CommitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

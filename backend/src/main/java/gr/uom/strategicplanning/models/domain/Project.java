@@ -1,6 +1,8 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.domain;
 
 import gr.uom.strategicplanning.enums.ProjectStatus;
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
+import gr.uom.strategicplanning.models.stats.ProjectStats;
 import lombok.*;
 
 import javax.persistence.*;
