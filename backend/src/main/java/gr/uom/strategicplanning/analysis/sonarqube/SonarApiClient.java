@@ -1,22 +1,19 @@
 package gr.uom.strategicplanning.analysis.sonarqube;
 
 
-import com.google.gson.JsonArray;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.Commit;
 import gr.uom.strategicplanning.models.Language;
 import gr.uom.strategicplanning.models.Project;
-import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

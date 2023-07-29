@@ -106,7 +106,7 @@ public class SonarAnalyzer {
         project.setRepoUrl("https://github.com/GeorgeApos/code_metadata_extractor");
 
         SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
-        
+
         GithubApiClient githubApiClient = new GithubApiClient();
         githubApiClient.fetchProjectData(project);
 
