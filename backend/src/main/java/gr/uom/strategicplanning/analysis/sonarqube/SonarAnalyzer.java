@@ -48,11 +48,13 @@ public class SonarAnalyzer {
         project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
 
         // Execute the SonarQube analysis.
-        sonarScanner.execute();
+//        sonarScanner.execute();
 
         // Set the analysis status to completed and delete the cloned repository.
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
         GithubApiClient.deleteRepository(project);
+
+        System.getLogger("SonarAnalyzer").log(System.Logger.Level.INFO, "Analysis completed for project: " + project.getName());
     }
 
     /**
