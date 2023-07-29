@@ -102,14 +102,19 @@ public class SonarAnalyzer {
      * @throws Exception If any error occurs during the analysis process.
      */
     public static void main(String[] args) throws Exception {
-        SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
         Project project = new Project();
         project.setRepoUrl("https://github.com/GeorgeApos/code_metadata_extractor");
 
+        SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
+        
         GithubApiClient githubApiClient = new GithubApiClient();
         githubApiClient.fetchProjectData(project);
 
         // Analyze the test project.
         sonarAnalyzer.analyzeProject(project);
+
+        // Fetch the analysis results.
+        SonarApiClient sonarApiClient = new SonarApiClient();
+        sonarApiClient.fetchProjectData(project);
     }
 }
