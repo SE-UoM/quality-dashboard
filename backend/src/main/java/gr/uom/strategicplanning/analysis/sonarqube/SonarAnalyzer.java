@@ -31,31 +31,17 @@ public class SonarAnalyzer {
     public void analyzeProject(Project project) throws Exception {
         project.setStatus(ProjectStatus.ANALYSIS_STARTED);
 
-        // Clone the project's repository using the GithubApiClient.
         GithubApiClient.cloneRepository(project);
 
-        // Build SonarQube properties based on the project information.
         buildProps(project);
 
-        // Start SonarQube scanner and set analysis status to in-progress.
         sonarScanner.start();
         project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
 
-        // Execute the SonarQube analysis.
-        // THIS LINE BREAKS THE ANALYSIS WHEN WE CALL THE API TO START THE ANALYSIS
-        // HOWEVER, IF WE COMMENT THIS LINE, THE ANALYSIS IS SUCCESSFUL
-        // HOW CAN WE FIX THIS?
-        // THE ANALYSIS IS SUCCESSFUL IF WE RUN IT FROM THIS CLASSES MAIN METHOD
-        // BUT IT FAILS WHEN WE CALL IT FROM THE API
-        // THE ERROR IS: javax.management.InstanceAlreadyExistsException: DefaultDomain:application=
-        System.out.println("Executing sonarScanner.execute()");
         sonarScanner.execute();
 
-        // Set the analysis status to completed and delete the cloned repository.
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
         GithubApiClient.deleteRepository(project);
-
-        System.getLogger("SonarAnalyzer").log(System.Logger.Level.INFO, "Analysis completed for project: " + project.getName());
     }
 
     /**
@@ -71,44 +57,8 @@ public class SonarAnalyzer {
            if (language.is("Java")) {
                sonarScanner.addProperty("sonar.java.binaries", "./repos/" + project.getName());
            } else if (language.is("C") || language.is("C++")) {
-               execBuildWrapper(project);
-               sonarScanner.addProperty("sonar.cfamily.build-wrapper", "./repos/" + project.getName() + "/build-wrapper-win-x86-64.exe");
-               sonarScanner.addProperty("sonar.cfamily.build-wrapper-output", "./repos/" + project.getName());
+               sonarScanner.addProperty("sonar.cxx.file.suffixes", ".cc,.cpp,.cxx,.c++,.hh,.hpp,.hxx,.h++,.c,.h");
            }
        }
-    }
-
-    private void execBuildWrapper(Project project) {
-        try {
-            ProcessBuilder builder = new ProcessBuilder("./repos/" + project.getName() + "/build-wrapper-win-x86-64.exe", "--out-dir", "./repos/" + project.getName(), "./repos/" + project.getName() + "/build.bat");
-            builder.directory(new File("./repos/" + project.getName()));
-            Process process = builder.start();
-            process.waitFor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Main method for testing the SonarAnalyzer class.
-     *
-     * @param args Command-line arguments (not used in this method).
-     * @throws Exception If any error occurs during the analysis process.
-     */
-    public static void main(String[] args) throws Exception {
-        Project project = new Project();
-        project.setRepoUrl("https://github.com/GeorgeApos/code_metadata_extractor");
-
-        SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
-
-        GithubApiClient githubApiClient = new GithubApiClient();
-        githubApiClient.fetchProjectData(project);
-
-        // Analyze the test project.
-        sonarAnalyzer.analyzeProject(project);
-
-        // Fetch the analysis results.
-        SonarApiClient sonarApiClient = new SonarApiClient();
-        sonarApiClient.fetchProjectData(project);
     }
 }
