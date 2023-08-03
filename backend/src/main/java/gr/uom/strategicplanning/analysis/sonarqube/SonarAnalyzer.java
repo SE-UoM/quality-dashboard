@@ -13,9 +13,7 @@ import gr.uom.strategicplanning.services.CommitService;
 public class SonarAnalyzer {
     private SonarScanner sonarScanner;
     SonarApiClient sonarApiClient = new SonarApiClient();
-
-    CommitService commitService = new CommitService();
-
+    
     /**
      * Constructs a new SonarAnalyzer instance.
      */
@@ -34,8 +32,6 @@ public class SonarAnalyzer {
      */
     public void analyzeProject(Project project, Commit commit) throws Exception {
         project.setStatus(ProjectStatus.ANALYSIS_STARTED);
-
-        GithubApiClient.cloneRepository(project);
 
         buildProps(project);
 

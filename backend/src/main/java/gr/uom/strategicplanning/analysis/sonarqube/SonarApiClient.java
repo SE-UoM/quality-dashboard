@@ -86,6 +86,8 @@ public class SonarApiClient extends HttpClient {
     private Integer fetchComponentMetrics(Project project, String metricKey) throws IOException {
         String apiUrl = SONARQUBE_URL + "/api/measures/component?metricKeys=" + metricKey + "&component=" + project.getName();
 
+        this.loginToSonar();
+
         // Send the GET request
         Response response = this.sendGetRequest(apiUrl);
 

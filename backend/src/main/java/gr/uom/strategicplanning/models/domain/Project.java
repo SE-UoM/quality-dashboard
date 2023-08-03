@@ -55,4 +55,9 @@ public class Project {
         this.commits.add(commit);
         commit.setProject(this);
     }
+
+    public void addDeveloper(Developer developer) {
+        this.developers.add(developer);
+        developer.setProject(this);
+    }
 }

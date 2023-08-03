@@ -1,15 +1,29 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.repositories.CommitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @Service
 public class CommitService {
+    private CommitRepository commitRepository;
+    private DeveloperService developerService;
+    private GithubApiClient githubApiClient = new GithubApiClient();
 
-    public void populateCommit(Commit commit, Project project) {
-        //TODO: Fetch commit data from Github API
+    @Autowired
+    public CommitService(DeveloperService developerService, CommitRepository commitRepository) {
+        this.developerService = developerService;
+        this.commitRepository = commitRepository;
+    }
 
-        //TODO: Populate commit with Developers
+    public void populateCommit(Commit commit, Project project) throws IOException {
+        commit.setCommitDate(githubApiClient.fetchCommitDate(project, commit));
+        commit.setDeveloper(developerService.populateDeveloperData(project, commit));
+        commitRepository.save(commit);
     }
 }
