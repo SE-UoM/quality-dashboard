@@ -20,7 +20,6 @@ import java.util.Date;
 public class OrganizationAnalysis {
     public static final int COMMITS_THRESHOLD = 50;
 
-
     @Id
     @GeneratedValue
     private Long id;

@@ -3,6 +3,8 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
+import gr.uom.strategicplanning.analysis.github.GithubApiClient;
+import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
@@ -41,7 +43,7 @@ public class SonarApiClient extends HttpClient {
      * @param project The Project object to which the fetched data and statistics will be added.
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
-    public void fetchProjectData(Project project) throws IOException {
+    public void fetchCommitData(Project project, Commit commit) throws IOException {
         this.loginToSonar();
 
         // Fetch the data from component metrics
@@ -53,21 +55,20 @@ public class SonarApiClient extends HttpClient {
         JSONObject issues = this.fetchIssues(project, EMPTY_PARAM);
         Number effortInMins = (Number) issues.get("effortTotal");
 
+        //TODO: Populate Code Smells Object
         JSONObject codeSmellsJsonObject = this.fetchIssues(project, "CODE_SMELL");
         Integer totalCodeSmells = codeSmellsJsonObject.getInt("total");
 
+        commit.setTotalFiles(totalFiles);
+        commit.setTotalLoC(totalLines);
+        commit.setLanguages(languageDistribution);
+        commit.setTechnicalDebt(effortInMins);
+        commit.setTotalCodeSmells(totalCodeSmells);
+        commit.setTechDebtPerLoC(commit.getTechDebtPerLoC());
+        commit.setTotalFiles(totalFiles);
+        commit.setTotalLanguages(languageDistribution.size());
 
-        // Update the project
-        ProjectStats projectStats = new ProjectStats();
-        projectStats.setTotalLoC(totalLines);
-        projectStats.setTotalFiles(totalFiles);
-        projectStats.setTotalCodeSmells(totalCodeSmells);
-        projectStats.setTechDebt(effortInMins);
-        projectStats.calculateTechDebtPerLoC();
-        projectStats.setTotalLanguages(languageDistribution.size());
-
-        project.setProjectStats(projectStats);
-
+        project.getCommits().add(commit);
 
         System.out.println("Project: " + System.lineSeparator() + project);
     }
@@ -166,23 +167,4 @@ public class SonarApiClient extends HttpClient {
         loginResponse = this.sentPostAuthRequest(SONARQUBE_AUTH_URL);
     }
 
-    /**
-     * Main method that demonstrates how to use the SonarApiClient to fetch project data from the SonarQube API.
-     *
-     * @param args Command-line arguments (not used in this context).
-     * @throws IOException If an I/O error occurs during the API request.
-     */
-    public static void main(String[] args) throws IOException {
-        Project project = new Project();
-        project.setRepoUrl("https://github.com/GeorgeApos/code_metadata_extractor");
-        project.setName("test");
-
-        // Fetch the analysis results.
-        System.getLogger("SonarAnalyzer").log(System.Logger.Level.INFO, "Fetching analysis data from SonarQube API client for project: " + project.getName());
-
-        SonarApiClient sonarApiClient = new SonarApiClient();
-        sonarApiClient.fetchProjectData(project);
-
-        System.getLogger("SonarAnalyzer").log(System.Logger.Level.INFO, "Analysis data fetched from SonarQube API client for project: " + project.getName());
-    }
 }

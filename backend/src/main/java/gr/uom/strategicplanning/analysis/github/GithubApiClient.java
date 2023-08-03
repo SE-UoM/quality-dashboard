@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.analysis.github;
 
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
+import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -173,5 +175,18 @@ public class GithubApiClient extends HttpClient {
                 .setURI(project.getRepoUrl())
                 .setDirectory(new File(System.getProperty("user" + ".dir") + "/repos" + "/" + project.getName()))
                 .call();
+    }
+
+    public void populateCommitData(Project project, Commit commit) {
+        //TODO: Implement this method
+    }
+
+    public List<String> fetchCommitSHA(Project project) {
+        //TODO: Implement this method
+        return null;
+    }
+
+    public void checkoutCommit(Project project, String commitSHA) {
+
     }
 }

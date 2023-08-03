@@ -2,16 +2,19 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.enums.ProjectStatus;
+import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
-
-import java.io.File;
+import gr.uom.strategicplanning.services.CommitService;
 
 /**
  * A utility class for analyzing projects with SonarQube.
  */
 public class SonarAnalyzer {
     private SonarScanner sonarScanner;
+    SonarApiClient sonarApiClient = new SonarApiClient();
+
+    CommitService commitService = new CommitService();
 
     /**
      * Constructs a new SonarAnalyzer instance.
@@ -26,9 +29,10 @@ public class SonarAnalyzer {
      * runs the analysis, and cleans up the repository after the analysis is completed.
      *
      * @param project The Project object representing the project to be analyzed.
+     * @param commit
      * @throws Exception If any error occurs during the analysis process.
      */
-    public void analyzeProject(Project project) throws Exception {
+    public void analyzeProject(Project project, Commit commit) throws Exception {
         project.setStatus(ProjectStatus.ANALYSIS_STARTED);
 
         GithubApiClient.cloneRepository(project);
@@ -41,8 +45,10 @@ public class SonarAnalyzer {
         sonarScanner.execute();
 
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
-        GithubApiClient.deleteRepository(project);
+
+        sonarApiClient.fetchCommitData(project, commit);
     }
+
 
     /**
      * Builds SonarQube properties based on the project information and adds them to the scanner.
@@ -52,13 +58,7 @@ public class SonarAnalyzer {
     private void buildProps(Project project) {
        sonarScanner.addProperty("sonar.projectKey", project.getName());
        sonarScanner.addProperty("sonar.sources", "./repos/" + project.getName());
-
-       for (Language language : project.getLanguages()) {
-           if (language.is("Java")) {
-               sonarScanner.addProperty("sonar.java.binaries", "./repos/" + project.getName());
-           } else if (language.is("C") || language.is("C++")) {
-               sonarScanner.addProperty("sonar.cxx.file.suffixes", ".cc,.cpp,.cxx,.c++,.hh,.hpp,.hxx,.h++,.c,.h");
-           }
-       }
+       sonarScanner.addProperty("sonar.java.binaries", "./repos/" + project.getName());
+       sonarScanner.addProperty("sonar.cxx.file.suffixes", ".cc,.cpp,.cxx,.c++,.hh,.hpp,.hxx,.h++,.c,.h");
     }
 }
