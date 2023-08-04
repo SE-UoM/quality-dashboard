@@ -14,8 +14,8 @@ import java.io.IOException;
 @Service
 public class DeveloperService {
 
-    private GithubApiClient githubApiClient = new GithubApiClient();
-    private DeveloperRepository developerRepository;
+    private final GithubApiClient githubApiClient = new GithubApiClient();
+    private final DeveloperRepository developerRepository;
 
     @Autowired
     public DeveloperService(DeveloperRepository developerRepository) {

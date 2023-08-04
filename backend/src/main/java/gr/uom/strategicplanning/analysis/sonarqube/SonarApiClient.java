@@ -55,8 +55,7 @@ public class SonarApiClient extends HttpClient {
         JSONObject issues = this.fetchIssues(project, EMPTY_PARAM);
         Number effortInMins = (Number) issues.get("effortTotal");
 
-        //TODO: Populate Code Smells Object
-        JSONObject codeSmellsJsonObject = this.fetchIssues(project, "CODE_SMELL");
+        JSONObject codeSmellsJsonObject = fetchCodeSmells(project);
         Integer totalCodeSmells = codeSmellsJsonObject.getInt("total");
 
         commit.setTotalFiles(totalFiles);
@@ -73,6 +72,9 @@ public class SonarApiClient extends HttpClient {
         System.out.println("Project: " + System.lineSeparator() + project);
     }
 
+    public JSONObject fetchCodeSmells(Project project) throws IOException {
+        return this.fetchIssues(project, "CODE_SMELL");
+    }
 
     /**
      * Fetches a specific component metric for the given project from the SonarQube API.

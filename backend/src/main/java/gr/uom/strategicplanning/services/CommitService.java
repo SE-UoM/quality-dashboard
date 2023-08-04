@@ -13,6 +13,7 @@ import java.io.IOException;
 public class CommitService {
     private CommitRepository commitRepository;
     private DeveloperService developerService;
+    private CodeSmellService codeSmellService;
     private GithubApiClient githubApiClient = new GithubApiClient();
 
     @Autowired
@@ -24,6 +25,7 @@ public class CommitService {
     public void populateCommit(Commit commit, Project project) throws IOException {
         commit.setCommitDate(githubApiClient.fetchCommitDate(project, commit));
         commit.setDeveloper(developerService.populateDeveloperData(project, commit));
+        commit.setCodeSmells(codeSmellService.populateCodeSmells(project, commit));
         commitRepository.save(commit);
     }
 }
