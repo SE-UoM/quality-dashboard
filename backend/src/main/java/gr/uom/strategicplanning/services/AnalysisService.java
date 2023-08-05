@@ -2,10 +2,8 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalyzer;
-import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
-import org.eclipse.egit.github.core.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +12,10 @@ import java.util.List;
 
 @Service
 public class AnalysisService {
-    private SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
-    private GithubApiClient githubApiClient = new GithubApiClient();
-    private CommitService commitService;
+    private final SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
+    private final GithubApiClient githubApiClient = new GithubApiClient();
+    private final CommitService commitService;
+    private final ProjectService projectService = new ProjectService();
 
     @Autowired
     public AnalysisService(CommitService commitService) {
@@ -39,6 +38,8 @@ public class AnalysisService {
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
         }
+
+        projectService.populateProject(project);
 
         GithubApiClient.deleteRepository(project);
 
