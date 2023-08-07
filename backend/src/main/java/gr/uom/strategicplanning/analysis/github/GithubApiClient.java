@@ -5,7 +5,9 @@ import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.repositories.LanguageRepository;
 import gr.uom.strategicplanning.services.DeveloperService;
+import gr.uom.strategicplanning.services.LanguageService;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -27,10 +29,14 @@ import java.util.*;
  */
 public class GithubApiClient extends HttpClient {
     public RepositoryService repoService = new RepositoryService();
+    public LanguageService languageService;
     public CommitService commitService = new CommitService();
     public Repository repository = new Repository();
-    
-            /**
+
+    public GithubApiClient() {
+    }
+
+    /**
              * Fetches project data from the GitHub API and populates the provided Project object with the retrieved information.
              *
              * @param project the Project object to populate with project data
@@ -53,8 +59,7 @@ public class GithubApiClient extends HttpClient {
 
     private Collection<Language> extractLanguages(Project project) {
         Collection<Language> listLanguages = new ArrayList<>();
-//        Collection<Language> allLanguages = languageRepository.findAll();
-        Collection<Language> allLanguages = new ArrayList<>();
+
         String[] split = project.getRepoUrl().split("/");
         String owner = split[split.length - 2];
         String name = split[split.length - 1];
@@ -65,19 +70,26 @@ public class GithubApiClient extends HttpClient {
         Map<String, Integer> map = response.getBody();
 
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            for (Language language : allLanguages) {
-                if (!language.getName().equals(entry.getKey())) {
-                    Language newLanguage = new Language();
-                    language.setName(entry.getKey());
-                    listLanguages.add(newLanguage);
-                } else {
-                    listLanguages.add(language);
-                }
+            String languageName = entry.getKey();
+
+            // Check if the language with the same name already exists in the database
+            Language existingLanguage = languageService.getLanguageByName(languageName);
+
+            if (existingLanguage == null) {
+                // If language doesn't exist, create a new instance and save it to the database
+                Language newLanguage = new Language();
+                newLanguage.setName(languageName);
+                languageService.saveLanguage(newLanguage); // Make sure to implement this method
+                listLanguages.add(newLanguage);
+            } else {
+                // If language exists, reuse the existing instance
+                listLanguages.add(existingLanguage);
             }
         }
 
         return listLanguages;
     }
+
 
 
     /**

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/analysis")
 public class AnalysisController {
@@ -27,17 +30,19 @@ public class AnalysisController {
 
     @PostMapping("/start")
     public void startAnalysis(@RequestParam("github_url") String githubUrl) throws Exception {
+        Project project = new Project();
+        Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
 
-        Project project = projectRepository.findByRepoUrl(githubUrl);
-        if (project == null) {
-            project = new Project();
+        if (projectOptional.isEmpty())
             project.setRepoUrl(githubUrl);
-        }
+        else
+            project = projectOptional.get();
+
 
         analysisService.fetchGithubData(project);
 
         projectService.saveProject(project);
-            
+
         if (project.canBeAnalyzed())
             analysisService.startAnalysis(project);
         else

@@ -5,7 +5,6 @@ import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
-import gr.uom.strategicplanning.services.CommitService;
 
 /**
  * A utility class for analyzing projects with SonarQube.
