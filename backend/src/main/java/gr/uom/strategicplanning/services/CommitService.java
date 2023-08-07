@@ -17,9 +17,10 @@ public class CommitService {
     private GithubApiClient githubApiClient = new GithubApiClient();
 
     @Autowired
-    public CommitService(DeveloperService developerService, CommitRepository commitRepository) {
+    public CommitService(DeveloperService developerService, CommitRepository commitRepository, CodeSmellService codeSmellService) {
         this.developerService = developerService;
         this.commitRepository = commitRepository;
+        this.codeSmellService = codeSmellService;
     }
 
     public void populateCommit(Commit commit, Project project) throws IOException {
