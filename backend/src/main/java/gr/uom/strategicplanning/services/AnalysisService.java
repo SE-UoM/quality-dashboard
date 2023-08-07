@@ -43,7 +43,6 @@ public class AnalysisService {
         }
 
         projectService.populateProject(project);
-        projectService.saveProject(project);
 
         GithubApiClient.deleteRepository(project);
 

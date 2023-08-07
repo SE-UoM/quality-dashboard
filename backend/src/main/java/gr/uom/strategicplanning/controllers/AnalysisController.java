@@ -39,12 +39,14 @@ public class AnalysisController {
             project = projectOptional.get();
         
         analysisService.fetchGithubData(project);
-
-        projectService.saveProject(project);
-
-        if (project.canBeAnalyzed())
+        
+        if (project.canBeAnalyzed()) {
             analysisService.startAnalysis(project);
-        else
+        }
+        else {
             project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+
+        }
+        projectService.saveProject(project);
     }
 }

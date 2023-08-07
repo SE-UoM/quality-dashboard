@@ -46,7 +46,6 @@ public class SonarApiClient extends HttpClient {
     public void fetchCommitData(Project project, Commit commit) throws IOException {
         this.loginToSonar();
 
-        // Fetch the data from component metrics
         Integer totalFiles = this.fetchComponentMetrics(project, "files");
         Integer totalLines = this.fetchComponentMetrics(project, "ncloc");
 
@@ -63,11 +62,9 @@ public class SonarApiClient extends HttpClient {
         commit.setLanguages(languageDistribution);
         commit.setTechnicalDebt(effortInMins);
         commit.setTotalCodeSmells(totalCodeSmells);
-        commit.setTechDebtPerLoC(commit.getTechDebtPerLoC());
+        commit.setTechDebtPerLoC(effortInMins.doubleValue() / totalLines.doubleValue());
         commit.setTotalFiles(totalFiles);
         commit.setTotalLanguages(languageDistribution.size());
-
-        project.getCommits().add(commit);
 
         System.out.println("Project: " + System.lineSeparator() + project);
     }
@@ -88,18 +85,15 @@ public class SonarApiClient extends HttpClient {
     private Integer fetchComponentMetrics(Project project, String metricKey) throws IOException {
         String apiUrl = SONARQUBE_URL + "/api/measures/component?metricKeys=" + metricKey + "&component=" + project.getName();
 
-        this.loginToSonar();
+        loginToSonar();
 
-        // Send the GET request
         Response response = this.sendGetRequest(apiUrl);
 
         JSONObject jsonObject = this.convertResponseToJson(response);
 
-        // Get the measures array
         JSONObject component = jsonObject.getJSONObject("component");
         JSONArray measures = component.getJSONArray("measures");
 
-        // Get the metrics map
         Map metrics_map = measures.getJSONObject(ARRAY_INDEX).toMap();
         String value = (String) metrics_map.get("value");
 
@@ -130,7 +124,6 @@ public class SonarApiClient extends HttpClient {
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
     private Collection<Language> fetchLanguages(Project project) throws IOException {
-        // Send the GET request
         Response response = this.sendGetRequest(LANGUAGES_URL + project.getName());
 
         JSONObject jsonObject = this.convertResponseToJson(response);
@@ -138,15 +131,12 @@ public class SonarApiClient extends HttpClient {
         JSONArray measures = component.getJSONArray("measures");
         String value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
 
-        // Regular expression to match language-value pairs
         String regex = "(\\w+)=(\\d+)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
 
-        // Create a list to store the Language objects
         ArrayList<Language> languages = new ArrayList<>();
 
-        // Find all matches using the regex and extract language names and values
         while (matcher.find()) {
             String languageName = matcher.group(1);
             int numericValue = Integer.parseInt(matcher.group(2));

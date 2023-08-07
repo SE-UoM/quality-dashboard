@@ -40,6 +40,7 @@ public class LanguageService {
             if (existingLanguage == null) {
                 Language newLanguage = new Language();
                 newLanguage.setName(languageName);
+                newLanguage.setLinesOfCode(entry.getValue());
                 saveLanguage(newLanguage);
                 listLanguages.add(newLanguage);
             } else {
