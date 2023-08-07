@@ -16,6 +16,8 @@ public class AnalysisService {
     private final GithubApiClient githubApiClient = new GithubApiClient();
     private final CommitService commitService;
     private final ProjectService projectService = new ProjectService();
+    @Autowired
+    private LanguageService languageService;
 
     @Autowired
     public AnalysisService(CommitService commitService) {
@@ -24,6 +26,7 @@ public class AnalysisService {
     
     public void fetchGithubData(Project project) throws Exception {
         githubApiClient.fetchProjectData(project);
+        project.setLanguages(languageService.extractLanguages(project));
     }
 
     public void startAnalysis(Project project) throws Exception {

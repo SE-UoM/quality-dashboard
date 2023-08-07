@@ -54,10 +54,9 @@ public class GithubApiClient extends HttpClient {
         project.setTotalCommits(this.captureTotalCommits());
         project.setForks(this.repository.getForks());
         project.setStars(this.getTotalStars());
-        project.setLanguages(extractLanguages(project));
     }
 
-    private Collection<Language> extractLanguages(Project project) {
+    public Map<String, Integer> languageRespone(Project project) {
         Collection<Language> listLanguages = new ArrayList<>();
 
         String[] split = project.getRepoUrl().split("/");
@@ -67,27 +66,9 @@ public class GithubApiClient extends HttpClient {
         String url2 = "https://api.github.com/repos/" + owner + "/" + name + "/languages";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map> response = restTemplate.getForEntity(url2, Map.class);
-        Map<String, Integer> map = response.getBody();
 
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            String languageName = entry.getKey();
+        return response.getBody();
 
-            // Check if the language with the same name already exists in the database
-            Language existingLanguage = languageService.getLanguageByName(languageName);
-
-            if (existingLanguage == null) {
-                // If language doesn't exist, create a new instance and save it to the database
-                Language newLanguage = new Language();
-                newLanguage.setName(languageName);
-                languageService.saveLanguage(newLanguage); // Make sure to implement this method
-                listLanguages.add(newLanguage);
-            } else {
-                // If language exists, reuse the existing instance
-                listLanguages.add(existingLanguage);
-            }
-        }
-
-        return listLanguages;
     }
 
 

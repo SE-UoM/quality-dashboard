@@ -37,8 +37,7 @@ public class AnalysisController {
             project.setRepoUrl(githubUrl);
         else
             project = projectOptional.get();
-
-
+        
         analysisService.fetchGithubData(project);
 
         projectService.saveProject(project);
