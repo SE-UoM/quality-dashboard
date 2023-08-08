@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -14,16 +15,17 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 @ToString
 public class Language {
-    
     @Id
     @GeneratedValue
     private Long id;
     private String name;
     private String version;
     private String imageUrl;
-    private Number linesOfCode;
+    private Integer linesOfCode;
 
     @ManyToOne
+    @ToString.Exclude
+    @JsonIgnore
     private Project project;
 
     public Language(String name) {

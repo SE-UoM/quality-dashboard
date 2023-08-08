@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -22,6 +23,8 @@ public class Developer {
     private String githubUrl;
     private int totalCommits;
     @ManyToOne
+    @ToString.Exclude
+    @JsonIgnore
     private Project project;
 
 }
