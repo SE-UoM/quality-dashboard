@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Commit {
 
     @Id
@@ -22,15 +24,17 @@ public class Commit {
     private Date commitDate;
     @OneToMany
     private Collection<CodeSmell> codeSmells;
-    private Number technicalDebt;
-    private Number totalFiles;
-    private Number totalLoC;
-    private Number totalCodeSmells;
-    private Number techDebtPerLoC;
+    private double technicalDebt;
+    private int totalFiles;
+    private int totalLoC;
+    private int totalCodeSmells;
+    private double techDebtPerLoC;
     @OneToMany
     private Collection<Language> languages;
     private int totalLanguages;
     @ManyToOne
+    @ToString.Exclude
+    @JsonIgnore
     private Project project;
 
     public void setCodeSmells(Collection<CodeSmell> codeSmells) {
@@ -44,25 +48,6 @@ public class Commit {
     }
 
     public void calculateTechDebtPerLoC() {
-        this.techDebtPerLoC = this.technicalDebt.doubleValue() / this.totalLoC.doubleValue();
-    }
-
-    @Override
-    // Pretty print the Commit object
-    public String toString() {
-        return "Commit{\n" +
-                "id=" + id + "\n" +
-                ", hash='" + hash + '\'' + "\n" +
-                ", developer=" + developer + "\n" +
-                ", commitDate=" + commitDate + "\n" +
-                ", codeSmells=" + codeSmells + "\n" +
-                ", technicalDebt=" + technicalDebt + "\n" +
-                ", totalFiles=" + totalFiles + "\n" +
-                ", totalLoC=" + totalLoC + "\n" +
-                ", totalCodeSmells=" + totalCodeSmells + "\n" +
-                ", techDebtPerLoC=" + techDebtPerLoC + "\n" +
-                ", languages=" + languages + "\n" +
-                ", totalLanguages=" + totalLanguages + "\n" +
-                '}';
+        this.techDebtPerLoC = this.technicalDebt / this.totalLoC;
     }
 }
