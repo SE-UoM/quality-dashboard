@@ -46,27 +46,25 @@ public class SonarApiClient extends HttpClient {
     public void fetchCommitData(Project project, Commit commit) throws IOException {
         this.loginToSonar();
 
-        Integer totalFiles = this.fetchComponentMetrics(project, "files");
-        Integer totalLines = this.fetchComponentMetrics(project, "ncloc");
+        int totalFiles = this.fetchComponentMetrics(project, "files");
+        int totalLines = this.fetchComponentMetrics(project, "ncloc");
 
         Collection<Language> languageDistribution = this.fetchLanguages(project);
 
         JSONObject issues = this.fetchIssues(project, EMPTY_PARAM);
-        Number effortInMins = (Number) issues.get("effortTotal");
+        Double effortInMins = Double.valueOf(issues.get("effortTotal").toString());
 
         JSONObject codeSmellsJsonObject = fetchCodeSmells(project);
-        Integer totalCodeSmells = codeSmellsJsonObject.getInt("total");
+        int totalCodeSmells = codeSmellsJsonObject.getInt("total");
 
         commit.setTotalFiles(totalFiles);
         commit.setTotalLoC(totalLines);
         commit.setLanguages(languageDistribution);
         commit.setTechnicalDebt(effortInMins);
         commit.setTotalCodeSmells(totalCodeSmells);
-        commit.setTechDebtPerLoC(effortInMins.doubleValue() / totalLines.doubleValue());
+        commit.setTechDebtPerLoC(effortInMins/ totalLines);
         commit.setTotalFiles(totalFiles);
         commit.setTotalLanguages(languageDistribution.size());
-
-        System.out.println("Project: " + System.lineSeparator() + project);
     }
 
     public JSONObject fetchCodeSmells(Project project) throws IOException {
@@ -82,7 +80,7 @@ public class SonarApiClient extends HttpClient {
      * @return The value of the requested metric as an Integer.
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
-    private Integer fetchComponentMetrics(Project project, String metricKey) throws IOException {
+    private int fetchComponentMetrics(Project project, String metricKey) throws IOException {
         String apiUrl = SONARQUBE_URL + "/api/measures/component?metricKeys=" + metricKey + "&component=" + project.getName();
 
         loginToSonar();
