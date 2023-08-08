@@ -9,12 +9,12 @@ public class ProjectStatsService {
     public ProjectStats populateProjectStats(Project project) {
         ProjectStats projectStats = new ProjectStats();
         project.getCommits().forEach((commit -> {
-            projectStats.setTotalLoC(projectStats.getTotalLoC().doubleValue() + commit.getTotalLoC().doubleValue());
-            projectStats.setTotalFiles(projectStats.getTotalFiles().doubleValue() + commit.getTotalFiles().doubleValue());
-            projectStats.setTotalCodeSmells(projectStats.getTotalCodeSmells().doubleValue() + commit.getTotalCodeSmells().doubleValue());
-            projectStats.setTechDebt(projectStats.getTechDebt().doubleValue() + commit.getTechnicalDebt().doubleValue());
-            projectStats.setTechDebtPerLoC(projectStats.getTechDebtPerLoC().doubleValue() + commit.getTechDebtPerLoC().doubleValue());
-            projectStats.setTotalLanguages(projectStats.getTotalLanguages().doubleValue() + commit.getLanguages().size());
+            projectStats.setTotalLoC(projectStats.getTotalLoC() + commit.getTotalLoC());
+            projectStats.setTotalFiles(projectStats.getTotalFiles() + commit.getTotalFiles());
+            projectStats.setTotalCodeSmells(projectStats.getTotalCodeSmells() + commit.getTotalCodeSmells());
+            projectStats.setTechDebt((int) (projectStats.getTechDebt() + commit.getTechnicalDebt()));
+            projectStats.setTechDebtPerLoC(projectStats.getTechDebtPerLoC() + commit.getTechDebtPerLoC());
+            projectStats.setTotalLanguages(projectStats.getTotalLanguages() + commit.getLanguages().size());
         }));
 
         return projectStats;
