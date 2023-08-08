@@ -7,10 +7,7 @@ import gr.uom.strategicplanning.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LanguageService {
@@ -21,7 +18,7 @@ public class LanguageService {
     public LanguageService(LanguageRepository languageRepository) {
         this.languageRepository = languageRepository;
     }
-    public Language getLanguageByName(String languageName) {
+    public Optional<Language> getLanguageByName(String languageName) {
         return languageRepository.findByName(languageName);
     }
 
@@ -35,7 +32,8 @@ public class LanguageService {
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             String languageName = entry.getKey();
 
-            Language existingLanguage = getLanguageByName(languageName);
+            Optional<Language> foundLanguage = getLanguageByName(languageName);
+            Language existingLanguage = foundLanguage.orElse(null);
 
             if (existingLanguage == null) {
                 Language newLanguage = new Language();
