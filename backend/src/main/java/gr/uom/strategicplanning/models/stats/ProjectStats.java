@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.stats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.uom.strategicplanning.models.domain.Project;
 import lombok.*;
 
@@ -17,18 +18,19 @@ public class ProjectStats {
     @Id
     @GeneratedValue
     private Long id;
-    private Number totalLoC;
-    private Number totalFiles;
-    private Number totalCodeSmells;
-    private Number techDebt;
-    private Number techDebtPerLoC;
-    private Number totalLanguages;
+    private int totalLoC;
+    private int totalFiles;
+    private int totalCodeSmells;
+    private int techDebt;
+    private double techDebtPerLoC;
+    private int totalLanguages;
 
     @OneToOne
     @ToString.Exclude
+    @JsonIgnore
     private Project project;
 
     public void calculateTechDebtPerLoC() {
-        this.techDebtPerLoC = this.techDebt.doubleValue() / this.totalLoC.doubleValue();
+        this.techDebtPerLoC = this.techDebt/ this.totalLoC;
     }
 }
