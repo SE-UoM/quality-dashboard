@@ -38,7 +38,7 @@ public class AnalysisController {
         else
             project = projectOptional.get();
         
-        analysisService.fetchGithubData(project);
+        //analysisService.fetchGithubData(project);
         
         if (project.canBeAnalyzed()) {
             analysisService.startAnalysis(project);

@@ -16,8 +16,8 @@ public class SonarAnalyzer {
     /**
      * Constructs a new SonarAnalyzer instance.
      */
-    public SonarAnalyzer() {
-        this.sonarScanner = new SonarScanner("dashboard-scanner", "1.0");
+    public SonarAnalyzer(String name) {
+        this.sonarScanner = new SonarScanner(name, "1.0");
     }
 
     /**
@@ -38,10 +38,10 @@ public class SonarAnalyzer {
         project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
 
         sonarScanner.execute();
-
+        sonarApiClient.fetchCommitData(project, commit);
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
 
-        sonarApiClient.fetchCommitData(project, commit);
+
     }
 
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class AnalysisService {
-    private final SonarAnalyzer sonarAnalyzer = new SonarAnalyzer();
+    private SonarAnalyzer sonarAnalyzer;
     private final GithubApiClient githubApiClient = new GithubApiClient();
     private final CommitService commitService;
     private final ProjectService projectService = new ProjectService();
@@ -33,10 +33,15 @@ public class AnalysisService {
         GithubApiClient.cloneRepository(project);
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
+
+
         for (String commitSHA : commitList) {
             githubApiClient.checkoutCommit(project, commitSHA);
             Commit commit = new Commit();
             commit.setHash(commitSHA);
+
+            sonarAnalyzer = new SonarAnalyzer(commitSHA);
+
             sonarAnalyzer.analyzeProject(project, commit);
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
