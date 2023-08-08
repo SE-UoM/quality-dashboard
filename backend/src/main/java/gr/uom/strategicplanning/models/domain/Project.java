@@ -6,10 +6,7 @@ import gr.uom.strategicplanning.models.stats.ProjectStats;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter @Setter
@@ -40,7 +37,7 @@ public class Project {
 
     @OneToOne(mappedBy = "project")
     private ProjectStats projectStats;
-
+    
     public boolean canBeAnalyzed() {
         if (this.totalCommits >= OrganizationAnalysis.COMMITS_THRESHOLD) {
             this.status = ProjectStatus.ANALYSIS_TO_BE_REVIEWED;
