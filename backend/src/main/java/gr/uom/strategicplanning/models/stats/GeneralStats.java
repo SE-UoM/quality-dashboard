@@ -1,15 +1,13 @@
 package gr.uom.strategicplanning.models.stats;
 
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Language;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 
@@ -33,5 +31,7 @@ public class GeneralStats {
     private int totalFiles;
     private int totalLinesOfCode;
     private int totalDevs;
+    @OneToOne
+    private OrganizationAnalysis organizationAnalysis;
 
 }

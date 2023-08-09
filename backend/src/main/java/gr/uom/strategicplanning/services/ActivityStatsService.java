@@ -4,6 +4,7 @@ import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.repositories.ActivityStatsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,13 +14,14 @@ public class ActivityStatsService {
 
     private ActivityStatsRepository activityStatsRepository;
 
+    @Autowired
     public ActivityStatsService(ActivityStatsRepository activityStatsRepository) {
         this.activityStatsRepository = activityStatsRepository;
     }
 
     public ActivityStats getActivityStats(Organization organization) {
         ActivityStats activityStats = new ActivityStats();
-        Optional<ActivityStats> activityStatsOptional = activityStatsRepository.findByOrganization(organization);
+        Optional<ActivityStats> activityStatsOptional = activityStatsRepository.findByOrganizationAnalysis(organization.getOrganizationAnalysis());
         if (activityStatsOptional.isPresent()) {
             activityStats = activityStatsOptional.get();
         }

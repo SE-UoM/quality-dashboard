@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.TechDebtStatsRepository;
 import org.aspectj.bridge.ICommand;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,13 +17,14 @@ public class TechDebtStatsService {
 
     private TechDebtStatsRepository techDebtStatsRepository;
 
+    @Autowired
     public TechDebtStatsService(TechDebtStatsRepository techDebtStatsRepository) {
         this.techDebtStatsRepository = techDebtStatsRepository;
     }
 
     public TechDebtStats getTechDebtStats(Organization organization) {
         TechDebtStats techDebtStats = new TechDebtStats();
-        Optional<TechDebtStats> techDebtStatsOptional = techDebtStatsRepository.findByOrganization(organization);
+        Optional<TechDebtStats> techDebtStatsOptional = techDebtStatsRepository.findByOrganizationAnalysis(organization.getOrganizationAnalysis());
 
         if (techDebtStatsOptional.isPresent()) {
             techDebtStats = techDebtStatsOptional.get();

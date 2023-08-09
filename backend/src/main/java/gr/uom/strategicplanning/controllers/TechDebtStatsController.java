@@ -45,7 +45,6 @@ public class TechDebtStatsController {
             existingTechDebtStats.setProjectWithMinTechDebt(updatedTechDebtStats.getProjectWithMinTechDebt());
             existingTechDebtStats.setProjectWithMaxTechDebt(updatedTechDebtStats.getProjectWithMaxTechDebt());
             existingTechDebtStats.setAverageTechDebtPerLoC(updatedTechDebtStats.getAverageTechDebtPerLoC());
-            existingTechDebtStats.setMinDebtLanguage(updatedTechDebtStats.getMinDebtLanguage());
             existingTechDebtStats.setBestTechDebtProjects(updatedTechDebtStats.getBestTechDebtProjects());
             existingTechDebtStats.setBestCodeSmellProjects(updatedTechDebtStats.getBestCodeSmellProjects());
             existingTechDebtStats.setTotalCodeSmells(updatedTechDebtStats.getTotalCodeSmells());

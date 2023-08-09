@@ -22,7 +22,7 @@ public class GeneralStatsService {
 
     public GeneralStats getGeneralStats(Organization organization) {
         GeneralStats generalStats = new GeneralStats();
-        Optional<GeneralStats> generalStatsOptional = generalStatsRepository.findByOrganization(organization);
+        Optional<GeneralStats> generalStatsOptional = generalStatsRepository.findByOrganizationAnalysis(organization.getOrganizationAnalysis());
 
         if (generalStatsOptional.isPresent()) {
             generalStats = generalStatsOptional.get();

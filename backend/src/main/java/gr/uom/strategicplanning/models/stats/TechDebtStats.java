@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.stats;
 
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.CodeSmell;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
@@ -35,5 +36,7 @@ public class TechDebtStats {
     private int totalCodeSmells;
     @OneToMany
     private Collection<CodeSmell> codeSmells;
+    @OneToOne
+    private OrganizationAnalysis organizationAnalysis;
 
 }
