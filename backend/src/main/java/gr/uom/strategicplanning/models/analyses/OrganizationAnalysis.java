@@ -1,5 +1,9 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.analyses;
 
+import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.stats.ActivityStats;
+import gr.uom.strategicplanning.models.stats.GeneralStats;
+import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +19,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class OrganizationAnalysis {
     public static final int COMMITS_THRESHOLD = 50;
-
 
     @Id
     @GeneratedValue

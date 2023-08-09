@@ -3,9 +3,12 @@ package gr.uom.strategicplanning.analysis;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * The HttpClient class provides utility methods for making HTTP requests and parsing JSON responses.
@@ -35,4 +38,24 @@ public abstract class HttpClient {
         return response;
     }
 
+    public Response sentPostAuthRequest(String url) throws IOException {
+        client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create(null, new byte[0]))
+                .build();
+
+        Response response = client
+                .newCall(request)
+                .execute();
+
+        return response;
+    }
+
+    public JSONObject convertResponseToJson(Response response) throws IOException {
+        Map<String, Object> jsonMap = this.gson.fromJson(response.body().string(), Map.class);
+        JSONObject jsonObject = new JSONObject(jsonMap);
+        return jsonObject;
+    }
 }

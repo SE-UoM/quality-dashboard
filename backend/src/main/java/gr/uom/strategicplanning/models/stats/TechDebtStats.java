@@ -1,5 +1,8 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.stats;
 
+import gr.uom.strategicplanning.models.domain.CodeSmell;
+import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.Project;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +10,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Getter

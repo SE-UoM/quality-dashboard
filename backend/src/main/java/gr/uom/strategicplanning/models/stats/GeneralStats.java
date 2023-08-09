@@ -1,5 +1,6 @@
-package gr.uom.strategicplanning.models;
+package gr.uom.strategicplanning.models.stats;
 
+import gr.uom.strategicplanning.models.domain.Language;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
