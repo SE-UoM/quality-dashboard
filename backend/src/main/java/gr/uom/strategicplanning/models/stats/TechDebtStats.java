@@ -28,8 +28,6 @@ public class TechDebtStats {
     @OneToOne
     private Project ProjectWithMaxTechDebt;
     private float averageTechDebtPerLoC;
-    @OneToOne
-    private Language minDebtLanguage;
     @OneToMany
     private Collection<Project> bestTechDebtProjects;
     @OneToMany
