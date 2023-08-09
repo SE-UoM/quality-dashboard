@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,13 @@ public class LanguageService {
 
         return listLanguages;
 
+    }
+
+    public List<Language> getLanguages(Organization organization) {
+        List<Language> languages = new ArrayList<>();
+        for (Project project : organization.getProjects()) {
+            languages.addAll(project.getLanguages());
+        }
+        return languages;
     }
 }

@@ -32,4 +32,8 @@ public class Organization {
     public void addUser(User user){
         users.add(user);
     }
+
+    public void addProject(Project project) {
+        projects.add(project);
+    }
 }

@@ -51,4 +51,12 @@ public class UserService {
         admin.setOrganization(organization);
         organizationRepository.save(organization);
     }
+
+    public User getUserByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if(userOptional.isPresent()){
+            return userOptional.get();
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+    }
 }
