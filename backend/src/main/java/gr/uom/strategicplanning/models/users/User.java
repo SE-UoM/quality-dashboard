@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.uom.strategicplanning.models.domain.Organization;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class User {
     private String roles;
     private boolean verified;
     @ManyToOne
+    @JsonIgnore
     private Organization organization;
 
     public User(String name, String email, String password) {
