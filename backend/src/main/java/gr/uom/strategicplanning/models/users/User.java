@@ -26,7 +26,6 @@ public class User {
     private String roles;
     private boolean verified;
     @ManyToOne
-    @JsonIgnore
     private Organization organization;
 
     public User(String name, String email, String password) {

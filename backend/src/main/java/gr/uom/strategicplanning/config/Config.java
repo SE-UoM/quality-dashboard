@@ -29,12 +29,11 @@ public class Config {
     private String superuserName;
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository userRepository, UserService userService, UserPrivilegedService userPrivilegedService
-    , OrganizationRepository organizationRepository){
+    CommandLineRunner commandLineRunner(UserRepository userRepository, UserService userService, UserPrivilegedService userPrivilegedService, OrganizationRepository organizationRepository){
         return args -> {
-            Optional<Organization> organization = organizationRepository.findByName("University of Macedonia");
+            Optional<Organization> organization = organizationRepository.findByName(superuserOrganization);
             if (!organization.isPresent()) {
-                Optional<User> userOptional = userRepository.findByEmail("admin@uom.gr");
+                Optional<User> userOptional = userRepository.findByEmail(superuserEmail);
                 if(!userOptional.isPresent()){
                     User admin = new User(superuserName, superuserEmail, superuserPassword);
                     userService.createOrganization(superuserOrganization, admin);
@@ -43,8 +42,6 @@ public class Config {
                     userPrivilegedService.givePrivilegeToUser(superuserEmail);
                 }
             }
-
-
         };
     }
 }

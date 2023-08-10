@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,20 +21,28 @@ public class UserResponse {
         private Long id;
         private String name;
         private String email;
-        private String password;
         private String roles;
         private boolean verified;
-        private String organization;
+        private String organizationName;
+        private Long organizationId;
 
     public UserResponse(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
-        this.password = user.getPassword();
         this.roles = user.getRoles();
         this.verified = user.isVerified();
         if(user.getOrganization() != null){
-            this.organization = user.getOrganization().getName();
+            this.organizationName = user.getOrganization().getName();
+            this.organizationId = user.getOrganization().getId();
         }
+    }
+
+    public static List<UserResponse> convertToUserResponseList(List<User> users) {
+        List<UserResponse> userResponses = new java.util.ArrayList<>();
+        for (User user : users) {
+            userResponses.add(new UserResponse(user));
+        }
+        return userResponses;
     }
 }

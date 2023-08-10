@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.models.stats;
 
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.LanguageStats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,9 @@ public class GeneralStats {
     private int totalProjects;
     private int totalLanguages;
     @ManyToMany
-    private List<Language> languages;
+    private List<LanguageStats> languages;
     @ManyToMany
-    private Map <Integer, Language> topLanguages;
+    private Map <Integer, LanguageStats> topLanguages;
     private int totalCommits;
     private int totalFiles;
     private int totalLinesOfCode;

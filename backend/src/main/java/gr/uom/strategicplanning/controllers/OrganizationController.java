@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
+import gr.uom.strategicplanning.controllers.responses.OrganizationResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,12 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Organization> getOrganizationById(@PathVariable Long id) {
+    public ResponseEntity<OrganizationResponse> getOrganizationById(@PathVariable Long id) {
         Optional<Organization> organizationOptional = organizationRepository.findById(id);
-        return organizationOptional.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        Organization organization = organizationOptional.orElseThrow( () -> new RuntimeException("Organization not found"));
+
+        OrganizationResponse organizationResponse = new OrganizationResponse(organization);
+        return ResponseEntity.ok(organizationResponse);
     }
 
     @PostMapping

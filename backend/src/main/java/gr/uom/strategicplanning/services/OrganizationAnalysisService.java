@@ -48,7 +48,6 @@ public class OrganizationAnalysisService {
         organizationAnalysis.setTechDebtStats(getTechDebtStats(organization));
 
         organizationAnalysisRepository.save(organizationAnalysis);
-
     }
 
     private TechDebtStats getTechDebtStats(Organization organization) {

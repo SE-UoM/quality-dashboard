@@ -41,7 +41,6 @@ public class LanguageController {
         if (languageOptional.isPresent()) {
             Language existingLanguage = languageOptional.get();
             existingLanguage.setName(updatedLanguage.getName());
-            existingLanguage.setVersion(updatedLanguage.getVersion());
             existingLanguage.setImageUrl(updatedLanguage.getImageUrl());
             Language savedLanguage = (Language) languageRepository.save(existingLanguage);
             return ResponseEntity.ok(savedLanguage);

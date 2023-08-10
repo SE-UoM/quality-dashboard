@@ -29,12 +29,11 @@ public class Project {
     private int totalDevelopers;
     private int totalCommits;
     @OneToMany(mappedBy = "project")
-    private Collection<Language> languages = new ArrayList<>();
+    private Collection<LanguageStats> languages = new ArrayList<>();
     private int totalLanguages;
     @OneToMany(mappedBy = "project")
     private Set<Developer> developers = new HashSet<>();
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
-
     @OneToOne(mappedBy = "project")
     private ProjectStats projectStats;
     
