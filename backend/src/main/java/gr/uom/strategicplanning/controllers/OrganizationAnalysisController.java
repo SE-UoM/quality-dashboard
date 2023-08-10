@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
+import gr.uom.strategicplanning.controllers.responses.OrganizationAnalysisResponse;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.repositories.OrganizationAnalysisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/organization-analysis")
@@ -19,21 +21,26 @@ public class OrganizationAnalysisController {
 
 
     @GetMapping
-    public ResponseEntity<List<OrganizationAnalysis>> getAllOrganizationAnalysis() {
+    public ResponseEntity<List<OrganizationAnalysisResponse>> getAllOrganizationAnalysis() {
         List<OrganizationAnalysis> organizationAnalyses = organizationAnalysisRepository.findAll();
-        return ResponseEntity.ok(organizationAnalyses);
+        List<OrganizationAnalysisResponse> organizationAnalysisResponses = organizationAnalyses.stream()
+                .map(OrganizationAnalysisResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(organizationAnalysisResponses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrganizationAnalysis> getOrganizationAnalysisById(@PathVariable Long id) {
+    public ResponseEntity<OrganizationAnalysisResponse> getOrganizationAnalysisById(@PathVariable Long id) {
         Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findById(id);
-        return organizationAnalysisOptional.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return organizationAnalysisOptional.map(organizationAnalysisResponse -> ResponseEntity.ok(new OrganizationAnalysisResponse(organizationAnalysisResponse)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<OrganizationAnalysis> createOrganizationAnalysis(@RequestBody OrganizationAnalysis organizationAnalysis) {
-        OrganizationAnalysis createdOrganizationAnalysis = (OrganizationAnalysis) organizationAnalysisRepository.save(organizationAnalysis);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrganizationAnalysis);
+    public ResponseEntity<OrganizationAnalysisResponse> createOrganizationAnalysis(@RequestBody OrganizationAnalysis organizationAnalysis) {
+        OrganizationAnalysis createdOrganizationAnalysis = organizationAnalysisRepository.save(organizationAnalysis);
+        OrganizationAnalysisResponse organizationAnalysisResponse = new OrganizationAnalysisResponse(createdOrganizationAnalysis);
+        return ResponseEntity.status(HttpStatus.CREATED).body(organizationAnalysisResponse);
     }
 
     @PutMapping("/{id}")

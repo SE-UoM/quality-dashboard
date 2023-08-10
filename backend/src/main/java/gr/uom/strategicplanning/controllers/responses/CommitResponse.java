@@ -1,8 +1,6 @@
 package gr.uom.strategicplanning.controllers.responses;
 
-import gr.uom.strategicplanning.models.domain.CodeSmell;
-import gr.uom.strategicplanning.models.domain.Developer;
-import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,11 +28,11 @@ public class CommitResponse {
     private int totalLoC;
     private int totalCodeSmells;
     private double techDebtPerLoC;
-    private Collection<Language> languages;
+    private Collection<LanguageStats> languages;
     private int totalLanguages;
     private Long projectId;
 
-    public CommitResponse(CommitResponse commit) {
+    public CommitResponse(Commit commit) {
         this.id = commit.getId();
         this.hash = commit.getHash();
         this.developer = commit.getDeveloper();
@@ -47,6 +45,6 @@ public class CommitResponse {
         this.techDebtPerLoC = commit.getTechDebtPerLoC();
         this.languages = commit.getLanguages();
         this.totalLanguages = commit.getTotalLanguages();
-        this.projectId = commit.getProjectId();
+        this.projectId = commit.getProject().getId();
     }
 }

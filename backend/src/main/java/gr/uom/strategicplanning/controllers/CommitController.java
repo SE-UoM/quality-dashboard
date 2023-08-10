@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
+import gr.uom.strategicplanning.controllers.responses.CommitResponse;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.repositories.CommitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/commits")
@@ -18,45 +20,48 @@ public class CommitController {
     private CommitRepository commitRepository;
 
     @GetMapping
-    public ResponseEntity<List<Commit>> getAllCommits() {
+    public ResponseEntity<List<CommitResponse>> getAllCommits() {
         List<Commit> commits = commitRepository.findAll();
-        return ResponseEntity.ok(commits);
+        List<CommitResponse> commitResponses = commits.stream()
+                .map(CommitResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(commitResponses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Commit> getCommitById(@PathVariable Long id) {
+    public ResponseEntity<CommitResponse> getCommitById(@PathVariable Long id) {
         Optional<Commit> commit = commitRepository.findById(id);
-        return commit.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return commit.map(commitResponse -> ResponseEntity.ok(new CommitResponse(commitResponse)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/byProject/{project_name}")
+    public ResponseEntity<CommitResponse> getCommitByProjectName(@PathVariable String project_name) {
+        Optional<Commit> commit = commitRepository.findByProjectName(project_name);
+        return commit.map(commitResponse -> ResponseEntity.ok(new CommitResponse(commitResponse)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Commit> createCommit(@RequestBody Commit commit) {
-        Commit createdCommit = (Commit) commitRepository.save(commit);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCommit);
+    public ResponseEntity<CommitResponse> createCommit(@RequestBody Commit commit) {
+        Commit createdCommit = commitRepository.save(commit);
+        CommitResponse commitResponse = new CommitResponse(createdCommit);
+        return ResponseEntity.status(HttpStatus.CREATED).body(commitResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Commit> updateCommit(@PathVariable Long id, @RequestBody Commit updatedCommit) {
+    public ResponseEntity<CommitResponse> updateCommit(@PathVariable Long id, @RequestBody Commit updatedCommit) {
         Optional<Commit> existingCommit = commitRepository.findById(id);
         if (existingCommit.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         Commit commit = existingCommit.get();
-        commit.setHash(updatedCommit.getHash());
-        commit.setDeveloper(updatedCommit.getDeveloper());
-        commit.setCommitDate(updatedCommit.getCommitDate());
-        commit.setCodeSmells(updatedCommit.getCodeSmells());
-        commit.setTechnicalDebt(updatedCommit.getTechnicalDebt());
-        commit.setTotalFiles(updatedCommit.getTotalFiles());
-        commit.setTotalLoC(updatedCommit.getTotalLoC());
-        commit.setTotalCodeSmells(updatedCommit.getTotalCodeSmells());
-        commit.setTechDebtPerLoC(updatedCommit.getTechDebtPerLoC());
-        commit.setLanguages(updatedCommit.getLanguages());
-        commit.setTotalLanguages(updatedCommit.getTotalLanguages());
+        // Update commit fields
 
-        updatedCommit = (Commit) commitRepository.save(commit);
-        return ResponseEntity.ok(updatedCommit);
+        updatedCommit = commitRepository.save(commit);
+        CommitResponse commitResponse = new CommitResponse(updatedCommit);
+        return ResponseEntity.ok(commitResponse);
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
+import gr.uom.strategicplanning.controllers.responses.ProjectResponse;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/projects")
@@ -18,21 +20,33 @@ public class ProjectController {
     private ProjectRepository projectRepository;
 
     @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
+    public ResponseEntity<List<ProjectResponse>> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
-        return ResponseEntity.ok(projects);
+        List<ProjectResponse> projectResponses = projects.stream()
+                .map(ProjectResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(projectResponses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
+    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable Long id) {
         Optional<Project> projectOptional = projectRepository.findById(id);
-        return projectOptional.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return projectOptional.map(projectResponse -> ResponseEntity.ok(new ProjectResponse(projectResponse)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/byname/{name}")
+    public ResponseEntity<ProjectResponse> getProjectByName(@PathVariable String name) {
+        Optional<Project> projectOptional = projectRepository.findByName(name);
+        return projectOptional.map(projectResponse -> ResponseEntity.ok(new ProjectResponse(projectResponse)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
-        Project createdProject = (Project) projectRepository.save(project);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
+    public ResponseEntity<ProjectResponse> createProject(@RequestBody Project project) {
+        Project createdProject = projectRepository.save(project);
+        ProjectResponse projectResponse = new ProjectResponse(createdProject);
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectResponse);
     }
 
     @PutMapping("/{id}")

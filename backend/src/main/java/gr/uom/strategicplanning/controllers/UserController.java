@@ -49,6 +49,13 @@ public class UserController {
         return userResponses;
     }
 
+    @GetMapping("/{id}")
+    UserResponse getUserById(@PathVariable Long id){
+        User user = userService.getUserById(id);
+        UserResponse userResponse = new UserResponse(user);
+        return userResponse;
+    }
+
     @GetMapping("/token/refresh")
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
