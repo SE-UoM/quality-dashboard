@@ -22,7 +22,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @PostMapping
+    @PostMapping("/register")
     User createUser(@RequestBody User user){
         return userService.createUser(user);
     }

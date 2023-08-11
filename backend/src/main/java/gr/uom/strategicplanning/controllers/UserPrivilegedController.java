@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class UserPrivilegedController {
 
     @Autowired

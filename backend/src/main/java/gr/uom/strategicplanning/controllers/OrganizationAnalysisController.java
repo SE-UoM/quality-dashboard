@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/organization-analysis")
+@RequestMapping("/api/organization-analysis")
 public class OrganizationAnalysisController {
 
     @Autowired
@@ -35,41 +35,5 @@ public class OrganizationAnalysisController {
         return organizationAnalysisOptional.map(organizationAnalysisResponse -> ResponseEntity.ok(new OrganizationAnalysisResponse(organizationAnalysisResponse)))
                 .orElse(ResponseEntity.notFound().build());
     }
-
-    @PostMapping
-    public ResponseEntity<OrganizationAnalysisResponse> createOrganizationAnalysis(@RequestBody OrganizationAnalysis organizationAnalysis) {
-        OrganizationAnalysis createdOrganizationAnalysis = organizationAnalysisRepository.save(organizationAnalysis);
-        OrganizationAnalysisResponse organizationAnalysisResponse = new OrganizationAnalysisResponse(createdOrganizationAnalysis);
-        return ResponseEntity.status(HttpStatus.CREATED).body(organizationAnalysisResponse);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<OrganizationAnalysis> updateOrganizationAnalysis(@PathVariable Long id, @RequestBody OrganizationAnalysis updatedOrganizationAnalysis) {
-        Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findById(id);
-        if (organizationAnalysisOptional.isPresent()) {
-            OrganizationAnalysis existingOrganizationAnalysis = organizationAnalysisOptional.get();
-            existingOrganizationAnalysis.setOrgName(updatedOrganizationAnalysis.getOrgName());
-            existingOrganizationAnalysis.setAnalysisDate(updatedOrganizationAnalysis.getAnalysisDate());
-            existingOrganizationAnalysis.setGeneralStats(updatedOrganizationAnalysis.getGeneralStats());
-            existingOrganizationAnalysis.setTechDebtStats(updatedOrganizationAnalysis.getTechDebtStats());
-            existingOrganizationAnalysis.setActivityStats(updatedOrganizationAnalysis.getActivityStats());
-            existingOrganizationAnalysis.setMostStarredProject(updatedOrganizationAnalysis.getMostStarredProject());
-            existingOrganizationAnalysis.setMostForkedProject(updatedOrganizationAnalysis.getMostForkedProject());
-            OrganizationAnalysis savedOrganizationAnalysis = (OrganizationAnalysis) organizationAnalysisRepository.save(existingOrganizationAnalysis);
-            return ResponseEntity.ok(savedOrganizationAnalysis);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrganizationAnalysis(@PathVariable Long id) {
-        Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findById(id);
-        if (organizationAnalysisOptional.isPresent()) {
-            organizationAnalysisRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    
 }
