@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom"
 import HomePage from './pages/HomePage.tsx'
 import { ChakraProvider } from '@chakra-ui/react'
 import Navbar from './components/Navbar.tsx'
@@ -19,15 +17,32 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          {/* Public Routes */}
+          <Route path="/">
+            <Route index element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+
+          </Route>
+
+          {/* Protected Routes */}
+          <Route path="/" element={<RequireAuth />}>
+            <Route path="/register-organisation" element={<RegisterOrganisationPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/admin-panel" element={<AdminPanel />} />
+            <Route path="/submit-project" element={<SubmitProjectPage />} />
+          </Route>
           {/* <Route path="/admin-login" element={<RegisterPage />} /> */}
-          <Route path="/register-organisation" element={<RegisterOrganisationPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/admin-panel" element={<AdminPanel />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/submit-project" element={<SubmitProjectPage />} />
+
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,
 )
+
+
+function RequireAuth() {
+  return (<div>
+    Protected Route
+    <Outlet />
+  </div>)
+}
