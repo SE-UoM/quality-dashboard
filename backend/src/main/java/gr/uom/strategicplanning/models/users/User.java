@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.uom.strategicplanning.models.domain.Organization;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

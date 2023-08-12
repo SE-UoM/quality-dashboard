@@ -34,7 +34,6 @@ public class AnalysisService {
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
 
-
         for (String commitSHA : commitList) {
             githubApiClient.checkoutCommit(project, commitSHA);
             Commit commit = new Commit();

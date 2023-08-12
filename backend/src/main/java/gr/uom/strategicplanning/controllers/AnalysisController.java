@@ -1,16 +1,20 @@
 package gr.uom.strategicplanning.controllers;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
+import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.services.*;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.enums.ProjectStatus;
+import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
-import gr.uom.strategicplanning.services.AnalysisService;
-import gr.uom.strategicplanning.services.ProjectService;
+import gr.uom.strategicplanning.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.html.Option;
 import java.util.Optional;
 
@@ -19,17 +23,29 @@ import java.util.Optional;
 public class AnalysisController {
     private final AnalysisService analysisService;
     private final ProjectRepository projectRepository;
+    private final OrganizationService organizationService;
     private final ProjectService projectService;
+    private final UserService userService;
+    private final OrganizationAnalysisService organizationAnalysisService;
 
     @Autowired
-    public AnalysisController(AnalysisService analysisService, ProjectService projectService, ProjectRepository projectRepository) {
+    public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
+                              UserService userService, ProjectService projectService,
+                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService) {
         this.analysisService = analysisService;
         this.projectService = projectService;
+        this.userService = userService;
+        this.organizationAnalysisService = organizationAnalysisService;
+        this.organizationService = organizationService;
         this.projectRepository = projectRepository;
     }
 
     @PostMapping("/start")
-    public void startAnalysis(@RequestParam("github_url") String githubUrl) throws Exception {
+    public void startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
+        DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
+        String email = decodedJWT.getSubject();
+        User user = userService.getUserByEmail(email);
+
         Project project = new Project();
         Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
 
@@ -37,9 +53,9 @@ public class AnalysisController {
             project.setRepoUrl(githubUrl);
         else
             project = projectOptional.get();
-        
-        //analysisService.fetchGithubData(project);
-        
+
+        analysisService.fetchGithubData(project);
+
         if (project.canBeAnalyzed()) {
             analysisService.startAnalysis(project);
         }
@@ -47,6 +63,11 @@ public class AnalysisController {
             project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
 
         }
-        projectService.saveProject(project);
+
+        Organization organization = user.getOrganization();
+        organization.addProject(project);
+        project.setOrganization(organization);
+        organizationAnalysisService.updateOrganizationAnalysis(organization);
+        organizationService.saveOrganization(organization);
     }
 }

@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.analyses;
 
+import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
@@ -35,4 +36,6 @@ public class OrganizationAnalysis {
     private Project mostStarredProject;
     @OneToOne
     private Project mostForkedProject;
+    @OneToOne
+    private Organization organization;
 }

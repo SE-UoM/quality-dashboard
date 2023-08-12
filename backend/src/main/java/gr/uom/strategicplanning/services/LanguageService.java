@@ -2,6 +2,8 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.LanguageStats;
+import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,12 @@ public class LanguageService {
         languageRepository.save(newLanguage);
     }
 
-    public Collection<Language> extractLanguages(Project project) {
-        List<Language> listLanguages = new ArrayList<>();
+    public Collection<LanguageStats> extractLanguages(Project project) {
+        List<LanguageStats> listLanguages = new ArrayList<>();
         Map<String, Integer> map = githubApiClient.languageRespone(project);
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             String languageName = entry.getKey();
+            LanguageStats languageStats = new LanguageStats();
 
             Optional<Language> foundLanguage = getLanguageByName(languageName);
             Language existingLanguage = foundLanguage.orElse(null);
@@ -38,15 +41,24 @@ public class LanguageService {
             if (existingLanguage == null) {
                 Language newLanguage = new Language();
                 newLanguage.setName(languageName);
-                newLanguage.setLinesOfCode(entry.getValue());
                 saveLanguage(newLanguage);
-                listLanguages.add(newLanguage);
+                languageStats.setLanguage(newLanguage);
             } else {
-                listLanguages.add(existingLanguage);
+                languageStats.setLanguage(existingLanguage);
             }
+            languageStats.setLinesOfCode(entry.getValue());
+            listLanguages.add(languageStats);
         }
 
         return listLanguages;
 
+    }
+
+    public List<LanguageStats> getLanguages(Organization organization) {
+        List<LanguageStats> languages = new ArrayList<>();
+        for (Project project : organization.getProjects()) {
+            languages.addAll(project.getLanguages());
+        }
+        return languages;
     }
 }

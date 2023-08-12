@@ -38,7 +38,9 @@ public class SonarAnalyzer {
         project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
 
         sonarScanner.execute();
+
         sonarApiClient.fetchCommitData(project, commit);
+
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
 
 

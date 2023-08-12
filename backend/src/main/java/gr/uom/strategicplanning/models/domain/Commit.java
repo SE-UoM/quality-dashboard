@@ -30,11 +30,9 @@ public class Commit {
     private int totalCodeSmells;
     private double techDebtPerLoC;
     @OneToMany
-    private Collection<Language> languages;
+    private Collection<LanguageStats> languages;
     private int totalLanguages;
     @ManyToOne
-    @ToString.Exclude
-    @JsonIgnore
     private Project project;
 
     public void setCodeSmells(Collection<CodeSmell> codeSmells) {
@@ -42,7 +40,7 @@ public class Commit {
         this.totalCodeSmells = codeSmells.size();
     }
 
-    public void setLanguages(Collection<Language> languages) {
+    public void setLanguages(Collection<LanguageStats> languages) {
         this.languages = languages;
         this.totalLanguages = languages.size();
     }
