@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class ProjectService {
 
     public void populateProject(Project project) {
         HashSet<Developer> developers = new HashSet<>();
-        ArrayList<Language> languages = new ArrayList<>();
+        ArrayList<LanguageStats> languages = new ArrayList<>();
 
         project.getCommits().forEach(commit -> {
             languages.addAll(commit.getLanguages());

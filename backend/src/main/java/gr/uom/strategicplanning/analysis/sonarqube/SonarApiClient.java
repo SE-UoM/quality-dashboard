@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.json.JSONArray;
@@ -49,7 +50,7 @@ public class SonarApiClient extends HttpClient {
         int totalFiles = this.fetchComponentMetrics(project, "files");
         int totalLines = this.fetchComponentMetrics(project, "ncloc");
 
-        Collection<Language> languageDistribution = this.fetchLanguages(project);
+        Collection<LanguageStats> languageDistribution = this.fetchLanguages(project);
 
         JSONObject issues = this.fetchIssues(project, EMPTY_PARAM);
         Double effortInMins = Double.valueOf(issues.get("effortTotal").toString());
@@ -121,7 +122,7 @@ public class SonarApiClient extends HttpClient {
      * @return A collection of Language objects representing the language distribution.
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
-    private Collection<Language> fetchLanguages(Project project) throws IOException {
+    private Collection<LanguageStats> fetchLanguages(Project project) throws IOException {
         Response response = this.sendGetRequest(LANGUAGES_URL + project.getName());
 
         JSONObject jsonObject = this.convertResponseToJson(response);
@@ -133,17 +134,18 @@ public class SonarApiClient extends HttpClient {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
 
-        ArrayList<Language> languages = new ArrayList<>();
+        ArrayList<LanguageStats> languages = new ArrayList<>();
 
         while (matcher.find()) {
             String languageName = matcher.group(1);
-            int numericValue = Integer.parseInt(matcher.group(2));
+            int loc = Integer.parseInt(matcher.group(2));
 
             Language language = new Language();
             language.setName(languageName);
-            language.setLinesOfCode(numericValue);
-
-            languages.add(language);
+            LanguageStats languageStats = new LanguageStats();
+            languageStats.setLanguage(language);
+            languageStats.setLinesOfCode(loc);
+            languages.add(languageStats);
         }
 
         return languages;

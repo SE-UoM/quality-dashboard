@@ -23,8 +23,6 @@ public class Developer {
     private String githubUrl;
     private int totalCommits;
     @ManyToOne
-    @ToString.Exclude
-    @JsonIgnore
     private Project project;
 
 }
