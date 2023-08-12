@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text, VStack, Divider, chakra, Button } from '@chakra-ui/react';
+import { Box, Text, VStack, Divider, chakra, Button, Flex } from '@chakra-ui/react';
 import { Organization, Project, Developer, mockDeveloper, mockProject } from '../assets/models';
 import { mockOrganization } from '../assets/models';
+import Navbar from '../components/Navbar';
 function OrganizationList({ organization }: { organization: Organization }) {
     return (
+
         <Box bg="gray.100" p={4} mb={4}>
             <Text fontWeight="normal" fontSize="lg" mb={2}>
                 Organization name: {"  "}
@@ -12,12 +14,12 @@ function OrganizationList({ organization }: { organization: Organization }) {
 
             {/* <Text fontWeight="bold" mb={2}>
                 Users:
-            </Text>
-            <ul>
+                </Text>
+                <ul>
                 {organization.users.map((user, index) => (
                     <li key={index}>{user.name}</li>
-                ))}
-            </ul> */}
+                    ))}
+                </ul> */}
 
             <Text fontWeight="bold" mb={2}>
                 Repo URLs:
@@ -30,6 +32,7 @@ function OrganizationList({ organization }: { organization: Organization }) {
         </Box>
     );
 }
+
 
 function DeveloperList({ developers, organisation }: { developers: Developer[], organisation: Organization }) {
     return (
@@ -117,22 +120,28 @@ function AdminPanel() {
     }, []);
 
     return (
-        <Box p={4}>
-            <Text fontSize="xl" fontWeight="bold" mb={4}>
-                Admin Panel
-            </Text>
-            <PendingProjects projects={[mockProject, mockProject]} />
-            {/* these should be separated under a see more page */}
-            {organizations.map((organization) => (
-                <OrganizationList key={organization.name} organization={organization} />
-            ))}
+        <Flex direction={"column"}>
 
-            <VStack align="stretch">
+            <Navbar />
+
+
+            <Box p={4}>
+                <Text fontSize="xl" fontWeight="bold" mb={4}>
+                    Admin Panel
+                </Text>
+                <PendingProjects projects={[mockProject, mockProject]} />
+                {/* these should be separated under a see more page */}
                 {organizations.map((organization) => (
-                    <DeveloperList key={organization.name} developers={[mockDeveloper, mockDeveloper]} organisation={organization} />
+                    <OrganizationList key={organization.name} organization={organization} />
                 ))}
-            </VStack>
-        </Box>
+
+                <VStack align="stretch">
+                    {organizations.map((organization) => (
+                        <DeveloperList key={organization.name} developers={[mockDeveloper, mockDeveloper]} organisation={organization} />
+                    ))}
+                </VStack>
+            </Box>
+        </Flex>
     );
 }
 
