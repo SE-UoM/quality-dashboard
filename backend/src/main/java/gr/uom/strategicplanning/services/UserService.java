@@ -67,4 +67,15 @@ public class UserService {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
     }
+
+    public Optional<List<UserResponse>> getUsersByOrganizationId(Long id) {
+        Optional<Organization> organizationOptional = organizationRepository.findById(id);
+        if(organizationOptional.isPresent()){
+            Organization organization = organizationOptional.get();
+            List<User> users = organization.getUsers();
+            List<UserResponse> userResponses = UserResponse.convertToUserResponseList(users);
+            return Optional.of(userResponses);
+        }
+        return Optional.empty();
+    }
 }

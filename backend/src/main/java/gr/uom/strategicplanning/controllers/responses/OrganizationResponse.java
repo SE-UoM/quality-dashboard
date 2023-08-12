@@ -17,7 +17,6 @@ import java.util.List;
 public class OrganizationResponse {
     private Long id;
     private String organizationName;
-    private List<UserResponse> users;
     private List<ProjectResponse> projects;
     private OrganizationAnalysisResponse organizationAnalysis;
     
@@ -25,7 +24,6 @@ public class OrganizationResponse {
     public OrganizationResponse(Organization organization) {
         this.id = organization.getId();
         this.organizationName = organization.getName();
-        this.users = UserResponse.convertToUserResponseList(organization.getUsers());
         this.projects = ProjectResponse.convertToProjectResponseList(organization.getProjects());
 
         if (organization.getOrganizationAnalysis() != null)
