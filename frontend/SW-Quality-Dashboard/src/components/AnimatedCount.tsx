@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useSpring, animated } from 'react-spring'
 function AnimatedCount({ count }: { count: number }) {
     const [prevValue, setPrevValue] = useState(count);

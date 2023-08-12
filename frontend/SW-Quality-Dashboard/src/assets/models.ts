@@ -113,6 +113,17 @@ export interface Language {
     version: string;
 }
 
+export interface ProjectStats {
+    id: number;
+    totalLoC: number;
+    totalFiles: number;
+    totalCodeSmells: number;
+    techDebt: number;
+    techDebtPerLoC: number;
+    totalLanguages: number;
+}
+
+
 const mockOrganization: Organization = {
     name: "Acme Corp",
     users: [], // Assuming you have the mockUser object defined
@@ -228,6 +239,12 @@ mockProject.developers.add(mockDeveloper);
 
 mockTechDebtStats.codeSmells.push(mockCodeSmell);
 
+export interface LanguageStats {
+    id: number;
+    linesOfCode: number;
+    project: Project;
+    language: Language;
+}
 
 export {
     mockActivityStats, mockCodeSmell, mockCommit, mockDeveloper, mockGeneralStats, mockLanguage, mockOrganization, mockOrganizationAnalysis, mockProject, mockTechDebtStats,

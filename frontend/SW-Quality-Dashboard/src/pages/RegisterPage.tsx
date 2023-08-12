@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Flex, Text, Button, FormControl, FormLabel, Input, FormErrorMessage, Select } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
+import { useGetOrganizationsQuery } from '../features/api/organizationApi';
 
 interface Organization {
     id: string;
@@ -14,7 +15,8 @@ function RegisterPage() {
     const [passwordError, setPasswordError] = useState(false);
     const [organizations, setOrganizations] = useState<Organization[]>([]);
     const [selectedOrganization, setSelectedOrganization] = useState("");
-
+    const { data, error, isLoading } = useGetOrganizationsQuery(null);
+    console.log("data", data)
     useEffect(() => {
         setOrganizations([
             { id: '1', name: 'Organization 1' },

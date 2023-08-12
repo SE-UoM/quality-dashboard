@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { OrganizationResponse } from './responseTypes';
+
 
 export const organizationApiSlice = createApi({
+    reducerPath: "organizationApi",
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api/organization'
     }),
@@ -20,7 +23,7 @@ export const organizationApiSlice = createApi({
 
             invalidatesTags: ['Organization']
         }),
-        getOrganizations: builder.query({
+        getOrganizations: builder.query<OrganizationResponse, null>({
             query: () => ({
                 url: '/',
                 method: 'GET',

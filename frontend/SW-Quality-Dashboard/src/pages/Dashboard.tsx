@@ -1,6 +1,5 @@
-import React from 'react'
 import Navbar from '../components/Navbar'
-import { Box, Flex, Grid, GridItem } from '@chakra-ui/react'
+import { Flex, Grid, GridItem } from '@chakra-ui/react'
 import ShowTotalCommits from '../features/MainDashboard/ShowTotalCommits'
 import ShowTotalFiles from '../features/MainDashboard/ShowTotalFiles'
 import ShowTotalProjects from '../features/MainDashboard/ShowTotalProjects'
