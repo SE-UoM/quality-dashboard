@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.LanguageStats;
@@ -18,6 +19,10 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private AnalysisService analysisService;
+
     private final ProjectStatsService projectStatsService = new ProjectStatsService();
 
     public void populateProject(Project project) {
@@ -39,6 +44,18 @@ public class ProjectService {
     }
 
     public void saveProject(Project project) {
+        projectRepository.save(project);
+    }
+
+    public void authorizeProjectForAnalysis(Long id) throws Exception {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+        project.setStatus(ProjectStatus.ANALYSIS_READY);
+        projectRepository.save(project);
+    }
+
+    public void unauthorizeProjectForAnalysis(Long id) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+        project.setStatus(ProjectStatus.ANALYSIS_SKIPPED);
         projectRepository.save(project);
     }
 }

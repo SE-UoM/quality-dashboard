@@ -9,6 +9,7 @@ import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import gr.uom.strategicplanning.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,7 +42,7 @@ public class AnalysisController {
     }
 
     @PostMapping("/start")
-    public void startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
+    public ResponseEntity<String> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
         DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
         String email = decodedJWT.getSubject();
         User user = userService.getUserByEmail(email);
@@ -61,7 +62,7 @@ public class AnalysisController {
         }
         else {
             project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
-
+            return ResponseEntity.ok("Project has been added to the queue");
         }
 
         Organization organization = user.getOrganization();
@@ -69,5 +70,7 @@ public class AnalysisController {
         project.setOrganization(organization);
         organizationAnalysisService.updateOrganizationAnalysis(organization);
         organizationService.saveOrganization(organization);
+
+        return ResponseEntity.ok("Analysis ended successfully");
     }
 }
