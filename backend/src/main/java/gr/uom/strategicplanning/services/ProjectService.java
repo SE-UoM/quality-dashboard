@@ -50,12 +50,13 @@ public class ProjectService {
     public void authorizeProjectForAnalysis(Long id) throws Exception {
         Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
         project.setStatus(ProjectStatus.ANALYSIS_READY);
-        projectRepository.save(project);
+        analysisService.startAnalysis(project);
+        saveProject(project);
     }
 
     public void unauthorizeProjectForAnalysis(Long id) {
         Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
         project.setStatus(ProjectStatus.ANALYSIS_SKIPPED);
-        projectRepository.save(project);
+        saveProject(project);
     }
 }

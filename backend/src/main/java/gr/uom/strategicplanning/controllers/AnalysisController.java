@@ -46,14 +46,20 @@ public class AnalysisController {
         DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
         String email = decodedJWT.getSubject();
         User user = userService.getUserByEmail(email);
+        Organization organization = user.getOrganization();
 
         Project project = new Project();
         Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
 
-        if (projectOptional.isEmpty())
+        organization.addProject(project);
+        project.setOrganization(organization);
+
+        if (projectOptional.isEmpty()) {
             project.setRepoUrl(githubUrl);
-        else
+        }
+        else {
             project = projectOptional.get();
+        }
 
         analysisService.fetchGithubData(project);
 
@@ -65,9 +71,6 @@ public class AnalysisController {
             return ResponseEntity.ok("Project has been added to the queue");
         }
 
-        Organization organization = user.getOrganization();
-        organization.addProject(project);
-        project.setOrganization(organization);
         organizationAnalysisService.updateOrganizationAnalysis(organization);
         organizationService.saveOrganization(organization);
 
