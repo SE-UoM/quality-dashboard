@@ -5,7 +5,14 @@ import { OrganizationResponse } from './responseTypes';
 export const organizationApiSlice = createApi({
     reducerPath: "organizationApi",
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api/organization'
+        baseUrl: 'http://localhost:8080/api/organizations',
+        prepareHeaders: (headers, { getState }) => {
+            const token = getState().auth.accessToken;
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+            return headers;
+        }
     }),
     tagTypes: ['Organization'],
     endpoints: (builder) => ({

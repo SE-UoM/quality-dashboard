@@ -9,8 +9,8 @@ const authSlice = createSlice({
     },
     reducers: {
         setCredentials: (state, action) => {
-            state.accessToken = action.payload.token;
-            state.refreshToken = action.payload.user;
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
         },
         logOut: (state) => {
             state.accessToken = null;
