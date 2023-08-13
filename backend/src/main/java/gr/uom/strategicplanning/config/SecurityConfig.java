@@ -37,7 +37,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
                         .mvcMatchers("/api","/api-ui","/swagger-ui/**","/api/swagger-config/**",
-                                "/user/token/refresh/**","/user/token/refresh","/api/user/register","/login").permitAll()
+                                "/user/token/refresh/**","/user/token/refresh","/api/user/register","/login",
+                                "/api/organizations").permitAll()
                         .mvcMatchers(HttpMethod.POST,"/api/superuser**").hasAnyAuthority("SUPER_USER")
                         .mvcMatchers(HttpMethod.GET,"/api/superuser/**").hasAnyAuthority("SUPER_USER")
                         .mvcMatchers(HttpMethod.PUT,"/api/superuser/**").hasAnyAuthority("SUPER_USER")
