@@ -5,6 +5,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.Map;
 /**
  * The HttpClient class provides utility methods for making HTTP requests and parsing JSON responses.
  */
+@Getter @Setter
 public abstract class HttpClient {
     private OkHttpClient client = new OkHttpClient();
     protected Gson gson = new Gson();
