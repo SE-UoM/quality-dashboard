@@ -31,12 +31,15 @@ public class CodeSmellService {
 
         for (int i = 0; i < issuesArray.length(); i++) {
             JSONObject issue = issuesArray.getJSONObject(i);
-
             String componentName = issue.getString("component");
-            int line = issue.getInt("line");
+
+            // Extract line info
+            JSONObject lineInfo = issue.getJSONObject("textRange");
+            int line = lineInfo.getInt("startLine");
+
             String severity = issue.getString("severity");
             String message = issue.getString("message"); // Extract message
-            String effortOrDebt = issue.getString("effort"); // Extract effort or debt
+            String effortOrDebt = issue.getString("debt"); // Extract debt
 
             Number effort = extractNumericalPart(effortOrDebt);
 
