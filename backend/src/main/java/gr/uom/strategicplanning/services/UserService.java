@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.controllers.requests.UserRegistrationRequest;
 import gr.uom.strategicplanning.controllers.responses.UserResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.users.User;
@@ -26,17 +27,29 @@ public class UserService {
     OrganizationRepository organizationRepository;
 
     @Autowired
+    OrganizationService organizationService;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
-    public User createUser(User user) {
-        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
-        if(!userOptional.isPresent()){
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles("SIMPLE");
-            user.setVerified(false);
-            return userRepository.save(user);
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Email is used from another user");
+    public User createUser(UserRegistrationRequest registrationRequest) {
+        String email = registrationRequest.getEmail();
+        String password = registrationRequest.getPassword();
+        String name = registrationRequest.getName();
+        Long orgID = registrationRequest.getOrganizationId();
+
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if(userOptional.isPresent()) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The email is already in use");
+
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setName(name);
+        user.setOrganization(organizationService.getOrganizationById(orgID));
+        user.setRoles("SIMPLE");
+
+        return userRepository.save(user);
     }
 
     public List<User> getAllUsers() {
@@ -44,38 +57,41 @@ public class UserService {
     }
 
     @Transactional
-    public void createOrganization(String name, User admin) {
+    public Organization createOrganization(String name, User admin) {
         Organization organization = new Organization();
         organization.setName(name);
         organization.addUser(admin);
         admin.setOrganization(organization);
-        organizationRepository.save(organization);
+        return organizationRepository.save(organization);
     }
 
     public User getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
-        if(userOptional.isPresent()){
-            return userOptional.get();
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        return userOptional.get();
     }
 
     public User getUserById(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
-        if(userOptional.isPresent()){
-            return userOptional.get();
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        return userOptional.get();
     }
 
     public Optional<List<UserResponse>> getUsersByOrganizationId(Long id) {
         Optional<Organization> organizationOptional = organizationRepository.findById(id);
-        if(organizationOptional.isPresent()){
-            Organization organization = organizationOptional.get();
-            List<User> users = organization.getUsers();
-            List<UserResponse> userResponses = UserResponse.convertToUserResponseList(users);
-            return Optional.of(userResponses);
-        }
-        return Optional.empty();
+        boolean organizationNotFound = organizationOptional.isEmpty();
+
+        if(organizationNotFound) return Optional.empty();
+
+        Organization organization = organizationOptional.get();
+        List<User> users = organization.getUsers();
+        List<UserResponse> userResponses = UserResponse.convertToUserResponseList(users);
+        return Optional.of(userResponses);
     }
 }
