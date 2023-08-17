@@ -81,18 +81,16 @@ public class OrganizationAnalysisService {
 
     private Project getMostForkedProject(Organization organization) {
         int maxForks = 0;
+
+        // TODO: This is a bug. If there are two or more projects with the same number of forks, only one will be returned.
+        Project mostForkedProject = null;
         for (Project project : organization.getProjects()) {
-            if (project.getForks() > maxForks) {
+            if (project.getForks() >= maxForks) {
                 maxForks = project.getForks();
+                mostForkedProject = project;
             }
         }
 
-        for (Project project : organization.getProjects()) {
-            if (project.getForks() == maxForks) {
-                return project;
-            }
-        }
-
-        return null;
+        return mostForkedProject;
     }
 }

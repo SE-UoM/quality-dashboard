@@ -63,14 +63,12 @@ public class AnalysisController {
 
         analysisService.fetchGithubData(project);
 
-        if (project.canBeAnalyzed()) {
-            analysisService.startAnalysis(project);
-        }
-        else {
+        if (!project.canBeAnalyzed()) {
             project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
             return ResponseEntity.ok("Project has been added to the queue");
         }
 
+        analysisService.startAnalysis(project);
         organizationAnalysisService.updateOrganizationAnalysis(organization);
         organizationService.saveOrganization(organization);
 

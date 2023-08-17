@@ -65,72 +65,66 @@ public class SuperUserController {
     @PutMapping("/organization/{id}")
     public ResponseEntity<OrganizationResponse> updateOrganization(@PathVariable Long id, @RequestBody Organization updatedOrganization) {
         Optional<Organization> organizationOptional = organizationRepository.findById(id);
-        if (organizationOptional.isPresent()) {
-            Organization existingOrganization = organizationOptional.get();
-            existingOrganization.setName(updatedOrganization.getName());
-            // Set other fields
-            Organization savedOrganization = organizationRepository.save(existingOrganization);
-            OrganizationResponse organizationResponse = new OrganizationResponse(savedOrganization);
-            return ResponseEntity.ok(organizationResponse);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
+        if (organizationOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        Organization existingOrganization = organizationOptional.get();
+        existingOrganization.setName(updatedOrganization.getName());
+
+        Organization savedOrganization = organizationRepository.save(existingOrganization);
+        OrganizationResponse organizationResponse = new OrganizationResponse(savedOrganization);
+        return ResponseEntity.ok(organizationResponse);
     }
 
     @PutMapping("/developer/{id}")
     public ResponseEntity<Developer> updateDeveloper(@PathVariable Long id, @RequestBody Developer updatedDeveloper) {
         Optional<Developer> developerOptional = developerRepository.findById(id);
-        if (developerOptional.isPresent()) {
-            Developer existingDeveloper = developerOptional.get();
-            existingDeveloper.setName(updatedDeveloper.getName());
-            existingDeveloper.setGithubUrl(updatedDeveloper.getGithubUrl());
-            existingDeveloper.setTotalCommits(updatedDeveloper.getTotalCommits());
-            Developer savedDeveloper = (Developer) developerRepository.save(existingDeveloper);
-            return ResponseEntity.ok(savedDeveloper);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
+        if (developerOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        Developer existingDeveloper = developerOptional.get();
+        existingDeveloper.setName(updatedDeveloper.getName());
+        existingDeveloper.setGithubUrl(updatedDeveloper.getGithubUrl());
+        existingDeveloper.setTotalCommits(updatedDeveloper.getTotalCommits());
+        Developer savedDeveloper = (Developer) developerRepository.save(existingDeveloper);
+
+        return ResponseEntity.ok(savedDeveloper);
     }
 
     @PutMapping("/organization-analysis/{id}")
     public ResponseEntity<OrganizationAnalysis> updateOrganizationAnalysis(@PathVariable Long id, @RequestBody OrganizationAnalysis updatedOrganizationAnalysis) {
         Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findById(id);
-        if (organizationAnalysisOptional.isPresent()) {
-            OrganizationAnalysis existingOrganizationAnalysis = organizationAnalysisOptional.get();
-            existingOrganizationAnalysis.setOrgName(updatedOrganizationAnalysis.getOrgName());
-            existingOrganizationAnalysis.setAnalysisDate(updatedOrganizationAnalysis.getAnalysisDate());
-            existingOrganizationAnalysis.setGeneralStats(updatedOrganizationAnalysis.getGeneralStats());
-            existingOrganizationAnalysis.setTechDebtStats(updatedOrganizationAnalysis.getTechDebtStats());
-            existingOrganizationAnalysis.setActivityStats(updatedOrganizationAnalysis.getActivityStats());
-            existingOrganizationAnalysis.setMostStarredProject(updatedOrganizationAnalysis.getMostStarredProject());
-            existingOrganizationAnalysis.setMostForkedProject(updatedOrganizationAnalysis.getMostForkedProject());
-            OrganizationAnalysis savedOrganizationAnalysis = (OrganizationAnalysis) organizationAnalysisRepository.save(existingOrganizationAnalysis);
-            return ResponseEntity.ok(savedOrganizationAnalysis);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        if (organizationAnalysisOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        OrganizationAnalysis existingOrganizationAnalysis = organizationAnalysisOptional.get();
+        existingOrganizationAnalysis.setOrgName(updatedOrganizationAnalysis.getOrgName());
+        existingOrganizationAnalysis.setAnalysisDate(updatedOrganizationAnalysis.getAnalysisDate());
+        existingOrganizationAnalysis.setGeneralStats(updatedOrganizationAnalysis.getGeneralStats());
+        existingOrganizationAnalysis.setTechDebtStats(updatedOrganizationAnalysis.getTechDebtStats());
+        existingOrganizationAnalysis.setActivityStats(updatedOrganizationAnalysis.getActivityStats());
+        existingOrganizationAnalysis.setMostStarredProject(updatedOrganizationAnalysis.getMostStarredProject());
+        existingOrganizationAnalysis.setMostForkedProject(updatedOrganizationAnalysis.getMostForkedProject());
+        OrganizationAnalysis savedOrganizationAnalysis = (OrganizationAnalysis) organizationAnalysisRepository.save(existingOrganizationAnalysis);
+        return ResponseEntity.ok(savedOrganizationAnalysis);
     }
 
     @PutMapping("/language/{id}")
     public ResponseEntity<Language> updateLanguage(@PathVariable Long id, @RequestBody Language updatedLanguage) {
         Optional<Language> languageOptional = languageRepository.findById(id);
-        if (languageOptional.isPresent()) {
-            Language existingLanguage = languageOptional.get();
-            existingLanguage.setName(updatedLanguage.getName());
-            existingLanguage.setImageUrl(updatedLanguage.getImageUrl());
-            Language savedLanguage = (Language) languageRepository.save(existingLanguage);
-            return ResponseEntity.ok(savedLanguage);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        if (languageOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        Language existingLanguage = languageOptional.get();
+        existingLanguage.setName(updatedLanguage.getName());
+        existingLanguage.setImageUrl(updatedLanguage.getImageUrl());
+        Language savedLanguage = languageRepository.save(existingLanguage);
+        return ResponseEntity.ok(savedLanguage);
     }
 
     @PutMapping("/project/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project updatedProject) {
         Optional<Project> projectOptional = projectRepository.findById(id);
 
-        if (projectOptional.isEmpty())
-            return ResponseEntity.notFound().build();
+        if (projectOptional.isEmpty()) return ResponseEntity.notFound().build();
 
         Project existingProject = projectOptional.get();
         existingProject.setRepoUrl(updatedProject.getRepoUrl());
@@ -163,53 +157,43 @@ public class SuperUserController {
     @DeleteMapping("/organization-analysis/{id}")
     public ResponseEntity<Void> deleteOrganizationAnalysis(@PathVariable Long id) {
         Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findById(id);
-        if (organizationAnalysisOptional.isPresent()) {
-            organizationAnalysisRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        if (organizationAnalysisOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        organizationAnalysisRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/language/{id}")
     public ResponseEntity<Void> deleteLanguage(@PathVariable Long id) {
         Optional<Language> languageOptional = languageRepository.findById(id);
-        if (languageOptional.isPresent()) {
-            languageRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        if (languageOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        languageRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/developer/{id}")
     public ResponseEntity<Void> deleteDeveloper(@PathVariable Long id) {
         Optional<Developer> developerOptional = developerRepository.findById(id);
-        if (developerOptional.isPresent()) {
-            developerRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        if (developerOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        developerRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/organization/{id}")
     public ResponseEntity<Void> deleteOrganization(@PathVariable Long id) {
         Optional<Organization> organizationOptional = organizationRepository.findById(id);
-        if (organizationOptional.isPresent()) {
-            organizationRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        if (organizationOptional.isEmpty()) return ResponseEntity.notFound().build();
+
+        organizationRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/commit/{id}")
     public ResponseEntity<Void> deleteCommit(@PathVariable Long id) {
         Optional<Commit> commit = commitRepository.findById(id);
-        if (commit.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (commit.isEmpty()) return ResponseEntity.notFound().build();
 
         commitRepository.delete(commit.get());
         return ResponseEntity.noContent().build();

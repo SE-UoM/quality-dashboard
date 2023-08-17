@@ -47,15 +47,13 @@ public class DeveloperService {
     private Developer findOrCreateDeveloper(String developerName, Project project) {
         Developer existingDeveloper = developerRepository.findByName(developerName);
 
-        if (existingDeveloper != null) {
-            return existingDeveloper;
-        } else {
-            Developer newDeveloper = new Developer();
-            newDeveloper.setName(developerName);
-            newDeveloper.setProject(project);
+        if (existingDeveloper != null) return existingDeveloper;
 
-            developerRepository.save(newDeveloper);
-            return newDeveloper;
-        }
+        Developer newDeveloper = new Developer();
+        newDeveloper.setName(developerName);
+        newDeveloper.setProject(project);
+
+        developerRepository.save(newDeveloper);
+        return newDeveloper;
     }
 }
