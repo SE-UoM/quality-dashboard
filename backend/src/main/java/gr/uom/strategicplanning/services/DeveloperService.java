@@ -7,6 +7,7 @@ import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.DeveloperRepository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,7 +15,9 @@ import java.io.IOException;
 @Service
 public class DeveloperService {
 
-    private final GithubApiClient githubApiClient = new GithubApiClient();
+    @Value("${github.token}")
+    private String githubToken;
+    private final GithubApiClient githubApiClient = new GithubApiClient(githubToken);
     private final DeveloperRepository developerRepository;
 
     @Autowired

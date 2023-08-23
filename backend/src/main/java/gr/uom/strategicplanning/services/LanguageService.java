@@ -7,15 +7,19 @@ import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
 public class LanguageService {
 
+    @Value("${github.token}")
+    private String githubToken;
     private LanguageRepository languageRepository;
-    public GithubApiClient githubApiClient = new GithubApiClient();
+    public GithubApiClient githubApiClient = new GithubApiClient(githubToken);
 
     public LanguageService(LanguageRepository languageRepository) {
         this.languageRepository = languageRepository;
@@ -28,9 +32,9 @@ public class LanguageService {
         languageRepository.save(newLanguage);
     }
 
-    public Collection<LanguageStats> extractLanguages(Project project) {
+    public Collection<LanguageStats> extractLanguages(Project project) throws IOException {
         List<LanguageStats> listLanguages = new ArrayList<>();
-        Map<String, Integer> map = githubApiClient.languageRespone(project);
+        Map<String, Integer> map = githubApiClient.languageResponse(project);
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             String languageName = entry.getKey();
             LanguageStats languageStats = new LanguageStats();
