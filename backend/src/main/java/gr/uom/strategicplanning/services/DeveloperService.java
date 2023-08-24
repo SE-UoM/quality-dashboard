@@ -15,14 +15,13 @@ import java.io.IOException;
 @Service
 public class DeveloperService {
 
-    @Value("${github.token}")
-    private String githubToken;
-    private final GithubApiClient githubApiClient = new GithubApiClient(githubToken);
+    private final GithubApiClient githubApiClient;
     private final DeveloperRepository developerRepository;
 
     @Autowired
-    public DeveloperService(DeveloperRepository developerRepository) {
+    public DeveloperService(DeveloperRepository developerRepository, @Value("${github.token}") String githubToken) {
         this.developerRepository = developerRepository;
+        this.githubApiClient = new GithubApiClient(githubToken);
     }
 
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {

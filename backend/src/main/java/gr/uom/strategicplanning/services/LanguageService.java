@@ -16,13 +16,13 @@ import java.util.*;
 @Service
 public class LanguageService {
 
-    @Value("${github.token}")
-    private String githubToken;
+    private final GithubApiClient githubApiClient;
     private LanguageRepository languageRepository;
-    public GithubApiClient githubApiClient = new GithubApiClient(githubToken);
 
-    public LanguageService(LanguageRepository languageRepository) {
+    @Autowired
+    public LanguageService(LanguageRepository languageRepository, @Value("${github.token}") String githubToken) {
         this.languageRepository = languageRepository;
+        this.githubApiClient = new GithubApiClient(githubToken);
     }
     public Optional<Language> getLanguageByName(String languageName) {
         return languageRepository.findByName(languageName);

@@ -14,18 +14,17 @@ import java.util.List;
 
 @Service
 public class AnalysisService {
-    @Value("${github.token}")
-    private String githubToken;
     private SonarAnalyzer sonarAnalyzer;
-    private final GithubApiClient githubApiClient = new GithubApiClient(githubToken);
+    private final GithubApiClient githubApiClient;
     private final CommitService commitService;
     private final ProjectService projectService = new ProjectService();
     @Autowired
     private LanguageService languageService;
 
     @Autowired
-    public AnalysisService(CommitService commitService) {
+    public AnalysisService(CommitService commitService, @Value("${github.token}") String githubToken) {
         this.commitService = commitService;
+        this.githubApiClient = new GithubApiClient(githubToken);
     }
     
     public void fetchGithubData(Project project) throws Exception {

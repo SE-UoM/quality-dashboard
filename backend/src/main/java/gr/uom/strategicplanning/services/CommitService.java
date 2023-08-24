@@ -12,18 +12,19 @@ import java.io.IOException;
 
 @Service
 public class CommitService {
-    @Value("${github.token}")
-    private String githubToken;
+
     private CommitRepository commitRepository;
     private DeveloperService developerService;
     private CodeSmellService codeSmellService;
-    private GithubApiClient githubApiClient = new GithubApiClient(githubToken);
+    private GithubApiClient githubApiClient;
 
     @Autowired
-    public CommitService(DeveloperService developerService, CommitRepository commitRepository, CodeSmellService codeSmellService) {
+    public CommitService(DeveloperService developerService, CommitRepository commitRepository, CodeSmellService codeSmellService
+            , @Value("${github.token}") String githubToken) {
         this.developerService = developerService;
         this.commitRepository = commitRepository;
         this.codeSmellService = codeSmellService;
+        this.githubApiClient = new GithubApiClient(githubToken);
     }
 
     public void populateCommit(Commit commit, Project project) throws IOException {
