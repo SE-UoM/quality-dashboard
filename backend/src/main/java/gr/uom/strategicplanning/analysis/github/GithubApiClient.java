@@ -1,39 +1,38 @@
 package gr.uom.strategicplanning.analysis.github;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
-import gr.uom.strategicplanning.repositories.LanguageRepository;
-import gr.uom.strategicplanning.services.DeveloperService;
-import gr.uom.strategicplanning.services.LanguageService;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.service.CommitService;
-import org.eclipse.egit.github.core.service.RepositoryService;
+
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.json.JSONObject;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.*;
 
 /**
  * The GithubApiClient class extends the HttpClient class and provides methods to fetch project data from the GitHub API.
  */
 public class GithubApiClient extends HttpClient {
-    public RepositoryService repoService = new RepositoryService();
-    public LanguageService languageService;
-    public CommitService commitService = new CommitService();
-    public Repository repository = new Repository();
+    private String githubToken;
 
-    public GithubApiClient() {
+    public GithubApiClient(String token) {
+        super();
+        this.githubToken = token;
     }
 
     /**
@@ -48,30 +47,45 @@ public class GithubApiClient extends HttpClient {
         String username = extractUsername(project.getRepoUrl());
         String repoName = extractRepoName(project.getRepoUrl());
 
-        this.repository = repoService.getRepository(username, repoName);
-
         project.setName(repoName);
-        project.setTotalCommits(this.captureTotalCommits());
-        project.setForks(this.repository.getForks());
-        project.setStars(this.getTotalStars());
+        project.setTotalCommits(captureTotalCommits(username, repoName));
+        project.setForks(getTotalForks(username, repoName));
+        project.setStars(this.getTotalStars(username, repoName));
     }
 
-    public Map<String, Integer> languageRespone(Project project) {
-        Collection<Language> listLanguages = new ArrayList<>();
-
+    public Map<String, Integer> languageResponse(Project project) throws IOException {
         String[] split = project.getRepoUrl().split("/");
         String owner = split[split.length - 2];
         String name = split[split.length - 1];
 
-        String url2 = "https://api.github.com/repos/" + owner + "/" + name + "/languages";
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Map> response = restTemplate.getForEntity(url2, Map.class);
+        String url = "https://api.github.com/repos/" + owner + "/" + name + "/languages";
 
-        return response.getBody();
+        Response response = sendGithubRequest(url);
 
+        if (response.isSuccessful()) {
+            Map<String, Object> jsonMap = gson.fromJson(response.body().string(), Map.class);
+            Map<String, Integer> languageMap = new HashMap<>();
+
+            for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
+                languageMap.put(entry.getKey(), ((Number) entry.getValue()).intValue());
+            }
+
+            return languageMap;
+        } else {
+            throw new IOException("Failed to fetch language response from GitHub API");
+        }
     }
 
+    private Response sendGithubRequest(String url) throws IOException {
+        OkHttpClient client = new OkHttpClient();
 
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Bearer " + githubToken)
+                .build();
+
+        return client.newCall(request).execute();
+    }
 
     /**
      * Retrieves the number of stargazers for a GitHub repository.
@@ -80,39 +94,31 @@ public class GithubApiClient extends HttpClient {
      * @throws Exception if an error occurs during the API request
      */
 
-    public int getTotalStars() throws IOException {
-        String repoName = this.repository.getName();
-        String username = this.repository.getOwner().getLogin();
-
+    public int getTotalStars(String username, String repoName) throws IOException {
         String url = String.format("https://api.github.com/repos/%s/%s", username, repoName);
-        Response response = this.sendGetRequest(url);
+        Response response = sendGithubRequest(url);
 
-        // Convert response to JSONObject
-        Map<String, Object> jsonMap = this.gson.fromJson(response.body().string(), Map.class);
-        JSONObject jsonObject = new JSONObject(jsonMap);
-
-        // Get total stars
-        Number starsFloat = jsonObject.getNumber("stargazers_count");
-
-        return starsFloat.intValue();
+        if (response.isSuccessful()) {
+            Map<String, Object> jsonMap = gson.fromJson(response.body().string(), Map.class);
+            Number starsFloat = (Number) jsonMap.get("stargazers_count");
+            return starsFloat != null ? starsFloat.intValue() : 0;
+        } else {
+            throw new IOException("Failed to fetch total stars from GitHub API");
+        }
     }
 
-    /**
-     * Entry point of the GithubApiClient class for testing.
-     *
-     * @param args command-line arguments
-     * @throws Exception if an error occurs during the API request
-     */
+    public int getTotalForks(String username, String repoName) throws IOException {
+        String url = String.format("https://api.github.com/repos/%s/%s", username, repoName);
+        Response response = sendGithubRequest(url);
 
-    public static void main(String[] args) throws Exception {
-
-        Project project1 = new Project();
-        project1.setRepoUrl("https://github.com/StanGirard/quivr");
-
-        GithubApiClient githubApiClient = new GithubApiClient();
-        githubApiClient.fetchProjectData(project1);
+        if (response.isSuccessful()) {
+            Map<String, Object> jsonMap = gson.fromJson(response.body().string(), Map.class);
+            Number forksFloat = (Number) jsonMap.get("forks_count");
+            return forksFloat != null ? forksFloat.intValue() : 0;
+        } else {
+            throw new IOException("Failed to fetch total forks from GitHub API");
+        }
     }
-
     /**
      * Extracts the username from a GitHub repository URL.
      *
@@ -141,8 +147,16 @@ public class GithubApiClient extends HttpClient {
      * @return the total number of commits for the repository
      * @throws Exception if an error occurs during the API request
      */
-    private int captureTotalCommits() throws Exception {
-        return this.commitService.getCommits(repository).size();
+    private int captureTotalCommits(String username, String repoName) throws IOException {
+        String url = String.format("https://api.github.com/repos/%s/%s/commits", username, repoName);
+        Response response = sendGithubRequest(url);
+
+        if (response.isSuccessful()) {
+            List<Map<String, Object>> commitsList = gson.fromJson(response.body().string(), List.class);
+            return commitsList.size();
+        } else {
+            throw new IOException("Failed to fetch commits from GitHub API");
+        }
     }
 
     /**

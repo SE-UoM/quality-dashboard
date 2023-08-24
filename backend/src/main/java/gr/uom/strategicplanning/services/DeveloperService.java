@@ -7,6 +7,7 @@ import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.DeveloperRepository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,12 +15,13 @@ import java.io.IOException;
 @Service
 public class DeveloperService {
 
-    private final GithubApiClient githubApiClient = new GithubApiClient();
+    private final GithubApiClient githubApiClient;
     private final DeveloperRepository developerRepository;
 
     @Autowired
-    public DeveloperService(DeveloperRepository developerRepository) {
+    public DeveloperService(DeveloperRepository developerRepository, @Value("${github.token}") String githubToken) {
         this.developerRepository = developerRepository;
+        this.githubApiClient = new GithubApiClient(githubToken);
     }
 
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {
@@ -28,21 +30,19 @@ public class DeveloperService {
         Developer developer = findOrCreateDeveloper(developerName, project);
 
         developer.setTotalCommits(developer.getTotalCommits() + 1);
-
-        String githubUsername = developerName;
-        String githubUrl = generateGithubUrl(githubUsername);
-        developer.setGithubUrl(githubUrl);
-        developer.setName(githubUsername);
+        developer.setGithubUrl(project.getRepoUrl());
+        developer.setName(developerName);
 
         project.addDeveloper(developer);
+        saveDeveloper(developer);
 
         return developer;
     }
 
-    private String generateGithubUrl(String githubUsername) {
-        return "https://github.com/" + githubUsername;
-
+    private void saveDeveloper(Developer developer) {
+        developerRepository.save(developer);
     }
+
 
     private Developer findOrCreateDeveloper(String developerName, Project project) {
         Developer existingDeveloper = developerRepository.findByName(developerName);
