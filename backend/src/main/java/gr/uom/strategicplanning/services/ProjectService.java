@@ -41,6 +41,7 @@ public class ProjectService {
         project.setTotalLanguages(languages.size());
 
         project.setProjectStats(projectStatsService.populateProjectStats(project));
+        saveProject(project);
     }
 
     public void saveProject(Project project) {

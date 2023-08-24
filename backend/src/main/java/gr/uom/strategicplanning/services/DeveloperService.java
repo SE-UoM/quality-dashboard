@@ -30,21 +30,19 @@ public class DeveloperService {
         Developer developer = findOrCreateDeveloper(developerName, project);
 
         developer.setTotalCommits(developer.getTotalCommits() + 1);
-
-        String githubUsername = developerName;
-        String githubUrl = generateGithubUrl(githubUsername);
-        developer.setGithubUrl(githubUrl);
-        developer.setName(githubUsername);
+        developer.setGithubUrl(project.getRepoUrl());
+        developer.setName(developerName);
 
         project.addDeveloper(developer);
+        saveDeveloper(developer);
 
         return developer;
     }
 
-    private String generateGithubUrl(String githubUsername) {
-        return "https://github.com/" + githubUsername;
-
+    private void saveDeveloper(Developer developer) {
+        developerRepository.save(developer);
     }
+
 
     private Developer findOrCreateDeveloper(String developerName, Project project) {
         Developer existingDeveloper = developerRepository.findByName(developerName);

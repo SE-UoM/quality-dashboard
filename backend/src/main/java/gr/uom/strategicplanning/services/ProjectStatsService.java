@@ -2,10 +2,16 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
+import gr.uom.strategicplanning.repositories.ProjectStatsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProjectStatsService {
+
+    @Autowired
+    private ProjectStatsRepository projectStatsRepository;
+
     public ProjectStats populateProjectStats(Project project) {
         ProjectStats projectStats = new ProjectStats();
         project.getCommits().forEach((commit -> {
@@ -17,6 +23,12 @@ public class ProjectStatsService {
             projectStats.setTotalLanguages(projectStats.getTotalLanguages() + commit.getLanguages().size());
         }));
 
+        saveProjectStats(projectStats);
+
         return projectStats;
+    }
+
+    private void saveProjectStats(ProjectStats projectStats) {
+        projectStatsRepository.save(projectStats);
     }
 }

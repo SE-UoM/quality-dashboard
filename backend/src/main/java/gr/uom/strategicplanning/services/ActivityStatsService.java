@@ -45,6 +45,14 @@ public class ActivityStatsService {
 
         activityStats.setProjectsAddedPerDay(allProjects - activityStats.getProjectsAddedPerDay());
 
+        activityStats.setOrganizationAnalysis(organization.getOrganizationAnalysis());
+
+        saveActivityStats(activityStats);
+
         return activityStats;
+    }
+
+    private void saveActivityStats(ActivityStats activityStats) {
+        activityStatsRepository.save(activityStats);
     }
 }

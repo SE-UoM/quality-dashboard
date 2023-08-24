@@ -31,6 +31,10 @@ public class CommitService {
         commit.setCommitDate(githubApiClient.fetchCommitDate(project, commit));
         commit.setDeveloper(developerService.populateDeveloperData(project, commit));
         commit.setCodeSmells(codeSmellService.populateCodeSmells(project, commit));
-        // commitRepository.save(commit);
+        saveCommit(commit);
+    }
+
+    private void saveCommit(Commit commit) {
+        commitRepository.save(commit);
     }
 }

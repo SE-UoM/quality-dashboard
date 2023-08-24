@@ -82,8 +82,15 @@ public class TechDebtStatsService {
         techDebtStats.setTotalCodeSmells(techDebtStats.getCodeSmells().size());
         techDebtStats.setBestCodeSmellProjects(bestCodeSmellProjects);
 
+        techDebtStats.setOrganizationAnalysis(organization.getOrganizationAnalysis());
+
+        saveTechDebtStats(techDebtStats);
 
         return techDebtStats;
+    }
+
+    private void saveTechDebtStats(TechDebtStats techDebtStats) {
+        techDebtStatsRepository.save(techDebtStats);
     }
 
 }
