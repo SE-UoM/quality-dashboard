@@ -14,8 +14,8 @@ QualityDashboard serves as a visualization tool to help Organizations track and 
 
 <hr/>
 <div>
-  <img style="height:10em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
+  <img style="height:7em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
   <img style="height:10em; width:auto;" src="https://sde.uom.gr/wp-content/uploads/2016/10/sde-banner.png"/>
-  <img style="height:10em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
+  <img style="height:7em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
 </div>
 <hr/>
