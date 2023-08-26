@@ -29,6 +29,22 @@ public class SecurityConfig {
     @Autowired
     JpaUserDetailsService jpaUserDetailsService;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/api",
+            "/api-ui",
+
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/api/swagger-config/**",
+            "/v3/api-docs",
+
+            "/user/token/refresh/**",
+            "/user/token/refresh",
+            "/api/user/register",
+            "/login",
+            "/api/organizations"
+    };
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -36,9 +52,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(auth -> auth
-                        .mvcMatchers("/api","/api-ui","/swagger-ui/**","/api/swagger-config/**",
-                                "/user/token/refresh/**","/user/token/refresh","/api/user/register","/login",
-                                "/api/organizations").permitAll()
+                        .mvcMatchers(AUTH_WHITELIST).permitAll()
                         .mvcMatchers(HttpMethod.POST,"/api/superuser**").hasAnyAuthority("SUPER_USER")
                         .mvcMatchers(HttpMethod.GET,"/api/superuser/**").hasAnyAuthority("SUPER_USER")
                         .mvcMatchers(HttpMethod.PUT,"/api/superuser/**").hasAnyAuthority("SUPER_USER")
@@ -48,7 +62,8 @@ public class SecurityConfig {
                         .mvcMatchers(HttpMethod.GET,"/api/admin/**").hasAnyAuthority("PRIVILEGED")
                         .mvcMatchers(HttpMethod.PUT,"/api/admin/**").hasAnyAuthority("PRIVILEGED")
                         .mvcMatchers(HttpMethod.DELETE,"/api/admin/**").hasAnyAuthority("PRIVILEGED")
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
                 .userDetailsService(jpaUserDetailsService)
                 .addFilter(new CustomAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))))
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
