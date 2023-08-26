@@ -42,14 +42,16 @@ public class UserService {
         Long orgID = registrationRequest.getOrganizationId();
 
         Optional<User> userOptional = userRepository.findByEmail(email);
+        Optional<Organization> organizationOptional = organizationRepository.findById(orgID);
 
         if(userOptional.isPresent()) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The email is already in use");
+        if(organizationOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization not found");
 
         User user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setName(name);
-        user.setOrganization(organizationService.getOrganizationById(orgID));
+        user.setOrganization(organizationOptional.get());
         user.setRoles("SIMPLE");
 
         return userRepository.save(user);
