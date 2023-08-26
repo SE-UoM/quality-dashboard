@@ -3,12 +3,16 @@ package gr.uom.strategicplanning.services;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalyzer;
 import gr.uom.strategicplanning.models.domain.Commit;
+import gr.uom.strategicplanning.models.domain.Developer;
+import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.domain.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -17,13 +21,14 @@ public class AnalysisService {
     private SonarAnalyzer sonarAnalyzer;
     private final GithubApiClient githubApiClient;
     private final CommitService commitService;
-    private final ProjectService projectService = new ProjectService();
+    private final ProjectService projectService;
     @Autowired
     private LanguageService languageService;
 
     @Autowired
-    public AnalysisService(CommitService commitService, @Value("${github.token}") String githubToken) {
+    public AnalysisService(CommitService commitService, @Value("${github.token}") String githubToken, ProjectService projectService) {
         this.commitService = commitService;
+        this.projectService = projectService;
         this.githubApiClient = new GithubApiClient(githubToken);
     }
     
@@ -54,4 +59,6 @@ public class AnalysisService {
         GithubApiClient.deleteRepository(project);
 
     }
+
+
 }

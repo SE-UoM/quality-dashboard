@@ -60,12 +60,13 @@ public class SonarApiClient extends HttpClient {
 
         commit.setTotalFiles(totalFiles);
         commit.setTotalLoC(totalLines);
-        commit.setLanguages(languageDistribution);
+//        commit.setLanguages(languageDistribution);
         commit.setTechnicalDebt(effortInMins);
         commit.setTotalCodeSmells(totalCodeSmells);
         commit.setTechDebtPerLoC(effortInMins/ totalLines);
         commit.setTotalFiles(totalFiles);
         commit.setTotalLanguages(languageDistribution.size());
+
     }
 
     public JSONObject fetchCodeSmells(Project project) throws IOException {

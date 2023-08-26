@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectStatsService {
 
-    @Autowired
     private ProjectStatsRepository projectStatsRepository;
+
+    @Autowired
+    public ProjectStatsService(ProjectStatsRepository projectStatsRepository) {
+        this.projectStatsRepository = projectStatsRepository;
+    }
 
     public ProjectStats populateProjectStats(Project project) {
         ProjectStats projectStats = new ProjectStats();
@@ -20,7 +24,7 @@ public class ProjectStatsService {
             projectStats.setTotalCodeSmells(projectStats.getTotalCodeSmells() + commit.getTotalCodeSmells());
             projectStats.setTechDebt((int) (projectStats.getTechDebt() + commit.getTechnicalDebt()));
             projectStats.setTechDebtPerLoC(projectStats.getTechDebtPerLoC() + commit.getTechDebtPerLoC());
-            projectStats.setTotalLanguages(projectStats.getTotalLanguages() + commit.getLanguages().size());
+//            projectStats.setTotalLanguages(projectStats.getTotalLanguages() + commit.getLanguages().size());
         }));
 
         saveProjectStats(projectStats);

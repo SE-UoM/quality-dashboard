@@ -9,28 +9,26 @@ import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProjectService {
 
-    @Autowired
     private ProjectRepository projectRepository;
+    private ProjectStatsService projectStatsService;
 
     @Autowired
-    private AnalysisService analysisService;
-
-    private final ProjectStatsService projectStatsService = new ProjectStatsService();
+    public ProjectService(ProjectRepository projectRepository, ProjectStatsService projectStatsService) {
+        this.projectStatsService = projectStatsService;
+        this.projectRepository = projectRepository;
+    }
 
     public void populateProject(Project project) {
         HashSet<Developer> developers = new HashSet<>();
         ArrayList<LanguageStats> languages = new ArrayList<>();
 
         project.getCommits().forEach(commit -> {
-            languages.addAll(commit.getLanguages());
+//            languages.addAll(commit.getLanguages());
             developers.add(commit.getDeveloper());
         });
 
@@ -51,8 +49,6 @@ public class ProjectService {
     public void authorizeProjectForAnalysis(Long id) throws Exception {
         Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
         project.setStatus(ProjectStatus.ANALYSIS_READY);
-        analysisService.startAnalysis(project);
-        saveProject(project);
     }
 
     public void unauthorizeProjectForAnalysis(Long id) {

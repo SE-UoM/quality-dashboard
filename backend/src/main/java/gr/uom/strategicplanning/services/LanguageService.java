@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
+import gr.uom.strategicplanning.repositories.LanguageStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,13 @@ public class LanguageService {
 
     private final GithubApiClient githubApiClient;
     private LanguageRepository languageRepository;
+    private LanguageStatsRepository languageStatsRepository;
 
     @Autowired
-    public LanguageService(LanguageRepository languageRepository, @Value("${github.token}") String githubToken) {
+    public LanguageService(LanguageRepository languageRepository, @Value("${github.token}") String githubToken, LanguageStatsRepository languageStatsRepository) {
         this.languageRepository = languageRepository;
         this.githubApiClient = new GithubApiClient(githubToken);
+        this.languageStatsRepository = languageStatsRepository;
     }
     public Optional<Language> getLanguageByName(String languageName) {
         return languageRepository.findByName(languageName);
@@ -52,10 +55,15 @@ public class LanguageService {
             }
             languageStats.setLinesOfCode(entry.getValue());
             listLanguages.add(languageStats);
+            saveLanguagesStats(languageStats);
         }
 
         return listLanguages;
 
+    }
+
+    private void saveLanguagesStats(LanguageStats languageStats) {
+        languageStatsRepository.save(languageStats);
     }
 
     public List<LanguageStats> getLanguages(Organization organization) {
