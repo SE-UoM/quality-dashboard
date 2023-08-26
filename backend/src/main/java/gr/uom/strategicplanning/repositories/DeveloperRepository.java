@@ -5,7 +5,9 @@ import gr.uom.strategicplanning.models.domain.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface DeveloperRepository extends JpaRepository<Developer, Long> {
-    Developer findByName(String developerName);
+    Optional<Developer> findByName(String developerName);
 }

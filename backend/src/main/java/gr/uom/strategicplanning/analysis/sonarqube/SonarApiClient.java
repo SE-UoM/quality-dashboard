@@ -27,7 +27,7 @@ public class SonarApiClient extends HttpClient {
     private Response loginResponse;
     public static final String SONARQUBE_URL = "http://localhost:9000";
     public static final String LOGIN_USERNAME = "admin";
-    public static final String LOGIN_PASSWORD = "admin1";
+    public static final String LOGIN_PASSWORD = "admin123";
 
     public final String SONARQUBE_AUTH_URL = SONARQUBE_URL + "/api/authentication/login" +
             "?login=" + LOGIN_USERNAME + "&password=" + LOGIN_PASSWORD;

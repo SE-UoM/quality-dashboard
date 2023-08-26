@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class DeveloperService {
@@ -45,15 +47,16 @@ public class DeveloperService {
 
 
     private Developer findOrCreateDeveloper(String developerName, Project project) {
-        Developer existingDeveloper = developerRepository.findByName(developerName);
+        Optional<Developer> developerOptional = developerRepository.findByName(developerName);
 
-        if (existingDeveloper != null) return existingDeveloper;
-
-        Developer newDeveloper = new Developer();
-        newDeveloper.setName(developerName);
-        newDeveloper.setProject(project);
-
-        developerRepository.save(newDeveloper);
-        return newDeveloper;
+        if (developerOptional.isEmpty()) {
+            Developer developer = new Developer();
+            developer.setName(developerName);
+            developer.setGithubUrl(project.getRepoUrl());
+            return developer;
+        }
+        else {
+            return developerOptional.get();
+        }
     }
 }
