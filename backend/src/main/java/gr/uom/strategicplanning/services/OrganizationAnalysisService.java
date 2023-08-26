@@ -8,6 +8,7 @@ import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.OrganizationAnalysisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,13 +36,13 @@ public class OrganizationAnalysisService {
         Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findByOrganization(organization);
         OrganizationAnalysis organizationAnalysis = new OrganizationAnalysis();
 
-        if (organizationAnalysisOptional.isPresent()) {
+        if (organizationAnalysisOptional.isPresent())
             organizationAnalysis = organizationAnalysisOptional.get();
-        }
 
         organizationAnalysis.setAnalysisDate(new java.util.Date());
         organizationAnalysis.setOrgName(organization.getName());
         organizationAnalysis.setMostForkedProject(getMostForkedProject(organization));
+
         organizationAnalysis.setMostStarredProject(getMostStarredProject(organization));
         organizationAnalysis.setGeneralStats(getGeneralStats(organization));
         organizationAnalysis.setActivityStats(getActivityStats(organization));
@@ -70,19 +71,17 @@ public class OrganizationAnalysisService {
 
     private Project getMostStarredProject(Organization organization) {
         int maxStars = 0;
+        Project mostStarredProject = null;
+
+        // TODO: This is a bug. If there are two or more projects with the same number of forks, only one will be returned.
         for (Project project : organization.getProjects()) {
             if (project.getStars() > maxStars) {
                 maxStars = project.getStars();
+                mostStarredProject = project;
             }
         }
 
-        for (Project project : organization.getProjects()) {
-            if (project.getStars() == maxStars) {
-                return project;
-            }
-        }
-
-        return null;
+        return mostStarredProject;
     }
 
     private Project getMostForkedProject(Organization organization) {

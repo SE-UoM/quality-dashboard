@@ -53,17 +53,16 @@ public class AnalysisController {
         Organization organization = user.getOrganization();
 
         Project project = new Project();
+        project.setRepoUrl(githubUrl);
+        project.setOrganization(organization);
+
         Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
 
         organization.addProject(project);
-        project.setOrganization(organization);
 
-        if (projectOptional.isEmpty()) {
-            project.setRepoUrl(githubUrl);
-        }
-        else {
-            project = projectOptional.get();
-        }
+
+        if (projectOptional.isPresent()) project = projectOptional.get();
+
 
         analysisService.fetchGithubData(project);
 

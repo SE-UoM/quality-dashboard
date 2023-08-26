@@ -54,14 +54,11 @@ public class DeveloperService {
     private Developer findOrCreateDeveloper(String developerName, Project project) {
         Optional<Developer> developerOptional = developerRepository.findByName(developerName);
 
-        if (developerOptional.isEmpty()) {
-            Developer developer = new Developer();
-            developer.setName(developerName);
-            developer.setGithubUrl(project.getRepoUrl());
-            return developer;
-        }
-        else {
-            return developerOptional.get();
-        }
+        if (developerOptional.isPresent()) return developerOptional.get();
+
+        Developer developer = new Developer();
+        developer.setName(developerName);
+        developer.setGithubUrl(project.getRepoUrl());
+        return developer;
     }
 }

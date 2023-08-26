@@ -31,12 +31,7 @@ public class TechDebtStatsService {
         }
 
         List<Project> projects = organization.getProjects(); // Collect the projects for reuse
-
-        float averageTechDebt = (float) projects.stream()
-                .flatMap(project -> project.getCommits().stream())
-                .mapToDouble(Commit::getTechnicalDebt)
-                .sum() / projects.size();
-
+        float averageTechDebt = calculateAverageTechDebt(projects);
 
         Map<Project, Float> projectTechDebt = projects.stream()
                 .collect(Collectors.toMap(project -> project, project -> (float) project.getProjectStats().getTechDebt()));
@@ -87,6 +82,13 @@ public class TechDebtStatsService {
         saveTechDebtStats(techDebtStats);
 
         return techDebtStats;
+    }
+
+    private float calculateAverageTechDebt(List<Project> projects) {
+        return (float) projects.stream()
+                .flatMap(project -> project.getCommits().stream())
+                .mapToDouble(Commit::getTechnicalDebt)
+                .sum() / projects.size();
     }
 
     private void saveTechDebtStats(TechDebtStats techDebtStats) {
