@@ -35,7 +35,19 @@ public class ProjectService {
         project.setTotalCommits(project.getCommits().size());;
         project.setLanguages(languages);
         project.setDevelopers(developers);
-        project.setTotalDevelopers(developers.size());
+
+        for (Developer dev : developers) {
+            boolean exists = false;
+            for (Developer dev2 : developers) {
+                if (dev.getName().equals(dev2.getName()) && !exists) {
+                    exists = true;
+                }
+            }
+            if (exists) {
+                project.setTotalDevelopers(project.getTotalDevelopers() + 1);
+            }
+        }
+
         project.setTotalLanguages(languages.size());
 
         project.setProjectStats(projectStatsService.populateProjectStats(project));

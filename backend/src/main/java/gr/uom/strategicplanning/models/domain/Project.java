@@ -27,7 +27,7 @@ public class Project {
     private int stars;
     @OneToMany(mappedBy = "project")
     private Collection<Commit> commits = new ArrayList<>();
-    private int totalDevelopers;
+    private int totalDevelopers = 0;
     private int totalCommits;
     @OneToMany(mappedBy = "project")
     private Collection<LanguageStats> languages = new ArrayList<>();
