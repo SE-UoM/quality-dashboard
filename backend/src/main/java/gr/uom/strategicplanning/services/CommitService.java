@@ -32,7 +32,7 @@ public class CommitService {
         this.githubApiClient = new GithubApiClient(githubToken);
     }
 
-    public void populateCommit(Commit commit, Project project) throws IOException {
+    public void populateCommit(Commit commit, Project project) throws IOException, InterruptedException {
         commit.setCommitDate(githubApiClient.fetchCommitDate(project, commit));
         commit.setDeveloper(developerService.populateDeveloperData(project, commit));
         commit.setCodeSmells(codeSmellService.populateCodeSmells(project, commit));

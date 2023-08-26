@@ -44,7 +44,7 @@ public class CommitResponse {
         this.totalCodeSmells = commit.getTotalCodeSmells();
         this.techDebtPerLoC = commit.getTechDebtPerLoC();
 //        this.languages = commit.getLanguages();
-        this.totalLanguages = commit.getTotalLanguages();
+//        this.totalLanguages = commit.getTotalLanguages();
         this.projectId = commit.getProject().getId();
     }
 }

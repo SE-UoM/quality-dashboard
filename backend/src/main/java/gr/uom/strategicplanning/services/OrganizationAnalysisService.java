@@ -46,11 +46,13 @@ public class OrganizationAnalysisService {
         organizationAnalysis.setGeneralStats(getGeneralStats(organization));
         organizationAnalysis.setActivityStats(getActivityStats(organization));
         organizationAnalysis.setTechDebtStats(getTechDebtStats(organization));
+        organizationAnalysis.setOrganization(organization);
+        organization.setOrganizationAnalysis(organizationAnalysis);
 
         saveOrganizationAnalysis(organizationAnalysis);
     }
 
-    private void saveOrganizationAnalysis(OrganizationAnalysis organizationAnalysis) {
+    public void saveOrganizationAnalysis(OrganizationAnalysis organizationAnalysis) {
         organizationAnalysisRepository.save(organizationAnalysis);
     }
 

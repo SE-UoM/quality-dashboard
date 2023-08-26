@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.stats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.LanguageStats;
@@ -33,6 +34,7 @@ public class GeneralStats {
     private int totalLinesOfCode;
     private int totalDevs;
     @OneToOne
+    @JsonIgnore
     private OrganizationAnalysis organizationAnalysis;
 
 }

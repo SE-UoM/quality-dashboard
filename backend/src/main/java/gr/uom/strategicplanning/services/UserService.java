@@ -30,6 +30,9 @@ public class UserService {
     OrganizationService organizationService;
 
     @Autowired
+    OrganizationAnalysisService organizationAnalysisService;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     public User createUser(UserRegistrationRequest registrationRequest) {
@@ -62,6 +65,7 @@ public class UserService {
         organization.setName(name);
         organization.addUser(admin);
         admin.setOrganization(organization);
+        organizationAnalysisService.saveOrganizationAnalysis(organization.getOrganizationAnalysis());
         return organizationRepository.save(organization);
     }
 

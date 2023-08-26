@@ -31,7 +31,7 @@ public class Commit {
     private double techDebtPerLoC;
 /*    @OneToMany
     private Collection<LanguageStats> languages;*/
-    private int totalLanguages;
+//    private int totalLanguages;
     @ManyToOne
     private Project project;
 

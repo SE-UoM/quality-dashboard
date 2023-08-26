@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.html.Option;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,7 +45,7 @@ public class AnalysisController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<String> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
+    public ResponseEntity startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
         try{
         DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
         String email = decodedJWT.getSubject();
@@ -74,7 +76,7 @@ public class AnalysisController {
         organizationAnalysisService.updateOrganizationAnalysis(organization);
         organizationService.saveOrganization(organization);
 
-        return ResponseEntity.ok(Map.of("message", "Analysis ended successfully").toString());
+        return ResponseEntity.ok(Collections.singletonMap("message", "Analysis ended successfully"));
     } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -20,6 +20,7 @@ public class Project {
     private Long id;
     private String name;
     @ManyToOne
+    @ToString.Exclude
     private Organization organization;
     private String repoUrl;
     private int forks;
