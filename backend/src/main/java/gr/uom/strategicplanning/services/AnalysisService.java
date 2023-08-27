@@ -39,8 +39,8 @@ public class AnalysisService {
 
     public void startAnalysis(Project project) throws Exception {
         GithubApiClient.cloneRepository(project);
-        List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
+        List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
         for (String commitSHA : commitList) {
             githubApiClient.checkoutCommit(project, commitSHA);
@@ -55,9 +55,7 @@ public class AnalysisService {
         }
 
         projectService.populateProject(project);
-
         GithubApiClient.deleteRepository(project);
-
     }
 
 

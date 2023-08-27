@@ -7,12 +7,16 @@ import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
 
+import gr.uom.strategicplanning.utils.FileUtils;
 import org.eclipse.jgit.api.CheckoutCommand;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -20,8 +24,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -167,8 +175,21 @@ public class GithubApiClient extends HttpClient {
      */
     public static void deleteRepository(Project project) throws Exception {
         String repoName = project.getName();
-        File file = new File(System.getProperty("user" + ".dir") + "/repos/" + repoName);
-        file.delete();
+        String pathToRepo = System.getProperty("user.dir") + "\\repos" + "\\" + repoName;
+
+        Path path = Paths.get(pathToRepo);
+        Path gitFolderPath = Paths.get(pathToRepo + "\\.git");
+
+        if (!Files.exists(path)) throw new FileNotFoundException("Directory " + repoName + "not found | " + pathToRepo);
+
+        // Close git
+        Repository repository = FileRepositoryBuilder.create(gitFolderPath.toFile());
+        Git git = new Git(repository);
+        git.close();
+        git.getRepository().close();
+
+        // Delete all the contents of the directory
+        FileUtils.deleteDirectoryContents(path);
     }
 
     /**
@@ -178,10 +199,12 @@ public class GithubApiClient extends HttpClient {
      * @throws Exception if an error occurs during the cloning process
      */
     public static void cloneRepository(Project project) throws Exception {
-        Git.cloneRepository()
-                .setURI(project.getRepoUrl())
-                .setDirectory(new File(System.getProperty("user" + ".dir") + "/repos" + "/" + project.getName()))
-                .call();
+        CloneCommand cloneCommand = new CloneCommand();
+        cloneCommand.setURI(project.getRepoUrl());
+        cloneCommand.setDirectory(new File(System.getProperty("user.dir") + "\\repos" + "\\" + project.getName()));
+
+        Git git = cloneCommand.call();
+        git.close();
     }
 
     public List<String> fetchCommitSHA(Project project) {
