@@ -36,7 +36,7 @@ public class Project {
     private Set<Developer> developers = new HashSet<>();
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
     @OneToOne(mappedBy = "project")
-    private ProjectStats projectStats;
+    private ProjectStats projectStats = new ProjectStats();
     
     public boolean canBeAnalyzed() {
         if (this.totalCommits >= OrganizationAnalysis.COMMITS_THRESHOLD) {

@@ -36,18 +36,21 @@ public class ProjectResponse {
     private ProjectStats projectStats;
 
     public ProjectResponse(Project project) {
-        this.id = project.getId();
-        this.name = project.getName();
-        this.repoUrl = project.getRepoUrl();
-        this.forks = project.getForks();
-        this.stars = project.getStars();
-        this.totalDevelopers = project.getTotalDevelopers();
-        this.totalCommits = project.getTotalCommits();
-        this.totalLanguages = project.getTotalLanguages();
-        this.status = project.getStatus();
-        this.projectStats = project.getProjectStats();
-        this.organizationName = project.getOrganization().getName();
-        this.organizationId = project.getOrganization().getId();
+
+        if (project != null) {
+            this.id = project.getId();
+            this.name = project.getName();
+            this.repoUrl = project.getRepoUrl();
+            this.forks = project.getForks();
+            this.stars = project.getStars();
+            this.totalDevelopers = project.getTotalDevelopers();
+            this.totalCommits = project.getTotalCommits();
+            this.totalLanguages = project.getTotalLanguages();
+            this.status = project.getStatus();
+            this.projectStats = project.getProjectStats();
+            this.organizationName = project.getOrganization().getName();
+            this.organizationId = project.getOrganization().getId();
+        }
     }
 
     public static List<ProjectResponse> convertToProjectResponseList(List<Project> projects) {
