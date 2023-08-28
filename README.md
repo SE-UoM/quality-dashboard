@@ -21,7 +21,7 @@
     <br />
     <a href="https://github.com/SE-UoM/quality-dashboard">View Demo (Not Implemented)</a>
     ·
-    <a href="https://github.com/SE-UoM/quality-dashboard/issues">Report Bug</a>
+    <a href="https://github.com/SE-UoM/quality-dashboard/discussions/categories/bug-report">Report a Bug</a>
     ·
     <a href="https://github.com/SE-UoM/quality-dashboard/graphs/contributors">Contributors</a>
   </p>
