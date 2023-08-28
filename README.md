@@ -35,7 +35,7 @@ QualityDashboard is a project developed by the University of Macedonia, Departme
 By integrating both software quality data and repository statistics, the dashboard provides valuable insights to better understand and improve the development process.
 
 ## Build with
-<div style="align: center; width:100vw;">
+<div align="center">
   <img style="height:10em; width:auto;" src="https://github.com/devicons/devicon/blob/master/icons/java/java-original-wordmark.svg"/>
   <img style="height:10em; width:auto;" src="https://github.com/devicons/devicon/blob/master/icons/spring/spring-original-wordmark.svg"/>
   <img style="height:10em; width:auto;" src="https://github.com/devicons/devicon/blob/master/icons/postgresql/postgresql-plain.svg"/>
@@ -43,7 +43,7 @@ By integrating both software quality data and repository statistics, the dashboa
 </div>
 
 <hr/>
-<div>
+<div align="center">
   <img style="height:7em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
   <img style="height:7em; width:auto;" src="https://sde.uom.gr/wp-content/uploads/2016/10/sde-banner.png"/>
   <img style="height:7em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
