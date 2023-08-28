@@ -27,7 +27,7 @@ public class Organization {
     @OneToMany(mappedBy = "organization")
     private List<Project> projects = new ArrayList<>();
     @OneToOne
-    private OrganizationAnalysis organizationAnalysis;
+    private OrganizationAnalysis organizationAnalysis = new OrganizationAnalysis();
 
     public void addUser(User user){
         users.add(user);

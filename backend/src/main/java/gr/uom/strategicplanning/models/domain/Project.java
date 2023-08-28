@@ -20,13 +20,14 @@ public class Project {
     private Long id;
     private String name;
     @ManyToOne
+    @ToString.Exclude
     private Organization organization;
     private String repoUrl;
     private int forks;
     private int stars;
     @OneToMany(mappedBy = "project")
     private Collection<Commit> commits = new ArrayList<>();
-    private int totalDevelopers;
+    private int totalDevelopers = 0;
     private int totalCommits;
     @OneToMany(mappedBy = "project")
     private Collection<LanguageStats> languages = new ArrayList<>();
@@ -35,7 +36,7 @@ public class Project {
     private Set<Developer> developers = new HashSet<>();
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
     @OneToOne(mappedBy = "project")
-    private ProjectStats projectStats;
+    private ProjectStats projectStats = new ProjectStats();
     
     public boolean canBeAnalyzed() {
         if (this.totalCommits >= OrganizationAnalysis.COMMITS_THRESHOLD) {

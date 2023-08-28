@@ -44,7 +44,14 @@ public class GeneralStatsService {
         //TODO: Implement this
 //        generalStats.setTopLanguages();
 
+        generalStats.setOrganizationAnalysis(organization.getOrganizationAnalysis());
+
+        saveGeneralStats(generalStats);
 
         return generalStats;
+    }
+
+    private void saveGeneralStats(GeneralStats generalStats) {
+        generalStatsRepository.save(generalStats);
     }
 }

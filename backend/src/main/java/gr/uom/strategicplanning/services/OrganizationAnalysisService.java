@@ -8,6 +8,7 @@ import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.OrganizationAnalysisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,18 +36,24 @@ public class OrganizationAnalysisService {
         Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findByOrganization(organization);
         OrganizationAnalysis organizationAnalysis = new OrganizationAnalysis();
 
-        if (organizationAnalysisOptional.isPresent()) {
+        if (organizationAnalysisOptional.isPresent())
             organizationAnalysis = organizationAnalysisOptional.get();
-        }
 
         organizationAnalysis.setAnalysisDate(new java.util.Date());
         organizationAnalysis.setOrgName(organization.getName());
         organizationAnalysis.setMostForkedProject(getMostForkedProject(organization));
+
         organizationAnalysis.setMostStarredProject(getMostStarredProject(organization));
         organizationAnalysis.setGeneralStats(getGeneralStats(organization));
         organizationAnalysis.setActivityStats(getActivityStats(organization));
         organizationAnalysis.setTechDebtStats(getTechDebtStats(organization));
+        organizationAnalysis.setOrganization(organization);
+        organization.setOrganizationAnalysis(organizationAnalysis);
 
+        saveOrganizationAnalysis(organizationAnalysis);
+    }
+
+    public void saveOrganizationAnalysis(OrganizationAnalysis organizationAnalysis) {
         organizationAnalysisRepository.save(organizationAnalysis);
     }
 
@@ -64,35 +71,31 @@ public class OrganizationAnalysisService {
 
     private Project getMostStarredProject(Organization organization) {
         int maxStars = 0;
+        Project mostStarredProject = null;
+
+        // TODO: This is a bug. If there are two or more projects with the same number of forks, only one will be returned.
         for (Project project : organization.getProjects()) {
             if (project.getStars() > maxStars) {
                 maxStars = project.getStars();
+                mostStarredProject = project;
             }
         }
 
-        for (Project project : organization.getProjects()) {
-            if (project.getStars() == maxStars) {
-                return project;
-            }
-        }
-
-        return null;
+        return mostStarredProject;
     }
 
     private Project getMostForkedProject(Organization organization) {
         int maxForks = 0;
+
+        // TODO: This is a bug. If there are two or more projects with the same number of forks, only one will be returned.
+        Project mostForkedProject = null;
         for (Project project : organization.getProjects()) {
-            if (project.getForks() > maxForks) {
+            if (project.getForks() >= maxForks) {
                 maxForks = project.getForks();
+                mostForkedProject = project;
             }
         }
 
-        for (Project project : organization.getProjects()) {
-            if (project.getForks() == maxForks) {
-                return project;
-            }
-        }
-
-        return null;
+        return mostForkedProject;
     }
 }

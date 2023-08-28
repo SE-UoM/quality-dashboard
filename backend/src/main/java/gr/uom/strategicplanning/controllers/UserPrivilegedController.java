@@ -52,6 +52,7 @@ public class UserPrivilegedController {
     ResponseEntity<String> authorizeProjectForAnalysis(@PathVariable Long id){
         try {
             projectService.authorizeProjectForAnalysis(id);
+
             return ResponseEntity.ok("Project with id " + id + " is authorized for analysis");
         } catch (ResponseStatusException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

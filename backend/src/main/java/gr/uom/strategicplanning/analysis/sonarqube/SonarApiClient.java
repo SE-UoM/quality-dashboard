@@ -44,13 +44,13 @@ public class SonarApiClient extends HttpClient {
      * @param project The Project object to which the fetched data and statistics will be added.
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
-    public void fetchCommitData(Project project, Commit commit) throws IOException {
+    public void fetchCommitData(Project project, Commit commit) throws IOException, InterruptedException {
         this.loginToSonar();
 
         int totalFiles = this.fetchComponentMetrics(project, "files");
         int totalLines = this.fetchComponentMetrics(project, "ncloc");
 
-        Collection<LanguageStats> languageDistribution = this.fetchLanguages(project);
+//        Collection<LanguageStats> languageDistribution = this.fetchLanguages(project);
 
         JSONObject issues = this.fetchIssues(project, EMPTY_PARAM);
         Double effortInMins = Double.valueOf(issues.get("effortTotal").toString());
@@ -60,12 +60,13 @@ public class SonarApiClient extends HttpClient {
 
         commit.setTotalFiles(totalFiles);
         commit.setTotalLoC(totalLines);
-        commit.setLanguages(languageDistribution);
+//        commit.setLanguages(languageDistribution);
         commit.setTechnicalDebt(effortInMins);
         commit.setTotalCodeSmells(totalCodeSmells);
         commit.setTechDebtPerLoC(effortInMins/ totalLines);
         commit.setTotalFiles(totalFiles);
-        commit.setTotalLanguages(languageDistribution.size());
+//        commit.setTotalLanguages(languageDistribution.size());
+
     }
 
     public JSONObject fetchCodeSmells(Project project) throws IOException {
@@ -92,6 +93,10 @@ public class SonarApiClient extends HttpClient {
 
         JSONObject component = jsonObject.getJSONObject("component");
         JSONArray measures = component.getJSONArray("measures");
+
+        if (measures.length() == 0) {
+            return -1;
+        }
 
         Map metrics_map = measures.getJSONObject(ARRAY_INDEX).toMap();
         String value = (String) metrics_map.get("value");
@@ -128,6 +133,12 @@ public class SonarApiClient extends HttpClient {
         JSONObject jsonObject = this.convertResponseToJson(response);
         JSONObject component = jsonObject.getJSONObject("component");
         JSONArray measures = component.getJSONArray("measures");
+
+        String missingValue = "?";
+        if (measures.length() == 0) {
+            missingValue = "";
+        }
+
         String value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
 
         String regex = "(\\w+)=(\\d+)";

@@ -6,19 +6,26 @@ import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
+import gr.uom.strategicplanning.repositories.LanguageStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
 public class LanguageService {
 
+    private final GithubApiClient githubApiClient;
     private LanguageRepository languageRepository;
-    public GithubApiClient githubApiClient = new GithubApiClient();
+    private LanguageStatsRepository languageStatsRepository;
 
-    public LanguageService(LanguageRepository languageRepository) {
+    @Autowired
+    public LanguageService(LanguageRepository languageRepository, @Value("${github.token}") String githubToken, LanguageStatsRepository languageStatsRepository) {
         this.languageRepository = languageRepository;
+        this.githubApiClient = new GithubApiClient(githubToken);
+        this.languageStatsRepository = languageStatsRepository;
     }
     public Optional<Language> getLanguageByName(String languageName) {
         return languageRepository.findByName(languageName);
@@ -28,9 +35,9 @@ public class LanguageService {
         languageRepository.save(newLanguage);
     }
 
-    public Collection<LanguageStats> extractLanguages(Project project) {
+    public Collection<LanguageStats> extractLanguages(Project project) throws IOException {
         List<LanguageStats> listLanguages = new ArrayList<>();
-        Map<String, Integer> map = githubApiClient.languageRespone(project);
+        Map<String, Integer> map = githubApiClient.languageResponse(project);
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             String languageName = entry.getKey();
             LanguageStats languageStats = new LanguageStats();
@@ -48,10 +55,15 @@ public class LanguageService {
             }
             languageStats.setLinesOfCode(entry.getValue());
             listLanguages.add(languageStats);
+            saveLanguagesStats(languageStats);
         }
 
         return listLanguages;
 
+    }
+
+    private void saveLanguagesStats(LanguageStats languageStats) {
+        languageStatsRepository.save(languageStats);
     }
 
     public List<LanguageStats> getLanguages(Organization organization) {
