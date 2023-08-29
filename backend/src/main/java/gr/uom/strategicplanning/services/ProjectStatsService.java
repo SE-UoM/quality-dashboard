@@ -17,7 +17,7 @@ public class ProjectStatsService {
     }
 
     public ProjectStats populateProjectStats(Project project) {
-        ProjectStats projectStats = new ProjectStats();
+        ProjectStats projectStats = project.getProjectStats();
         project.getCommits().forEach((commit -> {
             projectStats.setTotalLoC(projectStats.getTotalLoC() + commit.getTotalLoC());
             projectStats.setTotalFiles(projectStats.getTotalFiles() + commit.getTotalFiles());

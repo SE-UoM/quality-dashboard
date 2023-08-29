@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -24,6 +26,16 @@ public class LanguageResponse {
         this.name = languageStats.getLanguage().getName();
         this.imageUrl = languageStats.getLanguage().getImageUrl();
         this.linesOfCode = languageStats.getLinesOfCode();
+    }
+
+    public static Collection<LanguageResponse> convertToLanguageResponseCollection(Collection<LanguageStats> languageCollection) {
+        Collection<LanguageResponse> languageResponses = new ArrayList<>();
+
+        for (LanguageStats languageResponse : languageCollection) {
+            languageResponses.add(new LanguageResponse(languageResponse));
+        }
+
+        return languageResponses;
     }
 }
 

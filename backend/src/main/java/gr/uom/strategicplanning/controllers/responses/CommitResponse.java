@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -20,7 +18,7 @@ public class CommitResponse {
 
     private Long id;
     private String hash;
-    private Developer developer;
+    private DeveloperResponse developer;
     private Date commitDate;
     private Collection<CodeSmell> codeSmells;
     private double technicalDebt;
@@ -35,7 +33,9 @@ public class CommitResponse {
     public CommitResponse(Commit commit) {
         this.id = commit.getId();
         this.hash = commit.getHash();
-        this.developer = commit.getDeveloper();
+
+        Developer developer = commit.getDeveloper();
+        this.developer = new DeveloperResponse(developer);
         this.commitDate = commit.getCommitDate();
         this.codeSmells = commit.getCodeSmells();
         this.technicalDebt = commit.getTechnicalDebt();
@@ -46,5 +46,15 @@ public class CommitResponse {
 //        this.languages = commit.getLanguages();
 //        this.totalLanguages = commit.getTotalLanguages();
         this.projectId = commit.getProject().getId();
+    }
+
+    public static Collection<CommitResponse> convertToCommitResponseCollection(Collection<Commit> commitCollection) {
+        Collection<CommitResponse> commitResponses = new ArrayList<>();
+
+        for (Commit commit : commitCollection) {
+            commitResponses.add(new CommitResponse(commit));
+        }
+
+        return commitResponses;
     }
 }

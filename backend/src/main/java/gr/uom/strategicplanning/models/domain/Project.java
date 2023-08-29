@@ -36,7 +36,7 @@ public class Project {
     private Set<Developer> developers = new HashSet<>();
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private ProjectStats projectStats = new ProjectStats();
+    private ProjectStats projectStats = new ProjectStats(this);
     
     public boolean canBeAnalyzed() {
         if (this.totalCommits >= OrganizationAnalysis.COMMITS_THRESHOLD) {
