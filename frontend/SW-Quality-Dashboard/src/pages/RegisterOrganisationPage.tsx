@@ -10,6 +10,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
+import ProtectedRoute from '../features/api/auth/ProtectedRoute';
 
 const locations = ['Athens', 'Thessaloniki', 'Heraklion', 'Patras', 'Larissa'];
 
@@ -24,10 +25,12 @@ function OrganisationForm() {
     };
 
     return (
+
         <Flex direction='column'>
             <Navbar />
             <Box p={8} bg="gray.100" flex="1">
                 <Text fontWeight="bold" fontSize="xl" mb={4}>
+
                     Organisation Data (Required)
                 </Text>
                 <form>
@@ -104,15 +107,17 @@ function RightColumn() {
 
 export default function App() {
     return (
-        <Flex direction={"column"}>
-            <Flex>
+        <ProtectedRoute toastOptions={{ title: "Authorization Failed", description: "To register an organization, please log in", status: "warning" }}>
 
-                <OrganisationForm />
+            <Flex direction={"column"}>
+                <Flex>
+                    <OrganisationForm />
 
-                {/* The right column will be implemented later */}
-                {/* <RightColumn /> */}
+                    {/* The right column will be implemented later */}
+                    {/* <RightColumn /> */}
+                </Flex>
+
             </Flex>
-
-        </Flex>
+        </ProtectedRoute>
     );
 }

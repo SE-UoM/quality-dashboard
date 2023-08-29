@@ -11,6 +11,7 @@ import RegisterOrganisationPage from './pages/RegisterOrganisationPage.tsx'
 import AboutPage from './pages/AboutPage.tsx'
 import SubmitProjectPage from './pages/SubmitProjectPage.tsx'
 import LoginPage from './pages/LoginPage.tsx'
+import ProtectedRoute from './features/api/auth/ProtectedRoute.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -27,8 +28,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </Route>
 
             {/* Protected Routes */}
-            <Route path="/" element={<RequireAuth />}>
-              <Route path="/register-organisation" element={<RegisterOrganisationPage />} />
+            <Route path="/">
+              <Route path="/register-organisation" element={
+
+                <RegisterOrganisationPage />
+              } />
 
               <Route path="/admin-panel" element={<AdminPanel />} />
               <Route path="/submit-project" element={<SubmitProjectPage />} />

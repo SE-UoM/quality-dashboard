@@ -1,3 +1,9 @@
+export enum UserRoles {
+    ORG_ADMIN = "admin",
+    SUPER_USER = "superuser",
+    SIMPLE_USER = "user"
+}
+
 export interface Developer {
     name: string;
     githubUrl: string,

@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { decodeJWT } from '../../utils/decodeJWT';
 
 interface LoginResponse {
     accessToken: string;
@@ -40,6 +41,14 @@ export const registerApi = createApi({
                     },
                 }
             },
+            transformResponse: (response: LoginResponse) => {
+                console.log("Transforming response", response);
+
+                const contentsOfJwt = decodeJWT(response.accessToken);
+                console.log("Contents of Jwt:", contentsOfJwt);
+                return response;
+            }
+
             // transformResponse: (response: Response) => {
             //     const accessToken = response.body?.;
             //     const refreshToken = response.body?.get('refreshToken');
@@ -51,6 +60,7 @@ export const registerApi = createApi({
             // }
         })
     }),
+
 
 });
 

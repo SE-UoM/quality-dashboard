@@ -8,7 +8,7 @@ const baseQuery = fetchBaseQuery({
         const { accessToken } = getState().auth;
         if (accessToken) {
             // backend should be looking for both A-a
-            headers.set('authorization', `Bearer ${accessToken}`);
+            headers.set('Authorization', `Bearer ${accessToken}`);
         }
         return headers;
     },

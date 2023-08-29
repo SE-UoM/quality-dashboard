@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { OrganizationResponse } from './responseTypes';
+import { RootState } from './store';
 
 
 export const organizationApiSlice = createApi({
