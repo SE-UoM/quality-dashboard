@@ -3,10 +3,15 @@ package gr.uom.strategicplanning.controllers.dtos;
 import gr.uom.strategicplanning.controllers.responses.LanguageResponse;
 import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
+import lombok.*;
 
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter @Setter
+@ToString
 public class GeneralStatsDTO {
     private Long id;
     private int totalProjects;

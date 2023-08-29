@@ -3,10 +3,16 @@ package gr.uom.strategicplanning.controllers.dtos;
 import gr.uom.strategicplanning.controllers.responses.ProjectResponse;
 import gr.uom.strategicplanning.models.domain.CodeSmell;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import lombok.*;
 
 import java.util.Collection;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class TechDebtStatsDTO {
     private Long id;
     private float totalTechDebt;

@@ -1,7 +1,13 @@
 package gr.uom.strategicplanning.controllers.dtos;
 
 import gr.uom.strategicplanning.models.stats.ActivityStats;
+import lombok.*;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class ActivityStatsDTO {
     private Long id;
     private float commitsPerDay = -1;

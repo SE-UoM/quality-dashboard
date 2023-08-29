@@ -1,5 +1,8 @@
 package gr.uom.strategicplanning.controllers.responses;
 
+import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
+import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
+import gr.uom.strategicplanning.controllers.dtos.TechDebtStatsDTO;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.Project;
@@ -26,9 +29,9 @@ public class OrganizationAnalysisResponse {
     private Long id;
     private String orgName;
     private Date analysisDate;
-    private GeneralStats generalStats;
-    private TechDebtStats techDebtStats;
-    private ActivityStats activityStats;
+    private GeneralStatsDTO generalStats;
+    private TechDebtStatsDTO techDebtStats;
+    private ActivityStatsDTO activityStats;
     private ProjectResponse mostStarredProject;
     private ProjectResponse mostForkedProject;
     private Collection<LanguageResponse> languages = null;
@@ -37,9 +40,16 @@ public class OrganizationAnalysisResponse {
         this.id = organizationAnalysis.getId();
         this.orgName = organizationAnalysis.getOrgName();
         this.analysisDate = organizationAnalysis.getAnalysisDate();
-        this.generalStats = organizationAnalysis.getGeneralStats();
-        this.techDebtStats = organizationAnalysis.getTechDebtStats();
-        this.activityStats = organizationAnalysis.getActivityStats();
+
+        GeneralStats generalStats = organizationAnalysis.getGeneralStats();
+        this.generalStats = new GeneralStatsDTO(generalStats);
+
+        TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
+        this.techDebtStats = new TechDebtStatsDTO(techDebtStats);
+
+        ActivityStats activityStats = organizationAnalysis.getActivityStats();
+        this.activityStats = new ActivityStatsDTO(activityStats);
+
         this.mostStarredProject = new ProjectResponse(organizationAnalysis.getMostStarredProject());
         this.mostForkedProject = new ProjectResponse(organizationAnalysis.getMostForkedProject());
     }
