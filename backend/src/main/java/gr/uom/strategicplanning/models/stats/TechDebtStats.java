@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -24,19 +25,22 @@ public class TechDebtStats {
     private Long id;
     private float totalTechDebt;
     private float averageTechDebt;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Project ProjectWithMinTechDebt;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Project ProjectWithMaxTechDebt;
     private float averageTechDebtPerLoC;
-    @OneToMany
-    private Collection<Project> bestTechDebtProjects;
-    @OneToMany
-    private Collection<Project> bestCodeSmellProjects;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private Collection<Project> bestTechDebtProjects = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private Collection<Project> bestCodeSmellProjects = new ArrayList<>();
     private int totalCodeSmells;
     @OneToMany
-    private Collection<CodeSmell> codeSmells;
+    private Collection<CodeSmell> codeSmells = new ArrayList<>();
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;
 
+    public TechDebtStats(OrganizationAnalysis organizationAnalysis) {
+        this.organizationAnalysis = organizationAnalysis;
+    }
 }

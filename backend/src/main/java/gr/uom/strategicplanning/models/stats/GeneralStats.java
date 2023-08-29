@@ -37,4 +37,7 @@ public class GeneralStats {
     @JsonIgnore
     private OrganizationAnalysis organizationAnalysis;
 
+    public GeneralStats(OrganizationAnalysis organizationAnalysis) {
+        this.organizationAnalysis = organizationAnalysis;
+    }
 }

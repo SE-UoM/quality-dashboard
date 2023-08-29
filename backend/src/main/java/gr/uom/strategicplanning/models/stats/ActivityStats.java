@@ -29,5 +29,8 @@ public class ActivityStats {
     private float averageLoC;
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;
-    
+
+    public ActivityStats(OrganizationAnalysis organizationAnalysis) {
+        this.organizationAnalysis = organizationAnalysis;
+    }
 }
