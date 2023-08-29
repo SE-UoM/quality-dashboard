@@ -19,7 +19,7 @@ public class Commit {
     @GeneratedValue
     private Long id;
     private String hash;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Developer developer;
     private Date commitDate;
     @OneToMany

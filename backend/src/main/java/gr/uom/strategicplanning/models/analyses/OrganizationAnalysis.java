@@ -26,15 +26,15 @@ public class OrganizationAnalysis {
     private Long id;
     private String orgName;
     private Date analysisDate;
-    @OneToOne
-    private GeneralStats generalStats;
-    @OneToOne
-    private TechDebtStats techDebtStats;
-    @OneToOne
-    private ActivityStats activityStats;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    private GeneralStats generalStats = new GeneralStats();
+    @OneToOne(cascade = CascadeType.ALL)
+    private TechDebtStats techDebtStats = new TechDebtStats(this);
+    @OneToOne(cascade = CascadeType.ALL)
+    private ActivityStats activityStats = new ActivityStats();
+    @OneToOne(cascade = CascadeType.ALL)
     private Project mostStarredProject;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Project mostForkedProject;
     @OneToOne
     private Organization organization;

@@ -35,7 +35,7 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private Set<Developer> developers = new HashSet<>();
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
-    @OneToOne(mappedBy = "project")
+    @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats();
     
     public boolean canBeAnalyzed() {
