@@ -1,10 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.enums.ProjectStatus;
-import gr.uom.strategicplanning.models.domain.Developer;
-import gr.uom.strategicplanning.models.domain.Language;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,19 +32,7 @@ public class ProjectService {
         project.setTotalCommits(project.getCommits().size());;
         project.setLanguages(languages);
         project.setDevelopers(developers);
-
-        for (Developer dev : developers) {
-            boolean exists = false;
-            for (Developer dev2 : developers) {
-                if (dev.getName().equals(dev2.getName()) && !exists) {
-                    exists = true;
-                }
-            }
-            if (exists) {
-                project.setTotalDevelopers(project.getTotalDevelopers() + 1);
-            }
-        }
-
+        project.setTotalDevelopers(developers.size());
         project.setTotalLanguages(languages.size());
 
         project.setProjectStats(projectStatsService.populateProjectStats(project));

@@ -54,7 +54,13 @@ public class Project {
     }
 
     public void addDeveloper(Developer developer) {
-        this.developers.add(developer);
-        developer.setProject(this);
+        if (!developerExists(developer)) {
+            this.developers.add(developer);
+            developer.setProject(this);
+        }
+    }
+
+    private boolean developerExists(Developer developer) {
+        return this.developers.contains(developer);
     }
 }

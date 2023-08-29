@@ -25,4 +25,13 @@ public class Developer {
     @ManyToOne
     private Project project;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Developer))
+            return false;
+        if (obj == this)
+            return true;
+        return this.getName().equals(((Developer) obj).getName());
+    }
 }
