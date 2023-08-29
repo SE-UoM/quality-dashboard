@@ -1,3 +1,9 @@
+export enum UserRoles {
+    ORG_ADMIN = "admin",
+    SUPER_USER = "superuser",
+    SIMPLE_USER = "user"
+}
+
 export interface Developer {
     name: string;
     githubUrl: string,
@@ -112,6 +118,17 @@ export interface Language {
     name: string;
     version: string;
 }
+
+export interface ProjectStats {
+    id: number;
+    totalLoC: number;
+    totalFiles: number;
+    totalCodeSmells: number;
+    techDebt: number;
+    techDebtPerLoC: number;
+    totalLanguages: number;
+}
+
 
 const mockOrganization: Organization = {
     name: "Acme Corp",
@@ -228,6 +245,12 @@ mockProject.developers.add(mockDeveloper);
 
 mockTechDebtStats.codeSmells.push(mockCodeSmell);
 
+export interface LanguageStats {
+    id: number;
+    linesOfCode: number;
+    project: Project;
+    language: Language;
+}
 
 export {
     mockActivityStats, mockCodeSmell, mockCommit, mockDeveloper, mockGeneralStats, mockLanguage, mockOrganization, mockOrganizationAnalysis, mockProject, mockTechDebtStats,

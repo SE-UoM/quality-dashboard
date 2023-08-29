@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Flex, Text, Button, FormControl, FormLabel, Input, FormErrorMessage, Select } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
+import { useGetOrganizationsQuery } from '../features/api/organizationApi';
+import { useRegisterMutation } from '../features/api/registerApi';
 
 interface Organization {
     id: string;
@@ -8,20 +10,15 @@ interface Organization {
 }
 
 function RegisterPage() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
-    const [organizations, setOrganizations] = useState<Organization[]>([]);
     const [selectedOrganization, setSelectedOrganization] = useState("");
+    const [register, { data: regData, status, isLoading }] = useRegisterMutation();
+    const { data, isLoading: orgLoading } = useGetOrganizationsQuery();
+    console.log("data", regData, status)
 
-    useEffect(() => {
-        setOrganizations([
-            { id: '1', name: 'Organization 1' },
-            { id: '2', name: 'Organization 2' },
-            { id: '3', name: 'Organization 3' },
-        ])
-    }, []);
     const handleSignUp = () => {
         if (password.length < 6) {
             setPasswordError(true);
@@ -29,10 +26,8 @@ function RegisterPage() {
         }
 
         // Placeholder function for sign-up logic
-        console.log('Sign Up');
-        console.log('Username:', username);
-        console.log('Password:', password);
-        console.log('Selected Organization:', selectedOrganization);
+        register({ name, email, password })
+
     };
 
     return (
@@ -58,8 +53,8 @@ function RegisterPage() {
                             <FormLabel>Username</FormLabel>
                             <Input
                                 placeholder="Enter your username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
 
                             <FormLabel>Password</FormLabel>
@@ -81,9 +76,10 @@ function RegisterPage() {
                                 onChange={(e) => setSelectedOrganization(e.target.value)}
 
                             >
-                                {organizations.map((org) => (
+
+                                {data && data.map((org) => (
                                     <option key={org.id} value={org.id}>
-                                        {org.name}
+                                        {org.organizationName}
                                     </option>
                                 ))}
                             </Select>
@@ -96,7 +92,7 @@ function RegisterPage() {
                                     my={"6"}
                                     width="65%"
                                     onClick={handleSignUp}
-
+                                    isLoading={isLoading}
                                 >
                                     Sign Up
                                 </Button>

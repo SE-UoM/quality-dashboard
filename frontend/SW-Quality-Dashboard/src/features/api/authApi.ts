@@ -8,7 +8,7 @@ const baseQuery = fetchBaseQuery({
         const { accessToken } = getState().auth;
         if (accessToken) {
             // backend should be looking for both A-a
-            headers.set('authorization', `Bearer ${accessToken}`);
+            headers.set('Authorization', `Bearer ${accessToken}`);
         }
         return headers;
     },
@@ -35,7 +35,8 @@ const baseQueryWithReAuth = async (args: any, api: any, extraOptions: any) => {
     return result;
 }
 
-// export const apiSlice = createApi({
-//     baseQuery: baseQueryWithReAuth,
-//     endpoints: (builder) => ({})
-// })
+export const apiSlice = createApi({
+    baseQuery: baseQueryWithReAuth,
+    endpoints: (builder) => ({
+    })
+})
