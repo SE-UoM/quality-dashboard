@@ -23,6 +23,4 @@ public class CodeSmell {
     private String severityLevel;
     private int line;
     private int remediationTime;
-    private String description;
-
 }
