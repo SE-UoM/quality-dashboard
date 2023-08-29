@@ -7,6 +7,7 @@ import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.repositories.GeneralStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
+import org.springframework.jca.endpoint.GenericMessageEndpointFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,12 +22,7 @@ public class GeneralStatsService {
     private LanguageService languageService;
 
     public GeneralStats getGeneralStats(Organization organization) {
-        GeneralStats generalStats = new GeneralStats();
-        Optional<GeneralStats> generalStatsOptional = generalStatsRepository.findByOrganizationAnalysis(organization.getOrganizationAnalysis());
-
-        if (generalStatsOptional.isPresent()) {
-            generalStats = generalStatsOptional.get();
-        }
+        GeneralStats generalStats = organization.getOrganizationAnalysis().getGeneralStats();
 
         generalStats.setLanguages(languageService.getLanguages(organization));
         generalStats.setTotalDevs(organization.getProjects()

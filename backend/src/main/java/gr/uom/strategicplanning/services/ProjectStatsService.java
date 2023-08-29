@@ -32,7 +32,7 @@ public class ProjectStatsService {
         return projectStats;
     }
 
-    private void saveProjectStats(ProjectStats projectStats) {
+    public void saveProjectStats(ProjectStats projectStats) {
         projectStatsRepository.save(projectStats);
     }
 }

@@ -33,11 +33,7 @@ public class OrganizationAnalysisService {
 
 
     public void updateOrganizationAnalysis(Organization organization) {
-        Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findByOrganization(organization);
-        OrganizationAnalysis organizationAnalysis = new OrganizationAnalysis();
-
-        if (organizationAnalysisOptional.isPresent())
-            organizationAnalysis = organizationAnalysisOptional.get();
+        OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
 
         organizationAnalysis.setAnalysisDate(new java.util.Date());
         organizationAnalysis.setOrgName(organization.getName());
@@ -46,7 +42,9 @@ public class OrganizationAnalysisService {
         organizationAnalysis.setMostStarredProject(getMostStarredProject(organization));
         organizationAnalysis.setGeneralStats(getGeneralStats(organization));
         organizationAnalysis.setActivityStats(getActivityStats(organization));
-        organizationAnalysis.setTechDebtStats(getTechDebtStats(organization));
+
+        TechDebtStats techDebtStats = organization.getOrganizationAnalysis().getTechDebtStats();
+        organizationAnalysis.setTechDebtStats(techDebtStats);
         organizationAnalysis.setOrganization(organization);
         organization.setOrganizationAnalysis(organizationAnalysis);
 

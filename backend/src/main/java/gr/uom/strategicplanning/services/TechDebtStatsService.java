@@ -23,20 +23,17 @@ public class TechDebtStatsService {
     }
 
     public TechDebtStats getTechDebtStats(Organization organization) {
-        TechDebtStats techDebtStats = new TechDebtStats();
-        Optional<TechDebtStats> techDebtStatsOptional = techDebtStatsRepository.findByOrganizationAnalysis(organization.getOrganizationAnalysis());
-
-        if (techDebtStatsOptional.isPresent()) {
-            techDebtStats = techDebtStatsOptional.get();
-        }
+        TechDebtStats techDebtStats = organization.getOrganizationAnalysis().getTechDebtStats();
 
         List<Project> projects = organization.getProjects(); // Collect the projects for reuse
         float averageTechDebt = calculateAverageTechDebt(projects);
+        techDebtStats.setAverageTechDebt(averageTechDebt);
 
         Map<Project, Float> projectTechDebt = projects.stream()
                 .collect(Collectors.toMap(project -> project, project -> (float) project.getProjectStats().getTechDebt()));
 
         float minTechDebtValue = projectTechDebt.values().stream().min(Float::compareTo).orElse(0f);
+
 
         Collection<Project> bestTechDebtProjects = projectTechDebt.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(minTechDebtValue))

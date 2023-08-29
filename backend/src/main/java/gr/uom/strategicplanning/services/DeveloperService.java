@@ -20,13 +20,13 @@ public class DeveloperService {
 
     private final GithubApiClient githubApiClient;
     private final DeveloperRepository developerRepository;
-    private final ProjectRepository projectRepository;
+    private final ProjectService projectService;
 
     @Autowired
-    public DeveloperService(DeveloperRepository developerRepository, @Value("${github.token}") String githubToken, ProjectRepository projectRepository) {
+    public DeveloperService(DeveloperRepository developerRepository, @Value("${github.token}") String githubToken, ProjectService projectService) {
         this.developerRepository = developerRepository;
         this.githubApiClient = new GithubApiClient(githubToken);
-        this.projectRepository = projectRepository;
+        this.projectService = projectService;
     }
 
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {
@@ -40,8 +40,8 @@ public class DeveloperService {
         developer.setProject(project);
 
         project.addDeveloper(developer);
-        projectRepository.save(project);
-        saveDeveloper(developer);
+        projectService.saveProject(project);
+//        saveDeveloper(developer);
 
         return developer;
     }

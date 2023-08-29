@@ -24,11 +24,17 @@ import java.util.stream.Collectors;
 
         @GetMapping
         public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
-            List<Organization> organizations = organizationRepository.findAll();
-            List<OrganizationResponse> organizationResponses = organizations.stream()
-                    .map(OrganizationResponse::new)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(organizationResponses);
+            try {
+                List<Organization> organizations = organizationRepository.findAll();
+                List<OrganizationResponse> organizationResponses = organizations.stream()
+                        .map(OrganizationResponse::new)
+                        .collect(Collectors.toList());
+                return ResponseEntity.ok(organizationResponses);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         }
 
         @GetMapping("/{id}")

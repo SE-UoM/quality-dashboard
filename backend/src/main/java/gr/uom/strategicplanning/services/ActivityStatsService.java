@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
@@ -24,10 +25,7 @@ public class ActivityStatsService {
     }
 
     public ActivityStats getActivityStats(Organization organization) {
-        ActivityStats activityStats = new ActivityStats();
-        Optional<ActivityStats> activityStatsOptional = activityStatsRepository.findByOrganizationAnalysis(organization.getOrganizationAnalysis());
-
-        if (activityStatsOptional.isPresent()) activityStats = activityStatsOptional.get();
+        ActivityStats activityStats = organization.getOrganizationAnalysis().getActivityStats();
 
         List<Project> projects = organization.getProjects();
 
