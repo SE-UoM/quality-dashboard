@@ -36,4 +36,11 @@ public class Organization {
     public void addProject(Project project) {
         projects.add(project);
     }
+
+    public Project getFirstProject() {
+        if (projects.size() == 0)
+            return null;
+
+        return projects.get(0);
+    }
 }

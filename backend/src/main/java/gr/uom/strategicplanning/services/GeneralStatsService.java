@@ -4,6 +4,7 @@ import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
+import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.repositories.GeneralStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
@@ -25,17 +26,21 @@ public class GeneralStatsService {
         GeneralStats generalStats = organization.getOrganizationAnalysis().getGeneralStats();
 
         generalStats.setLanguages(languageService.getLanguages(organization));
+
         generalStats.setTotalDevs(organization.getProjects()
                 .stream().mapToInt(Project::getTotalDevelopers).sum());
-        generalStats.setTotalFiles(organization.getProjects()
-                .stream().mapToInt(project -> project.getCommits().stream().mapToInt(Commit::getTotalFiles).sum()).sum());
+
+        generalStats.setTotalFiles(countTotalFiles(organization));
+
         generalStats.setTotalCommits(organization.getProjects()
                 .stream().mapToInt(project -> project.getCommits().size()).sum());
+
         generalStats.setTotalLinesOfCode(organization.getProjects().stream()
                 .mapToInt(project -> project.getCommits().stream()
                         .mapToInt(Commit::getTotalLoC).sum()).sum());
         generalStats.setTotalLanguages(organization.getProjects().stream()
                 .mapToInt(project -> project.getLanguages().size()).sum());
+        generalStats.setTotalProjects(organization.getProjects().size());
 
         //TODO: Implement this
 //        generalStats.setTopLanguages();
@@ -45,6 +50,14 @@ public class GeneralStatsService {
         saveGeneralStats(generalStats);
 
         return generalStats;
+    }
+
+    private int countTotalFiles(Organization organization) {
+        int totalFiles = 0;
+        for(Project project: organization.getProjects()) {
+            totalFiles += project.getProjectStats().getTotalFiles();
+        }
+        return totalFiles;
     }
 
     private void saveGeneralStats(GeneralStats generalStats) {

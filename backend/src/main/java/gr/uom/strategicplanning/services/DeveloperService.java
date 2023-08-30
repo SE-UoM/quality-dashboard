@@ -31,11 +31,14 @@ public class DeveloperService {
 
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {
         String developerName = githubApiClient.fetchDeveloperName(project, commit);
+        String developerUsername = githubApiClient.fetchDeveloperUsername(project, commit);
 
         Developer developer = findOrCreateDeveloper(developerName, project);
 
         developer.setTotalCommits(developer.getTotalCommits() + 1);
-        developer.setGithubUrl(project.getRepoUrl());
+
+        //TODO: Fetch developer's username from github
+        developer.setGithubUrl("www.github.com/" + developerUsername);
         developer.setName(developerName);
         developer.setProject(project);
 

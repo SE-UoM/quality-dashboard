@@ -69,7 +69,7 @@ public class OrganizationAnalysisService {
 
     private Project getMostStarredProject(Organization organization) {
         int maxStars = 0;
-        Project mostStarredProject = null;
+        Project mostStarredProject = organization.getFirstProject();
 
         // TODO: This is a bug. If there are two or more projects with the same number of forks, only one will be returned.
         for (Project project : organization.getProjects()) {
@@ -86,7 +86,7 @@ public class OrganizationAnalysisService {
         int maxForks = 0;
 
         // TODO: This is a bug. If there are two or more projects with the same number of forks, only one will be returned.
-        Project mostForkedProject = null;
+        Project mostForkedProject = organization.getFirstProject();
         for (Project project : organization.getProjects()) {
             if (project.getForks() >= maxForks) {
                 maxForks = project.getForks();
