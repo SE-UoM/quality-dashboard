@@ -4,7 +4,7 @@ import { setCredentials, logOut } from './authSlice';
 const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:8080',
     credentials: 'include',
-    prepareHeaders: (headers, { getState }: any) => {
+    prepareHeaders: (headers, { getState }:any) => {
         const { accessToken } = getState().auth;
         if (accessToken) {
             // backend should be looking for both A-a

@@ -31,7 +31,7 @@ export const organizationApiSlice = createApi({
 
             invalidatesTags: ['Organization']
         }),
-        getOrganizations: builder.query<OrganizationResponse, null>({
+        getOrganizations: builder.query({
             query: () => ({
                 url: '/',
                 method: 'GET',

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Box, Flex, Text, Button, FormControl, FormLabel, Input, FormErrorMessage, Select } from '@chakra-ui/react';
 import Navbar from '../components/Navbar';
 import { useGetOrganizationsQuery } from '../features/api/organizationApi';

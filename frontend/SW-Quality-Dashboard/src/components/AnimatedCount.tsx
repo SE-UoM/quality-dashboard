@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import { useSpring, animated } from 'react-spring'
+import {chakra} from "@chakra-ui/react"
 function AnimatedCount({ count }: { count: number }) {
     const [prevValue, setPrevValue] = useState(count);
     const prevValueRef = useRef<number>();
@@ -17,7 +18,7 @@ function AnimatedCount({ count }: { count: number }) {
 
     console.log("Prev Value: ", prevValueRef.current)
     console.log("Current Value: ", count)
-    return <animated.div>{number.to((num) => num.toFixed(0))}</animated.div>
+    return <chakra.span fontSize={"5xl"} fontWeight={"semibold"}><animated.div>{number.to((num) => num.toFixed(0))}</animated.div></chakra.span>
 
 }
 export default AnimatedCount

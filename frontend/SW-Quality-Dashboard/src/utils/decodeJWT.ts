@@ -6,12 +6,19 @@ interface DecodedToken {
     name: string;
     id: string;
 }
+
+const mockToken = {
+    sub:"",
+
+}
+
 //should probably be passed as an env variable
 let secret = "secret";
 
 export const decodeJWT: (token: string) => DecodedToken | null = (token: string): DecodedToken | null => {
     try {
-        const decoded = jwt.verify(token, secret) as DecodedToken;
+        const decoded = {} as DecodedToken;
+        // const decoded = jwt.verify(token, secret) as DecodedToken;
         return decoded;
     } catch (error) {
         console.error('Error decoding JWT:', error);
