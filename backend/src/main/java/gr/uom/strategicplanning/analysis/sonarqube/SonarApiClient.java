@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  */
 public class SonarApiClient extends HttpClient {
     private Response loginResponse;
-    public static final String SONARQUBE_URL = "http://localhost:9000";
+    public static final String SONARQUBE_URL = "http://195.251.210.147:9952";
     public static final String LOGIN_USERNAME = "admin";
     public static final String LOGIN_PASSWORD = "admin1";
 

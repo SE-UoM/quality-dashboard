@@ -19,6 +19,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -266,14 +269,29 @@ public class GithubApiClient extends HttpClient {
         return jgitCommit.getAuthorIdent().getName();
     }
 
-    public String fetchDeveloperUsername(Project project, Commit commit) throws IOException {
-        Git git = Git.open(new File("./repos/" + project.getName()));
-        RevWalk walk = new RevWalk(git.getRepository());
-        RevCommit jgitCommit = walk.parseCommit(ObjectId.fromString(commit.getHash()));
-        String username = jgitCommit.getAuthorIdent().getName();
-        walk.dispose();
-        git.close();
+    public String fetchGitHubUsernameAvatarUrl(Project project, Commit commit, String param) throws IOException {
+        String[] split = project.getRepoUrl().split("/");
+        String owner = split[split.length - 2];
+        String name = split[split.length - 1];
 
-        return username;
+        String url = String.format("https://api.github.com/repos/%s/%s/commits", owner, name);
+        Response response = sendGithubRequest(url);
+        JSONArray jsonArray = new JSONArray(response.body().string());
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String sha = jsonObject.getString("sha");
+            if (sha.equals(commit.getHash()) && param.equals("githubUrl")) {
+                JSONObject author = jsonObject.getJSONObject("author");
+                return "www.github.com/" + author.getString("login");
+            } else if (sha.equals(commit.getHash()) && param.equals("avatarUrl")) {
+                JSONObject author = jsonObject.getJSONObject("author");
+                return author.getString("avatar_url");
+            }
+        }
+
+
+        return null;
     }
+
 }
