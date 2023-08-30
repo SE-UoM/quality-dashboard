@@ -40,6 +40,8 @@ public class AnalysisService {
     public void startAnalysis(Project project) throws Exception {
         GithubApiClient.cloneRepository(project);
 
+        project.getCommits().clear();
+
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
         for (String commitSHA : commitList) {

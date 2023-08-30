@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.analysis.github;
 
+import antlr.StringUtils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -16,6 +17,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -262,5 +264,16 @@ public class GithubApiClient extends HttpClient {
         Git git = Git.open(new File("./repos/" + project.getName()));
         RevCommit jgitCommit = git.getRepository().parseCommit(ObjectId.fromString(commit.getHash()));
         return jgitCommit.getAuthorIdent().getName();
+    }
+
+    public String fetchDeveloperUsername(Project project, Commit commit) throws IOException {
+        Git git = Git.open(new File("./repos/" + project.getName()));
+        RevWalk walk = new RevWalk(git.getRepository());
+        RevCommit jgitCommit = walk.parseCommit(ObjectId.fromString(commit.getHash()));
+        String username = jgitCommit.getAuthorIdent().getName();
+        walk.dispose();
+        git.close();
+
+        return username;
     }
 }

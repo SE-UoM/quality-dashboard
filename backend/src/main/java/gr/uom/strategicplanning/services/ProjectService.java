@@ -29,10 +29,10 @@ public class ProjectService {
             developers.add(commit.getDeveloper());
         });
 
-        project.setTotalCommits(project.getCommits().size());;
+        project.setTotalCommits(project.getCommits().size());
         project.setLanguages(languages);
         project.setDevelopers(developers);
-        project.setTotalDevelopers(developers.size());
+        project.setTotalDevelopers(project.getDevelopers().size());
         project.setTotalLanguages(languages.size());
 
         project.setProjectStats(projectStatsService.populateProjectStats(project));

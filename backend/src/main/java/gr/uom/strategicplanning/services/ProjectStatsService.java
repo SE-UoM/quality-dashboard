@@ -1,10 +1,13 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.repositories.ProjectStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class ProjectStatsService {
@@ -17,16 +20,28 @@ public class ProjectStatsService {
     }
 
     public ProjectStats populateProjectStats(Project project) {
-        ProjectStats projectStats = project.getProjectStats();
-        project.getCommits().forEach((commit -> {
-            projectStats.setTotalLoC(projectStats.getTotalLoC() + commit.getTotalLoC());
-            projectStats.setTotalFiles(projectStats.getTotalFiles() + commit.getTotalFiles());
-            projectStats.setTotalCodeSmells(projectStats.getTotalCodeSmells() + commit.getTotalCodeSmells());
-            projectStats.setTechDebt((int) (projectStats.getTechDebt() + commit.getTechnicalDebt()));
-            projectStats.setTechDebtPerLoC(projectStats.getTechDebtPerLoC() + commit.getTechDebtPerLoC());
-//            projectStats.setTotalLanguages(projectStats.getTotalLanguages() + commit.getLanguages().size());
-        }));
 
+        ProjectStats projectStats = new ProjectStats();
+        Commit latestCommit = null;
+
+        for(Commit commit: project.getCommits()) {
+            Date commitDate = commit.getCommitDate();
+            if(latestCommit == null || commitDate.after(latestCommit.getCommitDate())) {
+                latestCommit = commit;
+            }
+        }
+
+        if(latestCommit != null) {
+            projectStats.setTotalLoC(latestCommit.getTotalLoC());
+            projectStats.setTotalFiles(latestCommit.getTotalFiles());
+            projectStats.setTechDebt((int) latestCommit.getTechnicalDebt());
+            projectStats.setTechDebtPerLoC(latestCommit.getTechDebtPerLoC());
+//            projectStats.setTotalLanguages(latestCommit.getLanguages().size());
+            projectStats.setTotalCodeSmells(latestCommit.getTotalCodeSmells());
+            projectStats.setTotalLanguages(-1);
+        }
+
+        projectStats.setProject(project);
         saveProjectStats(projectStats);
 
         return projectStats;
