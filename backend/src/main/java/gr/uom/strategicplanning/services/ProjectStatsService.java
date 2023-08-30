@@ -20,6 +20,7 @@ public class ProjectStatsService {
     }
 
     public ProjectStats populateProjectStats(Project project) {
+
         ProjectStats projectStats = new ProjectStats();
         Commit latestCommit = null;
 

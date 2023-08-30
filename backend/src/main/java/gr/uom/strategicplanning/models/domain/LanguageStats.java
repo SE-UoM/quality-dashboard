@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,8 +17,10 @@ public class LanguageStats {
     private Long id;
     private int linesOfCode;
     @ManyToOne
+    @JsonIgnore
     private Project project;
     @ManyToOne
+    @JsonIgnore
     private Language language;
 
 }

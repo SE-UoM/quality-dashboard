@@ -154,6 +154,7 @@ public class SonarApiClient extends HttpClient {
             Language language = new Language();
             language.setName(languageName);
             LanguageStats languageStats = new LanguageStats();
+            languageStats.setProject(project);
             languageStats.setLanguage(language);
             languageStats.setLinesOfCode(loc);
             languages.add(languageStats);

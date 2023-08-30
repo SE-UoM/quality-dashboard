@@ -30,6 +30,10 @@ public class ProjectStats {
     @JsonIgnore
     private Project project;
 
+    public ProjectStats(Project project) {
+        this.project = project;
+    }
+
     public void calculateTechDebtPerLoC() {
         this.techDebtPerLoC = this.techDebt/ this.totalLoC;
     }
