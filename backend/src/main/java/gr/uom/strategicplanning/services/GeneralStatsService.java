@@ -1,8 +1,6 @@
 package gr.uom.strategicplanning.services;
 
-import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.Organization;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.repositories.GeneralStatsRepository;
@@ -11,6 +9,8 @@ import org.springframework.data.annotation.AccessType;
 import org.springframework.jca.endpoint.GenericMessageEndpointFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -25,7 +25,9 @@ public class GeneralStatsService {
     public GeneralStats getGeneralStats(Organization organization) {
         GeneralStats generalStats = organization.getOrganizationAnalysis().getGeneralStats();
 
-        generalStats.setLanguages(languageService.getLanguages(organization));
+        Collection<OrganizationLanguage> languages = languageService.getOrganizationLanguages();
+
+        generalStats.setLanguages(languages);
 
         generalStats.setTotalDevs(organization.getProjects()
                 .stream().mapToInt(Project::getTotalDevelopers).sum());

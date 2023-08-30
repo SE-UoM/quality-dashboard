@@ -1,10 +1,7 @@
 package gr.uom.strategicplanning.controllers.responses;
 
 import gr.uom.strategicplanning.enums.ProjectStatus;
-import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.Developer;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,7 +56,7 @@ public class ProjectResponse {
             Collection<Commit> commitCollection = project.getCommits();
             this.commits = CommitResponse.convertToCommitResponseCollection(commitCollection);
 
-            Collection<LanguageStats> languageCollection = project.getLanguages();
+            Collection<ProjectLanguage> languageCollection = project.getLanguages();
             this.languages = LanguageResponse.convertToLanguageResponseCollection(languageCollection);
         }
     }

@@ -21,19 +21,10 @@ public class ProjectService {
     }
 
     public void populateProject(Project project) {
-        HashSet<Developer> developers = new HashSet<>();
-        ArrayList<LanguageStats> languages = new ArrayList<>();
-
-        project.getCommits().forEach(commit -> {
-//            languages.addAll(commit.getLanguages());
-            developers.add(commit.getDeveloper());
-        });
 
         project.setTotalCommits(project.getCommits().size());
-        project.setLanguages(languages);
-        project.setDevelopers(developers);
         project.setTotalDevelopers(project.getDevelopers().size());
-        project.setTotalLanguages(languages.size());
+        project.setTotalLanguages(project.getLanguages().size());
 
         project.setProjectStats(projectStatsService.populateProjectStats(project));
         saveProject(project);

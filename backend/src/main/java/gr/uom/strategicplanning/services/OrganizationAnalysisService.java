@@ -2,7 +2,9 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.ProjectLanguage;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,8 @@ public class OrganizationAnalysisService {
     private ActivityStatsService activityStatsService;
 
     private TechDebtStatsService techDebtStatsService;
+    @Autowired
+    private LanguageService languageService;
 
     public OrganizationAnalysisService(OrganizationAnalysisRepository organizationAnalysisRepository,TechDebtStatsService techDebtStatsService, ActivityStatsService activityStatsService, GeneralStatsService generalStatsService) {
         this.organizationAnalysisRepository = organizationAnalysisRepository;
@@ -40,13 +45,20 @@ public class OrganizationAnalysisService {
         organizationAnalysis.setMostForkedProject(getMostForkedProject(organization));
 
         organizationAnalysis.setMostStarredProject(getMostStarredProject(organization));
-        organizationAnalysis.setGeneralStats(getGeneralStats(organization));
+//        organizationAnalysis.setGeneralStats(getGeneralStats(organization));
         organizationAnalysis.setActivityStats(getActivityStats(organization));
 
         TechDebtStats techDebtStats = organization.getOrganizationAnalysis().getTechDebtStats();
         organizationAnalysis.setTechDebtStats(techDebtStats);
         organizationAnalysis.setOrganization(organization);
         organization.setOrganizationAnalysis(organizationAnalysis);
+
+        Collection<Project> projects = organization.getProjects();
+
+        // Now parse all the languages and make organization languages with the total loc
+        for (Project project : projects) {
+            languageService.updateOrganizationLanguages(project);
+        }
 
         saveOrganizationAnalysis(organizationAnalysis);
     }

@@ -4,10 +4,7 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
-import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.Language;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -127,7 +124,7 @@ public class SonarApiClient extends HttpClient {
      * @return A collection of Language objects representing the language distribution.
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
-    private Collection<LanguageStats> fetchLanguages(Project project) throws IOException {
+    public Collection<ProjectLanguage> fetchLanguages(Project project) throws IOException {
         Response response = this.sendGetRequest(LANGUAGES_URL + project.getName());
 
         JSONObject jsonObject = this.convertResponseToJson(response);
@@ -136,6 +133,7 @@ public class SonarApiClient extends HttpClient {
 
         String missingValue = "?";
         if (measures.length() == 0) {
+            System.out.println("No languages found for project " + project.getName());
             missingValue = "";
         }
 
@@ -145,22 +143,27 @@ public class SonarApiClient extends HttpClient {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
 
-        ArrayList<LanguageStats> languages = new ArrayList<>();
+        Collection<ProjectLanguage> languages = new ArrayList<>();
 
         while (matcher.find()) {
             String languageName = matcher.group(1);
             int loc = Integer.parseInt(matcher.group(2));
 
-            Language language = new Language();
+            ProjectLanguage language = new ProjectLanguage();
+            language.setProject(project);
             language.setName(languageName);
-            LanguageStats languageStats = new LanguageStats();
-            languageStats.setProject(project);
-            languageStats.setLanguage(language);
-            languageStats.setLinesOfCode(loc);
-            languages.add(languageStats);
+            language.setLinesOfCode(loc);
+
+            ifLangIsPythonChangeTheName(language);
+
+            languages.add(language);
         }
 
         return languages;
+    }
+
+    private void ifLangIsPythonChangeTheName(ProjectLanguage language) {
+        if (language.getName().equals("py")) language.setName("python");
     }
 
 

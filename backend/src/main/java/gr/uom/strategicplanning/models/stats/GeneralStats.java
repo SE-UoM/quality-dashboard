@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.LanguageStats;
+import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +28,9 @@ public class GeneralStats {
     private int totalProjects;
     private int totalLanguages;
     @ManyToMany
-    private List<LanguageStats> languages;
+    private Collection<OrganizationLanguage> languages;
     @ManyToMany
-    private Map <Integer, LanguageStats> topLanguages;
+    private Map <Integer, OrganizationLanguage> topLanguages;
     private int totalCommits;
     private int totalFiles;
     private int totalLinesOfCode;
@@ -39,5 +41,9 @@ public class GeneralStats {
 
     public GeneralStats(OrganizationAnalysis organizationAnalysis) {
         this.organizationAnalysis = organizationAnalysis;
+    }
+
+    public void addLanguage(OrganizationLanguage newLanguage) {
+        this.languages.add(newLanguage);
     }
 }
