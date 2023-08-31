@@ -27,8 +27,6 @@ public class GeneralStatsService {
 
         Collection<OrganizationLanguage> languages = languageService.getOrganizationLanguages();
 
-        generalStats.setLanguages(languages);
-
         generalStats.setTotalDevs(organization.getProjects()
                 .stream().mapToInt(Project::getTotalDevelopers).sum());
 
