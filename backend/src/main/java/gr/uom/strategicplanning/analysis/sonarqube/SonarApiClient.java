@@ -132,13 +132,8 @@ public class SonarApiClient extends HttpClient {
         JSONObject component = jsonObject.getJSONObject("component");
         JSONArray measures = component.getJSONArray("measures");
 
-        String missingValue = "?";
-        if (measures.length() == 0) {
-            System.out.println("No languages found for project " + project.getName());
-            missingValue = "";
-        }
 
-        String value = "none=-1";
+        String value = "none=0";
         try {
             value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
         }
