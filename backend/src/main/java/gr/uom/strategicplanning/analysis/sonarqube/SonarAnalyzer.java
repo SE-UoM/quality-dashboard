@@ -29,7 +29,7 @@ public class SonarAnalyzer {
      * @param commit
      * @throws Exception If any error occurs during the analysis process.
      */
-    public void analyzeProject(Project project, Commit commit) throws Exception {
+    public void analyzeProject(Project project) throws Exception {
         project.setStatus(ProjectStatus.ANALYSIS_STARTED);
 
         buildProps(project);

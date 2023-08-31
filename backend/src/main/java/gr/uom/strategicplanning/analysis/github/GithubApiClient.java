@@ -14,6 +14,7 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
@@ -248,6 +249,29 @@ public class GithubApiClient extends HttpClient {
             git.close(); //
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Checks out the master branch with the changes of the latest commit.
+     *
+     * @param project The Project object representing the project whose repository is to be checked out.
+     * @throws Exception if an error occurs during the checkout process
+     */
+    public void checkoutMasterWithLatestCommit(Project project) throws Exception {
+        try {
+            String repoPath = "./repos/" + project.getName();
+            Git git = Git.open(new File(repoPath));
+
+            // Checkout the master branch and reset to the latest commit
+            CheckoutCommand checkoutCommand = git.checkout();
+            checkoutCommand.setName("main");
+            checkoutCommand.call();
+
+            git.close();
+        } catch (IOException | GitAPIException e) {
+            e.printStackTrace();
+            throw new Exception("Error during checkout process: " + e.getMessage());
         }
     }
 

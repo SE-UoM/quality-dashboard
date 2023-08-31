@@ -57,10 +57,15 @@ public class AnalysisService {
 
             sonarAnalyzer = new SonarAnalyzer(commitSHA);
 
-            sonarAnalyzer.analyzeProject(project, commit);
+            sonarAnalyzer.analyzeProject(project);
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
         }
+
+        // Analyze the master branch to get the latest analysis of the project
+        githubApiClient.checkoutMasterWithLatestCommit(project);
+        sonarAnalyzer = new SonarAnalyzer("master");
+        sonarAnalyzer.analyzeProject(project);
 
         Collection languages = languageService.extractLanguagesFromProject(project);
 
