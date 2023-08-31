@@ -26,7 +26,6 @@ public class SonarAnalyzer {
      * runs the analysis, and cleans up the repository after the analysis is completed.
      *
      * @param project The Project object representing the project to be analyzed.
-     * @param commit
      * @throws Exception If any error occurs during the analysis process.
      */
     public void analyzeProject(Project project) throws Exception {
@@ -40,9 +39,6 @@ public class SonarAnalyzer {
         sonarScanner.execute();
 
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
-
-        // Wait a bit to make sure the analysis data is available
-        Thread.sleep(5000);
     }
 
 

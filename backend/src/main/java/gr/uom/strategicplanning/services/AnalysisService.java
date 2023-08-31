@@ -66,6 +66,9 @@ public class AnalysisService {
         githubApiClient.checkoutMasterWithLatestCommit(project);
         sonarAnalyzer = new SonarAnalyzer("master");
         sonarAnalyzer.analyzeProject(project);
+        // Wait a bit to make sure the analysis data is available
+        Thread.sleep(5000);
+
 
         Collection languages = languageService.extractLanguagesFromProject(project);
 
