@@ -50,13 +50,7 @@ public class OrganizationAnalysis {
     private Organization organization;
 
     public void addLanguage(OrganizationLanguage language) {
-        boolean languageDoesNotExist = !languageExists(language);
-
-        if (languageDoesNotExist) languages.add(language);
-    }
-
-    public boolean languageExists(OrganizationLanguage language) {
-        return languages.contains(language);
+        languages.add(language);
     }
 
     public Map<Integer, OrganizationLanguage> findTopLanguages() {

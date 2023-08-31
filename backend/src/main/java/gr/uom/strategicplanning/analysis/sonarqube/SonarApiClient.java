@@ -7,6 +7,7 @@ import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -137,7 +138,13 @@ public class SonarApiClient extends HttpClient {
             missingValue = "";
         }
 
-        String value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
+        String value = "none=-1";
+        try {
+            value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
+        }
+        catch (JSONException e) {
+            System.out.println("No languages found for project " + project.getName());
+        }
 
         String regex = "(\\w+)=(\\d+)";
         Pattern pattern = Pattern.compile(regex);
