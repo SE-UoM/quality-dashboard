@@ -41,7 +41,8 @@ public class SonarAnalyzer {
 
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
 
-
+        // Wait a bit to make sure the analysis data is available
+        Thread.sleep(5000);
     }
 
 
