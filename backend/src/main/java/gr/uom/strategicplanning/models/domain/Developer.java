@@ -21,6 +21,7 @@ public class Developer {
     private Long id;
     private String name;
     private String githubUrl;
+    private String avatarUrl;
     private int totalCommits;
     @ManyToOne
     private Project project;
