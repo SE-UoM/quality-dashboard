@@ -29,9 +29,9 @@ public class ProjectResponse {
     private int totalCommits;
     private int totalLanguages;
     private ProjectStatus status;
-    private Set<DeveloperResponse> developers = new HashSet<>();
-    private Collection<CommitResponse> commits = new HashSet<>();
-    private Collection<LanguageResponse> languages = new HashSet<>();
+    private Set<DeveloperResponse> developers;
+    private Collection<CommitResponse> commits;
+    private Collection<LanguageResponse> languages;
     private ProjectStats projectStats;
 
     public ProjectResponse(Project project) {
