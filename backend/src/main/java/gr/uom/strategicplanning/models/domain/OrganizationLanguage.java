@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.models.domain;
 
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,18 @@ public class OrganizationLanguage {
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String name = "";
     private int linesOfCode;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    private GeneralStats generalStats;
+    @ManyToOne
+    private OrganizationAnalysis organizationAnalysis;
+
+    // Equals is based on name
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrganizationLanguage)) return false;
+        OrganizationLanguage that = (OrganizationLanguage) o;
+        return getName().equals(that.getName());
+    }
 }
