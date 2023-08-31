@@ -33,4 +33,8 @@ public class ProjectLanguage {
         ProjectLanguage that = (ProjectLanguage) o;
         return getName().equals(that.getName());
     }
+
+    public boolean isTheSame(OrganizationLanguage other) {
+        return this.name.equals(other.getName());
+    }
 }

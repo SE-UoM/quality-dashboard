@@ -1,10 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
-import gr.uom.strategicplanning.models.domain.Organization;
-import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
-import gr.uom.strategicplanning.models.domain.Project;
-import gr.uom.strategicplanning.models.domain.ProjectLanguage;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
@@ -13,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -45,7 +43,16 @@ public class OrganizationAnalysisService {
         organizationAnalysis.setMostForkedProject(getMostForkedProject(organization));
 
         organizationAnalysis.setMostStarredProject(getMostStarredProject(organization));
-//        organizationAnalysis.setGeneralStats(getGeneralStats(organization));
+
+        Collection<Project> projects = organization.getProjects();
+
+        // Now parse all the languages and make organization languages with the total loc
+        for (Project project : projects) {
+            languageService.updateOrganizationLanguages(organization);
+        }
+
+
+        getGeneralStats(organization);
         organizationAnalysis.setActivityStats(getActivityStats(organization));
 
         TechDebtStats techDebtStats = organization.getOrganizationAnalysis().getTechDebtStats();
@@ -53,12 +60,7 @@ public class OrganizationAnalysisService {
         organizationAnalysis.setOrganization(organization);
         organization.setOrganizationAnalysis(organizationAnalysis);
 
-        Collection<Project> projects = organization.getProjects();
-
-        // Now parse all the languages and make organization languages with the total loc
-        for (Project project : projects) {
-            languageService.updateOrganizationLanguages(project);
-        }
+        organization.getOrganizationAnalysis().findTopLanguages();
 
         saveOrganizationAnalysis(organizationAnalysis);
     }
@@ -76,7 +78,61 @@ public class OrganizationAnalysisService {
     }
 
     private GeneralStats getGeneralStats(Organization organization) {
-        return generalStatsService.getGeneralStats(organization);
+        Collection<Project> organizationProjects = organization.getProjects();
+        int totalProjects = organizationProjects.size();
+
+        Collection<OrganizationLanguage> organizationLanguages = organization.getOrganizationAnalysis().getLanguages();
+        int totalLanguages = organizationLanguages.size();
+
+        Collection<Commit> organizationCommits = getAllOrganizationCommits(organization);
+        int totalCommits = organizationCommits.size();
+
+        Collection<Developer> organizationDevelopers = getAllOrganizationDevelopers(organization);
+        int totalDevelopers = organizationDevelopers.size();
+
+        int totalLinesOfCode = calculateTotalLinesOfCode(organization);
+
+        GeneralStats generalStats = organization.getOrganizationAnalysis().getGeneralStats();
+        generalStats.setTotalProjects(totalProjects);
+        generalStats.setTotalLanguages(totalLanguages);
+        generalStats.setTotalCommits(totalCommits);
+        generalStats.setTotalDevs(totalDevelopers);
+        generalStats.setTotalLinesOfCode(totalLinesOfCode);
+
+        return generalStats;
+    }
+
+    private Collection<Developer> getAllOrganizationDevelopers(Organization organization) {
+        Collection<Project> organizationProjects = organization.getProjects();
+        Collection<Developer> organizationDevelopers = new ArrayList();
+
+        for (Project project : organizationProjects) {
+            Collection<Developer> projectDevelopers = project.getDevelopers();
+            organizationDevelopers.addAll(projectDevelopers);
+        }
+        return organizationDevelopers;
+    }
+
+    private Collection<Commit> getAllOrganizationCommits(Organization organization) {
+        Collection<Project> organizationProjects = organization.getProjects();
+        Collection<Commit> organizationCommits = new ArrayList();
+
+        for (Project project : organizationProjects) {
+            Collection<Commit> projectCommits = project.getCommits();
+            organizationCommits.addAll(projectCommits);
+        }
+        return organizationCommits;
+    }
+
+    private int calculateTotalLinesOfCode(Organization organization) {
+        Collection<OrganizationLanguage> organizationLanguages = organization.getOrganizationAnalysis().getLanguages();
+        int totalLinesOfCode = 0;
+
+        for (OrganizationLanguage organizationLanguage : organizationLanguages) {
+            totalLinesOfCode += organizationLanguage.getLinesOfCode();
+        }
+
+        return totalLinesOfCode;
     }
 
     private Project getMostStarredProject(Organization organization) {

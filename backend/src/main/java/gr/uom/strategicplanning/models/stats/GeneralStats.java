@@ -27,10 +27,6 @@ public class GeneralStats {
     private Long id;
     private int totalProjects;
     private int totalLanguages;
-    @ManyToMany
-    private Collection<OrganizationLanguage> languages;
-    @ManyToMany
-    private Map <Integer, OrganizationLanguage> topLanguages;
     private int totalCommits;
     private int totalFiles;
     private int totalLinesOfCode;
@@ -41,9 +37,5 @@ public class GeneralStats {
 
     public GeneralStats(OrganizationAnalysis organizationAnalysis) {
         this.organizationAnalysis = organizationAnalysis;
-    }
-
-    public void addLanguage(OrganizationLanguage newLanguage) {
-        this.languages.add(newLanguage);
     }
 }

@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.repositories.LanguageRepository;
@@ -36,45 +37,54 @@ public class LanguageService {
         this.sonarApiClient = new SonarApiClient();
         this.languageStatsRepository = languageStatsRepository;
     }
-    public Optional<Language> getLanguageByName(String languageName) {
-        return languageRepository.findByName(languageName);
-    }
 
-    public void saveLanguage(Language newLanguage) {
-        languageRepository.save(newLanguage);
-    }
+    public void updateOrganizationLanguages(Organization organization) {
+        Collection<Project> projects = organization.getProjects();
+        OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+        Collection<OrganizationLanguage> organizationLanguages = organizationAnalysis.getLanguages();
 
-    public void updateOrganizationLanguages(Project project) {
-        Organization organization = project.getOrganization();
-        Collection<ProjectLanguage> projectLanguages = project.getLanguages();
-        GeneralStats generalStats = organization.getOrganizationAnalysis().getGeneralStats();
+        // make all languages have a total loc of 0
+        resetOrgLanguagesLoc(organization);
 
-        for (ProjectLanguage lang : projectLanguages) {
-            String currentLangName = lang.getName();
-            Optional<OrganizationLanguage> existingLanguage = organizationLanguageRepository.findByName(currentLangName);
+        // Now recalculate the total loc for each language
+        for (Project project : projects) {
+            Collection<ProjectLanguage> projectLanguages = project.getLanguages();
 
-            if (existingLanguage.isEmpty()) {
-                int currentLoC = lang.getLinesOfCode();
-                String currentName = lang.getName();
+            for (ProjectLanguage projectLanguage : projectLanguages) {
+                Optional<OrganizationLanguage> organizationLanguage = organizationLanguageRepository.findByName(projectLanguage.getName());
 
-                OrganizationLanguage newLanguage = new OrganizationLanguage();
-                newLanguage.setName(currentName);
-                newLanguage.setLinesOfCode(currentLoC);
-                newLanguage.setGeneralStats(generalStats);
-
-                organizationLanguageRepository.save(newLanguage);
-            }
-            else {
-                OrganizationLanguage existingLang = existingLanguage.get();
-                int existingLoC = existingLang.getLinesOfCode();
-                int currentLoC = lang.getLinesOfCode();
-                int newLoC = currentLoC + existingLoC;
-
-                existingLang.setLinesOfCode(newLoC);
-                organizationLanguageRepository.save(existingLang);
+                createOrUpdateOrgLanguage(projectLanguage, organizationLanguage, organizationAnalysis);
             }
         }
+    }
 
+    private OrganizationLanguage createOrUpdateOrgLanguage(ProjectLanguage projectLanguage, Optional<OrganizationLanguage> organizationLanguageOptional, OrganizationAnalysis organizationAnalysis) {
+        if (organizationLanguageOptional.isEmpty()) {
+            OrganizationLanguage newOrganizationLanguage = new OrganizationLanguage();
+            newOrganizationLanguage.setName(projectLanguage.getName());
+            newOrganizationLanguage.setLinesOfCode(projectLanguage.getLinesOfCode());
+            newOrganizationLanguage.setOrganizationAnalysis(organizationAnalysis);
+
+            return organizationLanguageRepository.save(newOrganizationLanguage);
+        }
+
+        OrganizationLanguage organizationLanguageToUpdate = organizationLanguageOptional.get();
+        int currentLoc = organizationLanguageToUpdate.getLinesOfCode();
+        int projectLanguageLoc = projectLanguage.getLinesOfCode();
+        int totalLoc = currentLoc + projectLanguageLoc;
+
+        organizationLanguageToUpdate.setLinesOfCode(totalLoc);
+
+        return organizationLanguageRepository.save(organizationLanguageToUpdate);
+    }
+
+    private void resetOrgLanguagesLoc(Organization organization) {
+        Collection<OrganizationLanguage> organizationLanguages = organization.getOrganizationAnalysis().getLanguages();
+
+        for (OrganizationLanguage organizationLanguage : organizationLanguages) {
+            organizationLanguage.setLinesOfCode(0);
+            organizationLanguageRepository.save(organizationLanguage);
+        }
     }
 
     public Collection<ProjectLanguage> extractLanguagesFromProject(Project project) throws IOException {
