@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalyzer;
+import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.LanguageStats;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import java.util.List;
 @Service
 public class AnalysisService {
     private SonarAnalyzer sonarAnalyzer;
+    private SonarApiClient sonarApiClient;
     private final GithubApiClient githubApiClient;
     private final CommitService commitService;
     private final ProjectService projectService;
@@ -30,11 +33,12 @@ public class AnalysisService {
         this.commitService = commitService;
         this.projectService = projectService;
         this.githubApiClient = new GithubApiClient(githubToken);
+        this.sonarApiClient = new SonarApiClient();
     }
     
     public void fetchGithubData(Project project) throws Exception {
         githubApiClient.fetchProjectData(project);
-        project.setLanguages(languageService.extractLanguages(project));
+
     }
 
     public void startAnalysis(Project project) throws Exception {
@@ -43,6 +47,8 @@ public class AnalysisService {
         project.getCommits().clear();
 
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
+
+
 
         for (String commitSHA : commitList) {
             githubApiClient.checkoutCommit(project, commitSHA);
@@ -56,9 +62,19 @@ public class AnalysisService {
             project.addCommit(commit);
         }
 
-        projectService.populateProject(project);
+        Collection languages = languageService.extractLanguagesFromProject(project);
+
+        int totalLanguages = languages.size();
+        int totalDevelopers = project.getDevelopers().size();
+        int totalCommits = project.getCommits().size();
+
+        project.setTotalCommits(totalCommits);
+        project.setTotalDevelopers(totalDevelopers);
+        project.setTotalLanguages(totalLanguages);
+        project.setLanguages(languages);
+
+        projectService.saveProject(project);
         GithubApiClient.deleteRepository(project);
     }
-
 
 }

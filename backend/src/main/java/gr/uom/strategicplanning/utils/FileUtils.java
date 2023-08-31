@@ -24,12 +24,4 @@ public class FileUtils {
             throw new IOException("Failed to delete directory: " + path, e);
         }
     }
-
-    public static void deleteDirectory(Path path) throws IOException {
-        try {
-            Files.deleteIfExists(path);
-        } catch (IOException e) {
-            throw new IOException("Failed to delete directory: " + path, e);
-        }
-    }
 }

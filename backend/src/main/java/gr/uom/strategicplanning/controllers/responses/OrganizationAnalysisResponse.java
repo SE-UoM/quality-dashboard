@@ -5,6 +5,7 @@ import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.TechDebtStatsDTO;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Language;
+import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
@@ -17,8 +18,7 @@ import lombok.Setter;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,7 +34,8 @@ public class OrganizationAnalysisResponse {
     private ActivityStatsDTO activityStats;
     private ProjectResponse mostStarredProject;
     private ProjectResponse mostForkedProject;
-    private Collection<LanguageResponse> languages = null;
+    private Collection<LanguageResponse> languages;
+    private Map<Integer, LanguageResponse> topLanguages;
 
     public OrganizationAnalysisResponse(OrganizationAnalysis organizationAnalysis) {
         this.id = organizationAnalysis.getId();
@@ -52,5 +53,33 @@ public class OrganizationAnalysisResponse {
 
         this.mostStarredProject = new ProjectResponse(organizationAnalysis.getMostStarredProject());
         this.mostForkedProject = new ProjectResponse(organizationAnalysis.getMostForkedProject());
+
+        Collection<LanguageResponse> languages = convertLanguages(organizationAnalysis.getLanguages());
+        this.languages = languages;
+
+        Map<Integer, LanguageResponse> topLanguages = convertTopLanguages(organizationAnalysis.getTopLanguages());
+        this.topLanguages = topLanguages;
+    }
+
+    private Map<Integer, LanguageResponse> convertTopLanguages(Map<Integer, OrganizationLanguage> topLanguages) {
+        Map<Integer, LanguageResponse> convertedTopLanguages = new HashMap<>();
+
+        for (Map.Entry<Integer, OrganizationLanguage> entry : topLanguages.entrySet()) {
+            LanguageResponse languageResponse = new LanguageResponse(entry.getValue());
+            convertedTopLanguages.put(entry.getKey(), languageResponse);
+        }
+
+        return convertedTopLanguages;
+    }
+
+    private Collection<LanguageResponse> convertLanguages(Collection<OrganizationLanguage> languageStats) {
+        ArrayList<LanguageResponse> convertedLanguages = new ArrayList<>();
+
+        for (OrganizationLanguage languageStat : languageStats) {
+            LanguageResponse languageResponse = new LanguageResponse(languageStat);
+            convertedLanguages.add(languageResponse);
+        }
+
+        return convertedLanguages;
     }
 }

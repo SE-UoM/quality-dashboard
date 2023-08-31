@@ -255,6 +255,7 @@ public class GithubApiClient extends HttpClient {
         try {
             Git git = Git.open(new File("./repos/" + project.getName()));
             RevCommit jgitCommit = git.getRepository().parseCommit(ObjectId.fromString(commit.getHash()));
+            git.close();
             return jgitCommit.getAuthorIdent().getWhen();
         } catch (IOException e) {
             e.printStackTrace();
@@ -266,6 +267,7 @@ public class GithubApiClient extends HttpClient {
     public String fetchDeveloperName(Project project, Commit commit) throws IOException {
         Git git = Git.open(new File("./repos/" + project.getName()));
         RevCommit jgitCommit = git.getRepository().parseCommit(ObjectId.fromString(commit.getHash()));
+        git.close();
         return jgitCommit.getAuthorIdent().getName();
     }
 
