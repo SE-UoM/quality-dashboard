@@ -259,19 +259,21 @@ public class GithubApiClient extends HttpClient {
      * @throws Exception if an error occurs during the checkout process
      */
     public void checkoutMasterWithLatestCommit(Project project) throws Exception {
+        String repoPath = "./repos/" + project.getName();
+        Git git = Git.open(new File(repoPath));
+
+        // Checkout the master branch and reset to the latest commit
+        CheckoutCommand checkoutCommand = git.checkout();
+        checkoutCommand.setName("main");
+
         try {
-            String repoPath = "./repos/" + project.getName();
-            Git git = Git.open(new File(repoPath));
-
-            // Checkout the master branch and reset to the latest commit
-            CheckoutCommand checkoutCommand = git.checkout();
-            checkoutCommand.setName("main");
             checkoutCommand.call();
-
             git.close();
-        } catch (IOException | GitAPIException e) {
+        } catch (GitAPIException e) {
             e.printStackTrace();
-            throw new Exception("Error during checkout process: " + e.getMessage());
+            checkoutCommand.setName("master");
+            checkoutCommand.call();
+            git.close();
         }
     }
 
