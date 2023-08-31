@@ -53,17 +53,21 @@ public class LanguageService {
             for (ProjectLanguage projectLanguage : projectLanguages) {
                 Optional<OrganizationLanguage> organizationLanguage = organizationLanguageRepository.findByName(projectLanguage.getName());
 
-                createOrUpdateOrgLanguage(projectLanguage, organizationLanguage, organizationAnalysis);
+                createOrUpdateOrgLanguage(projectLanguage, organizationLanguage, organization);
             }
         }
     }
 
-    private OrganizationLanguage createOrUpdateOrgLanguage(ProjectLanguage projectLanguage, Optional<OrganizationLanguage> organizationLanguageOptional, OrganizationAnalysis organizationAnalysis) {
+    private OrganizationLanguage createOrUpdateOrgLanguage(ProjectLanguage projectLanguage, Optional<OrganizationLanguage> organizationLanguageOptional, Organization organization) {
+        OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
         if (organizationLanguageOptional.isEmpty()) {
             OrganizationLanguage newOrganizationLanguage = new OrganizationLanguage();
             newOrganizationLanguage.setName(projectLanguage.getName());
             newOrganizationLanguage.setLinesOfCode(projectLanguage.getLinesOfCode());
             newOrganizationLanguage.setOrganizationAnalysis(organizationAnalysis);
+
+            organizationAnalysis.addLanguage(newOrganizationLanguage);
 
             return organizationLanguageRepository.save(newOrganizationLanguage);
         }
