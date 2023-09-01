@@ -25,7 +25,7 @@ public class ProjectStatsService {
     }
 
     public ProjectStats populateProjectStats(Project project) throws IOException {
-        ProjectStats projectStats = new ProjectStats();
+        ProjectStats projectStats = project.getProjectStats();
 
         int totalLoC = sonarApiClient.retrieveDataFromMeasures(project, "ncloc");
         projectStats.setTotalLoC(totalLoC);

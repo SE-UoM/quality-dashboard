@@ -20,7 +20,7 @@ public class CodeSmellDistribution {
     private String codeSmell;
     private int count;
 
-    @ManyToOne()
+    @ManyToOne
     @JsonIgnore
     private ProjectStats projectStats;
 }

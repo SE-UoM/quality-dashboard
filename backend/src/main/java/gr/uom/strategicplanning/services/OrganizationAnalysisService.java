@@ -56,6 +56,8 @@ public class OrganizationAnalysisService {
         organizationAnalysis.setOrganization(organization);
         organization.setOrganizationAnalysis(organizationAnalysis);
 
+        getTechDebtStats(organization);
+
         organization.getOrganizationAnalysis().findTopLanguages();
 
         saveOrganizationAnalysis(organizationAnalysis);
