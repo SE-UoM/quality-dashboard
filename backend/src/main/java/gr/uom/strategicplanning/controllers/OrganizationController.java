@@ -1,10 +1,12 @@
 package gr.uom.strategicplanning.controllers;
 
+import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
 import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.OrganizationService;
@@ -97,6 +99,24 @@ public class OrganizationController {
             }
 
             return ResponseEntity.ok(projectsInfoResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/organization-analysis/general-stats")
+    public ResponseEntity<GeneralStatsDTO> getOrganizationAnalysisGeneralStats(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            GeneralStats generalStats = organizationAnalysis.getGeneralStats();
+
+            GeneralStatsDTO generalStatsDTO = new GeneralStatsDTO(generalStats);
+
+            return ResponseEntity.ok(generalStatsDTO);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
