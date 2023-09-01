@@ -5,6 +5,7 @@ import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
@@ -139,7 +140,7 @@ public class OrganizationController {
         }
 
     @GetMapping("/{id}/top_developers")
-    public ResponseEntity<List<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
+    public ResponseEntity<Collection<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
             Organization organization = organizationRepository.findById(id).orElse(null);
             if (organization == null) {
                 return ResponseEntity.notFound().build();
@@ -159,4 +160,24 @@ public class OrganizationController {
 
             return ResponseEntity.ok(developerResponses);
         }
+
+    @GetMapping("/{id}/language-names")
+    public ResponseEntity<Collection<String>> getOrganizationLanguageNames(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            Collection<OrganizationLanguage> organizationLanguages = organizationAnalysis.getLanguages();
+
+            Collection<String> languageNamesResponse = organizationLanguages.stream()
+                    .map(OrganizationLanguage::getName)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(languageNamesResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
