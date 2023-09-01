@@ -81,6 +81,24 @@ public class AnalysisService {
         project.setTotalLanguages(totalLanguages);
         project.setLanguages(languages);
 
+        Collection<Developer> developers = project.getDevelopers();
+        for (Developer developer : developers) {
+            developer.setTotalCommits(0);
+            developer.setTotalCodeSmells(0);
+            developer.setCodeSmellsPerCommit(0);
+        }
+
+        for (Commit commit : project.getCommits()) {
+            Developer developer = commit.getDeveloper();
+            developer.setTotalCommits(developer.getTotalCommits() + 1);
+
+            int totalCodeSmells = commit.getCodeSmells().size();
+            developer.setTotalCodeSmells(totalCodeSmells);
+
+            double codeSmellsPerCommit = (double) totalCodeSmells / developer.getTotalCommits();
+            developer.setCodeSmellsPerCommit(codeSmellsPerCommit);
+        }
+
         projectService.populateProjectStats(project);
 
         projectService.saveProject(project);

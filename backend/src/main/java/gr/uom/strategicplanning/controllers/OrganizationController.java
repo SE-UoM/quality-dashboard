@@ -1,10 +1,8 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.controllers.responses.OrganizationAnalysisResponse;
-import gr.uom.strategicplanning.controllers.responses.OrganizationResponse;
-import gr.uom.strategicplanning.controllers.responses.ProjectResponse;
-import gr.uom.strategicplanning.controllers.responses.UserResponse;
+import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
+import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,6 +77,26 @@ import java.util.stream.Collectors;
             return ResponseEntity.ok(organizationAnalysisResponse);
         }
 
+        @GetMapping("/{id}/top_developers")
+        public ResponseEntity<List<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
+            Organization organization = organizationRepository.findById(id).orElse(null);
+            if (organization == null) {
+                return ResponseEntity.notFound().build();
+            }
 
+            Collection<Developer> projectDevelopers = organization.getProjects().stream()
+                    .flatMap(project -> project.getDevelopers().stream())
+                    .collect(Collectors.toList());
+
+            List<Developer> topDeveloper = projectDevelopers.stream()
+                    .sorted(Comparator.comparingDouble(Developer::getCodeSmellsPerCommit))
+                    .collect(Collectors.toList());
+
+            List<DeveloperResponse> developerResponses = topDeveloper.stream()
+                    .map(DeveloperResponse::new)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(developerResponses);
+        }
         
     }

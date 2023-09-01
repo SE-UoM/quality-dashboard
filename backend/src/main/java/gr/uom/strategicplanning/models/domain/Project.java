@@ -34,6 +34,8 @@ public class Project {
     private int totalLanguages;
     @OneToMany(mappedBy = "project")
     private Set<Developer> developers = new HashSet<>();
+    @OneToMany(mappedBy = "project")
+    private Collection<Developer> topDevelopers = new ArrayList<>();
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
