@@ -4,26 +4,25 @@ import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-    @RestController
-    @RequestMapping("/api/organizations")
-    public class OrganizationController {
+@RestController
+@RequestMapping("/api/organizations")
+public class OrganizationController {
 
-        @Autowired
-        private OrganizationRepository organizationRepository;
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
-        @GetMapping
-        public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
+    @GetMapping
+    public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
             try {
                 List<Organization> organizations = organizationRepository.findAll();
                 List<OrganizationResponse> organizationResponses = organizations.stream()
@@ -37,34 +36,46 @@ import java.util.stream.Collectors;
             }
         }
 
-        @GetMapping("/{id}")
-        public ResponseEntity<OrganizationResponse> getOrganizationById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<OrganizationResponse> getOrganizationById(@PathVariable Long id) {
             Optional<Organization> organizationOptional = organizationRepository.findById(id);
             Organization organization = organizationOptional.orElseThrow(() -> new RuntimeException("Organization not found"));
 
             OrganizationResponse organizationResponse = new OrganizationResponse(organization);
             return ResponseEntity.ok(organizationResponse);
         }
+    @GetMapping("/{id}/projects-info")
+    public ResponseEntity<Collection<Map>> getOrganizationProjectsInfo(@PathVariable Long id) {
+        Optional<Organization> organizationOptional = organizationRepository.findById(id);
 
-        @GetMapping("/{id}/projects")
-        public ResponseEntity<List<ProjectResponse>> getOrganizationProjects(@PathVariable Long id) {
-            Optional<Organization> organizationOptional = organizationRepository.findById(id);
+        if (organizationOptional.isEmpty())
+            return ResponseEntity.notFound().build();
 
-            if (!organizationOptional.isEmpty())
-            	return ResponseEntity.notFound().build();
+        Organization organization = organizationOptional.get();
 
+        Collection<Project> organizationProjects = organization.getProjects();
+        Collection<Map> projectsInfoResponse = new ArrayList<>();
 
-            Organization organization = organizationOptional.get();
+        for (Project project : organizationProjects) {
+            String projectName = project.getName();
+            int projectCommits = project.getTotalCommits();
+            int getProjectStars = project.getStars();
+            int projectForks = project.getForks();
 
-            List<ProjectResponse> projectResponses = organization.getProjects().stream()
-                    .map(ProjectResponse::new)
-                    .collect(Collectors.toList());
+            Map<String, Object> projectInfoMap = new HashMap<>();
+            projectInfoMap.put("name", projectName);
+            projectInfoMap.put("totalContributions", projectCommits);
+            projectInfoMap.put("stars", getProjectStars);
+            projectInfoMap.put("forks", projectForks);
 
-            return ResponseEntity.ok(projectResponses);
+            projectsInfoResponse.add(projectInfoMap);
         }
 
-        @GetMapping("/{id}/organization-analysis")
-        public ResponseEntity<OrganizationAnalysisResponse> getOrganizationAnalysis(@PathVariable Long id) {
+        return ResponseEntity.ok(projectsInfoResponse);
+    }
+
+    @GetMapping("/{id}/organization-analysis")
+    public ResponseEntity<OrganizationAnalysisResponse> getOrganizationAnalysis(@PathVariable Long id) {
             Optional<Organization> organizationOptional = organizationRepository.findById(id);
 
             if (organizationOptional.isEmpty())
@@ -77,8 +88,8 @@ import java.util.stream.Collectors;
             return ResponseEntity.ok(organizationAnalysisResponse);
         }
 
-        @GetMapping("/{id}/top_developers")
-        public ResponseEntity<List<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
+    @GetMapping("/{id}/top_developers")
+    public ResponseEntity<List<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
             Organization organization = organizationRepository.findById(id).orElse(null);
             if (organization == null) {
                 return ResponseEntity.notFound().build();
@@ -98,5 +109,4 @@ import java.util.stream.Collectors;
 
             return ResponseEntity.ok(developerResponses);
         }
-        
-    }
+}
