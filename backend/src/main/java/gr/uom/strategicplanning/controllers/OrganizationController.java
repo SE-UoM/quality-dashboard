@@ -276,22 +276,8 @@ public class OrganizationController {
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
 
             Project mostStarredProject = organizationAnalysis.getMostStarredProject();
-            ProjectStats mostStarredProjectStats = mostStarredProject.getProjectStats();
 
-            String mostStarredProjectName = mostStarredProject.getName();
-            int mostStarredProjectStars = mostStarredProject.getStars();
-            int mostStarredProjectFiles = mostStarredProjectStats.getTotalFiles();
-            int mostStarredProjectLines = mostStarredProjectStats.getTotalLoC();
-            int mostStarredProjectTechDebt = mostStarredProjectStats.getTechDebt();
-            int mostStarredProjectTotalCodeSmells = mostStarredProjectStats.getTotalCodeSmells();
-
-            Map<String, Object> mostStarredProjectResponse = new HashMap<>();
-            mostStarredProjectResponse.put("name", mostStarredProjectName);
-            mostStarredProjectResponse.put("stars", mostStarredProjectStars);
-            mostStarredProjectResponse.put("files", mostStarredProjectFiles);
-            mostStarredProjectResponse.put("loc", mostStarredProjectLines);
-            mostStarredProjectResponse.put("techDebt", mostStarredProjectTechDebt);
-            mostStarredProjectResponse.put("totalCodeSmells", mostStarredProjectTotalCodeSmells);
+            Map<String, Object> mostStarredProjectResponse = createSimpleProjectResponse(mostStarredProject);
 
             return ResponseEntity.ok(mostStarredProjectResponse);
         }
@@ -299,5 +285,91 @@ public class OrganizationController {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/{id}/most-forked-project")
+    public ResponseEntity<Map> getMostForkedProject(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            Project mostForkedProject = organizationAnalysis.getMostForkedProject();
+
+            Map<String, Object> mostStarredProjectResponse = createSimpleProjectResponse(mostForkedProject);
+
+            return ResponseEntity.ok(mostStarredProjectResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/last-analysis-date")
+    public ResponseEntity<Map<String, Date>> getLastAnalysisDate(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            Date lastAnalysisDate = organizationAnalysis.getAnalysisDate();
+
+            Map<String, Date> lastAnalysisDateResponse = new HashMap<>();
+            lastAnalysisDateResponse.put("lastAnalysisDate", lastAnalysisDate);
+
+            return ResponseEntity.ok(lastAnalysisDateResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/total-tech-debt")
+    public ResponseEntity<Map> getTotalTechDebt(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
+
+            Map<String, Object> totalTechDebtResponse = new HashMap<>();
+            totalTechDebtResponse.put("totalTechDebt", techDebtStats.getTotalTechDebt());
+
+            // Convert tech debt to hours
+            double techDebtHours = techDebtStats.getTotalTechDebt() / 60;
+            totalTechDebtResponse.put("totalTechDebtHours", techDebtHours);
+
+            // Convert tech debt to currency
+            double hourlyRate = 30;
+            double techDebtCurrency = techDebtHours * hourlyRate;
+            totalTechDebtResponse.put("totalTechDebtCurrency", techDebtCurrency);
+
+            return ResponseEntity.ok(totalTechDebtResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private Map<String, Object> createSimpleProjectResponse(Project project) {
+        ProjectStats projectStats = project.getProjectStats();
+
+        String mostStarredProjectName = project.getName();
+        int mostStarredProjectStars = project.getStars();
+        int mostStarredProjectFiles = projectStats.getTotalFiles();
+        int mostStarredProjectLines = projectStats.getTotalLoC();
+        int mostStarredProjectTechDebt = projectStats.getTechDebt();
+        int mostStarredProjectTotalCodeSmells = projectStats.getTotalCodeSmells();
+
+        Map<String, Object> simpleProjectResponse = new HashMap<>();
+        simpleProjectResponse.put("name", mostStarredProjectName);
+        simpleProjectResponse.put("stars", mostStarredProjectStars);
+        simpleProjectResponse.put("files", mostStarredProjectFiles);
+        simpleProjectResponse.put("loc", mostStarredProjectLines);
+        simpleProjectResponse.put("techDebt", mostStarredProjectTechDebt);
+        simpleProjectResponse.put("totalCodeSmells", mostStarredProjectTotalCodeSmells);
+
+        return simpleProjectResponse;
     }
 }
