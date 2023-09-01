@@ -1,12 +1,10 @@
 package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
+import gr.uom.strategicplanning.controllers.dtos.TechDebtStatsDTO;
 import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
-import gr.uom.strategicplanning.models.domain.Developer;
-import gr.uom.strategicplanning.models.domain.Organization;
-import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
@@ -53,6 +51,7 @@ public class OrganizationController {
             OrganizationResponse organizationResponse = new OrganizationResponse(organization);
             return ResponseEntity.ok(organizationResponse);
         }
+
     @GetMapping("/{id}/projects-info")
     public ResponseEntity<Collection<Map>> getOrganizationProjectsInfo(@PathVariable Long id) {
         try {
@@ -445,6 +444,23 @@ public class OrganizationController {
                             .collect(Collectors.toList());
 
             return ResponseEntity.ok(languageDistribution);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/code-smells-distribution")
+    public ResponseEntity<Collection<OrganizationCodeSmellDistribution>> getCodeSmellsDistribution(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
+
+            Collection<OrganizationCodeSmellDistribution> codeSmellsDistribution = techDebtStats.getCodeSmells();
+
+            return ResponseEntity.ok(codeSmellsDistribution);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
