@@ -468,6 +468,37 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("/{id}/all-commits")
+    public ResponseEntity<Collection<Map>> getAllOrganizationCommits(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            Collection<Project> projects = organization.getProjects();
+
+            Collection<Map> allCommits = new ArrayList<>();
+
+            for (Project project : projects) {
+                Collection<Commit> commits = project.getCommits();
+
+                for (Commit commit : commits) {
+                    String commitSHA = commit.getHash();
+                    Date commitDate = commit.getCommitDate();
+
+                    Map<String, Object> commitResponse = new HashMap<>();
+                    commitResponse.put("sha", commitSHA);
+                    commitResponse.put("date", commitDate);
+
+                    allCommits.add(commitResponse);
+                }
+            }
+
+            return ResponseEntity.ok(allCommits);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private Map<String, Object> createSimpleProjectResponse(Project project) {
         ProjectStats projectStats = project.getProjectStats();
 
