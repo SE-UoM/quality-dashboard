@@ -18,6 +18,8 @@ public class DeveloperResponse {
     public String name;
     public String githubUrl;
     public int totalCommits;
+    public int totalCodeSmells;
+    public double codeSmellsPerCommit;
     public Long projectId;
 
     public DeveloperResponse(Developer developer) {
@@ -25,6 +27,8 @@ public class DeveloperResponse {
         this.name = developer.getName();
         this.githubUrl = developer.getGithubUrl();
         this.totalCommits = developer.getTotalCommits();
+        this.totalCodeSmells = developer.getTotalCodeSmells();
+        this.codeSmellsPerCommit = developer.getCodeSmellsPerCommit();
         this.projectId = developer.getProject().getId();
     }
 
