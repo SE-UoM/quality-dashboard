@@ -12,6 +12,7 @@ import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.OrganizationService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -206,6 +207,31 @@ public class OrganizationController {
             }
 
             return ResponseEntity.ok(topProjectsResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/most-active-developer")
+    public ResponseEntity<Map> getMostActiveDeveloper(@PathVariable Long id) {
+        try{
+            Organization organization = organizationService.getOrganizationById(id);
+            Collection<Project> organizationProjects = organization.getProjects();
+
+            Developer mostActiveDeveloper = organizationProjects.stream()
+                    .flatMap(project -> project.getDevelopers().stream())
+                    .max(Comparator.comparingInt(Developer::getTotalCommits))
+                    .orElse(null);
+
+            Map<String, Object> mostActiveDeveloperResponse = new HashMap<>();
+            mostActiveDeveloperResponse.put("name", mostActiveDeveloper.getName());
+            mostActiveDeveloperResponse.put("totalCommits", mostActiveDeveloper.getTotalCommits());
+            mostActiveDeveloperResponse.put("totalIssues", mostActiveDeveloper.getTotalCodeSmells());
+            mostActiveDeveloperResponse.put("issuesPerContribution", mostActiveDeveloper.getCodeSmellsPerCommit());
+
+            return ResponseEntity.ok(mostActiveDeveloperResponse);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
