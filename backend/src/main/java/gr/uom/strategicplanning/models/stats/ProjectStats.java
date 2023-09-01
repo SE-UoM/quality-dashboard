@@ -23,7 +23,6 @@ public class ProjectStats {
     private int totalCodeSmells;
     private int techDebt;
     private double techDebtPerLoC;
-    private int totalLanguages;
 
     @OneToOne
     @ToString.Exclude
