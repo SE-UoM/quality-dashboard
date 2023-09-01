@@ -29,9 +29,6 @@ public class Commit {
     private int totalLoC;
     private int totalCodeSmells;
     private double techDebtPerLoC;
-/*    @OneToMany
-    private Collection<LanguageStats> languages;*/
-//    private int totalLanguages;
     @ManyToOne
     private Project project;
 
@@ -39,11 +36,6 @@ public class Commit {
         this.codeSmells = codeSmells;
         this.totalCodeSmells = codeSmells.size();
     }
-
-//    public void setLanguages(Collection<LanguageStats> languages) {
-//        this.languages = languages;
-//        this.totalLanguages = languages.size();
-//    }
 
     public void calculateTechDebtPerLoC() {
         this.techDebtPerLoC = this.technicalDebt / this.totalLoC;

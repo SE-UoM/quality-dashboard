@@ -81,6 +81,8 @@ public class AnalysisService {
         project.setTotalLanguages(totalLanguages);
         project.setLanguages(languages);
 
+        projectService.populateProjectStats(project);
+
         projectService.saveProject(project);
         GithubApiClient.deleteRepository(project);
     }

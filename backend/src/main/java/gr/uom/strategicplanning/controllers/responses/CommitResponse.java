@@ -26,8 +26,6 @@ public class CommitResponse {
     private int totalLoC;
     private int totalCodeSmells;
     private double techDebtPerLoC;
-    private Collection<LanguageStats> languages;
-    private int totalLanguages;
     private Long projectId;
 
     public CommitResponse(Commit commit) {
@@ -43,8 +41,6 @@ public class CommitResponse {
         this.totalLoC = commit.getTotalLoC();
         this.totalCodeSmells = commit.getTotalCodeSmells();
         this.techDebtPerLoC = commit.getTechDebtPerLoC();
-//        this.languages = commit.getLanguages();
-//        this.totalLanguages = commit.getTotalLanguages();
         this.projectId = commit.getProject().getId();
     }
 
