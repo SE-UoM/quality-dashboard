@@ -214,6 +214,36 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("/{id}/developers-info")
+    public ResponseEntity<Collection<Map>> getOrganizationDevelopersInfo(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            Collection<Project> organizationProjects = organization.getProjects();
+
+            Collection<Map> developersInfoResponse = new ArrayList<>();
+            for (Project project : organizationProjects) {
+                Collection<Developer> projectDevelopers = project.getDevelopers();
+
+                for (Developer developer : projectDevelopers) {
+                    String developerName = developer.getName();
+                    String avatarUrl = developer.getAvatarUrl();
+
+                    Map<String, Object> developerInfo = new HashMap<>();
+                    developerInfo.put("name", developerName);
+                    developerInfo.put("avatarUrl", avatarUrl);
+
+                    developersInfoResponse.add(developerInfo);
+                }
+            }
+
+            return ResponseEntity.ok(developersInfoResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}/most-active-developer")
     public ResponseEntity<Map> getMostActiveDeveloper(@PathVariable Long id) {
         try{
@@ -232,6 +262,38 @@ public class OrganizationController {
             mostActiveDeveloperResponse.put("issuesPerContribution", mostActiveDeveloper.getCodeSmellsPerCommit());
 
             return ResponseEntity.ok(mostActiveDeveloperResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/most-starred-project")
+    public ResponseEntity<Map> getMostStarredProject(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            Project mostStarredProject = organizationAnalysis.getMostStarredProject();
+            ProjectStats mostStarredProjectStats = mostStarredProject.getProjectStats();
+
+            String mostStarredProjectName = mostStarredProject.getName();
+            int mostStarredProjectStars = mostStarredProject.getStars();
+            int mostStarredProjectFiles = mostStarredProjectStats.getTotalFiles();
+            int mostStarredProjectLines = mostStarredProjectStats.getTotalLoC();
+            int mostStarredProjectTechDebt = mostStarredProjectStats.getTechDebt();
+            int mostStarredProjectTotalCodeSmells = mostStarredProjectStats.getTotalCodeSmells();
+
+            Map<String, Object> mostStarredProjectResponse = new HashMap<>();
+            mostStarredProjectResponse.put("name", mostStarredProjectName);
+            mostStarredProjectResponse.put("stars", mostStarredProjectStars);
+            mostStarredProjectResponse.put("files", mostStarredProjectFiles);
+            mostStarredProjectResponse.put("loc", mostStarredProjectLines);
+            mostStarredProjectResponse.put("techDebt", mostStarredProjectTechDebt);
+            mostStarredProjectResponse.put("totalCodeSmells", mostStarredProjectTotalCodeSmells);
+
+            return ResponseEntity.ok(mostStarredProjectResponse);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
