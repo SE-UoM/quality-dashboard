@@ -269,6 +269,26 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("/{id}/most-active-project")
+    public ResponseEntity<Map> getMostActiveProject(@PathVariable Long id) {
+        try{
+            Organization organization = organizationService.getOrganizationById(id);
+            Collection<Project> organizationProjects = organization.getProjects();
+
+            Project mostActiveProject = organizationProjects.stream()
+                    .max(Comparator.comparingInt(Project::getTotalCommits))
+                    .orElse(null);
+
+            Map<String, Object> mostActiveProjectResponse = createSimpleProjectResponse(mostActiveProject);
+
+            return ResponseEntity.ok(mostActiveProjectResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}/most-starred-project")
     public ResponseEntity<Map> getMostStarredProject(@PathVariable Long id) {
         try {
@@ -324,6 +344,31 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("/{id}/top-languages")
+    public ResponseEntity<Map> getTopOrganizationLanguages(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            Map<Integer, OrganizationLanguage> topLanguages = organizationAnalysis.getTopLanguages();
+
+            Map<String, LanguageResponse> topLanguagesResponse = new HashMap<>();
+            for (Map.Entry<Integer, OrganizationLanguage> entry : topLanguages.entrySet()) {
+                OrganizationLanguage currentLanguage = entry.getValue();
+                Integer rank = entry.getKey();
+
+                LanguageResponse languageResponse = new LanguageResponse(currentLanguage);
+                topLanguagesResponse.put(rank.toString(), languageResponse);
+            }
+
+            return ResponseEntity.ok(topLanguagesResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}/total-tech-debt")
     public ResponseEntity<Map> getTotalTechDebt(@PathVariable Long id) {
         try {
@@ -355,20 +400,22 @@ public class OrganizationController {
     private Map<String, Object> createSimpleProjectResponse(Project project) {
         ProjectStats projectStats = project.getProjectStats();
 
-        String mostStarredProjectName = project.getName();
-        int mostStarredProjectStars = project.getStars();
-        int mostStarredProjectFiles = projectStats.getTotalFiles();
-        int mostStarredProjectLines = projectStats.getTotalLoC();
-        int mostStarredProjectTechDebt = projectStats.getTechDebt();
-        int mostStarredProjectTotalCodeSmells = projectStats.getTotalCodeSmells();
+        String projectName = project.getName();
+        int projectStars = project.getStars();
+        int totalFiles = projectStats.getTotalFiles();
+        int totalLoC = projectStats.getTotalLoC();
+        int techDebt = projectStats.getTechDebt();
+        int codeSmells = projectStats.getTotalCodeSmells();
+        int totalCommits = project.getTotalCommits();
 
         Map<String, Object> simpleProjectResponse = new HashMap<>();
-        simpleProjectResponse.put("name", mostStarredProjectName);
-        simpleProjectResponse.put("stars", mostStarredProjectStars);
-        simpleProjectResponse.put("files", mostStarredProjectFiles);
-        simpleProjectResponse.put("loc", mostStarredProjectLines);
-        simpleProjectResponse.put("techDebt", mostStarredProjectTechDebt);
-        simpleProjectResponse.put("totalCodeSmells", mostStarredProjectTotalCodeSmells);
+        simpleProjectResponse.put("name", projectName);
+        simpleProjectResponse.put("stars", projectStars);
+        simpleProjectResponse.put("files", totalFiles);
+        simpleProjectResponse.put("loc", totalLoC);
+        simpleProjectResponse.put("techDebt", techDebt);
+        simpleProjectResponse.put("totalCodeSmells", codeSmells);
+        simpleProjectResponse.put("totalCommits", totalCommits);
 
         return simpleProjectResponse;
     }
