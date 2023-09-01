@@ -12,9 +12,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -175,10 +173,36 @@ public class SonarApiClient extends HttpClient {
         loginResponse = this.sentPostAuthRequest(SONARQUBE_AUTH_URL);
     }
 
+    public Collection<CodeSmellDistribution> fetchCodeSmellsDistribution(Project project) throws IOException {
+        String apiUrl = SONARQUBE_URL + "/api/issues/search?componentKeys=" + project.getName() + "&types=CODE_SMELL&&facets=severities";
+
+        Response response = this.sendGetRequest(apiUrl);
+        JSONObject jsonObject = this.convertResponseToJson(response);
+
+        JSONArray facets = jsonObject.getJSONArray("facets");
+        JSONObject severities = facets.getJSONObject(ARRAY_INDEX);
+        JSONArray values = severities.getJSONArray("values");
+
+        int valuesSize = values.length();
+
+        Collection<CodeSmellDistribution> codeSmellsDistribution = new ArrayList<>();
+        for (int i = 0; i < valuesSize; i++) {
+            JSONObject value = values.getJSONObject(i);
+            String name = value.getString("val");
+            int count = value.getInt("count");
+
+            CodeSmellDistribution codeSmellDistribution = new CodeSmellDistribution();
+            codeSmellDistribution.setProjectStats(project.getProjectStats());
+            codeSmellDistribution.setCodeSmell(name);
+            codeSmellDistribution.setCount(count);
+        }
+
+        return codeSmellsDistribution;
+    }
+
     public int retrieveDataFromMeasures(Project project, String metric) throws IOException {
         this.loginToSonar();
         int totalNumber = this.fetchComponentMetrics(project, metric);
         return totalNumber;
     }
-
 }

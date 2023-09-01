@@ -3,19 +3,14 @@ package gr.uom.strategicplanning.services;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalyzer;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
-import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.Developer;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.*;
+import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -27,6 +22,12 @@ public class AnalysisService {
     private final ProjectService projectService;
     @Autowired
     private LanguageService languageService;
+
+    @Autowired
+    private ProjectStatsService projectStatsService;
+
+    @Autowired
+    private CodeSmellDistributionService codeSmellDistributionService;
 
     @Autowired
     public AnalysisService(CommitService commitService, @Value("${github.token}") String githubToken, ProjectService projectService) {
@@ -48,8 +49,6 @@ public class AnalysisService {
 
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
-
-
         for (String commitSHA : commitList) {
             githubApiClient.checkoutCommit(project, commitSHA);
             Commit commit = new Commit();
@@ -62,10 +61,11 @@ public class AnalysisService {
             project.addCommit(commit);
         }
 
-        // Analyze the master branch to get the latest analysis of the project
+//         Analyze the master branch to get the latest analysis of the project
         githubApiClient.checkoutMasterWithLatestCommit(project);
         sonarAnalyzer = new SonarAnalyzer("master");
         sonarAnalyzer.analyzeProject(project);
+
         // Wait a bit to make sure the analysis data is available
         Thread.sleep(5000);
 
@@ -75,6 +75,13 @@ public class AnalysisService {
         int totalLanguages = languages.size();
         int totalDevelopers = project.getDevelopers().size();
         int totalCommits = project.getCommits().size();
+
+        Collection<CodeSmellDistribution> codeSmellsDistribution = sonarApiClient.fetchCodeSmellsDistribution(project);
+        codeSmellDistributionService.saveCollectionOfCodeSmellDistribution(codeSmellsDistribution);
+
+        ProjectStats projectStats = project.getProjectStats();
+        projectStats.setCodeSmellDistributions(codeSmellsDistribution);
+        projectStatsService.saveProjectStats(projectStats);
 
         project.setTotalCommits(totalCommits);
         project.setTotalDevelopers(totalDevelopers);
