@@ -1,0 +1,198 @@
+[
+  {
+    "title": "Use Descriptive Variable Names",
+    "explanation": "Choose meaningful names that convey the purpose and content of variables."
+  },
+  {
+    "title": "Indent Code Consistently",
+    "explanation": "Maintain consistent and clear indentation for improved code readability."
+  },
+  {
+    "title": "Break Down Complex Functions",
+    "explanation": "Divide complex functions into smaller, well-named functions to enhance readability."
+  },
+  {
+    "title": "Prioritize Self-Explanatory Code",
+    "explanation": "Write code that's easy to understand without relying heavily on comments."
+  },
+  {
+    "title": "Use Version Control Effectively",
+    "explanation": "Leverage version control to track changes and collaborate while maintaining code history."
+  },
+  {
+    "title": "Eliminate Code Duplication",
+    "explanation": "Refactor repeated code into reusable functions or modules to minimize redundancy."
+  },
+  {
+    "title": "Handle Errors Gracefully",
+    "explanation": "Implement comprehensive error handling to prevent crashes and provide helpful feedback."
+  },
+  {
+    "title": "Write Tests",
+    "explanation": "Develop unit and integration tests to ensure code correctness and maintain stability."
+  },
+  {
+    "title": "Organize Files and Folders",
+    "explanation": "Structure project files into logical directories for easy navigation and maintenance."
+  },
+  {
+    "title": "Follow Naming Conventions",
+    "explanation": "Adopt consistent naming patterns for variables, functions, and classes for clarity."
+  },
+  {
+    "title": "Embrace Code Simplicity",
+    "explanation": "Prioritize straightforward solutions over complex ones to avoid unnecessary complications."
+  },
+  {
+    "title": "Remove Unused Code",
+    "explanation": "Regularly clean up the codebase to eliminate unused variables, functions, and imports."
+  },
+  {
+    "title": "Name Everything",
+    "explanation": "Names should be provided for all entities, including variables, functions, and classes. This rule helps to find patterns and to understand the code."
+  },
+  {
+    "title": "Use Generic Building Blocks",
+    "explanation": "Use generic building blocks instead of special purpose ones. E.g. Don't use a List, use a Collection. This rule helps to avoid code duplication and to make the code more flexible."
+  },
+  {
+    "title": "Document Your Code",
+    "explanation": "Include clear comments and documentation to aid developers in understanding the code."
+  },
+  {
+    "title": "Avoid Long Lines of Code",
+    "explanation": "Break long lines into shorter ones to improve readability and maintainability."
+  },
+  {
+    "title": "Be a Never Nester",
+    "explanation": "Each method or function should not comtain statements that need more than one level of indentation. This rule helps to avoid nested if statements and to make the code more readable."
+  },
+  {
+    "title": "Don't use else",
+    "explanation": "Don't use else. An easy way to remove 'else' is to use early returns This rule helps to avoid nested if statements and to make the code more readable."
+  },
+  {
+    "title": "Keep Files Short",
+    "explanation": "Long files are much harder to read, understand and maintain."
+  },
+  {
+    "title": "Provide Meaningful Error Messages",
+    "explanation": "Supply error messages that guide users and developers to understand and address issues."
+  },
+  {
+    "title": "Short Methods/Functions",
+    "explanation": "Limit the number of lines in a method or function to improve readability and maintainability."
+  },
+  {
+    "title": "Avoid Hardcoding Values",
+    "explanation": "Use constants or configuration files instead of hardcoding values for flexibility."
+  },
+  {
+    "title": "Manage Dependency Versions",
+    "explanation": "Explicitly define and manage dependencies to prevent compatibility and stability issues."
+  },
+  {
+    "title": "Follow the DRY Principle",
+    "explanation": "Eliminate duplicated code by extracting common logic into reusable functions or modules."
+  },
+  {
+    "title": "Write Clear and Concise Commit Messages",
+    "explanation": "Provide meaningful commit messages that explain the purpose of code changes."
+  },
+  {
+    "title": "Test Edge Cases",
+    "explanation": "Always test edge cases to ensure code correctness and prevent unexpected behavior."
+  },
+  {
+    "title": "Test Driven Development",
+    "explanation": "Write test cases before writing code to ensure code correctness and maintain stability."
+  },
+  {
+    "title": "Use Design Patterns",
+    "explanation": "Leverage design patterns to solve common problems and improve code readability and maintainability."
+  },
+  {
+    "title": "Plan Before Coding",
+    "explanation": "Spend time planning and designing before writing code to minimize revisions later."
+  },
+  {
+    "title": "Use Comments Sparingly",
+    "explanation": "Instead of using comments, write code that's self-explanatory and easy to understand. If you think you need a comment, try to refactor the code to make it self-explanatory."
+  },
+  {
+    "title": "Maintain Consistent Coding Styles",
+    "explanation": "Adhere to a consistent coding style and follow established patterns for better collaboration."
+  },
+  {
+    "title": "Use Descriptive Function Names",
+    "explanation": "Select clear and descriptive function names that convey their purpose."
+  },
+  {
+    "title": "Handle Null Values Appropriately",
+    "explanation": "Account for null or missing values to prevent unexpected errors and crashes."
+  },
+  {
+    "title": "Avoid Over-Engineering",
+    "explanation": "Strive for simplicity and avoid adding unnecessary complexity to the codebase."
+  },
+  {
+    "title": "Choose Meaningful Function Parameters",
+    "explanation": "Use parameter names that provide context and improve code readability."
+  },
+  {
+    "title": "Adhere to Coding Standards",
+    "explanation": "Follow established coding standards and guidelines to ensure consistent and clean code."
+  },
+  {
+    "title": "Limit Nesting Levels",
+    "explanation": "Minimize deep nesting to enhance code readability and reduce cognitive load."
+  },
+  {
+    "title": "Regularly Refactor for Maintainability",
+    "explanation": "Periodically refactor code to ensure it remains maintainable and up-to-date."
+  },
+  {
+    "title": "Separate Concerns",
+    "explanation": "Decouple unrelated functionality to improve code readability and maintainability."
+  },
+  {
+    "title": "Engage in Code Reviews",
+    "explanation": "Participate in code reviews to receive feedback and improve overall code quality."
+  },
+  {
+    "title": "Utilize Whitespace for Clarity",
+    "explanation": "Incorporate proper whitespace to improve code layout and visual separation."
+  },
+  {
+    "title": "Follow Semantic Versioning",
+    "explanation": "Adhere to semantic versioning rules to communicate changes and updates effectively."
+  },
+  {
+    "title": "Leverage Functional Programming Concepts",
+    "explanation": "Apply functional programming principles to create modular and cleaner code."
+  },
+  {
+    "title": "Simplify Conditional Logic",
+    "explanation": "Streamline complex conditionals for enhanced code clarity and maintainability."
+  },
+  {
+    "title": "Use Meaningful Variable Names",
+    "explanation": "Choose descriptive variable names to enhance code readability and understanding."
+  },
+  {
+    "title": "Embrace Pair Programming",
+    "explanation": "Collaborate with a partner to improve code quality through shared expertise."
+  },
+  {
+    "title": "Write Unit and Integration Tests",
+    "explanation": "Develop automated tests to ensure code accuracy and maintain stability."
+  },
+  {
+    "title": "Keep Frameworks Up to Date",
+    "explanation": "Regularly update frameworks to benefit from improvements, bug fixes, and security patches."
+  },
+  {
+    "title": "Evaluate Third-Party Libraries Wisely",
+    "explanation": "Assess third-party libraries for quality, maintainability, and compatibility before integration."
+  }
+]
