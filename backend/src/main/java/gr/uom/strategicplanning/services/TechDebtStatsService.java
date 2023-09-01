@@ -1,9 +1,10 @@
 package gr.uom.strategicplanning.services;
 
-import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.Organization;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import gr.uom.strategicplanning.repositories.CodeSmellDistributionRepository;
+import gr.uom.strategicplanning.repositories.OrganizationCodeSmellsRepository;
 import gr.uom.strategicplanning.repositories.TechDebtStatsRepository;
 import org.aspectj.bridge.ICommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import java.util.stream.Collectors;
 public class TechDebtStatsService {
 
     private TechDebtStatsRepository techDebtStatsRepository;
+    @Autowired
+    private OrganizationCodeSmellsRepository organizationCodeSmellsRepository;
 
     @Autowired
     public TechDebtStatsService(TechDebtStatsRepository techDebtStatsRepository) {
@@ -67,10 +70,29 @@ public class TechDebtStatsService {
                 .map(Map.Entry::getKey)
                 .map(Project::getProjectStats)
                 .orElse(null)).getProject());
-        techDebtStats.setCodeSmells(projects.stream()
-                .flatMap(project -> project.getCommits().stream())
-                .flatMap(commit -> commit.getCodeSmells().stream())
-                .collect(Collectors.toList()));
+
+        // Find Code Smells Distribution for the whole organization
+        Collection<Project> allProjects = organization.getProjects();
+        techDebtStats.resetCodeSmellDistribution();
+
+        for (Project project : allProjects) {
+            Collection<CodeSmellDistribution> projectCodeSmellDistributions = project.getProjectStats().getCodeSmellDistributions();
+
+            for (CodeSmellDistribution codeSmell : projectCodeSmellDistributions) {
+                String severity = codeSmell.getCodeSmell();
+                int projectCodeSmellCount = codeSmell.getCount();
+
+                Optional<OrganizationCodeSmellDistribution> organizationCodeSmellDistribution = techDebtStats.getCodeSmellDistribution(severity);
+
+                if (organizationCodeSmellDistribution.isPresent()) {
+                    OrganizationCodeSmellDistribution organizationCodeSmell = organizationCodeSmellDistribution.get();
+                    organizationCodeSmell.updateCount(projectCodeSmellCount);
+
+                    organizationCodeSmellsRepository.save(organizationCodeSmell);
+                }
+            }
+        }
+
         techDebtStats.setTotalCodeSmells(techDebtStats.getCodeSmells().size());
         techDebtStats.setBestCodeSmellProjects(bestCodeSmellProjects);
 
