@@ -2,6 +2,8 @@ package gr.uom.strategicplanning.controllers.responses;
 
 import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.LanguageStats;
+import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
+import gr.uom.strategicplanning.models.domain.ProjectLanguage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,17 +23,22 @@ public class LanguageResponse {
     public String imageUrl;
     public int linesOfCode;
 
-    public LanguageResponse(LanguageStats languageStats) {
-        this.id = languageStats.getLanguage().getId();
-        this.name = languageStats.getLanguage().getName();
-        this.imageUrl = languageStats.getLanguage().getImageUrl();
-        this.linesOfCode = languageStats.getLinesOfCode();
+    public LanguageResponse(ProjectLanguage projectLanguage) {
+        this.id = projectLanguage.getId();
+        this.name = projectLanguage.getName();
+        this.linesOfCode = projectLanguage.getLinesOfCode();
     }
 
-    public static Collection<LanguageResponse> convertToLanguageResponseCollection(Collection<LanguageStats> languageCollection) {
+    public LanguageResponse(OrganizationLanguage projectLanguage) {
+        this.id = projectLanguage.getId();
+        this.name = projectLanguage.getName();
+        this.linesOfCode = projectLanguage.getLinesOfCode();
+    }
+
+    public static Collection<LanguageResponse> convertToLanguageResponseCollection(Collection<ProjectLanguage> languageCollection) {
         Collection<LanguageResponse> languageResponses = new ArrayList<>();
 
-        for (LanguageStats languageResponse : languageCollection) {
+        for (ProjectLanguage languageResponse : languageCollection) {
             languageResponses.add(new LanguageResponse(languageResponse));
         }
 

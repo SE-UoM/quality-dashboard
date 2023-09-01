@@ -30,10 +30,12 @@ public class Project {
     private int totalDevelopers = 0;
     private int totalCommits;
     @OneToMany(mappedBy = "project")
-    private Collection<LanguageStats> languages = new ArrayList<>();
+    private Collection<ProjectLanguage> languages = new ArrayList<>();
     private int totalLanguages;
     @OneToMany(mappedBy = "project")
     private Set<Developer> developers = new HashSet<>();
+    @OneToMany(mappedBy = "project")
+    private Collection<Developer> topDevelopers = new ArrayList<>();
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
@@ -57,6 +59,20 @@ public class Project {
         if (!developerExists(developer)) {
             this.developers.add(developer);
             developer.setProject(this);
+        }
+    }
+
+    private boolean languageExists(ProjectLanguage language) {
+        if (!this.languages.contains(language)) return false;
+
+        return true;
+    }
+
+    public void addLanguage(ProjectLanguage language) {
+        boolean languageIsNotPresent = !languageExists(language);
+        if (languageIsNotPresent) {
+            this.languages.add(language);
+            language.setProject(this);
         }
     }
 

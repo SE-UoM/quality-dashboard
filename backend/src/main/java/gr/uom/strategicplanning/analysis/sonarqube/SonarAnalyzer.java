@@ -26,10 +26,9 @@ public class SonarAnalyzer {
      * runs the analysis, and cleans up the repository after the analysis is completed.
      *
      * @param project The Project object representing the project to be analyzed.
-     * @param commit
      * @throws Exception If any error occurs during the analysis process.
      */
-    public void analyzeProject(Project project, Commit commit) throws Exception {
+    public void analyzeProject(Project project) throws Exception {
         project.setStatus(ProjectStatus.ANALYSIS_STARTED);
 
         buildProps(project);
@@ -40,8 +39,6 @@ public class SonarAnalyzer {
         sonarScanner.execute();
 
         project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
-
-
     }
 
 

@@ -4,19 +4,15 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
-import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.Language;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
-import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class SonarApiClient extends HttpClient {
     private Response loginResponse;
-    public static final String SONARQUBE_URL = "http://localhost:9000";
+    public static final String SONARQUBE_URL = "http://195.251.210.147:9952";
     public static final String LOGIN_USERNAME = "admin";
     public static final String LOGIN_PASSWORD = "admin1";
 
@@ -50,7 +46,6 @@ public class SonarApiClient extends HttpClient {
         int totalFiles = this.fetchComponentMetrics(project, "files");
         int totalLines = this.fetchComponentMetrics(project, "ncloc");
 
-//        Collection<LanguageStats> languageDistribution = this.fetchLanguages(project);
 
         JSONObject issues = this.fetchIssues(project, EMPTY_PARAM);
         Double effortInMins = Double.valueOf(issues.get("effortTotal").toString());
@@ -60,12 +55,10 @@ public class SonarApiClient extends HttpClient {
 
         commit.setTotalFiles(totalFiles);
         commit.setTotalLoC(totalLines);
-//        commit.setLanguages(languageDistribution);
         commit.setTechnicalDebt(effortInMins);
         commit.setTotalCodeSmells(totalCodeSmells);
         commit.setTechDebtPerLoC(effortInMins/ totalLines);
         commit.setTotalFiles(totalFiles);
-//        commit.setTotalLanguages(languageDistribution.size());
 
     }
 
@@ -127,40 +120,47 @@ public class SonarApiClient extends HttpClient {
      * @return A collection of Language objects representing the language distribution.
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
-    private Collection<LanguageStats> fetchLanguages(Project project) throws IOException {
+    public Collection<ProjectLanguage> fetchLanguages(Project project) throws IOException {
         Response response = this.sendGetRequest(LANGUAGES_URL + project.getName());
 
         JSONObject jsonObject = this.convertResponseToJson(response);
         JSONObject component = jsonObject.getJSONObject("component");
         JSONArray measures = component.getJSONArray("measures");
 
-        String missingValue = "?";
-        if (measures.length() == 0) {
-            missingValue = "";
-        }
 
-        String value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
+        String value = "none=0";
+        try {
+            value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
+        }
+        catch (JSONException e) {
+            System.out.println("No languages found for project " + project.getName());
+        }
 
         String regex = "(\\w+)=(\\d+)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
 
-        ArrayList<LanguageStats> languages = new ArrayList<>();
+        Collection<ProjectLanguage> languages = new ArrayList<>();
 
         while (matcher.find()) {
             String languageName = matcher.group(1);
             int loc = Integer.parseInt(matcher.group(2));
 
-            Language language = new Language();
+            ProjectLanguage language = new ProjectLanguage();
+            language.setProject(project);
             language.setName(languageName);
-            LanguageStats languageStats = new LanguageStats();
-            languageStats.setProject(project);
-            languageStats.setLanguage(language);
-            languageStats.setLinesOfCode(loc);
-            languages.add(languageStats);
+            language.setLinesOfCode(loc);
+
+            ifLangIsPythonChangeTheName(language);
+
+            languages.add(language);
         }
 
         return languages;
+    }
+
+    private void ifLangIsPythonChangeTheName(ProjectLanguage language) {
+        if (language.getName().equals("py")) language.setName("python");
     }
 
 
@@ -173,4 +173,36 @@ public class SonarApiClient extends HttpClient {
         loginResponse = this.sentPostAuthRequest(SONARQUBE_AUTH_URL);
     }
 
+    public Collection<CodeSmellDistribution> fetchCodeSmellsDistribution(Project project) throws IOException {
+        String apiUrl = SONARQUBE_URL + "/api/issues/search?componentKeys=" + project.getName() + "&types=CODE_SMELL&&facets=severities";
+
+        Response response = this.sendGetRequest(apiUrl);
+        JSONObject jsonObject = this.convertResponseToJson(response);
+
+        JSONArray facets = jsonObject.getJSONArray("facets");
+        JSONObject severities = facets.getJSONObject(ARRAY_INDEX);
+        JSONArray values = severities.getJSONArray("values");
+
+        int valuesSize = values.length();
+
+        Collection<CodeSmellDistribution> codeSmellsDistribution = new ArrayList<>();
+        for (int i = 0; i < valuesSize; i++) {
+            JSONObject value = values.getJSONObject(i);
+            String name = value.getString("val");
+            int count = value.getInt("count");
+
+            CodeSmellDistribution codeSmellDistribution = new CodeSmellDistribution();
+            codeSmellDistribution.setProjectStats(project.getProjectStats());
+            codeSmellDistribution.setCodeSmell(name);
+            codeSmellDistribution.setCount(count);
+        }
+
+        return codeSmellsDistribution;
+    }
+
+    public int retrieveDataFromMeasures(Project project, String metric) throws IOException {
+        this.loginToSonar();
+        int totalNumber = this.fetchComponentMetrics(project, metric);
+        return totalNumber;
+    }
 }

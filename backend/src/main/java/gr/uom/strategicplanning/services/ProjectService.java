@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -20,21 +21,7 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public void populateProject(Project project) {
-        HashSet<Developer> developers = new HashSet<>();
-        ArrayList<LanguageStats> languages = new ArrayList<>();
-
-        project.getCommits().forEach(commit -> {
-//            languages.addAll(commit.getLanguages());
-            developers.add(commit.getDeveloper());
-        });
-
-        project.setTotalCommits(project.getCommits().size());
-        project.setLanguages(languages);
-        project.setDevelopers(developers);
-        project.setTotalDevelopers(project.getDevelopers().size());
-        project.setTotalLanguages(languages.size());
-
+    public void populateProjectStats(Project project) throws IOException {
         project.setProjectStats(projectStatsService.populateProjectStats(project));
         saveProject(project);
     }

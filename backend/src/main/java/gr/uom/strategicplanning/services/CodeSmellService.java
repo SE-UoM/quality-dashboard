@@ -24,6 +24,8 @@ public class CodeSmellService {
     private CodeSmellRepository codeSmellRepository;
     private final SonarApiClient sonarApiClient = new SonarApiClient();
 
+    private final int DEFAULT_LINE_NUMBER = -1;
+
     public Collection<CodeSmell> populateCodeSmells(Project project, Commit commit) throws IOException {
         JSONObject codeSmells = sonarApiClient.fetchCodeSmells(project);
         return codeSmellsToCodeSmellList(codeSmells, commit);
@@ -37,9 +39,7 @@ public class CodeSmellService {
             JSONObject issue = issuesArray.getJSONObject(i);
             String componentName = issue.getString("component");
 
-            // Extract line info
-            JSONObject lineInfo = issue.getJSONObject("textRange");
-            int line = lineInfo.getInt("startLine");
+            int line = tryToExtractLineNumber(issue);
 
             String severity = issue.getString("severity");
             String message = issue.getString("message");
@@ -59,6 +59,16 @@ public class CodeSmellService {
         }
 
         return codeSmellList;
+    }
+
+    private int tryToExtractLineNumber(JSONObject issue) {
+        try {
+            JSONObject lineInfo = issue.getJSONObject("textRange");
+            return lineInfo.getInt("startLine");
+        } catch (Exception e) {
+            // If line info is not available, set it to 0
+            return this.DEFAULT_LINE_NUMBER;
+        }
     }
 
     private void saveCodeSmell(CodeSmell codeSmell) {

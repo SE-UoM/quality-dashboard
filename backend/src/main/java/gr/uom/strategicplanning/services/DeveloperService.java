@@ -31,20 +31,20 @@ public class DeveloperService {
 
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {
         String developerName = githubApiClient.fetchDeveloperName(project, commit);
-        String developerUsername = githubApiClient.fetchDeveloperUsername(project, commit);
+        String developerUsername = githubApiClient.fetchGitHubUsernameAvatarUrl(project, commit, "githubUrl");
+        String developerAvatarUrl = githubApiClient.fetchGitHubUsernameAvatarUrl(project, commit, "avatarUrl");
 
         Developer developer = findOrCreateDeveloper(developerName, project);
 
         developer.setTotalCommits(developer.getTotalCommits() + 1);
 
-        //TODO: Fetch developer's username from github
-        developer.setGithubUrl("www.github.com/" + developerUsername);
+        developer.setGithubUrl(developerUsername);
+        developer.setAvatarUrl(developerAvatarUrl);
         developer.setName(developerName);
         developer.setProject(project);
 
         project.addDeveloper(developer);
         projectService.saveProject(project);
-//        saveDeveloper(developer);
 
         return developer;
     }
@@ -52,7 +52,6 @@ public class DeveloperService {
     private void saveDeveloper(Developer developer) {
         developerRepository.save(developer);
     }
-
 
     private Developer findOrCreateDeveloper(String developerName, Project project) {
         Optional<Developer> developerOptional = developerRepository.findByName(developerName);
