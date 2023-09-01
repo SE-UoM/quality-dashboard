@@ -31,7 +31,6 @@ public class ProjectResponse {
     private ProjectStatus status;
     private Set<DeveloperResponse> developers;
     private Collection<CommitResponse> commits;
-    private Collection<LanguageResponse> languages;
     private ProjectStats projectStats;
 
     public ProjectResponse(Project project) {
@@ -55,9 +54,6 @@ public class ProjectResponse {
 
             Collection<Commit> commitCollection = project.getCommits();
             this.commits = CommitResponse.convertToCommitResponseCollection(commitCollection);
-
-            Collection<ProjectLanguage> languageCollection = project.getLanguages();
-            this.languages = LanguageResponse.convertToLanguageResponseCollection(languageCollection);
         }
     }
 

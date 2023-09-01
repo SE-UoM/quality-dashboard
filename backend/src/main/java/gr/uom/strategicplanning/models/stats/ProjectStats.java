@@ -1,13 +1,14 @@
 package gr.uom.strategicplanning.models.stats;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import gr.uom.strategicplanning.models.domain.CodeSmellDistribution;
 import gr.uom.strategicplanning.models.domain.Project;
+import io.swagger.models.auth.In;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Map;
 
 @Entity
 @Getter @Setter
@@ -24,6 +25,9 @@ public class ProjectStats {
     private int techDebt;
     private double techDebtPerLoC;
     private int totalLanguages;
+
+    @OneToMany(mappedBy = "projectStats", cascade = CascadeType.PERSIST)
+    private Collection<CodeSmellDistribution> codeSmellDistributions;
 
     @OneToOne
     @ToString.Exclude
