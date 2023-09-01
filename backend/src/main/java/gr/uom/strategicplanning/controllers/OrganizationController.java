@@ -397,6 +397,40 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("/{id}/tech-debt-statistics")
+    public ResponseEntity<Map> getTechDebtStats(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
+
+            int minProjectTechDebt = techDebtStats
+                    .getProjectWithMinTechDebt()
+                    .getProjectStats()
+                    .getTechDebt();
+
+            int maxProjectTechDebt = techDebtStats
+                    .getProjectWithMaxTechDebt()
+                    .getProjectStats()
+                    .getTechDebt();
+
+            float avgTechDebt = techDebtStats.getAverageTechDebt();
+            float avgTechDebtPerLOC = techDebtStats.getAverageTechDebtPerLoC();
+
+            Map<String, Object> techDebtStatsResponse = new HashMap<>();
+            techDebtStatsResponse.put("minProjectTechDebt", minProjectTechDebt);
+            techDebtStatsResponse.put("maxProjectTechDebt", maxProjectTechDebt);
+            techDebtStatsResponse.put("avgTechDebt", avgTechDebt);
+            techDebtStatsResponse.put("avgTechDebtPerLOC", avgTechDebtPerLOC);
+
+            return ResponseEntity.ok(techDebtStatsResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private Map<String, Object> createSimpleProjectResponse(Project project) {
         ProjectStats projectStats = project.getProjectStats();
 
