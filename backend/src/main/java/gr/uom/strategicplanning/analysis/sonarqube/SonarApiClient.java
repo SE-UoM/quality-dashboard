@@ -46,7 +46,6 @@ public class SonarApiClient extends HttpClient {
         int totalFiles = this.fetchComponentMetrics(project, "files");
         int totalLines = this.fetchComponentMetrics(project, "ncloc");
 
-//        Collection<LanguageStats> languageDistribution = this.fetchLanguages(project);
 
         JSONObject issues = this.fetchIssues(project, EMPTY_PARAM);
         Double effortInMins = Double.valueOf(issues.get("effortTotal").toString());
@@ -56,12 +55,10 @@ public class SonarApiClient extends HttpClient {
 
         commit.setTotalFiles(totalFiles);
         commit.setTotalLoC(totalLines);
-//        commit.setLanguages(languageDistribution);
         commit.setTechnicalDebt(effortInMins);
         commit.setTotalCodeSmells(totalCodeSmells);
         commit.setTechDebtPerLoC(effortInMins/ totalLines);
         commit.setTotalFiles(totalFiles);
-//        commit.setTotalLanguages(languageDistribution.size());
 
     }
 
@@ -201,5 +198,11 @@ public class SonarApiClient extends HttpClient {
         }
 
         return codeSmellsDistribution;
+    }
+
+    public int retrieveDataFromMeasures(Project project, String metric) throws IOException {
+        this.loginToSonar();
+        int totalNumber = this.fetchComponentMetrics(project, metric);
+        return totalNumber;
     }
 }

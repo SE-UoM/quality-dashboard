@@ -23,6 +23,8 @@ public class Developer {
     private String githubUrl;
     private String avatarUrl;
     private int totalCommits;
+    private int totalCodeSmells;
+    private double codeSmellsPerCommit;
     @ManyToOne
     private Project project;
 

@@ -24,7 +24,6 @@ public class ProjectStats {
     private int totalCodeSmells;
     private int techDebt;
     private double techDebtPerLoC;
-    private int totalLanguages;
 
     @OneToMany(mappedBy = "projectStats", cascade = CascadeType.PERSIST)
     private Collection<CodeSmellDistribution> codeSmellDistributions;

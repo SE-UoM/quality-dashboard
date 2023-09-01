@@ -45,7 +45,6 @@ public class DeveloperService {
 
         project.addDeveloper(developer);
         projectService.saveProject(project);
-//        saveDeveloper(developer);
 
         return developer;
     }
@@ -53,7 +52,6 @@ public class DeveloperService {
     private void saveDeveloper(Developer developer) {
         developerRepository.save(developer);
     }
-
 
     private Developer findOrCreateDeveloper(String developerName, Project project) {
         Optional<Developer> developerOptional = developerRepository.findByName(developerName);
