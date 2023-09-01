@@ -431,6 +431,27 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("/{id}/language-distribution")
+    public ResponseEntity<Collection<LanguageResponse>> getOrganizationLanguageDistribution(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            Collection<OrganizationLanguage> languages = organizationAnalysis.getLanguages();
+
+            Collection<LanguageResponse> languageDistribution =
+                    languages.stream()
+                            .map(LanguageResponse::new)
+                            .collect(Collectors.toList());
+
+            return ResponseEntity.ok(languageDistribution);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     private Map<String, Object> createSimpleProjectResponse(Project project) {
         ProjectStats projectStats = project.getProjectStats();
 
