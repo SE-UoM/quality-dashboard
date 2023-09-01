@@ -9,6 +9,7 @@ import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
+import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,6 +175,37 @@ public class OrganizationController {
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(languageNamesResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/top-projects")
+    public ResponseEntity<Collection<Map>> getOrganizationTopProjects(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
+            Collection<Project> topProjects = techDebtStats.getBestTechDebtProjects();
+
+            Collection<Map> topProjectsResponse = new ArrayList<>();
+
+            for (Project project : topProjects) {
+                Map<String, Object> projectResponse = new HashMap<>();
+
+                String projectName = project.getName();
+                double techDebt = project.getProjectStats().getTechDebtPerLoC();
+
+                projectResponse.put("name", projectName);
+                projectResponse.put("techDebtPerLoc", techDebt);
+
+                topProjectsResponse.add(projectResponse);
+            }
+
+            return ResponseEntity.ok(topProjectsResponse);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
