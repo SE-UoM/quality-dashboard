@@ -1,10 +1,12 @@
 package gr.uom.strategicplanning.controllers;
 
+import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.TechDebtStatsDTO;
 import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
+import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
@@ -492,6 +494,23 @@ public class OrganizationController {
             }
 
             return ResponseEntity.ok(allCommits);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/activity")
+    public ResponseEntity<ActivityStatsDTO> getOrganizationActivityStats(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            ActivityStats activityStats = organizationAnalysis.getActivityStats();
+
+            ActivityStatsDTO activityStatsDTO = new ActivityStatsDTO(activityStats);
+
+            return ResponseEntity.ok(activityStatsDTO);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
