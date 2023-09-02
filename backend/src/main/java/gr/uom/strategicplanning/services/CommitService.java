@@ -3,7 +3,6 @@ package gr.uom.strategicplanning.services;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.domain.Commit;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.CommitRepository;
 import org.springframework.beans.factory.annotation.Autowired;

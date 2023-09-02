@@ -1,12 +1,8 @@
 package gr.uom.strategicplanning.services;
 
-import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
-import gr.uom.strategicplanning.models.stats.GeneralStats;
-import gr.uom.strategicplanning.repositories.LanguageRepository;
-import gr.uom.strategicplanning.repositories.LanguageStatsRepository;
 import gr.uom.strategicplanning.repositories.OrganizationLanguageRepository;
 import gr.uom.strategicplanning.repositories.ProjectLanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +16,6 @@ import java.util.*;
 public class LanguageService {
 
     private final SonarApiClient sonarApiClient;
-    private LanguageRepository languageRepository;
-    private LanguageStatsRepository languageStatsRepository;
-
-    @Autowired
-    private ProjectService projectService;
 
     @Autowired
     private ProjectLanguageRepository projectLanguageRepository;
@@ -32,10 +23,8 @@ public class LanguageService {
     private OrganizationLanguageRepository organizationLanguageRepository;
 
     @Autowired
-    public LanguageService(LanguageRepository languageRepository, @Value("${github.token}") String githubToken, LanguageStatsRepository languageStatsRepository) {
-        this.languageRepository = languageRepository;
+    public LanguageService(@Value("${github.token}") String githubToken) {
         this.sonarApiClient = new SonarApiClient();
-        this.languageStatsRepository = languageStatsRepository;
     }
 
     public void updateOrganizationLanguages(Organization organization) {

@@ -2,18 +2,15 @@ package gr.uom.strategicplanning.models.stats;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
-import gr.uom.strategicplanning.models.domain.Language;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
-import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @Getter
