@@ -195,6 +195,8 @@ public class SonarApiClient extends HttpClient {
             codeSmellDistribution.setProjectStats(project.getProjectStats());
             codeSmellDistribution.setCodeSmell(name);
             codeSmellDistribution.setCount(count);
+
+            codeSmellsDistribution.add(codeSmellDistribution);
         }
 
         return codeSmellsDistribution;
