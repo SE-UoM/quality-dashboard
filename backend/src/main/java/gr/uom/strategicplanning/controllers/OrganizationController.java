@@ -436,7 +436,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/language-distribution")
-    public ResponseEntity<Collection<LanguageResponse>> getOrganizationLanguageDistribution(@PathVariable Long id) {
+    public ResponseEntity<Map> getOrganizationLanguageDistribution(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
@@ -448,7 +448,13 @@ public class OrganizationController {
                             .map(LanguageResponse::new)
                             .collect(Collectors.toList());
 
-            return ResponseEntity.ok(languageDistribution);
+            int totalLanguages = languageDistribution.size();
+
+            Map<String, Object> languageDistributionResponse = new HashMap<>();
+            languageDistributionResponse.put("totalLanguages", totalLanguages);
+            languageDistributionResponse.put("languageDistribution", languageDistribution);
+
+            return ResponseEntity.ok(languageDistributionResponse);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
