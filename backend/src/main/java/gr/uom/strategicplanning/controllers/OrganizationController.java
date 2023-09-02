@@ -30,7 +30,7 @@ public class OrganizationController {
     private OrganizationRepository organizationRepository;
     @Autowired
     private OrganizationService organizationService;
-    
+
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
             try {

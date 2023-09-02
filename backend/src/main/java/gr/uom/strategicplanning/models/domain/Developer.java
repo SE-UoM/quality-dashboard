@@ -1,6 +1,5 @@
 package gr.uom.strategicplanning.models.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Entity;
