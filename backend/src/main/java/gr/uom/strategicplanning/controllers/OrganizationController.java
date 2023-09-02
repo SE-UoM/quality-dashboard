@@ -443,10 +443,14 @@ public class OrganizationController {
 
             Collection<OrganizationLanguage> languages = organizationAnalysis.getLanguages();
 
-            Collection<LanguageResponse> languageDistribution =
-                    languages.stream()
-                            .map(LanguageResponse::new)
-                            .collect(Collectors.toList());
+            Collection<LanguageResponse> languageDistribution = new ArrayList<>();
+
+            for (OrganizationLanguage language : languages) {
+                if (language.getName() != null) {
+                    LanguageResponse languageResponse = new LanguageResponse(language);
+                    languageDistribution.add(languageResponse);
+                }
+            }
 
             int totalLanguages = languageDistribution.size();
 
