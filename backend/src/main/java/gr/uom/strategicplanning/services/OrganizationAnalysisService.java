@@ -90,12 +90,16 @@ public class OrganizationAnalysisService {
 
         int totalLinesOfCode = calculateTotalLinesOfCode(organization);
 
+        int totalFiles = generalStatsService.countTotalFiles(organization);
+
         GeneralStats generalStats = organization.getOrganizationAnalysis().getGeneralStats();
         generalStats.setTotalProjects(totalProjects);
         generalStats.setTotalLanguages(totalLanguages);
         generalStats.setTotalCommits(totalCommits);
         generalStats.setTotalDevs(totalDevelopers);
         generalStats.setTotalLinesOfCode(totalLinesOfCode);
+        generalStats.setTotalFiles(totalFiles);
+
 
         return generalStats;
     }
