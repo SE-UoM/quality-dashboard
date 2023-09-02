@@ -21,8 +21,6 @@ public class GeneralStatsDTO {
     private int totalLinesOfCode;
     private int totalDevs;
 
-    private Long organizationAnalysisId;
-
     public GeneralStatsDTO(GeneralStats generalStats) {
         this.id = generalStats.getId();
         this.totalProjects = generalStats.getTotalProjects();
@@ -31,6 +29,5 @@ public class GeneralStatsDTO {
         this.totalFiles = generalStats.getTotalFiles();
         this.totalLinesOfCode = generalStats.getTotalLinesOfCode();
         this.totalDevs = generalStats.getTotalDevs();
-        this.organizationAnalysisId = generalStats.getOrganizationAnalysis().getId();
     }
 }

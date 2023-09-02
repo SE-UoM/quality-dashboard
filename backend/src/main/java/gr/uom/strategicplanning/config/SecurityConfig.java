@@ -42,7 +42,9 @@ public class SecurityConfig {
             "/user/token/refresh",
             "/api/user/register",
             "/login",
-            "/api/organizations"
+            "/api/organizations",
+            "/api/best-practices",
+            "/api/best-practices/random",
     };
 
     @Bean
