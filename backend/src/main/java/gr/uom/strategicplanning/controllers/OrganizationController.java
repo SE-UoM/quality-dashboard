@@ -30,9 +30,7 @@ public class OrganizationController {
     private OrganizationRepository organizationRepository;
     @Autowired
     private OrganizationService organizationService;
-
-    private final String EURO = " €";
-
+    
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
             try {
