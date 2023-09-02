@@ -12,6 +12,7 @@ import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.OrganizationService;
+import gr.uom.strategicplanning.utils.TechDebtUtils;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class OrganizationController {
     private OrganizationRepository organizationRepository;
     @Autowired
     private OrganizationService organizationService;
+
+    private final String EURO = " €";
 
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
@@ -110,7 +113,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/organization-analysis/general-stats")
+    @GetMapping("/{id}/general-stats")
     public ResponseEntity<GeneralStatsDTO> getOrganizationAnalysisGeneralStats(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -142,12 +145,10 @@ public class OrganizationController {
             return ResponseEntity.ok(organizationAnalysisResponse);
         }
 
-    @GetMapping("/{id}/top_developers")
+    @GetMapping("/{id}/top-developers")
     public ResponseEntity<Collection<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
-            Organization organization = organizationRepository.findById(id).orElse(null);
-            if (organization == null) {
-                return ResponseEntity.notFound().build();
-            }
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
 
             Collection<Developer> projectDevelopers = organization.getProjects().stream()
                     .flatMap(project -> project.getDevelopers().stream())
@@ -162,7 +163,11 @@ public class OrganizationController {
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(developerResponses);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
         }
+    }
 
     @GetMapping("/{id}/language-names")
     public ResponseEntity<Collection<String>> getOrganizationLanguageNames(@PathVariable Long id) {
@@ -375,20 +380,18 @@ public class OrganizationController {
         try {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
-
             TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
 
+            float tdInMinutes = techDebtStats.getTotalTechDebt();
+            Number techDebtHours = TechDebtUtils.convertTDToHours(tdInMinutes);
+            double techDectCostPerHour = TechDebtUtils.calculateTecDebtCostPerHour(techDebtHours);
+            double techDebtCostPerMonth = TechDebtUtils.calculateTechDebtCostPerMonth(techDebtHours, techDectCostPerHour);
+
             Map<String, Object> totalTechDebtResponse = new HashMap<>();
-            totalTechDebtResponse.put("totalTechDebt", techDebtStats.getTotalTechDebt());
-
-            // Convert tech debt to hours
-            double techDebtHours = techDebtStats.getTotalTechDebt() / 60;
             totalTechDebtResponse.put("totalTechDebtHours", techDebtHours);
-
-            // Convert tech debt to currency
-            double hourlyRate = 30;
-            double techDebtCurrency = techDebtHours * hourlyRate;
-            totalTechDebtResponse.put("totalTechDebtCurrency", techDebtCurrency);
+            totalTechDebtResponse.put("techDebtCostPerHour", techDectCostPerHour);
+            totalTechDebtResponse.put("techDebtCostPerMonth", techDebtCostPerMonth);
+            totalTechDebtResponse.put("tdInMinutes", tdInMinutes);
 
             return ResponseEntity.ok(totalTechDebtResponse);
         }
