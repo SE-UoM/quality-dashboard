@@ -19,10 +19,10 @@ public class ActivityStatsDTO {
 
     public ActivityStatsDTO(ActivityStats activityStats) {
         this.id = activityStats.getId();
-        this.commitsPerDay = activityStats.getCommitsPerDay();
-        this.locAddedPerDay = activityStats.getLocAddedPerDay();
-        this.filesAddedPerDay = activityStats.getFilesAddedPerDay();
-        this.projectsAddedPerDay = activityStats.getProjectsAddedPerDay();
+        this.commitsPerDay = activityStats.getCommitsPerAnalysis();
+        this.locAddedPerDay = activityStats.getLocAddedPerAnalysis();
+        this.filesAddedPerDay = activityStats.getFilesAddedPerAnalysis();
+        this.projectsAddedPerDay = activityStats.getProjectsAddedPerAnalysis();
         this.averageLoC = activityStats.getAverageLoC();
         this.organizationAnalysisId = activityStats.getOrganizationAnalysis().getId();
     }
