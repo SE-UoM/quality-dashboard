@@ -2,7 +2,6 @@ package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
-import gr.uom.strategicplanning.controllers.dtos.TechDebtStatsDTO;
 import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
@@ -13,7 +12,6 @@ import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.OrganizationService;
 import gr.uom.strategicplanning.utils.TechDebtUtils;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -382,12 +380,13 @@ public class OrganizationController {
 
             float tdInMinutes = techDebtStats.getTotalTechDebt();
             Number techDebtHours = TechDebtUtils.convertTDToHours(tdInMinutes);
-            double techDectCostPerHour = TechDebtUtils.calculateTecDebtCostPerHour(techDebtHours);
-            double techDebtCostPerMonth = TechDebtUtils.calculateTechDebtCostPerMonth(techDebtHours, techDectCostPerHour);
+
+            double costForAllHours = TechDebtUtils.calculateTechDebtForAllHours(techDebtHours);
+            double techDebtCostPerMonth = TechDebtUtils.calculateTechDebtCostPerMonth(costForAllHours, techDebtHours);
 
             Map<String, Object> totalTechDebtResponse = new HashMap<>();
             totalTechDebtResponse.put("totalTechDebtHours", techDebtHours);
-            totalTechDebtResponse.put("techDebtCostPerHour", techDectCostPerHour);
+            totalTechDebtResponse.put("totalTechDebtCost", costForAllHours);
             totalTechDebtResponse.put("techDebtCostPerMonth", techDebtCostPerMonth);
             totalTechDebtResponse.put("tdInMinutes", tdInMinutes);
 

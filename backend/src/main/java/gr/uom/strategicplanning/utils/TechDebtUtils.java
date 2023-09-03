@@ -14,11 +14,14 @@ public class TechDebtUtils {
         return techDebtInMinutes.doubleValue() / 60.0;
     }
 
-    public static double calculateTecDebtCostPerHour(Number totalTechDebtInHours) {
+    public static double calculateTechDebtForAllHours(Number totalTechDebtInHours) {
         return totalTechDebtInHours.doubleValue() * DEV_WAGE_PER_HOUR;
     }
 
-    public static double calculateTechDebtCostPerMonth(Number totalTechDebtInHours, Number techDebtCostPerHour) {
-        return totalTechDebtInHours.doubleValue() * techDebtCostPerHour.doubleValue() * WORK_HOURS_PER_MONTH;
+    public static double calculateTechDebtCostPerMonth(Number totalTechDebtCost, Number totalTechDebtInHours) {
+        boolean techDebtIsLessThanOneMonth = totalTechDebtInHours.doubleValue() <= WORK_HOURS_PER_MONTH;
+        if (techDebtIsLessThanOneMonth) return totalTechDebtCost.doubleValue();
+
+        return totalTechDebtCost.doubleValue() / WORK_HOURS_PER_MONTH;
     }
 }
