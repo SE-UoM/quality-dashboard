@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Configuration
@@ -64,8 +65,12 @@ public class Config {
             ObjectMapper objectMapper = new ObjectMapper();
             BestPractice bestPractices[] = objectMapper.readValue(Config.class.getResourceAsStream("/best_practices.json"), BestPractice[].class);
 
-            for (BestPractice bestPractice : bestPractices) {
-                bestPracticesRepository.save(bestPractice);
+            Collection<BestPractice> bestPracticesCollection = bestPracticesRepository.findAll();
+            
+            if (bestPracticesCollection.size() == 0) {
+                for (BestPractice bestPractice : bestPractices) {
+                    bestPracticesRepository.save(bestPractice);
+                }
             }
         };
     }
