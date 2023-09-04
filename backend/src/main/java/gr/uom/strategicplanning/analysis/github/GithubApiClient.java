@@ -1,6 +1,5 @@
 package gr.uom.strategicplanning.analysis.github;
 
-import antlr.StringUtils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -14,25 +13,15 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,6 +32,7 @@ import java.util.*;
  */
 public class GithubApiClient extends HttpClient {
     private String githubToken;
+    public static final String DEFAULT_AVATAR_URL = "https://api.github.com";
 
     public GithubApiClient(String token) {
         super();
@@ -65,29 +55,6 @@ public class GithubApiClient extends HttpClient {
         project.setTotalCommits(captureTotalCommits(username, repoName));
         project.setForks(getTotalForks(username, repoName));
         project.setStars(this.getTotalStars(username, repoName));
-    }
-
-    public Map<String, Integer> languageResponse(Project project) throws IOException {
-        String[] split = project.getRepoUrl().split("/");
-        String owner = split[split.length - 2];
-        String name = split[split.length - 1];
-
-        String url = "https://api.github.com/repos/" + owner + "/" + name + "/languages";
-
-        Response response = sendGithubRequest(url);
-
-        if (response.isSuccessful()) {
-            Map<String, Object> jsonMap = gson.fromJson(response.body().string(), Map.class);
-            Map<String, Integer> languageMap = new HashMap<>();
-
-            for (Map.Entry<String, Object> entry : jsonMap.entrySet()) {
-                languageMap.put(entry.getKey(), ((Number) entry.getValue()).intValue());
-            }
-
-            return languageMap;
-        } else {
-            throw new IOException("Failed to fetch language response from GitHub API");
-        }
     }
 
     private Response sendGithubRequest(String url) throws IOException {
@@ -290,36 +257,48 @@ public class GithubApiClient extends HttpClient {
     }
 
 
-    public String fetchDeveloperName(Project project, Commit commit) throws IOException {
-        Git git = Git.open(new File("./repos/" + project.getName()));
-        RevCommit jgitCommit = git.getRepository().parseCommit(ObjectId.fromString(commit.getHash()));
-        git.close();
-        return jgitCommit.getAuthorIdent().getName();
+    public String fetchDeveloperNameFromCommit(Project project, Commit commit) throws IOException {
+        String commitSHA = commit.getHash();
+
+        String repoURL = project.getRepoUrl();
+        String owner = extractUsername(repoURL);
+        String repoName = extractRepoName(repoURL);
+
+        String commitsAPI = String.format("https://api.github.com/repos/%s/%s/commits/%s", owner, repoName, commitSHA);
+
+        Response commitJSON = sendGithubRequest(commitsAPI);
+        JSONObject jsonObject = new JSONObject(commitJSON.body().string());
+        JSONObject author = jsonObject.getJSONObject("author");
+        String name = author.getString("login");
+
+        if (name == null) return "Unknown Developer";
+
+        return name;
     }
 
-    public String fetchGitHubUsernameAvatarUrl(Project project, Commit commit, String param) throws IOException {
-        String[] split = project.getRepoUrl().split("/");
-        String owner = split[split.length - 2];
-        String name = split[split.length - 1];
+    public String fetchGithubURL(String name) throws IOException {
+        String usersAPI = String.format("https://api.github.com/users/%s", name);
 
-        String url = String.format("https://api.github.com/repos/%s/%s/commits", owner, name);
-        Response response = sendGithubRequest(url);
-        JSONArray jsonArray = new JSONArray(response.body().string());
+        Response response = sendGithubRequest(usersAPI);
+        JSONObject jsonObject = new JSONObject(response.body().string());
+        String githubURL = jsonObject.getString("html_url");
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObject = jsonArray.getJSONObject(i);
-            String sha = jsonObject.getString("sha");
-            if (sha.equals(commit.getHash()) && param.equals("githubUrl")) {
-                JSONObject author = jsonObject.getJSONObject("author");
-                return "www.github.com/" + author.getString("login");
-            } else if (sha.equals(commit.getHash()) && param.equals("avatarUrl")) {
-                JSONObject author = jsonObject.getJSONObject("author");
-                return author.getString("avatar_url");
-            }
-        }
+        if (githubURL == null) return "";
 
+        return githubURL;
+    }
 
-        return null;
+    public String fetchAvatarUrl(String name) throws IOException {
+        String usersAPI = String.format("https://api.github.com/users/%s", name);
+
+        Response response = sendGithubRequest(usersAPI);
+        JSONObject jsonObject = new JSONObject(response.body().string());
+
+        String avatarUrl = jsonObject.getString("avatar_url");
+
+        if (avatarUrl == null) return DEFAULT_AVATAR_URL;
+
+        return avatarUrl;
     }
 
 }

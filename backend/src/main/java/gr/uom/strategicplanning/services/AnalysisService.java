@@ -51,12 +51,14 @@ public class AnalysisService {
 
         for (String commitSHA : commitList) {
             githubApiClient.checkoutCommit(project, commitSHA);
+
             Commit commit = new Commit();
             commit.setHash(commitSHA);
 
             sonarAnalyzer = new SonarAnalyzer(commitSHA);
 
             sonarAnalyzer.analyzeProject(project);
+
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
         }
