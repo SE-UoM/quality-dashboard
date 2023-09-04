@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrganizationAnalysisService {
@@ -106,7 +104,7 @@ public class OrganizationAnalysisService {
 
     private Collection<Developer> getAllOrganizationDevelopers(Organization organization) {
         Collection<Project> organizationProjects = organization.getProjects();
-        Collection<Developer> organizationDevelopers = new ArrayList();
+        Set<Developer> organizationDevelopers = new HashSet<>();
 
         for (Project project : organizationProjects) {
             Collection<Developer> projectDevelopers = project.getDevelopers();

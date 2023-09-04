@@ -42,11 +42,7 @@ public class AnalysisService {
 
     }
 
-    public void startAnalysis(Project project) throws Exception {
-        GithubApiClient.cloneRepository(project);
-
-        project.getCommits().clear();
-
+    private void analyzeCommits(Project project) throws Exception {
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
         for (String commitSHA : commitList) {
@@ -61,17 +57,26 @@ public class AnalysisService {
 
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
-        }
 
-//         Analyze the master branch to get the latest analysis of the project
+            // Maybe if we set sonarAnalyzer to null, the object will be ellible for garbage collection
+            // this could potentially save memory and help with the outOfMemory error we are getting
+            sonarAnalyzer = null;
+        }
+    }
+
+    private void analyzeMaster(Project project) throws Exception {
         githubApiClient.checkoutMasterWithLatestCommit(project);
         sonarAnalyzer = new SonarAnalyzer("master");
         sonarAnalyzer.analyzeProject(project);
 
+        // Also set sonarAnalyzer to null here
+        sonarAnalyzer = null;
+
         // Wait a bit to make sure the analysis data is available
         Thread.sleep(5000);
+    }
 
-
+    private void extractAnalysisDataForProject(Project project) throws Exception {
         Collection languages = languageService.extractLanguagesFromProject(project);
 
         int totalLanguages = languages.size();
@@ -109,9 +114,24 @@ public class AnalysisService {
         }
 
         projectService.populateProjectStats(project);
+    }
+
+    public void startAnalysis(Project project) throws Exception {
+        GithubApiClient.cloneRepository(project);
+
+        project.getCommits().clear();
+
+        analyzeCommits(project);
+        analyzeMaster(project);
+
+        extractAnalysisDataForProject(project);
 
         projectService.saveProject(project);
+
         GithubApiClient.deleteRepository(project);
+
+        // Also set sonarAnalyzer to null here
+        sonarAnalyzer = null;
     }
 
 }

@@ -17,6 +17,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -52,6 +53,7 @@ public class GithubApiClient extends HttpClient {
         String repoName = extractRepoName(project.getRepoUrl());
 
         project.setName(repoName);
+        project.setOwnerName(username);
         project.setTotalCommits(captureTotalCommits(username, repoName));
         project.setForks(getTotalForks(username, repoName));
         project.setStars(this.getTotalStars(username, repoName));
@@ -268,12 +270,16 @@ public class GithubApiClient extends HttpClient {
 
         Response commitJSON = sendGithubRequest(commitsAPI);
         JSONObject jsonObject = new JSONObject(commitJSON.body().string());
-        JSONObject author = jsonObject.getJSONObject("author");
-        String name = author.getString("login");
 
-        if (name == null) return "Unknown Developer";
+        try {
+            JSONObject author = jsonObject.getJSONObject("author");
+            String name = author.getString("login");
+            return name;
+        }
+        catch (JSONException e) {
+            return null;
+        }
 
-        return name;
     }
 
     public String fetchGithubURL(String name) throws IOException {

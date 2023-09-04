@@ -19,6 +19,8 @@ public class Project {
     @GeneratedValue
     private Long id;
     private String name;
+    private String ownerName;
+
     @ManyToOne
     @ToString.Exclude
     private Organization organization;

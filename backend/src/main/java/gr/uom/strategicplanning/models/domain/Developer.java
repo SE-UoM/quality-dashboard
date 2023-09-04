@@ -24,6 +24,7 @@ public class Developer {
     private int totalCommits;
     private int totalCodeSmells;
     private double codeSmellsPerCommit;
+    private Long organizationId;
 
     @ManyToMany(mappedBy = "developers")
     private Set<Project> projects = new HashSet<>();

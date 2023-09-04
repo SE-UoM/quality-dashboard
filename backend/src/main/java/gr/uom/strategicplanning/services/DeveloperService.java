@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -27,7 +28,10 @@ public class DeveloperService {
     }
 
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {
+        Long organizationId = project.getOrganization().getId();
+
         String developerName = githubApiClient.fetchDeveloperNameFromCommit(project, commit);
+
         String developerURL = githubApiClient.fetchGithubURL(developerName);
         String developerAvatarUrl = githubApiClient.fetchAvatarUrl(developerName);
 
@@ -37,6 +41,7 @@ public class DeveloperService {
         developer.setGithubUrl(developerURL);
         developer.setAvatarUrl(developerAvatarUrl);
         developer.setName(developerName);
+        developer.setOrganizationId(organizationId);
 
         project.addDeveloper(developer);
 
@@ -59,5 +64,9 @@ public class DeveloperService {
         developer.setName(developerName);
         developer.setGithubUrl(project.getRepoUrl());
         return developer;
+    }
+
+    public Collection<Developer> findAllByOrganizationId(Long organizationId) {
+        return developerRepository.findAllByOrganizationId(organizationId);
     }
 }
