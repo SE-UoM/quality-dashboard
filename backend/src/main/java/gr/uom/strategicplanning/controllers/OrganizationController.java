@@ -176,7 +176,7 @@ public class OrganizationController {
 
             Collection<String> languageNamesResponse = new ArrayList<>();
             for (OrganizationLanguage organizationLanguage : organizationLanguages) {
-                if (!organizationLanguage.getName().equals("null"))
+                if (organizationLanguage.getName() != null)
                     languageNamesResponse.add(organizationLanguage.getName());
             }
 
@@ -552,6 +552,7 @@ public class OrganizationController {
         simpleProjectResponse.put("techDebt", techDebt);
         simpleProjectResponse.put("totalCodeSmells", codeSmells);
         simpleProjectResponse.put("totalCommits", totalCommits);
+        simpleProjectResponse.put("totalForks", project.getForks());
 
         return simpleProjectResponse;
     }

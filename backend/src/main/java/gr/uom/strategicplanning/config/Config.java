@@ -66,7 +66,7 @@ public class Config {
             BestPractice bestPractices[] = objectMapper.readValue(Config.class.getResourceAsStream("/best_practices.json"), BestPractice[].class);
 
             Collection<BestPractice> bestPracticesCollection = bestPracticesRepository.findAll();
-            
+
             if (bestPracticesCollection.size() == 0) {
                 for (BestPractice bestPractice : bestPractices) {
                     bestPracticesRepository.save(bestPractice);
