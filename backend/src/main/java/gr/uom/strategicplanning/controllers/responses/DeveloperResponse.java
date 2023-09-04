@@ -20,7 +20,6 @@ public class DeveloperResponse {
     public int totalCommits;
     public int totalCodeSmells;
     public double codeSmellsPerCommit;
-    public Long projectId;
 
     public DeveloperResponse(Developer developer) {
         this.id = developer.getId();
@@ -29,7 +28,6 @@ public class DeveloperResponse {
         this.totalCommits = developer.getTotalCommits();
         this.totalCodeSmells = developer.getTotalCodeSmells();
         this.codeSmellsPerCommit = developer.getCodeSmellsPerCommit();
-        this.projectId = developer.getProject().getId();
     }
 
     public static Set<DeveloperResponse> convertToDeveloperResponseSet(Collection<Developer> developerCollection) {

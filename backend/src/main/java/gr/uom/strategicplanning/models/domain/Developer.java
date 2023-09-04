@@ -1,12 +1,11 @@
 package gr.uom.strategicplanning.models.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,12 +20,14 @@ public class Developer {
     private Long id;
     private String name;
     private String githubUrl;
-    private String avatarUrl;
+    private String avatarUrl = GithubApiClient.DEFAULT_AVATAR_URL;
     private int totalCommits;
     private int totalCodeSmells;
     private double codeSmellsPerCommit;
-    @ManyToOne
-    private Project project;
+    private Long organizationId;
+
+    @ManyToMany(mappedBy = "developers")
+    private Set<Project> projects = new HashSet<>();
 
     @Override
     public boolean equals(Object obj) {

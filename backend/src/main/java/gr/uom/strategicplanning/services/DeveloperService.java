@@ -5,14 +5,12 @@ import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Developer;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.DeveloperRepository;
-import gr.uom.strategicplanning.repositories.ProjectRepository;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -30,20 +28,24 @@ public class DeveloperService {
     }
 
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {
-        String developerName = githubApiClient.fetchDeveloperName(project, commit);
-        String developerUsername = githubApiClient.fetchGitHubUsernameAvatarUrl(project, commit, "githubUrl");
-        String developerAvatarUrl = githubApiClient.fetchGitHubUsernameAvatarUrl(project, commit, "avatarUrl");
+        Long organizationId = project.getOrganization().getId();
+
+        String developerName = githubApiClient.fetchDeveloperNameFromCommit(project, commit);
+
+        String developerURL = githubApiClient.fetchGithubURL(developerName);
+        String developerAvatarUrl = githubApiClient.fetchAvatarUrl(developerName);
 
         Developer developer = findOrCreateDeveloper(developerName, project);
 
         developer.setTotalCommits(developer.getTotalCommits() + 1);
-
-        developer.setGithubUrl(developerUsername);
+        developer.setGithubUrl(developerURL);
         developer.setAvatarUrl(developerAvatarUrl);
         developer.setName(developerName);
-        developer.setProject(project);
+        developer.setOrganizationId(organizationId);
 
         project.addDeveloper(developer);
+
+        saveDeveloper(developer);
         projectService.saveProject(project);
 
         return developer;
@@ -62,5 +64,9 @@ public class DeveloperService {
         developer.setName(developerName);
         developer.setGithubUrl(project.getRepoUrl());
         return developer;
+    }
+
+    public Collection<Developer> findAllByOrganizationId(Long organizationId) {
+        return developerRepository.findAllByOrganizationId(organizationId);
     }
 }

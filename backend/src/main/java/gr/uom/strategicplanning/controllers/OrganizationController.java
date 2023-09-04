@@ -2,7 +2,6 @@ package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
-import gr.uom.strategicplanning.controllers.dtos.TechDebtStatsDTO;
 import gr.uom.strategicplanning.controllers.responses.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
@@ -10,10 +9,12 @@ import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import gr.uom.strategicplanning.repositories.DeveloperRepository;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
+import gr.uom.strategicplanning.services.DeveloperService;
 import gr.uom.strategicplanning.services.OrganizationService;
 import gr.uom.strategicplanning.utils.TechDebtUtils;
-import org.aspectj.weaver.ast.Or;
+import org.eclipse.egit.github.core.Contributor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,8 @@ public class OrganizationController {
     private OrganizationRepository organizationRepository;
     @Autowired
     private OrganizationService organizationService;
-
-    private final String EURO = " €";
+    @Autowired
+    private DeveloperService developerService;
 
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
@@ -148,13 +149,9 @@ public class OrganizationController {
     @GetMapping("/{id}/top-developers")
     public ResponseEntity<Collection<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
         try {
-            Organization organization = organizationService.getOrganizationById(id);
+            Collection<Developer> allDevelopers  = developerService.findAllByOrganizationId(id);
 
-            Collection<Developer> projectDevelopers = organization.getProjects().stream()
-                    .flatMap(project -> project.getDevelopers().stream())
-                    .collect(Collectors.toList());
-
-            List<Developer> topDeveloper = projectDevelopers.stream()
+            List<Developer> topDeveloper = allDevelopers.stream()
                     .sorted(Comparator.comparingDouble(Developer::getCodeSmellsPerCommit))
                     .collect(Collectors.toList());
 
@@ -177,9 +174,11 @@ public class OrganizationController {
 
             Collection<OrganizationLanguage> organizationLanguages = organizationAnalysis.getLanguages();
 
-            Collection<String> languageNamesResponse = organizationLanguages.stream()
-                    .map(OrganizationLanguage::getName)
-                    .collect(Collectors.toList());
+            Collection<String> languageNamesResponse = new ArrayList<>();
+            for (OrganizationLanguage organizationLanguage : organizationLanguages) {
+                if (!organizationLanguage.getName().equals("null"))
+                    languageNamesResponse.add(organizationLanguage.getName());
+            }
 
             return ResponseEntity.ok(languageNamesResponse);
         }
@@ -226,7 +225,7 @@ public class OrganizationController {
             Organization organization = organizationService.getOrganizationById(id);
             Collection<Project> organizationProjects = organization.getProjects();
 
-            Collection<Map> developersInfoResponse = new ArrayList<>();
+            Set<Map> developersInfoResponse = new HashSet<>();
             for (Project project : organizationProjects) {
                 Collection<Developer> projectDevelopers = project.getDevelopers();
 
@@ -384,12 +383,13 @@ public class OrganizationController {
 
             float tdInMinutes = techDebtStats.getTotalTechDebt();
             Number techDebtHours = TechDebtUtils.convertTDToHours(tdInMinutes);
-            double techDectCostPerHour = TechDebtUtils.calculateTecDebtCostPerHour(techDebtHours);
-            double techDebtCostPerMonth = TechDebtUtils.calculateTechDebtCostPerMonth(techDebtHours, techDectCostPerHour);
+
+            double costForAllHours = TechDebtUtils.calculateTechDebtForAllHours(techDebtHours);
+            double techDebtCostPerMonth = TechDebtUtils.calculateTechDebtCostPerMonth(costForAllHours, techDebtHours);
 
             Map<String, Object> totalTechDebtResponse = new HashMap<>();
             totalTechDebtResponse.put("totalTechDebtHours", techDebtHours);
-            totalTechDebtResponse.put("techDebtCostPerHour", techDectCostPerHour);
+            totalTechDebtResponse.put("totalTechDebtCost", costForAllHours);
             totalTechDebtResponse.put("techDebtCostPerMonth", techDebtCostPerMonth);
             totalTechDebtResponse.put("tdInMinutes", tdInMinutes);
 
@@ -535,6 +535,7 @@ public class OrganizationController {
         ProjectStats projectStats = project.getProjectStats();
 
         String projectName = project.getName();
+        String projectOwner = project.getOwnerName();
         int projectStars = project.getStars();
         int totalFiles = projectStats.getTotalFiles();
         int totalLoC = projectStats.getTotalLoC();
@@ -544,6 +545,7 @@ public class OrganizationController {
 
         Map<String, Object> simpleProjectResponse = new HashMap<>();
         simpleProjectResponse.put("name", projectName);
+        simpleProjectResponse.put("owner", projectOwner);
         simpleProjectResponse.put("stars", projectStars);
         simpleProjectResponse.put("files", totalFiles);
         simpleProjectResponse.put("loc", totalLoC);

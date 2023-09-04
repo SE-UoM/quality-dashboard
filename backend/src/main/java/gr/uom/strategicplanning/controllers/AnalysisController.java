@@ -10,17 +10,11 @@ import gr.uom.strategicplanning.repositories.ProjectRepository;
 import gr.uom.strategicplanning.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.html.Option;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/analysis")
@@ -47,36 +41,36 @@ public class AnalysisController {
     @PostMapping("/start")
     public ResponseEntity startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
         try{
-        DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
-        String email = decodedJWT.getSubject();
-        User user = userService.getUserByEmail(email);
-        Organization organization = user.getOrganization();
+            DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
+            String email = decodedJWT.getSubject();
+            User user = userService.getUserByEmail(email);
+            Organization organization = user.getOrganization();
 
-        Project project = new Project();
-        project.setRepoUrl(githubUrl);
-        project.setOrganization(organization);
+            Project project = new Project();
+            project.setRepoUrl(githubUrl);
+            project.setOrganization(organization);
 
-        Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
+            Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
 
-        organization.addProject(project);
-
-
-        if (projectOptional.isPresent()) project = projectOptional.get();
+            organization.addProject(project);
 
 
-        analysisService.fetchGithubData(project);
+            if (projectOptional.isPresent()) project = projectOptional.get();
 
-        if (!project.canBeAnalyzed()) {
-            project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
-            return ResponseEntity.ok("Project has been added to the queue");
-        }
 
-        analysisService.startAnalysis(project);
-        organizationAnalysisService.updateOrganizationAnalysis(organization);
-        organizationService.saveOrganization(organization);
+            analysisService.fetchGithubData(project);
 
-        return ResponseEntity.ok(Collections.singletonMap("message", "Analysis ended successfully"));
-    } catch (Exception e) {
+            if (!project.canBeAnalyzed()) {
+                project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+                return ResponseEntity.ok("Project has been added to the queue");
+            }
+
+            analysisService.startAnalysis(project);
+            organizationAnalysisService.updateOrganizationAnalysis(organization);
+            organizationService.saveOrganization(organization);
+
+            return ResponseEntity.ok(Collections.singletonMap("message", "Analysis ended successfully"));
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }

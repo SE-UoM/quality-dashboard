@@ -1,7 +1,5 @@
 package gr.uom.strategicplanning.controllers.responses;
 
-import gr.uom.strategicplanning.models.domain.Language;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
 import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.ProjectLanguage;
 import lombok.AllArgsConstructor;
@@ -11,7 +9,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
