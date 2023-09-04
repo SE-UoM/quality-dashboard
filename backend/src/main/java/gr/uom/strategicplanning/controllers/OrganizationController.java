@@ -222,7 +222,7 @@ public class OrganizationController {
             Organization organization = organizationService.getOrganizationById(id);
             Collection<Project> organizationProjects = organization.getProjects();
 
-            Collection<Map> developersInfoResponse = new ArrayList<>();
+            Set<Map> developersInfoResponse = new HashSet<>();
             for (Project project : organizationProjects) {
                 Collection<Developer> projectDevelopers = project.getDevelopers();
 
