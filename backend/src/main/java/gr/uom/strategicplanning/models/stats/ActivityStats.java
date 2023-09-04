@@ -22,10 +22,10 @@ public class ActivityStats {
     @Id
     @GeneratedValue
     private Long id;
-    private float commitsPerDay = 0;
-    private float locAddedPerDay = 0;
-    private float filesAddedPerDay = 0;
-    private float projectsAddedPerDay = 0;
+    private float commitsPerAnalysis = 0;
+    private float locAddedPerAnalysis = 0;
+    private float filesAddedPerAnalysis = 0;
+    private float projectsAddedPerAnalysis = 0;
     private float averageLoC;
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;

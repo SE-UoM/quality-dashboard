@@ -19,6 +19,8 @@ public class Project {
     @GeneratedValue
     private Long id;
     private String name;
+    private String ownerName;
+
     @ManyToOne
     @ToString.Exclude
     private Organization organization;
@@ -32,10 +34,14 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private Collection<ProjectLanguage> languages = new ArrayList<>();
     private int totalLanguages;
-    @OneToMany(mappedBy = "project")
+
+    @ManyToMany()
+    @JoinTable(
+            name = "project_developer",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "developer_id"))
     private Set<Developer> developers = new HashSet<>();
-    @OneToMany(mappedBy = "project")
-    private Collection<Developer> topDevelopers = new ArrayList<>();
+
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
@@ -58,7 +64,7 @@ public class Project {
     public void addDeveloper(Developer developer) {
         if (!developerExists(developer)) {
             this.developers.add(developer);
-            developer.setProject(this);
+            developer.getProjects().add(this);
         }
     }
 

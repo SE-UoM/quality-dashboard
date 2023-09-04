@@ -1,12 +1,7 @@
 package gr.uom.strategicplanning.controllers.dtos;
 
-import gr.uom.strategicplanning.controllers.responses.LanguageResponse;
-import gr.uom.strategicplanning.models.domain.LanguageStats;
-import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import lombok.*;
-
-import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor

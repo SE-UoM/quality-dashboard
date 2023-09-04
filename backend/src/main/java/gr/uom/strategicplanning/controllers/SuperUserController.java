@@ -31,9 +31,6 @@ public class SuperUserController {
     private DeveloperRepository developerRepository;
 
     @Autowired
-    private LanguageRepository languageRepository;
-
-    @Autowired
     private OrganizationAnalysisRepository organizationAnalysisRepository;
 
     @Autowired
@@ -108,18 +105,6 @@ public class SuperUserController {
         return ResponseEntity.ok(savedOrganizationAnalysis);
     }
 
-    @PutMapping("/language/{id}")
-    public ResponseEntity<Language> updateLanguage(@PathVariable Long id, @RequestBody Language updatedLanguage) {
-        Optional<Language> languageOptional = languageRepository.findById(id);
-        if (languageOptional.isEmpty()) return ResponseEntity.notFound().build();
-
-        Language existingLanguage = languageOptional.get();
-        existingLanguage.setName(updatedLanguage.getName());
-        existingLanguage.setImageUrl(updatedLanguage.getImageUrl());
-        Language savedLanguage = languageRepository.save(existingLanguage);
-        return ResponseEntity.ok(savedLanguage);
-    }
-
     @PutMapping("/project/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project updatedProject) {
         Optional<Project> projectOptional = projectRepository.findById(id);
@@ -160,15 +145,6 @@ public class SuperUserController {
         if (organizationAnalysisOptional.isEmpty()) return ResponseEntity.notFound().build();
 
         organizationAnalysisRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/language/{id}")
-    public ResponseEntity<Void> deleteLanguage(@PathVariable Long id) {
-        Optional<Language> languageOptional = languageRepository.findById(id);
-        if (languageOptional.isEmpty()) return ResponseEntity.notFound().build();
-
-        languageRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -29,21 +29,21 @@ public class ActivityStatsService {
 
         List<Project> projects = organization.getProjects();
 
-        int locPerCommitPerProject = getLocPerCommitPerProject(projects);
-        int allCommits = getAllCommitsCount(projects);
+        int locPerCommitPerProject = calculateValues(projects, "loc");
+        int allCommits = calculateValues(projects, "commits");
         int allProjects = projects.size();
-        int addedFiles = getAddedFiles(projects);
+        int addedFiles = calculateValues(projects, "files");
 
         float avgLOC = calcAverageLoC(locPerCommitPerProject, allCommits);
         activityStats.setAverageLoC(avgLOC);
 
-        activityStats.setFilesAddedPerDay(addedFiles - activityStats.getFilesAddedPerDay());
+        activityStats.setFilesAddedPerAnalysis(addedFiles - activityStats.getFilesAddedPerAnalysis());
 
-        activityStats.setCommitsPerDay(allCommits - activityStats.getCommitsPerDay());
+        activityStats.setCommitsPerAnalysis(allCommits - activityStats.getCommitsPerAnalysis());
 
-        activityStats.setLocAddedPerDay(locPerCommitPerProject - activityStats.getLocAddedPerDay());
+        activityStats.setLocAddedPerAnalysis(locPerCommitPerProject - activityStats.getLocAddedPerAnalysis());
 
-        activityStats.setProjectsAddedPerDay(allProjects - activityStats.getProjectsAddedPerDay());
+        activityStats.setProjectsAddedPerAnalysis(allProjects - activityStats.getProjectsAddedPerAnalysis());
 
         activityStats.setOrganizationAnalysis(organization.getOrganizationAnalysis());
 
@@ -52,29 +52,35 @@ public class ActivityStatsService {
         return activityStats;
     }
 
-    private int getLocPerCommitPerProject(List<Project> projects) {
-        return (int) projects.stream().mapToLong(project -> project.getCommits()
-                .stream().mapToLong(Commit::getTotalLoC).sum()).sum();
-    }
-
-    private int getAllCommitsCount(List<Project> projects) {
-        return projects.stream().mapToInt(project -> project.getCommits().size()).sum();
-    }
-
-    private int getAddedFiles(List<Project> projects) {
-        return (int) projects.stream().mapToLong(project -> project.getCommits()
-                .stream().mapToLong(Commit::getTotalFiles).sum()).sum();
+    private void saveActivityStats(ActivityStats activityStats) {
+        activityStatsRepository.save(activityStats);
     }
 
     private float calcAverageLoC(int locPerCommitPerProject, int allCommits) {
+        if (allCommits == 0) {
+            return 0;
+        }
         return (float) locPerCommitPerProject / allCommits;
     }
 
-    private float calcAverageFilesAdded(int addedFiles, int allCommits) {
-        return (float) addedFiles / allCommits;
-    }
-
-    private void saveActivityStats(ActivityStats activityStats) {
-        activityStatsRepository.save(activityStats);
+    private int calculateValues(List<Project> projects, String param) {
+        int count = 0;
+        for (Project project : projects) {
+            for (Commit commit : project.getCommits()) {
+                if (param.equals("loc")) {
+                    if (commit.getTotalLoC() >= 0) {
+                        count += commit.getTotalLoC();
+                    }
+                } else if (param.equals("files")) {
+                    if (commit.getTotalFiles() >= 0) {
+                        count += commit.getTotalFiles();
+                    }
+                }
+            }
+            if (param.equals("projects")) {
+                count += project.getTotalCommits();
+            }
+        }
+        return count;
     }
 }
