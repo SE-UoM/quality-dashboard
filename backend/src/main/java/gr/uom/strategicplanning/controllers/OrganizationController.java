@@ -9,6 +9,7 @@ import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import gr.uom.strategicplanning.repositories.CodeSmellRepository;
 import gr.uom.strategicplanning.repositories.DeveloperRepository;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.DeveloperService;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
@@ -33,6 +35,9 @@ public class OrganizationController {
     private OrganizationService organizationService;
     @Autowired
     private DeveloperService developerService;
+
+    @Autowired
+    private CodeSmellRepository codeSmellRepository;
 
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
@@ -205,9 +210,11 @@ public class OrganizationController {
                 Map<String, Object> projectResponse = new HashMap<>();
 
                 String projectName = project.getName();
+                String projectOwner = project.getOwnerName();
                 double techDebt = project.getProjectStats().getTechDebtPerLoC();
 
                 projectResponse.put("name", projectName);
+                projectResponse.put("owner", projectOwner);
                 projectResponse.put("techDebtPerLoc", techDebt);
 
                 topProjectsResponse.add(projectResponse);
@@ -264,6 +271,7 @@ public class OrganizationController {
 
             Map<String, Object> mostActiveDeveloperResponse = new HashMap<>();
             mostActiveDeveloperResponse.put("name", mostActiveDeveloper.getName());
+            mostActiveDeveloperResponse.put("avatarUrl", mostActiveDeveloper.getAvatarUrl());
             mostActiveDeveloperResponse.put("totalCommits", mostActiveDeveloper.getTotalCommits());
             mostActiveDeveloperResponse.put("totalIssues", mostActiveDeveloper.getTotalCodeSmells());
             mostActiveDeveloperResponse.put("issuesPerContribution", mostActiveDeveloper.getCodeSmellsPerCommit());
@@ -333,17 +341,21 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/last-analysis-date")
-    public ResponseEntity<Map<String, Date>> getLastAnalysisDate(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> getLastAnalysisDate(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
 
             Date lastAnalysisDate = organizationAnalysis.getAnalysisDate();
 
-            Map<String, Date> lastAnalysisDateResponse = new HashMap<>();
-            lastAnalysisDateResponse.put("lastAnalysisDate", lastAnalysisDate);
+            // Convert to MM/DD/YYYY format
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            String formattedDate = formatter.format(lastAnalysisDate);
 
-            return ResponseEntity.ok(lastAnalysisDateResponse);
+            Map<String, String> lastAnalysisDateMap = new HashMap<>();
+            lastAnalysisDateMap.put("lastAnalysisDate", formattedDate);
+
+            return ResponseEntity.ok(lastAnalysisDateMap);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
@@ -469,15 +481,21 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/code-smells-distribution")
-    public ResponseEntity<Collection<OrganizationCodeSmellDistribution>> getCodeSmellsDistribution(@PathVariable Long id) {
+    public ResponseEntity<Map> getCodeSmellsDistribution(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
             TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
+            int totalCodeSmells = techDebtStats.getTotalCodeSmells();
 
             Collection<OrganizationCodeSmellDistribution> codeSmellsDistribution = techDebtStats.getCodeSmells();
 
-            return ResponseEntity.ok(codeSmellsDistribution);
+            Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
+            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
+            codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmellsDistribution);
+
+
+            return ResponseEntity.ok(codeSmellsDistributionResponse);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
