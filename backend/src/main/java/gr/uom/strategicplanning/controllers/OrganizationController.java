@@ -71,9 +71,11 @@ public class OrganizationController {
                 int projectCommits = project.getTotalCommits();
                 int getProjectStars = project.getStars();
                 int projectForks = project.getForks();
+                String projectOwner = project.getOwnerName();
 
                 Map<String, Object> projectInfoMap = new HashMap<>();
                 projectInfoMap.put("name", projectName);
+                projectInfoMap.put("owner", projectOwner);
                 projectInfoMap.put("totalContributions", projectCommits);
                 projectInfoMap.put("stars", getProjectStars);
                 projectInfoMap.put("forks", projectForks);
