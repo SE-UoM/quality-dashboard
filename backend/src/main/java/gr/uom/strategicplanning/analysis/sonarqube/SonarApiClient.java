@@ -3,13 +3,10 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
-import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.models.domain.*;
-import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -121,46 +118,46 @@ public class SonarApiClient extends HttpClient {
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
     public Collection<ProjectLanguage> fetchLanguages(Project project) throws IOException {
-        Response response = this.sendGetRequest(LANGUAGES_URL + project.getName());
+        Collection<ProjectLanguage> languages = new ArrayList<>();
 
-        JSONObject jsonObject = this.convertResponseToJson(response);
-        JSONObject component = jsonObject.getJSONObject("component");
-        JSONArray measures = component.getJSONArray("measures");
-
-
-        String value = "none=0";
         try {
-            value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
+            Response response = this.sendGetRequest(LANGUAGES_URL + project.getName());
+
+            JSONObject jsonObject = this.convertResponseToJson(response);
+            JSONObject component = jsonObject.getJSONObject("component");
+            JSONArray measures = component.getJSONArray("measures");
+
+            String value = measures.getJSONObject(ARRAY_INDEX).get("value").toString();
+
+            String regex = "(\\w+)=(\\d+)";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(value);
+
+            while (matcher.find()) {
+                String languageName = matcher.group(1);
+                int loc = Integer.parseInt(matcher.group(2));
+
+                ProjectLanguage language = new ProjectLanguage();
+                language.setProject(project);
+                language.setName(languageName);
+                language.setLinesOfCode(loc);
+
+                replaceKeyWithLangName(language);
+
+                languages.add(language);
+            }
         }
         catch (JSONException e) {
             System.out.println("No languages found for project " + project.getName());
         }
 
-        String regex = "(\\w+)=(\\d+)";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(value);
-
-        Collection<ProjectLanguage> languages = new ArrayList<>();
-
-        while (matcher.find()) {
-            String languageName = matcher.group(1);
-            int loc = Integer.parseInt(matcher.group(2));
-
-            ProjectLanguage language = new ProjectLanguage();
-            language.setProject(project);
-            language.setName(languageName);
-            language.setLinesOfCode(loc);
-
-            ifLangIsPythonChangeTheName(language);
-
-            languages.add(language);
-        }
-
         return languages;
     }
 
-    private void ifLangIsPythonChangeTheName(ProjectLanguage language) {
+    private void replaceKeyWithLangName(ProjectLanguage language) {
         if (language.getName().equals("py")) language.setName("python");
+        if (language.getName().equals("cs")) language.setName("c#");
+        if (language.getName().equals("cxx")) language.setName("c++");
     }
 
 
