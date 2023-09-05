@@ -31,7 +31,7 @@ public class CodeSmellDistributionService {
 
     public void saveCollectionOfCodeSmellDistribution(Collection<CodeSmellDistribution> codeSmellDistributions) {
         for (CodeSmellDistribution codeSmellDistribution : codeSmellDistributions) {
-            saveOrUpdate(codeSmellDistribution);
+            save(codeSmellDistribution);
         }
     }
 }

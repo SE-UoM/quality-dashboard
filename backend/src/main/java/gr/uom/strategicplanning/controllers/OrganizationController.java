@@ -486,9 +486,15 @@ public class OrganizationController {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
             TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
-            int totalCodeSmells = techDebtStats.getTotalCodeSmells();
 
             Collection<OrganizationCodeSmellDistribution> codeSmellsDistribution = techDebtStats.getCodeSmells();
+
+            int totalCodeSmells = 0;
+
+            for (OrganizationCodeSmellDistribution codeSmell : codeSmellsDistribution) {
+                totalCodeSmells += codeSmell.getCount();
+            }
+
 
             Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
             codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
