@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import gr.uom.strategicplanning.controllers.responses.ErrorResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.services.*;
 import gr.uom.strategicplanning.models.domain.Project;
@@ -9,6 +10,7 @@ import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import gr.uom.strategicplanning.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ public class AnalysisController {
     private final ProjectService projectService;
     private final UserService userService;
     private final OrganizationAnalysisService organizationAnalysisService;
+    private final String GITHUB_URL_PATTERN = "https://github.com/[^/]+/[^/]+" ;
 
     @Autowired
     public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
@@ -38,6 +41,10 @@ public class AnalysisController {
         this.projectRepository = projectRepository;
     }
 
+    private boolean urlIsValid(String url) {
+        return url.matches(GITHUB_URL_PATTERN);
+    }
+
     @PostMapping("/start")
     public ResponseEntity startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
         try{
@@ -45,6 +52,16 @@ public class AnalysisController {
             String email = decodedJWT.getSubject();
             User user = userService.getUserByEmail(email);
             Organization organization = user.getOrganization();
+
+            boolean urlIsInvalid = !urlIsValid(githubUrl);
+            if (urlIsInvalid)
+                return ResponseEntity.badRequest().
+                        body(new ErrorResponse(
+                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                                "Invalid github url",
+                                "The url you provided is not a valid github url"
+                        ));
+
 
             Project project = new Project();
             project.setRepoUrl(githubUrl);
@@ -54,9 +71,7 @@ public class AnalysisController {
 
             organization.addProject(project);
 
-
             if (projectOptional.isPresent()) project = projectOptional.get();
-
 
             analysisService.fetchGithubData(project);
 
