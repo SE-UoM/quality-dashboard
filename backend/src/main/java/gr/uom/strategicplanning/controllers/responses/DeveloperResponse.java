@@ -24,7 +24,7 @@ public class DeveloperResponse {
     public DeveloperResponse(Developer developer) {
         this.id = developer.getId();
         this.name = developer.getName();
-        this.githubUrl = developer.getGithubUrl();
+        this.githubUrl = developer.getAvatarUrl();
         this.totalCommits = developer.getTotalCommits();
         this.totalCodeSmells = developer.getTotalCodeSmells();
         this.codeSmellsPerCommit = developer.getCodeSmellsPerCommit();

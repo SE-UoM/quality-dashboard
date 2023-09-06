@@ -1,91 +1,116 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import LanguagesCount from "./LanguagesCount";
-import ShowTopLanguages from "./ShowTopLanguages";
-import ShowTotalCommits from "./ShowTotalCommits";
-import ShowTotalDevs from "./ShowTotalDevs";
-import ShowTotalFiles from "./ShowTotalFiles";
-import ShowTotalLoC from "./ShowTotalBytes";
-import ShowTotalProjects from "./ShowTotalProjects";
+import ShowTopLanguages from "./TopLanguages";
+import ShowTotalCommits from "./TotalCommits";
+import ShowTotalDevs from "./TotalDevs";
+import ShowTotalFiles from "./TotalFiles";
+import ShowTotalProjects from "./TotalProjects";
 import WordCloud from "./WordCloud";
 import OrganisationLogo from "./OrganisationLogo";
 import SinceLastAnalysis from "../../../components/SinceLastAnalysis";
+import {
+  useGetTopLanguagesQuery,
+  useGetDateSinceLastAnalysisQuery,
+  useGetGeneralStatsQuery,
+  useGetLanguageNamesQuery,
+} from "../../api/screen1Api";
+import ShowTotalBytes from "./TotalBytes";
+import { GeneralStats } from "../../../assets/models";
 
 const templateAreas = `
 "toplangs toplangs wordcloud wordcloud wordcloud proj"
 "toplangs toplangs wordcloud wordcloud wordcloud langs"
 "toplangs toplangs loc commits files devs"
 "logo logo logo sincelast logo2 logo2"
-`
-
+`;
 
 interface OverviewDashboardProps {
-    // topLanguages:
-    // totalLanguages:
-    // loc:
-    // commits:
-    // files:
-    // devs:
-    // projects:
-    // lastanalysis:
+  // topLanguages:
+  // totalLanguages:
+  // loc:
+  // commits:
+  // files:
+  // devs:
+  // projects:
+  // lastanalysis:
 }
 
+const getValueOf = (thing: number | null | undefined) => {
+  if (thing == 0) {
+    return 0;
+  }
+  if (thing == null || thing == undefined) return -1;
+  return thing;
+};
 
+function Dashboard1() {
+  // const { data } = useGetTopLanguagesQuery("10");
+  // const { data: generalStats } = useGetGeneralStatsQuery("10");
+  const generalStats: GeneralStats = {
+    totalCommits: 5,
+    totalDevs: 10,
+    totalFiles: 1,
+    totalLanguages: 4,
+    totalLinesOfCode: 1230,
+    id: 1235,
+    languages: ["Java"],
+    totalProjects: 45,
+  };
+  // console.log("The data is here: ", data);
+  console.log("General Stats: ", generalStats);
 
-function Dashboard1(){
-
-    return <Grid height={"92vh"}
-    padding={"1rem"}
-    templateAreas={templateAreas} 
-    templateColumns={"repeat(6,1fr)"} 
-    templateRows={"repeat(4,1fr)"}
-    gap="1rem">
-        
-        <GridItem gridArea={"toplangs"}>
-
-
+  let devs = getValueOf(generalStats?.totalDevs);
+  let commits = getValueOf(generalStats?.totalCommits);
+  let files = getValueOf(generalStats?.totalFiles);
+  let LoC = getValueOf(generalStats?.totalLinesOfCode);
+  let langs = getValueOf(generalStats?.totalLanguages);
+  let projects = getValueOf(generalStats?.totalProjects);
+  return (
+    <Grid
+      height={"92vh"}
+      padding={"1rem"}
+      templateAreas={templateAreas}
+      templateColumns={"repeat(6,1fr)"}
+      templateRows={"repeat(4,1fr)"}
+      gap="1rem"
+      borderRadius={"1rem"}
+    >
+      <GridItem gridArea={"toplangs"}>
         <ShowTopLanguages />
-        </GridItem>
-        <GridItem gridArea={"wordcloud"} border={"solid 2px black"}>
-
+      </GridItem>
+      <GridItem gridArea={"wordcloud"} border={"solid 2px black"}>
         <WordCloud />
-        </GridItem>
-        <GridItem gridArea={"proj"}>
+      </GridItem>
+      <GridItem gridArea={"proj"}>
+        <ShowTotalProjects projects={projects} />
+      </GridItem>
+      <GridItem gridArea={"langs"}>
+        <LanguagesCount langs={langs} />
+      </GridItem>
+      <GridItem gridArea={"devs"}>
+        <ShowTotalDevs devs={devs} />
+      </GridItem>
+      <GridItem gridArea={"files"}>
+        <ShowTotalFiles files={files} />
+      </GridItem>
+      <GridItem gridArea={"commits"}>
+        <ShowTotalCommits commits={commits} />
+      </GridItem>
+      <GridItem gridArea={"loc"}>
+        <ShowTotalBytes bytes={LoC} />
+      </GridItem>
 
-        <ShowTotalProjects/>
-        </GridItem>
-        <GridItem gridArea={"langs"}>
-
-        <LanguagesCount />
-        </GridItem>
-        <GridItem gridArea={"devs"}>
-
-        <ShowTotalDevs/>
-        </GridItem>
-        <GridItem gridArea={"files"}>
-
-        <ShowTotalFiles />
-        </GridItem>
-        <GridItem gridArea={"commits"}>
-
-        <ShowTotalCommits/>
-        </GridItem>
-        <GridItem gridArea={"loc"}>
-
-        <ShowTotalLoC/>
-        </GridItem>
-
-        <GridItem gridArea={"logo"} border={"solid 2px black"}>
-            <OrganisationLogo />
-        </GridItem>
-        <GridItem gridArea={"sincelast"} border={"solid 2px black"}>
-            <SinceLastAnalysis since="16/08/2023" />
-        </GridItem>
-        <GridItem gridArea={"logo2"} border={"solid 2px black"}>
+      <GridItem gridArea={"logo"} border={"solid 2px black"}>
         <OrganisationLogo />
-
-        </GridItem>
-        </Grid>
+      </GridItem>
+      <GridItem gridArea={"sincelast"} border={"solid 2px black"}>
+        <SinceLastAnalysis since="16/08/2023" />
+      </GridItem>
+      <GridItem gridArea={"logo2"} border={"solid 2px black"}>
+        <OrganisationLogo />
+      </GridItem>
+    </Grid>
+  );
 }
 
 export default Dashboard1;
-

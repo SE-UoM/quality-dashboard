@@ -1,0 +1,38 @@
+version: "3.3"
+services:
+  backend-dashboard:
+    build:
+      context: ./backend/.
+    container_name: backend-dashboard
+    depends_on:
+      - db-dashboard
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/test_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=30a301d7257
+    ports:
+      - '8088:8080'
+
+  db-dashboard:
+    image: postgres:14.7
+    container_name: db-dashboard
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 30a301d7257
+      POSTGRES_DB: test_db
+    volumes:
+       - dashboard_postgresql:/var/lib/postgresql
+       - dashboard_postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5458:5432'
+
+volumes:
+  dashboard_postgresql:
+  dashboard_postgresql_data:
+
+
+
+
+
+
+

@@ -150,10 +150,10 @@ public class GithubApiClient extends HttpClient {
      */
     public static void deleteRepository(Project project) throws Exception {
         String repoName = project.getName();
-        String pathToRepo = System.getProperty("user.dir") + "\\repos" + "\\" + repoName;
+        String pathToRepo = System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + repoName;
 
         Path path = Paths.get(pathToRepo);
-        Path gitFolderPath = Paths.get(pathToRepo + "\\.git");
+        Path gitFolderPath = Paths.get(pathToRepo + System.getProperty("file.separator") + ".git");
 
         if (!Files.exists(path)) throw new FileNotFoundException("Directory " + repoName + "not found | " + pathToRepo);
 
@@ -176,7 +176,7 @@ public class GithubApiClient extends HttpClient {
     public static void cloneRepository(Project project) throws Exception {
         CloneCommand cloneCommand = new CloneCommand();
         cloneCommand.setURI(project.getRepoUrl());
-        cloneCommand.setDirectory(new File(System.getProperty("user.dir") + "\\repos" + "\\" + project.getName()));
+        cloneCommand.setDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + project.getName()));
 
         Git git = cloneCommand.call();
         git.close();

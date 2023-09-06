@@ -32,6 +32,7 @@ public class CodeSmellService {
     }
 
     public Collection<CodeSmell> codeSmellsToCodeSmellList(JSONObject codeSmells, Commit commit) {
+        System.out.println(codeSmells);
         JSONArray issuesArray = codeSmells.getJSONArray("issues");
         List<CodeSmell> codeSmellList = new ArrayList<>();
 
