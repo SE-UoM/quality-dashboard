@@ -5,6 +5,7 @@ import CommitsGraph from "./CommitsGraph";
 import MostStarredProject from "./MostStarredProject";
 import MostForkedProject from "./MostForkedProject";
 import SinceLastAnalysis from "../../../components/SinceLastAnalysis";
+import DashboardLogo from "../../../components/DashboardLogo";
 
 const templateAreas = `
 "actived actived actived actived cgraph cgraph cgraph cgraph cgraph cgraph cgraph"
@@ -76,13 +77,13 @@ function Dashboard4() {
       </GridItem>
 
       <GridItem gridArea={"logo"} border={"solid 2px black"}>
-        Logo
+        <DashboardLogo imageName="uom" width={100} height={100} />
       </GridItem>
       <GridItem gridArea={"space"} border={"solid 2px black"}>
         <SinceLastAnalysis since="16/08/2023" />
       </GridItem>
       <GridItem gridArea={"logo2"} border={"solid 2px black"}>
-        Logo
+        <DashboardLogo imageName="sde" width={100} height={100} />
       </GridItem>
     </Grid>
   );

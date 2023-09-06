@@ -75,38 +75,38 @@ function Dashboard1() {
       gap="1rem"
       borderRadius={"1rem"}
     >
-      <GridItem gridArea={"toplangs"}>
+      <GridItem gridArea={"toplangs"} bg="white">
         <ShowTopLanguages />
       </GridItem>
-      <GridItem gridArea={"wordcloud"} border={"solid 2px black"}>
+      <GridItem gridArea={"wordcloud"} border={"solid 2px black"} bg="white">
         <WordCloud />
       </GridItem>
-      <GridItem gridArea={"proj"}>
+      <GridItem gridArea={"proj"} bg="white">
         <ShowTotalProjects projects={projects} />
       </GridItem>
-      <GridItem gridArea={"langs"}>
+      <GridItem gridArea={"langs"} bg="white">
         <LanguagesCount langs={langs} />
       </GridItem>
-      <GridItem gridArea={"devs"}>
+      <GridItem gridArea={"devs"} bg="white">
         <ShowTotalDevs devs={devs} />
       </GridItem>
-      <GridItem gridArea={"files"}>
+      <GridItem gridArea={"files"} bg="white">
         <ShowTotalFiles files={files} />
       </GridItem>
-      <GridItem gridArea={"commits"}>
+      <GridItem gridArea={"commits"} bg="white">
         <ShowTotalCommits commits={commits} />
       </GridItem>
-      <GridItem gridArea={"loc"}>
+      <GridItem gridArea={"loc"} bg="white">
         <ShowTotalBytes bytes={LoC} />
       </GridItem>
 
-      <GridItem gridArea={"logo"} border={"solid 2px black"}>
+      <GridItem gridArea={"logo"} border={"solid 2px black"} bg="white">
         <OrganisationLogo />
       </GridItem>
-      <GridItem gridArea={"sincelast"} border={"solid 2px black"}>
+      <GridItem gridArea={"sincelast"} border={"solid 2px black"} bg="white">
         <SinceLastAnalysis since="16/08/2023" />
       </GridItem>
-      <GridItem gridArea={"logo2"} border={"solid 2px black"}>
+      <GridItem gridArea={"logo2"} border={"solid 2px black"} bg="white">
         <OrganisationLogo />
       </GridItem>
     </Grid>

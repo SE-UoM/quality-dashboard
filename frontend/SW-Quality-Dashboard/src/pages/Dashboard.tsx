@@ -41,7 +41,7 @@ function HomePage() {
   const DisplayedDashboard = dashboards[index];
   return (
     <>
-      <Flex direction="column" height={"100vh"}>
+      <Flex direction="column" height={"100vh"} bgColor="gray.200">
         {/* wrap this in a swiper instance that doesnot autoscroll */}
         <DisplayedDashboard />
         <IconButton

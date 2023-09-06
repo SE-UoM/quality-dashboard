@@ -60,7 +60,7 @@ function ShowAllLanguages() {
       py="1rem"
       justifyContent={"space-around"}
     >
-      <Doughnut data={data} options={options} width={200} height={200} />
+      <Doughnut data={data} options={options} />
 
       <ChartLegend
         labels={data.labels}

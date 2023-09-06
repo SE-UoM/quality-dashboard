@@ -1,6 +1,7 @@
 import { MyIconProps } from "../types";
 
-function SimpleMedal({ width, height }: MyIconProps) {
+function SimpleMedal({ width, height, rank }: MyIconProps & { rank: number }) {
+  const digits = String(rank).length;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,6 +11,15 @@ function SimpleMedal({ width, height }: MyIconProps) {
       viewBox="0 0 39.688 39.687"
       xmlSpace="preserve"
     >
+      <text
+        x={width / 2 + 5}
+        y={height / 2 + 10}
+        textAnchor="middle"
+        fontSize={"1.4rem"}
+        color="red"
+      >
+        {rank}
+      </text>
       <g transform="translate(-237.43 -134.319)">
         <path
           fill="#4d4d4d"

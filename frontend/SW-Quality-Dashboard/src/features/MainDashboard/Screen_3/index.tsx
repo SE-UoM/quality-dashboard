@@ -4,16 +4,17 @@ import SubmittedProjects from "./SubmittedProjects";
 import ShowAllLanguages from "./ShowAllLanguages";
 import { Grid, GridItem } from "@chakra-ui/react";
 import SinceLastAnalysis from "../../../components/SinceLastAnalysis";
+import DashboardLogo from "../../../components/DashboardLogo";
 
 const templateAreas = `
+"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
+"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
+"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
+"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
+"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
 "projs projs submitted submitted submitted submitted bestdevs bestdevs"
 "projs projs submitted submitted submitted submitted bestdevs bestdevs"
 "projs projs submitted submitted submitted submitted bestdevs bestdevs"
-"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
-"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
-"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
-"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
-"projs projs toplangs toplangs toplangs toplangs bestdevs bestdevs"
 "logo logo logo space space logo2 logo2 logo2"
 "logo logo logo space space logo2 logo2 logo2"
 `;
@@ -31,25 +32,29 @@ function Dashboard3({}: DashboardOfBestProps) {
       gap="1rem"
     >
       <GridItem gridArea={"projs"} border={"solid 2px black"} overflow={"auto"}>
-        {/* <BestProjects /> */}
+        <BestProjects />
       </GridItem>
       <GridItem gridArea={"submitted"} border={"solid 2px black"}>
         <SubmittedProjects />
       </GridItem>
-      <GridItem gridArea={"bestdevs"} border={"solid 2px black"}>
-        Best Developers
+      <GridItem
+        gridArea={"bestdevs"}
+        border={"solid 2px black"}
+        overflow={"auto"}
+      >
+        <BestDevelopers />
       </GridItem>
       <GridItem gridArea={"toplangs"} border={"solid 2px black"}>
-        {/* <ShowAllLanguages /> */}
+        <ShowAllLanguages />
       </GridItem>
       <GridItem gridArea={"logo"} border={"solid 2px black"}>
-        Logo
+        <DashboardLogo imageName="uom" width={100} height={100} />
       </GridItem>
       <GridItem gridArea={"space"} border={"solid 2px black"}>
         <SinceLastAnalysis since="16/08/2023" />
       </GridItem>
       <GridItem gridArea={"logo2"} border={"solid 2px black"}>
-        Logo
+        <DashboardLogo imageName="uom" width={100} height={100} />
       </GridItem>
     </Grid>
   );
