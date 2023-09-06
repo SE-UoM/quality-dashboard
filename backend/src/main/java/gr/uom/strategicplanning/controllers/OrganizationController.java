@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/organizations")
 public class OrganizationController {
-
     @Autowired
     private OrganizationRepository organizationRepository;
     @Autowired
