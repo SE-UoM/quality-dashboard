@@ -9,6 +9,7 @@ import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import gr.uom.strategicplanning.repositories.CodeSmellRepository;
 import gr.uom.strategicplanning.repositories.DeveloperRepository;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.DeveloperService;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
@@ -168,6 +170,26 @@ public class OrganizationController {
         }
     }
 
+    @GetMapping("/{id}/top-contributors")
+    public ResponseEntity<Collection> getTopContributors(@PathVariable Long id) {
+        try {
+            Collection<Developer> allDevelopers  = developerService.findAllByOrganizationId(id);
+
+            List<Developer> topDeveloper = allDevelopers.stream()
+                    .sorted(Comparator.comparingDouble(Developer::getTotalCommits).reversed())
+                    .collect(Collectors.toList());
+
+            List<DeveloperResponse> developerResponses = topDeveloper.stream()
+                    .map(DeveloperResponse::new)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(developerResponses);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/{id}/language-names")
     public ResponseEntity<Collection<String>> getOrganizationLanguageNames(@PathVariable Long id) {
         try {
@@ -205,9 +227,11 @@ public class OrganizationController {
                 Map<String, Object> projectResponse = new HashMap<>();
 
                 String projectName = project.getName();
+                String projectOwner = project.getOwnerName();
                 double techDebt = project.getProjectStats().getTechDebtPerLoC();
 
                 projectResponse.put("name", projectName);
+                projectResponse.put("owner", projectOwner);
                 projectResponse.put("techDebtPerLoc", techDebt);
 
                 topProjectsResponse.add(projectResponse);
@@ -264,6 +288,7 @@ public class OrganizationController {
 
             Map<String, Object> mostActiveDeveloperResponse = new HashMap<>();
             mostActiveDeveloperResponse.put("name", mostActiveDeveloper.getName());
+            mostActiveDeveloperResponse.put("avatarUrl", mostActiveDeveloper.getAvatarUrl());
             mostActiveDeveloperResponse.put("totalCommits", mostActiveDeveloper.getTotalCommits());
             mostActiveDeveloperResponse.put("totalIssues", mostActiveDeveloper.getTotalCodeSmells());
             mostActiveDeveloperResponse.put("issuesPerContribution", mostActiveDeveloper.getCodeSmellsPerCommit());
@@ -333,17 +358,21 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/last-analysis-date")
-    public ResponseEntity<Map<String, Date>> getLastAnalysisDate(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> getLastAnalysisDate(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
 
             Date lastAnalysisDate = organizationAnalysis.getAnalysisDate();
 
-            Map<String, Date> lastAnalysisDateResponse = new HashMap<>();
-            lastAnalysisDateResponse.put("lastAnalysisDate", lastAnalysisDate);
+            // Convert to MM/DD/YYYY format
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            String formattedDate = formatter.format(lastAnalysisDate);
 
-            return ResponseEntity.ok(lastAnalysisDateResponse);
+            Map<String, String> lastAnalysisDateMap = new HashMap<>();
+            lastAnalysisDateMap.put("lastAnalysisDate", formattedDate);
+
+            return ResponseEntity.ok(lastAnalysisDateMap);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
@@ -448,7 +477,7 @@ public class OrganizationController {
             Collection<LanguageResponse> languageDistribution = new ArrayList<>();
 
             for (OrganizationLanguage language : languages) {
-                if (language.getName() != null) {
+                if (language.getName() != null && !language.getName().equals("none")) {
                     LanguageResponse languageResponse = new LanguageResponse(language);
                     languageDistribution.add(languageResponse);
                 }
@@ -469,7 +498,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/code-smells-distribution")
-    public ResponseEntity<Collection<OrganizationCodeSmellDistribution>> getCodeSmellsDistribution(@PathVariable Long id) {
+    public ResponseEntity<Map> getCodeSmellsDistribution(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
@@ -477,7 +506,19 @@ public class OrganizationController {
 
             Collection<OrganizationCodeSmellDistribution> codeSmellsDistribution = techDebtStats.getCodeSmells();
 
-            return ResponseEntity.ok(codeSmellsDistribution);
+            int totalCodeSmells = 0;
+
+            for (OrganizationCodeSmellDistribution codeSmell : codeSmellsDistribution) {
+                totalCodeSmells += codeSmell.getCount();
+            }
+
+
+            Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
+            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
+            codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmellsDistribution);
+
+
+            return ResponseEntity.ok(codeSmellsDistributionResponse);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
