@@ -36,9 +36,6 @@ public class OrganizationController {
     @Autowired
     private DeveloperService developerService;
 
-    @Autowired
-    private CodeSmellRepository codeSmellRepository;
-
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
             try {
@@ -160,6 +157,26 @@ public class OrganizationController {
 
             List<Developer> topDeveloper = allDevelopers.stream()
                     .sorted(Comparator.comparingDouble(Developer::getCodeSmellsPerCommit))
+                    .collect(Collectors.toList());
+
+            List<DeveloperResponse> developerResponses = topDeveloper.stream()
+                    .map(DeveloperResponse::new)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(developerResponses);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/top-contributors")
+    public ResponseEntity<Collection> getTopContributors(@PathVariable Long id) {
+        try {
+            Collection<Developer> allDevelopers  = developerService.findAllByOrganizationId(id);
+
+            List<Developer> topDeveloper = allDevelopers.stream()
+                    .sorted(Comparator.comparingDouble(Developer::getTotalCommits).reversed())
                     .collect(Collectors.toList());
 
             List<DeveloperResponse> developerResponses = topDeveloper.stream()
@@ -460,7 +477,7 @@ public class OrganizationController {
             Collection<LanguageResponse> languageDistribution = new ArrayList<>();
 
             for (OrganizationLanguage language : languages) {
-                if (language.getName() != null) {
+                if (language.getName() != null && !language.getName().equals("none")) {
                     LanguageResponse languageResponse = new LanguageResponse(language);
                     languageDistribution.add(languageResponse);
                 }
