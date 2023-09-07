@@ -41,12 +41,12 @@ const options = {
 };
 
 const data = {
-  labels: ["Minimal", "Minor", "Moderate", "Critical", "Unknown", "Code Style"],
+  labels: ["minor", "major", "critical", "blocker", "info"],
   datasets: [
     {
       label: "# of Votes",
       data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: ["green", "yellow", "orange", "red", "purple", "blue"],
+      backgroundColor: ["#67b279", "#fdd835", "#ff7f50", "#ff5252", "#58bbfb"],
 
       borderWidth: 1,
     },
@@ -59,7 +59,7 @@ function TotalCodeSmells() {
       justifyContent={"space-around"}
       width={"75%"}
       height={"75%"}
-      padding="1rem"
+      ml="3rem"
       mt="2rem"
     >
       <Doughnut data={data} options={options} />
@@ -77,13 +77,15 @@ interface LegendProps {
   colors: string[];
 }
 function ChartLegend({ labels, colors }: LegendProps) {
+  const colorsOfChart = ["minor", "major", "critical", "blocker", "info"];
+
   return (
     <Flex direction={"column"} rowGap="0.5rem" alignSelf={"center"}>
       {labels.map((label, index) => {
         return (
           <Flex columnGap={"2rem"} alignItems={"center"} key={label}>
             <Box
-              bg={colors[index]}
+              bg={"level." + colorsOfChart[index]}
               width={"2rem"}
               height={"2rem"}
               borderRadius={"1000000px"}

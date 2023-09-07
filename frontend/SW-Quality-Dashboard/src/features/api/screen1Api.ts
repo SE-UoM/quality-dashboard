@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { GeneralStats } from "../../assets/models";
+import { API_URL } from "../../assets/url";
 
 export const screen1Api = createApi({
   reducerPath: "screen1Api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/organizations",
+    baseUrl: `${API_URL}/api/organizations`,
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.accessToken;
       console.log("Token: set", token);
@@ -25,8 +26,8 @@ export const screen1Api = createApi({
         url: `/${organizationId}/language-names`,
       }),
     }),
-    getGeneralStats: builder.query<GeneralStats, string>({
-      query: (organizationId: string) => ({
+    getGeneralStats: builder.query<GeneralStats, number>({
+      query: (organizationId: number) => ({
         url: `/${organizationId}/general-stats`,
       }),
     }),

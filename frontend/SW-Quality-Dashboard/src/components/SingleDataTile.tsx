@@ -13,15 +13,14 @@ function SingleDataTile({ Icon, label, num }: SingleDataTileProps) {
     <Flex
       direction={"row"}
       height="100%"
-      borderRadius={"0.25rem"}
+      borderRadius={"0.5rem"}
       columnGap={"1rem"}
       alignItems={"center"}
       justifyContent={"space-around"}
-      border={"solid 2px black"}
     >
       <chakra.span>{Icon}</chakra.span>
       <Flex direction={"column"} rowGap={"0.25rem"}>
-        <chakra.span fontSize={"5xl"} fontWeight={"semibold"}>
+        <chakra.span fontSize={"4xl"} fontWeight={"semibold"}>
           <AnimatedCount count={num} />
         </chakra.span>
         <chakra.span fontSize={"xl"}>{label}</chakra.span>

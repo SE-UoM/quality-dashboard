@@ -1,4 +1,4 @@
-import { Flex, chakra } from "@chakra-ui/react";
+import { Flex, NumberInputStepperProps, chakra } from "@chakra-ui/react";
 import { useGetTopLanguagesQuery } from "../../api/screen1Api";
 
 function getIconOfLanguage(lang: string) {}
@@ -9,15 +9,19 @@ interface LangBarProps {
   rank: number;
 }
 
-function LanguageBar({ color, langname, rank }: LangBarProps) {
-  let height = 20 - rank * 5;
+function getColorOfRank(rank: number) {
+  return "lang" + rank;
+}
 
+function LanguageBar({ langname, rank }: LangBarProps) {
+  let height = 20 - rank * 5;
+  let colorOfBar = getColorOfRank(rank);
   return (
     <Flex direction={"column"} alignItems={"center"}>
       {/* the icon will go here */}
       <chakra.span fontWeight={"semibold"}>{langname}</chakra.span>
       <chakra.div
-        bg={color}
+        bg={colorOfBar}
         height={`${height}rem`}
         width="5rem"
         borderRadius={"0.25rem"}
@@ -38,7 +42,6 @@ function TopLanguages() {
       direction={"column"}
       p={4}
       borderRadius={"0.5rem"}
-      border={"solid 2px black"}
       height={"100%"}
       width={"100%"}
     >

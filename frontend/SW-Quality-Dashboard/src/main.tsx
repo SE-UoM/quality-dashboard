@@ -12,12 +12,13 @@ import AboutPage from "./pages/AboutPage.tsx";
 import SubmitProjectPage from "./pages/SubmitProjectPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import ProtectedRoute from "./features/api/auth/ProtectedRoute.tsx";
+import { theme } from "./theme.tsx";
 // import "swiper/css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ReduxProvider store={store}>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <BrowserRouter>
           <Routes>
             {/* Public Routes */}

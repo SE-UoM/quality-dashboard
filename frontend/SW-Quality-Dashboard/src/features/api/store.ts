@@ -6,6 +6,7 @@ import { registerApi } from "./registerApi";
 import { screen1Api } from "./screen1Api";
 import { screen2Api } from "./screen2Api";
 import { screen3Api } from "./screen3Api";
+import { screen4Api } from "./screen4Api";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [screen1Api.reducerPath]: screen1Api.reducer,
     [screen2Api.reducerPath]: screen2Api.reducer,
     [screen3Api.reducerPath]: screen3Api.reducer,
+    [screen4Api.reducerPath]: screen4Api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -24,7 +26,8 @@ export const store = configureStore({
       registerApi.middleware,
       screen1Api.middleware,
       screen2Api.middleware,
-      screen3Api.middleware
+      screen3Api.middleware,
+      screen4Api.middleware
     ),
   devTools: true,
 });

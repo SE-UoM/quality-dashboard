@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { API_URL } from "../../assets/url";
 
 export const screen3Api = createApi({
   reducerPath: "screen3Api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/organizations",
+    baseUrl: `${API_URL}/api/organizations`,
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.accessToken;
       if (token) {
@@ -23,9 +24,9 @@ export const screen3Api = createApi({
         url: `/${organizationId}/projects-info`,
       }),
     }),
-    getTopDevelopers: builder.query({
+    getTopContributors: builder.query({
       query: (organizationId: string) => ({
-        url: `/${organizationId}/top-developers`,
+        url: `/${organizationId}/top-contributors`,
       }),
     }),
     getTopLanguages: builder.query({
@@ -38,7 +39,7 @@ export const screen3Api = createApi({
 
 export const {
   useGetProjectsInfoQuery,
-  useGetTopDevelopersQuery,
+  useGetTopContributorsQuery,
   useGetTopLanguagesQuery,
   useGetTopProjectsQuery,
 } = screen3Api;

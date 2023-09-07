@@ -2,7 +2,7 @@ import { Flex, chakra } from "@chakra-ui/react";
 import AnimatedCount from "../../../components/AnimatedCount";
 function TotalTD() {
   return (
-    <Flex direction={"column"} border={"solid 2px black"}>
+    <Flex direction={"column"}>
       <chakra.span
         fontSize={"2xl"}
         mb="1rem"
@@ -14,7 +14,7 @@ function TotalTD() {
       <Flex alignSelf={"center"} justifySelf={"center"}>
         <chakra.span fontSize={"4xl"}>€</chakra.span>
         <chakra.span
-          fontSize="9xl"
+          fontSize="8xl"
           fontWeight={"bold"}
           display={"inline"}
           lineHeight={"6.5rem"}

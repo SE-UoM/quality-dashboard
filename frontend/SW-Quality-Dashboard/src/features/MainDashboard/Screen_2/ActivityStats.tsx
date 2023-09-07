@@ -6,7 +6,7 @@ function ActivityStats() {
   const maxProjectTechDebt = 123.58;
   const avgTechDebtPerLoc = 123.58;
   return (
-    <Flex direction={"column"} border="solid 2px black" height="100%">
+    <Flex direction={"column"} height="100%">
       {/* title: */}
       <chakra.header fontSize={"2xl"} pl="1rem" pt="0.25rem">
         Activity Stats

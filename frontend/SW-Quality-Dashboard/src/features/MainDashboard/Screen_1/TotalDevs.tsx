@@ -7,7 +7,7 @@ function ShowTotalDevs({ devs }: TotalDevsProps) {
   return (
     <SingleDataTile
       Icon={<DevelopersIcon height={60} width={60} />}
-      label="Projects"
+      label="Developer"
       num={devs}
     />
   );

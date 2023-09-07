@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import LanguagesCount from "./LanguagesCount";
 import ShowTopLanguages from "./TopLanguages";
 import ShowTotalCommits from "./TotalCommits";
@@ -16,6 +16,9 @@ import {
 } from "../../api/screen1Api";
 import ShowTotalBytes from "./TotalBytes";
 import { GeneralStats } from "../../../assets/models";
+import DashboardLogo from "../../../components/DashboardLogo";
+import OpenSourceUomLogo from "../../../components/OpenSourceUomLogo";
+import UoMLogo from "../../../components/UoMLogo";
 
 const templateAreas = `
 "toplangs toplangs wordcloud wordcloud wordcloud proj"
@@ -45,7 +48,7 @@ const getValueOf = (thing: number | null | undefined) => {
 
 function Dashboard1() {
   // const { data } = useGetTopLanguagesQuery("10");
-  // const { data: generalStats } = useGetGeneralStatsQuery("10");
+  const { data: generalStatsFetched } = useGetGeneralStatsQuery(10);
   const generalStats: GeneralStats = {
     totalCommits: 5,
     totalDevs: 10,
@@ -57,57 +60,65 @@ function Dashboard1() {
     totalProjects: 45,
   };
   // console.log("The data is here: ", data);
-  console.log("General Stats: ", generalStats);
+  console.log("General Stats: ", generalStatsFetched);
 
-  let devs = getValueOf(generalStats?.totalDevs);
-  let commits = getValueOf(generalStats?.totalCommits);
-  let files = getValueOf(generalStats?.totalFiles);
-  let LoC = getValueOf(generalStats?.totalLinesOfCode);
-  let langs = getValueOf(generalStats?.totalLanguages);
-  let projects = getValueOf(generalStats?.totalProjects);
+  let devs = getValueOf(generalStatsFetched?.totalDevs);
+  let commits = getValueOf(generalStatsFetched?.totalCommits);
+  let files = getValueOf(generalStatsFetched?.totalFiles);
+  let LoC = getValueOf(generalStatsFetched?.totalLinesOfCode);
+  let langs = getValueOf(generalStatsFetched?.totalLanguages);
+  let projects = getValueOf(generalStatsFetched?.totalProjects);
   return (
     <Grid
       height={"92vh"}
       padding={"1rem"}
       templateAreas={templateAreas}
       templateColumns={"repeat(6,1fr)"}
-      templateRows={"repeat(4,1fr)"}
+      templateRows={"1fr 1fr 1fr 9rem"}
       gap="1rem"
       borderRadius={"1rem"}
     >
-      <GridItem gridArea={"toplangs"} bg="white">
+      <GridItem gridArea={"toplangs"} bg="white" borderRadius={"0.5rem"}>
         <ShowTopLanguages />
       </GridItem>
-      <GridItem gridArea={"wordcloud"} border={"solid 2px black"} bg="white">
+      <GridItem gridArea={"wordcloud"} bg="white" borderRadius={"0.5rem"}>
         <WordCloud />
       </GridItem>
-      <GridItem gridArea={"proj"} bg="white">
+      <GridItem gridArea={"proj"} borderRadius={"0.5rem"} bg="white">
         <ShowTotalProjects projects={projects} />
       </GridItem>
-      <GridItem gridArea={"langs"} bg="white">
+      <GridItem gridArea={"langs"} bg="white" borderRadius={"0.5rem"}>
         <LanguagesCount langs={langs} />
       </GridItem>
-      <GridItem gridArea={"devs"} bg="white">
+      <GridItem gridArea={"devs"} bg="white" borderRadius={"0.5rem"}>
         <ShowTotalDevs devs={devs} />
       </GridItem>
-      <GridItem gridArea={"files"} bg="white">
+      <GridItem gridArea={"files"} bg="white" borderRadius={"0.5rem"}>
         <ShowTotalFiles files={files} />
       </GridItem>
-      <GridItem gridArea={"commits"} bg="white">
+      <GridItem gridArea={"commits"} bg="white" borderRadius={"0.5rem"}>
         <ShowTotalCommits commits={commits} />
       </GridItem>
-      <GridItem gridArea={"loc"} bg="white">
+      <GridItem gridArea={"loc"} bg="white" borderRadius={"0.5rem"}>
         <ShowTotalBytes bytes={LoC} />
       </GridItem>
 
-      <GridItem gridArea={"logo"} border={"solid 2px black"} bg="white">
-        <OrganisationLogo />
+      <GridItem gridArea={"logo"} bg="white" borderRadius={"0.5rem"}>
+        <DashboardLogo imageName="uom" width={"100%"} height={"100%"} />
       </GridItem>
-      <GridItem gridArea={"sincelast"} border={"solid 2px black"} bg="white">
+      <GridItem gridArea={"sincelast"} bg="white" borderRadius={"0.5rem"}>
         <SinceLastAnalysis since="16/08/2023" />
       </GridItem>
-      <GridItem gridArea={"logo2"} border={"solid 2px black"} bg="white">
-        <OrganisationLogo />
+      <GridItem gridArea={"logo2"} bg="white" borderRadius={"0.5rem"}>
+        <Flex
+          alignItems={"center"}
+          justifyContent={"center"}
+          mt="0.5rem"
+          columnGap={"1rem"}
+        >
+          <UoMLogo />
+          <OpenSourceUomLogo />
+        </Flex>
       </GridItem>
     </Grid>
   );
