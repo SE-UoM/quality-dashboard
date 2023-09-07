@@ -1,6 +1,9 @@
-import { Box, Flex, chakra } from "@chakra-ui/react";
+import { Box, Flex, chakra, useInterval } from "@chakra-ui/react";
 import GithubStar from "../../../assets/icons/components/GithubStars";
 import ContributionsIcon from "../../../assets/icons/components/ContributionsIcon";
+import { useGetProjectsInfoQuery } from "../../api/screen3Api";
+import { useState } from "react";
+import getNextIndex from "../../../utils/getNextIndex";
 //all of this will be swippable probably
 
 interface DisplayProjectProps {
@@ -8,6 +11,7 @@ interface DisplayProjectProps {
   repoName: string;
   stars: number;
   forks: number;
+  contributions: number;
 }
 
 function DisplayProject({
@@ -15,12 +19,13 @@ function DisplayProject({
   forks,
   repoName,
   stars,
+  contributions,
 }: DisplayProjectProps) {
   return (
-    <Flex direction={"column"} mx="auto" pt="1rem">
+    <Flex direction={"column"} mx="auto">
       <Box>
-        <chakra.span fontSize={"3xl"}>{devName}/</chakra.span>
-        <chakra.span fontSize={"3xl"} fontWeight={"bold"}>
+        <chakra.span fontSize={"2xl"}>{devName}/</chakra.span>
+        <chakra.span fontSize={"2xl"} fontWeight={"bold"}>
           {repoName}
         </chakra.span>
       </Box>
@@ -43,7 +48,7 @@ function DisplayProject({
         <Flex columnGap={"1rem"} alignItems={"center"}>
           <ContributionsIcon height={50} width={50} />
           <Flex direction={"column"}>
-            <chakra.span fontWeight={"semibold"}>25</chakra.span>
+            <chakra.span fontWeight={"semibold"}>{contributions}</chakra.span>
             <chakra.span fontWeight={"semibold"}>Contributions</chakra.span>
           </Flex>
         </Flex>
@@ -53,15 +58,23 @@ function DisplayProject({
 }
 
 function SubmittedProjects() {
+  const { data } = useGetProjectsInfoQuery("10");
+  const [currentIndexOfProject, setCurrentProjectIndex] = useState(0);
+  useInterval(() => {
+    setCurrentProjectIndex(getNextIndex(data, currentIndexOfProject));
+  }, 5 * 1000);
+  console.log("Submitted Projects:", data);
+  // owner forks name starts
+  const currentProject = data ? data[currentIndexOfProject] : {};
   return (
-    <Flex direction={"column"}>
+    <Flex direction={"column"} h="100%">
       <chakra.span fontSize="xl" fontWeight={"medium"} mx="auto" py="0.25rem">
         Submitted Projects
       </chakra.span>
       <Box width="100%" bg="black" height="1.5px"></Box>
       <Flex
         direction={"row"}
-        justifyItems={"center"}
+        justifyContent={"center"}
         alignItems="center"
         px="1rem"
         height={"100%"}
@@ -69,10 +82,11 @@ function SubmittedProjects() {
       >
         <GithubIcon />
         <DisplayProject
-          devName="GeorgeFkd"
-          repoName="BPME-Tool"
-          forks={4}
-          stars={10}
+          devName={currentProject.owner}
+          repoName={currentProject.name}
+          forks={currentProject.forks}
+          stars={currentProject.stars}
+          contributions={currentProject.totalContributions}
         />
       </Flex>
     </Flex>

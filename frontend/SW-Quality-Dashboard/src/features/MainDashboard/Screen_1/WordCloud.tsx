@@ -1,4 +1,5 @@
 import { Flex, Grid, GridItem, chakra } from "@chakra-ui/react";
+import { useGetLanguageNamesQuery } from "../../api/screen1Api";
 
 function spreadArrOnGrid(items: string[]) {
   if (items.length > 16) return items.slice(0, 16);
@@ -23,7 +24,10 @@ const colorsToPickFrom = [
 ];
 
 function WordCloud() {
-  const languages = ["Java", "Javascript", "Go", "Rust", "C++"];
+  // const languages = ["Java", "Javascript", "Go", "Rust", "C++"];
+  const { data } = useGetLanguageNamesQuery("10");
+  const languages = data ? data : ["Java", "Javascript", "Go", "Rust", "C++"];
+  console.log(data, "The language");
   const spreadLangs = spreadArrOnGrid(languages);
   const colorsInGrid = spreadArrOnGrid(colorsToPickFrom);
   return (

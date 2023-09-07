@@ -1,5 +1,6 @@
 import { Flex, Avatar, chakra } from "@chakra-ui/react";
 import GithubIcon from "../../../assets/icons/GithubIcon";
+import { useGetMostActiveDevelopersQuery } from "../../api/screen4Api";
 
 interface MostActiveDevProps {
   devName: string;
@@ -14,6 +15,8 @@ function MostActiveDev({
   numberOfContributions,
   numberOfProjects,
 }: MostActiveDevProps) {
+  const { data } = useGetMostActiveDevelopersQuery("10");
+  console.log(data);
   return (
     <Flex direction={"column"}>
       <chakra.span fontWeight={"bold"} fontSize={"xl"}>

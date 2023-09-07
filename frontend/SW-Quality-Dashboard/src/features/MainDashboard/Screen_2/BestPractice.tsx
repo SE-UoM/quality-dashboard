@@ -1,6 +1,33 @@
 import { Box, Divider, Flex, chakra } from "@chakra-ui/react";
+import { useGetRandomBestPracticeQuery } from "../../api/screen2Api";
+import { useEffect, useState } from "react";
+
+const durationOfBestPracticeInSeconds = 15;
+
+function useInterval(interval: number, fn: () => any) {
+  useEffect(() => {
+    const intervalId = setInterval(fn, interval);
+    return () => clearInterval(intervalId);
+  }, [fn]);
+}
+
+const getNextIndex = (arr: any[], currentIndex: number) => {
+  if (currentIndex === arr.length - 1) return 0;
+  else return currentIndex + 1;
+};
 
 function BestPractice() {
+  const { data } = useGetRandomBestPracticeQuery("10");
+  const [currentBestPractice, setCurrentBestPractice] = useState(0);
+  useInterval(durationOfBestPracticeInSeconds * 1000, () =>
+    setCurrentBestPractice((prev) => getNextIndex(data, currentBestPractice))
+  );
+  const { title, explanation } = data
+    ? data[currentBestPractice]
+    : { title: "No more Best Practices", explanation: "You have seen enough" };
+
+  //title,explanation
+  console.log("BEST PRACTICE", data);
   return (
     <Flex direction={"column"} pt="1.5rem" height="100%" width="100%">
       <Flex width={"100%"} direction={"column"}>
@@ -25,7 +52,7 @@ function BestPractice() {
             textAlign={"center"}
             justifySelf={"center"}
           >
-            Avoid Magic Numbers
+            {title}
           </chakra.span>
           <chakra.p
             my="auto"
@@ -37,8 +64,7 @@ function BestPractice() {
             textAlign={"center"}
             width={"80%"}
           >
-            Replace Plain Numbers with named constants or variables to improve
-            code readability and make changes easier in the future
+            {explanation}
           </chakra.p>
         </Flex>
       </Flex>

@@ -1,6 +1,14 @@
 import { Flex, chakra } from "@chakra-ui/react";
 import AnimatedCount from "../../../components/AnimatedCount";
+import { useGetTotalTechDebtQuery } from "../../api/screen2Api";
 function TotalTD() {
+  const { data } = useGetTotalTechDebtQuery("10");
+  const { totalTechDebtCost } = data
+    ? data
+    : {
+        totalTechDebtCost: -1,
+      };
+  console.log(data);
   return (
     <Flex direction={"column"}>
       <chakra.span
@@ -20,7 +28,7 @@ function TotalTD() {
           lineHeight={"6.5rem"}
           // mb="-1.5rem"
         >
-          <AnimatedCount count={12256} />
+          <AnimatedCount count={totalTechDebtCost} />
         </chakra.span>
       </Flex>
     </Flex>

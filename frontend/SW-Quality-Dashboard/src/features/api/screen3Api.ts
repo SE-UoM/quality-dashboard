@@ -34,6 +34,11 @@ export const screen3Api = createApi({
         url: `/${organizationId}/language-distribution`,
       }),
     }),
+    getTopDevelopers: builder.query({
+      query: (organizationId: string) => ({
+        url: `/${organizationId}/top-contributors`,
+      }),
+    }),
   }),
 });
 
@@ -42,4 +47,5 @@ export const {
   useGetTopContributorsQuery,
   useGetTopLanguagesQuery,
   useGetTopProjectsQuery,
+  useGetTopDevelopersQuery,
 } = screen3Api;

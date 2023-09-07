@@ -9,7 +9,7 @@ function ShowTotalBytes({ bytes }: TotalBytesProps) {
   return (
     <SingleDataTile
       Icon={<LinesOfCode height={60} width={60} />}
-      label="Bytes of Code"
+      label="Lines of Code"
       num={bytes}
     />
   );

@@ -1,6 +1,7 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Box, Flex, chakra } from "@chakra-ui/react";
+import { useGetCodeSmellsQuery } from "../../api/screen2Api";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 const textCenter = {
@@ -31,7 +32,7 @@ const options = {
     title: {
       position: "top",
       display: true,
-      text: "Total Code Smells",
+      text: "Code Smells",
       font: {
         size: 18,
         weight: "bold",
@@ -41,7 +42,7 @@ const options = {
 };
 
 const data = {
-  labels: ["minor", "major", "critical", "blocker", "info"],
+  labels: ["Minor", "Major", "Critical", "Blocker", "Info"],
   datasets: [
     {
       label: "# of Votes",
@@ -54,6 +55,34 @@ const data = {
 };
 
 function TotalCodeSmells() {
+  const { data: codesmells } = useGetCodeSmellsQuery("10");
+  const distribution = codesmells
+    ? codesmells.codeSmellsDistribution
+    : [{ severity: "Null", count: "-1" }];
+  console.log("Hey", distribution);
+  const labels = distribution.map(
+    (severityWithCount: any) => severityWithCount.severity
+  );
+  const thedata = labels.map(
+    (label: string) =>
+      distribution.find(
+        (severityWithCount: any) => severityWithCount.severity === label
+      )?.count
+  );
+  const bgColors = ["#67b279", "#fdd835", "#ff7f50", "#ff5252", "#58bbfb"];
+  const datalabel = "# of Code Smells";
+
+  const allData = {
+    labels,
+    datasets: [
+      {
+        label: datalabel,
+        data: thedata,
+        backgroundColor: bgColors,
+      },
+    ],
+  };
+  console.log(thedata, "HELLLOOOOOO");
   return (
     <Flex
       justifyContent={"space-around"}
@@ -61,8 +90,23 @@ function TotalCodeSmells() {
       height={"75%"}
       ml="3rem"
       mt="2rem"
+      position={"relative"}
     >
-      <Doughnut data={data} options={options} />
+      <Flex alignItems={"center"}>
+        <chakra.span
+          position={"absolute"}
+          bottom={"40%"}
+          right="45%"
+          w="9rem"
+          fontSize={"xl"}
+        >
+          Total Code Smells:
+          <chakra.span fontWeight={"bold"}>
+            {codesmells ? codesmells.totalCodeSmells : -1}
+          </chakra.span>
+        </chakra.span>
+      </Flex>
+      <Doughnut data={allData} options={options} />
 
       <ChartLegend
         labels={data.labels}

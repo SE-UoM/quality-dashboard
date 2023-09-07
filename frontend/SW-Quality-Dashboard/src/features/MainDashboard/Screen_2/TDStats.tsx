@@ -1,9 +1,23 @@
 import { Box, Flex, chakra } from "@chakra-ui/react";
+import { useGetTechDebtStatsQuery } from "../../api/screen2Api";
+
 function TDStats() {
-  const avgProjectTechDebt = 123.58;
-  const minProjectTechDebt = 123.58;
-  const maxProjectTechDebt = 123.58;
-  const avgTechDebtPerLoc = 123.58;
+  const { data } = useGetTechDebtStatsQuery("10");
+  console.log("THE DATA", data);
+  const {
+    avgTechDebt,
+    avgTechDebtPerLOC,
+    minProjectTechDebt,
+    maxProjectTechDebt,
+  } = data
+    ? data
+    : {
+        avgTechDebt: -1,
+        avgTechDebtPerLOC: -1,
+        minProjectTechDebt: -1,
+        maxProjectTechDebt: -1,
+      };
+
   return (
     <Flex direction={"column"} height="100%">
       {/* title: */}
@@ -19,7 +33,7 @@ function TDStats() {
             Average Project Tech Debt: &nbsp;
           </chakra.span>
           <chakra.span fontSize={"lg"}>
-            {avgProjectTechDebt}
+            {avgTechDebt}
             {"€"}
           </chakra.span>
         </Flex>
@@ -46,7 +60,7 @@ function TDStats() {
             Average Tech Debt per LoC &nbsp;
           </chakra.span>
           <chakra.span fontSize={"lg"}>
-            {avgTechDebtPerLoc}
+            {avgTechDebtPerLOC}
             {"€"}
           </chakra.span>
         </Flex>
