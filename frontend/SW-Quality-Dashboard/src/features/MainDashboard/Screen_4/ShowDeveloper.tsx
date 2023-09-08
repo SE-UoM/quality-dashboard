@@ -1,7 +1,8 @@
-import { Avatar, Flex, chakra } from "@chakra-ui/react";
+import { Avatar, Flex, chakra, useInterval } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useGetDevelopersInfoQuery } from "../../api/screen4Api";
+import getNextIndex from "../../../utils/getNextIndex";
 
 const interval = 3 * 1000;
 const fadeOutDuration = 5 * 1000;
@@ -10,45 +11,68 @@ const fadeInDuration = 200;
 const developersArr = [];
 
 function ShowDeveloper() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const { data } = useGetDevelopersInfoQuery("10");
-  console.log("Data: ", data);
-  const avatarUrl = "https://avatars.githubusercontent.com/u/69716466?v=4";
-  const controls = useAnimation();
+  const [currentDevIndex, setCurrentDevIndex] = useState(0);
+  useInterval(() => {
+    setCurrentDevIndex((prev) => getNextIndex(data, prev));
+  }, 5 * 1000);
 
-  useEffect(() => {
-    // Function to handle fading in and out
-    const handleFade = async () => {
-      await controls.start({ opacity: 1 });
-      await new Promise((resolve) => setTimeout(resolve, fadeOutDuration));
-      await controls.start({ opacity: 0 });
-      await new Promise((resolve) => setTimeout(resolve, fadeInDuration));
-      setIsVisible(!isVisible);
-    };
+  console.log("Developers: ", data);
+  const { avatarUrl, name } = data
+    ? data[currentDevIndex]
+    : {
+        avatarUrl: "",
+        name: "",
+      };
+  // const controls = useAnimation();
 
-    // Initially trigger the fade
-    handleFade();
+  // useEffect(() => {
+  //   // Function to handle fading in and out
+  //   const handleFade = async () => {
+  //     await controls.start({ opacity: 1 });
+  //     await new Promise((resolve) => setTimeout(resolve, fadeOutDuration));
+  //     await controls.start({ opacity: 0 });
+  //     await new Promise((resolve) => setTimeout(resolve, fadeInDuration));
+  //     setIsVisible(!isVisible);
+  //   };
 
-    // Set interval to trigger the fade every 'interval' milliseconds
-    const fadeInterval = setInterval(() => {
-      handleFade();
-    }, interval);
+  //   // Initially trigger the fade
+  //   handleFade();
 
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(fadeInterval);
-  }, [isVisible, controls]);
+  //   // Set interval to trigger the fade every 'interval' milliseconds
+  //   const fadeInterval = setInterval(() => {
+  //     handleFade();
+  //   }, interval);
+
+  //   // Clean up the interval when the component unmounts
+  //   return () => clearInterval(fadeInterval);
+  // }, [isVisible, controls]);
 
   return (
-    <Flex direction={"column"} px="1rem" pt="0.5rem" h="100%">
-      <chakra.span fontWeight={"semibold"} fontSize={"2xl"}>
+    <Flex direction={"column"} px="1rem" h="100%">
+      <chakra.span fontWeight={"semibold"} fontSize={"xl"}>
         Developers
       </chakra.span>
-      <motion.div
-        animate={controls}
-        transition={{
-          duration: fadeInDuration / 1000, // Convert milliseconds to seconds
-        }}
-      >
+      <>
+        <style>
+          {`/* Define the text and its initial state */
+       
+
+        /* Define the animation keyframes */
+        @keyframes fadeInOut {
+            0% {
+                opacity: 1;
+
+            }
+            50% {
+              opacity:0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }`}
+        </style>
         {isVisible && (
           <Flex
             direction={"column"}
@@ -59,6 +83,7 @@ function ShowDeveloper() {
             px="1rem"
             mx="auto"
             h="100%"
+            animation="fadeInOut 5s linear infinite"
           >
             <Avatar src={avatarUrl} size={"2xl"} />
             <chakra.span
@@ -68,11 +93,11 @@ function ShowDeveloper() {
               fontWeight={"bold"}
               fontSize={"xl"}
             >
-              George David Apostolidis
+              {name}
             </chakra.span>
           </Flex>
         )}
-      </motion.div>
+      </>
     </Flex>
   );
 }

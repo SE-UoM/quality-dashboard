@@ -15,13 +15,14 @@ function SinceLastAnalysis({ since }: SinceLastAnalysisProps) {
       direction={"row"}
       columnGap="0.5rem"
       alignItems={"center"}
-      justifyContent={"center"}
+      mx="2rem"
+      justifyContent={"space-around"}
       height={"100%"}
       borderRadius={"0.5rem"}
     >
       {/* Render Icon here */}
       <chakra.span>
-        <DateIcon height={40} width={40} />
+        <DateIcon height={60} width={60} />
       </chakra.span>
       <Flex direction={"column"}>
         <chakra.span fontSize={"2xl"} fontWeight="semibold">

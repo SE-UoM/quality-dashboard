@@ -59,7 +59,7 @@ function BestPractice() {
             px="2rem"
             justifySelf={"center"}
             alignSelf="center"
-            fontSize={"2xl"}
+            fontSize={"xl"}
             fontWeight={"medium"}
             textAlign={"center"}
             width={"80%"}

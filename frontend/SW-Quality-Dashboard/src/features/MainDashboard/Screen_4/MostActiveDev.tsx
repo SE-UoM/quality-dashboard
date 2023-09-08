@@ -31,7 +31,7 @@ function MostActiveDev({
         };
   return (
     <Flex direction={"column"}>
-      <chakra.span fontWeight={"bold"} fontSize={"xl"}>
+      <chakra.span fontWeight={"bold"} pl="1rem" fontSize={"xl"}>
         Most Active Developer
       </chakra.span>
       <Flex
@@ -41,7 +41,7 @@ function MostActiveDev({
         columnGap={"2rem"}
         px="1rem"
       >
-        <Avatar name={devName} src={avatarUrl} size="lg" />
+        <Avatar name={devName} src={avatarUrl} size="xl" />
         <Flex direction={"column"} width={"100%"}>
           <chakra.span fontSize={"xl"} fontWeight="bold" alignSelf={"center"}>
             {name}
@@ -51,8 +51,9 @@ function MostActiveDev({
             columnGap={"1rem"}
             justifyContent={"space-around"}
             alignItems={"center"}
+            mx="4rem"
           >
-            <ContributionsIcon height={65} width={65} />
+            <ContributionsIcon height={60} width={60} />
             <Flex direction={"column"}>
               <chakra.span
                 fontWeight={"bold"}

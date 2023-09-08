@@ -32,6 +32,7 @@ function Dashboard3({}: DashboardOfBestProps) {
       templateColumns={"repeat(8,1fr)"}
       templateRows={"repeat(10,1fr)"}
       gap="1rem"
+      color="txt"
     >
       <GridItem
         gridArea={"projs"}

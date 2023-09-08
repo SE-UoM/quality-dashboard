@@ -10,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { useGetAllCommitQuery } from "../../api/screen4Api";
 
 ChartJS.register(
   CategoryScale,
@@ -32,7 +33,7 @@ const options = {
   plugins: {
     title: {
       display: true,
-      text: "Monthly Commit Activity of Projects",
+      text: "Monthly Contribution Activity of Projects",
     },
   },
   scales: {
@@ -40,14 +41,6 @@ const options = {
       type: "linear" as const,
       display: true,
       position: "left" as const,
-    },
-    y1: {
-      type: "linear" as const,
-      display: true,
-      position: "right" as const,
-      grid: {
-        drawOnChartArea: false,
-      },
     },
   },
 };
@@ -90,7 +83,7 @@ const commitsData = [
 ];
 
 // Function to count commits for each month
-function countCommitsByMonth(commitsData) {
+function countCommitsByMonth(commitsData: any[]) {
   const commitsByMonth = new Array(12).fill(0); // Initialize an array with zeros for each month
 
   commitsData.forEach((commit) => {
@@ -131,9 +124,33 @@ const data = {
 };
 
 function CommitsGraph({}) {
+  const { data: commitData } = useGetAllCommitQuery("10");
+  console.log("Commit Data: ", commitData);
+
+  const theData = commitData
+    ? countCommitsByMonth(commitData)
+    : [
+        {
+          date: "2021-12-17T16:46:21.000+00:00",
+          sha: "a2a8fd0c2de7887e7f73326a705709f38614affe",
+        },
+      ];
+
+  const backgroundColor = "blue";
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: "Monthly Contributions",
+        data: theData,
+        backgroundColor,
+      },
+    ],
+  };
+  //{date,sha}[]
   return (
     <Flex width={"100%"} height={"100%"}>
-      <Line options={options} data={data} width={"900"} height="500" />
+      <Line options={options} data={chartData} width={"900"} height="500" />
     </Flex>
   );
 }

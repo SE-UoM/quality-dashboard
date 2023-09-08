@@ -68,7 +68,7 @@ function SubmittedProjects() {
   const currentProject = data ? data[currentIndexOfProject] : {};
   return (
     <Flex direction={"column"} h="100%">
-      <chakra.span fontSize="xl" fontWeight={"medium"} mx="auto" py="0.25rem">
+      <chakra.span fontSize="xl" fontWeight={"bold"} mx="auto" py="0.25rem">
         Submitted Projects
       </chakra.span>
       <Box width="100%" bg="black" height="1.5px"></Box>

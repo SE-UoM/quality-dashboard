@@ -27,18 +27,19 @@ function TDStats() {
       {/* weird behavior around here */}
       <Box width="100%" bg="lightgrey" height="2px"></Box>
 
-      <Flex direction={"column"} px="0.5rem" pt="0.5rem" rowGap={"0.5rem"}>
-        <Flex>
-          <chakra.span fontWeight={"bold"} fontSize={"lg"}>
+      <Flex direction={"column"} pl="1rem" pt="1rem" rowGap={"1rem"}>
+        <Flex alignItems={"center"}>
+          <chakra.span fontWeight={"bold"} fontSize={"xl"}>
             Average Project Tech Debt: &nbsp;
           </chakra.span>
           <chakra.span fontSize={"lg"}>
-            {avgTechDebt}
-            {"€"}
+            {(avgTechDebt / 36).toFixed(2)}
+
+            {" mins"}
           </chakra.span>
         </Flex>
-        <Flex>
-          <chakra.span fontWeight={"bold"} fontSize={"lg"}>
+        <Flex alignItems={"center"}>
+          <chakra.span fontWeight={"bold"} fontSize={"xl"}>
             Min Project Tech Debt: &nbsp;
           </chakra.span>
           <chakra.span fontSize={"lg"}>
@@ -46,8 +47,8 @@ function TDStats() {
             {"€"}
           </chakra.span>
         </Flex>
-        <Flex>
-          <chakra.span fontWeight={"bold"} fontSize={"lg"}>
+        <Flex alignItems={"center"}>
+          <chakra.span fontWeight={"bold"} fontSize={"xl"}>
             Max Project Tech Debt: &nbsp;
           </chakra.span>
           <chakra.span fontSize={"lg"}>
@@ -55,13 +56,13 @@ function TDStats() {
             {"€"}
           </chakra.span>
         </Flex>
-        <Flex>
-          <chakra.span fontWeight={"bold"} fontSize={"lg"}>
+        <Flex alignItems={"center"}>
+          <chakra.span fontWeight={"bold"} fontSize={"xl"}>
             Average Tech Debt per LoC &nbsp;
           </chakra.span>
-          <chakra.span fontSize={"lg"}>
+          <chakra.span fontSize={"xl"}>
             {avgTechDebtPerLOC}
-            {"€"}
+            {" min"}
           </chakra.span>
         </Flex>
       </Flex>

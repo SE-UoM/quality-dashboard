@@ -17,7 +17,7 @@ function TotalTD() {
         fontWeight={"thin"}
         alignSelf={"center"}
       >
-        Monthly Total Tech Debt
+        Total Tech Debt
       </chakra.span>
       <Flex alignSelf={"center"} justifySelf={"center"}>
         <chakra.span fontSize={"4xl"}>€</chakra.span>

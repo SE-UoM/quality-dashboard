@@ -44,7 +44,7 @@ function MostActiveProject({
   // files, loc,totalCommits, owner,name,techDebt,totalCodeSmells,totalForks,stars
   return (
     <Flex direction={"column"} w={"100%"}>
-      <chakra.span fontWeight={"bold"} fontSize={"lg"}>
+      <chakra.span fontWeight={"bold"} fontSize={"xl"} pl="1rem">
         Most Active Project
       </chakra.span>
       <Flex
@@ -55,8 +55,8 @@ function MostActiveProject({
         columnGap={"2rem"}
         px="1rem"
       >
-        <GithubIcon height={80} width={80} />
-        <Flex direction={"column"} width={"100%"}>
+        <GithubIcon height={100} width={100} />
+        <Flex direction={"column"}>
           <chakra.span fontSize={"xl"} fontWeight="bold" alignSelf={"center"}>
             {name}
           </chakra.span>
@@ -66,8 +66,9 @@ function MostActiveProject({
             columnGap={"1rem"}
             justifyContent={"space-around"}
             alignItems={"center"}
+            mx="2rem"
           >
-            <ContributionsIcon height={65} width={65} />
+            <ContributionsIcon height={60} width={60} />
             <Flex direction={"column"}>
               <chakra.span
                 fontWeight={"bold"}

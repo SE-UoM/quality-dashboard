@@ -77,6 +77,7 @@ function Dashboard1() {
       templateRows={"1fr 1fr 1fr 9rem"}
       gap="1rem"
       borderRadius={"1rem"}
+      color="txt"
     >
       <GridItem gridArea={"toplangs"} bg="white" borderRadius={"0.5rem"}>
         <ShowTopLanguages />

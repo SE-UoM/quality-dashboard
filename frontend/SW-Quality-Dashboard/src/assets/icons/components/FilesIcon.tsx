@@ -63,7 +63,7 @@ function FilesIcon({ width, height }: MyIconProps) {
               fontVariant="normal"
               fontWeight="bold"
             >
-              {}
+              {"{ }"}
             </tspan>
           </text>
         </g>

@@ -33,6 +33,7 @@ function Dashboard4() {
       templateColumns={"repeat(11,1fr)"}
       templateRows={"1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 10rem"}
       gap="1rem"
+      color="txt"
     >
       <GridItem gridArea={"actived"} borderRadius={"0.5rem"} bg="white">
         <MostActiveDev

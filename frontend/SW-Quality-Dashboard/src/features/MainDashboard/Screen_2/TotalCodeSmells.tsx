@@ -32,9 +32,9 @@ const options = {
     title: {
       position: "top",
       display: true,
-      text: "Code Smells",
+      text: "Total Code Smells",
       font: {
-        size: 18,
+        size: 22,
         weight: "bold",
       }, // Set your title here
     },
@@ -70,7 +70,7 @@ function TotalCodeSmells() {
       )?.count
   );
   const bgColors = ["#67b279", "#fdd835", "#ff7f50", "#ff5252", "#58bbfb"];
-  const datalabel = "# of Code Smells";
+  const datalabel = "Number of Code Smells";
 
   const allData = {
     labels,
@@ -95,12 +95,11 @@ function TotalCodeSmells() {
       <Flex alignItems={"center"}>
         <chakra.span
           position={"absolute"}
-          bottom={"40%"}
-          right="45%"
+          bottom={"33%"}
+          right="48%"
           w="9rem"
-          fontSize={"xl"}
+          fontSize={"5xl"}
         >
-          Total Code Smells:
           <chakra.span fontWeight={"bold"}>
             {codesmells ? codesmells.totalCodeSmells : -1}
           </chakra.span>

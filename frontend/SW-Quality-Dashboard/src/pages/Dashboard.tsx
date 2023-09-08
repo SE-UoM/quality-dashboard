@@ -5,7 +5,7 @@ import Dashboard1 from "../features/MainDashboard/Screen_1";
 import Dashboard2 from "../features/MainDashboard/Screen_2";
 import Dashboard3 from "../features/MainDashboard/Screen_3";
 import Dashboard4 from "../features/MainDashboard/Screen_4";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RotatingLine from "../components/RotatingLine";
 
 import { ArrowRightIcon } from "@chakra-ui/icons";
@@ -23,6 +23,12 @@ const getNextIndex = (arr: any[], currentIndex: number) => {
 function HomePage() {
   const [index, setIndex] = useState(0);
   const DisplayedDashboard = dashboards[index];
+
+  useEffect(() => {}, []);
+  // window.addEventListener("keydown", (e) => {
+  //   if (e.code === "Space") setIndex((prev) => getNextIndex(dashboards, prev));
+  // });
+
   return (
     <>
       <Flex direction="column" height={"100vh"} bgColor="#dededeff">

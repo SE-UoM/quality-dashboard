@@ -52,19 +52,13 @@ function LanguageBlock({ language, color }: LangBlockProps) {
   const randomRotation = Math.floor(Math.random() * 45);
   const randomDirection = Math.random() > 0.5 ? 1 : 0;
   const deg = randomRotation - randomDirection * 60;
+  const randomDuration = (Math.random() + 0.2) * 5;
+  const randomBiggerLetters = Math.random() + 0.2;
   return (
     <GridItem colSpan={1} rowSpan={1} w="100%" h="100%">
       <Flex justifyContent={"center"} alignItems={"center"} h="100%" w="100%">
         <style>
           {`/* Define the text and its initial state */
-        .fade-text {
-            opacity: 0;
-            font-size: 24px;
-            text-align: center;
-            margin-top: 20px;
-            animation: fadeInOut 3s infinite alternate; /* Apply the animation */
-        }
-
         /* Define the animation keyframes */
         @keyframes fadeInOut {
             0% {
@@ -80,10 +74,11 @@ function LanguageBlock({ language, color }: LangBlockProps) {
         }`}
         </style>
         <chakra.span
-          fontSize={"xl"}
+          fontSize={1.3 + randomBiggerLetters + "rem"}
           opacity={"0"}
           color={color}
-          animation="fadeInOut 15s linear infinite"
+          fontWeight={randomDirection === 0 ? "bold" : "medium"}
+          animation={`fadeInOut ${randomDuration}s linear infinite`}
           transform={`rotate(${deg}deg)`}
         >
           {language}

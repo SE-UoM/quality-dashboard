@@ -8,9 +8,12 @@ import TotalTD from "./TotalTD";
 import DashboardLogo from "../../../components/DashboardLogo";
 import OpenSourceUomLogo from "../../../components/OpenSourceUomLogo";
 import UoMLogo from "../../../components/UoMLogo";
+import SinceLastAnalysis from "../../../components/SinceLastAnalysis";
 
 const templateAreas = `
 "smells smells smells tdstats tdstats tdstats tdstats tdstats"
+"smells smells smells tdstats tdstats tdstats tdstats tdstats" 
+"smells smells smells tdstats tdstats tdstats tdstats tdstats" 
 "smells smells smells tdstats tdstats tdstats tdstats tdstats" 
 "smells smells smells practice practice practice practice practice"
 "smells smells smells practice practice practice practice practice"
@@ -30,6 +33,7 @@ function Dashboard2() {
       templateRows={"1fr 1fr 1fr 1fr 1fr 1fr 8rem"}
       borderRadius={"0.5rem"}
       gap="1rem"
+      color="txt"
     >
       <GridItem gridArea={"smells"} bg="white" borderRadius={"0.5rem"}>
         <TotalCodeSmells />
@@ -83,7 +87,7 @@ function Dashboard2() {
         height={"100%"}
         bg="white"
       >
-        Extra
+        <SinceLastAnalysis since="20" />
       </GridItem>
       <GridItem
         gridArea={"logo2"}

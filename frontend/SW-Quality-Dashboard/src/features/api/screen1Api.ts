@@ -36,6 +36,11 @@ export const screen1Api = createApi({
         url: `/${organizationId}/last-analysis-date`,
       }),
     }),
+    getProjectNames: builder.query({
+      query: (organizationId: string) => ({
+        url: `/${organizationId}/project-names`,
+      }),
+    }),
   }),
 });
 
@@ -44,4 +49,5 @@ export const {
   useGetGeneralStatsQuery,
   useGetLanguageNamesQuery,
   useGetTopLanguagesQuery,
+  useGetProjectNamesQuery,
 } = screen1Api;

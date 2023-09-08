@@ -55,9 +55,10 @@ MostForkedProjectProps) {
       <chakra.span
         mb="auto"
         fontWeight={"bold"}
-        fontSize={"2xl"}
+        fontSize={"xl"}
         px="0.75rem"
         pt="0.15rem"
+        color="txt"
       >
         Most Forked Project
       </chakra.span>

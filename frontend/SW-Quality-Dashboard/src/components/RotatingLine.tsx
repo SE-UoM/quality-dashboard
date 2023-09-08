@@ -1,36 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, useInterval, chakra } from "@chakra-ui/react";
+import { useGetProjectNamesQuery } from "../features/api/screen1Api";
 
 function RotatingLine() {
-  const projectArray = [
-    "PyAssess",
-    "CodeInspector",
-    "BPMN Plugin",
-    "myUoM",
-    "project4",
-    "project4",
-    "project4",
-    "project4",
-    "project4",
-    "project4",
-    "project4",
-    "project4",
-    "project4",
-  ];
-  const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentProjectIndex(
-        (prevIndex) => (prevIndex + 1) % (projectArray.length + 1)
-      );
-    }, 3000); // Change project every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [projectArray]);
+  const { data } = useGetProjectNamesQuery("10");
+  console.log("Project Names: ", data);
+  const projectArray = data
+    ? data.map((project) => project.name)
+    : ["PyAssess", "CodeInspector", "BPMN Plugin", "myUoM"];
 
   return (
-    <Flex bgColor="black" width="100%" height="8%" overflow="hidden">
+    <Flex bgColor="black" width="100%" height="8%">
       <style>
         {`
           @keyframes slide {
@@ -53,14 +33,16 @@ function RotatingLine() {
         width="100%"
         height="100%"
         whiteSpace="nowrap"
-        overflow="hidden"
       >
-        {projectArray.map((project, index) => (
-          <span key={project}>
-            {index !== 0 && "  |  "} <strong>{project}</strong>
-          </span>
-        ))}
-        {currentProjectIndex === 0 && <span>{"  |  "}</span>}
+        {projectArray
+          .filter((name) => Boolean(name))
+          .map((project, index) => (
+            <span key={project} style={{}}>
+              {index !== 0 && "  |  "}
+              {index === 0 && "Organization Projects: "}
+              <strong>{project}</strong>
+            </span>
+          ))}
       </Text>
     </Flex>
   );
