@@ -1,6 +1,7 @@
 import { Flex, Avatar, chakra } from "@chakra-ui/react";
 import GithubIcon from "../../../assets/icons/GithubIcon";
 import { useGetMostActiveDevelopersQuery } from "../../api/screen4Api";
+import ContributionsIcon from "../../../assets/icons/components/ContributionsIcon";
 
 interface MostActiveDevProps {
   devName: string;
@@ -16,7 +17,18 @@ function MostActiveDev({
   numberOfProjects,
 }: MostActiveDevProps) {
   const { data } = useGetMostActiveDevelopersQuery("10");
-  console.log(data);
+  //totalCommits,totalIssues,avatarUrl,name,issuesPerContribution
+  console.log(data, "Most active developers");
+  const { totalCommits, totalIssues, avatarUrl, name, issuesPerContribution } =
+    data
+      ? data
+      : {
+          totalCommits: -1,
+          totalIssues: -1,
+          avatarUrl: "",
+          name: "",
+          issuesPerContribution: -1,
+        };
   return (
     <Flex direction={"column"}>
       <chakra.span fontWeight={"bold"} fontSize={"xl"}>
@@ -29,30 +41,27 @@ function MostActiveDev({
         columnGap={"2rem"}
         px="1rem"
       >
-        <Avatar name={devName} src={imgUrl} size="lg" />
+        <Avatar name={devName} src={avatarUrl} size="lg" />
         <Flex direction={"column"} width={"100%"}>
           <chakra.span fontSize={"xl"} fontWeight="bold" alignSelf={"center"}>
-            {devName}
+            {name}
           </chakra.span>
-          <Flex direction={"row"} columnGap={"1rem"} justifyContent={"center"}>
+          <Flex
+            direction={"row"}
+            columnGap={"1rem"}
+            justifyContent={"space-around"}
+            alignItems={"center"}
+          >
+            <ContributionsIcon height={65} width={65} />
             <Flex direction={"column"}>
-              <chakra.span fontWeight={"bold"}>{numberOfProjects}</chakra.span>
-              <chakra.span>Projects</chakra.span>
-              {/* <GithubIcon height="100" width="100" /> */}
-            </Flex>
-            <Flex direction={"column"}>
-              <chakra.span fontWeight={"bold"}>
-                {numberOfContributions}
+              <chakra.span
+                fontWeight={"bold"}
+                fontSize={"xl"}
+                textAlign={"center"}
+              >
+                {totalCommits}
               </chakra.span>
-              <chakra.span>Contributions</chakra.span>
-              {/* <GithubIcon height="100" width="100" /> */}
-            </Flex>
-            <Flex direction={"column"}>
-              <chakra.span fontWeight={"bold"}>
-                {numberOfContributions}
-              </chakra.span>
-              <chakra.span>Contributions</chakra.span>
-              {/* <GithubIcon height="100" width="100" /> */}
+              <chakra.span fontSize={"xl"}>Contributions</chakra.span>
             </Flex>
           </Flex>
         </Flex>

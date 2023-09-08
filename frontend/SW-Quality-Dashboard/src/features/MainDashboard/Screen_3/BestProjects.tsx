@@ -46,9 +46,6 @@ function BestProjects() {
                   By: {item.owner}
                 </chakra.span>
               </Flex>
-              <chakra.span ml="auto" mr="2rem">
-                ({item.techDebtPerLoc}){"€"}
-              </chakra.span>
             </Flex>
           ))}
       </Flex>
