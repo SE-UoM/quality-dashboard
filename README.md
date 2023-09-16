@@ -46,7 +46,7 @@ By integrating both software quality data and repository statistics, the dashboa
 <div align="center">
   <img style="height:7em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
   <img style="height:7em; width:auto;" src="https://sde.uom.gr/wp-content/uploads/2016/10/sde-banner.png"/>
-  <img style="height:7em; width:auto;" src="https://www.uom.gr/site/images/logo.png"/>
+  <img style="height:7em; width:auto;" src="https://gitlab.com/uploads/-/system/group/avatar/14286426/avatar-icon.png"/>
 </div>
 <hr/>
 
