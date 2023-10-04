@@ -174,6 +174,8 @@ public class GithubApiClient extends HttpClient {
      * @throws Exception if an error occurs during the cloning process
      */
     public static void cloneRepository(Project project) throws Exception {
+        System.out.println("Cloning repository: " + project.getName());
+        System.out.println("User dir: " + System.getProperty("user.dir"));
         CloneCommand cloneCommand = new CloneCommand();
         cloneCommand.setURI(project.getRepoUrl());
         cloneCommand.setDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + project.getName()));

@@ -86,8 +86,7 @@ public class AnalysisController {
 
             return ResponseEntity.ok(Collections.singletonMap("message", "Analysis ended successfully"));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
+             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
