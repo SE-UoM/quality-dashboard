@@ -182,6 +182,24 @@ public class GithubApiClient extends HttpClient {
         git.close();
     }
 
+    /**
+     * Get the default branch name after cloning project
+     *
+     * @param project
+     * @return the default branch name
+     */
+    public static String getDefaultBranchName(Project project){
+        String branch = "";
+        try {
+            Git git = Git.open(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + project.getName()));
+            branch = git.getRepository().getBranch();
+            git.close(); // Close the Git repository
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return branch;
+    }
+
     public List<String> fetchCommitSHA(Project project) {
         List<String> commitSHAList = new ArrayList<>();
 

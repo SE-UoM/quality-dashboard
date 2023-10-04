@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
+import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalyzer;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.domain.*;
@@ -118,6 +119,10 @@ public class AnalysisService {
 
     public void startAnalysis(Project project) throws Exception {
         GithubApiClient.cloneRepository(project);
+
+        String defaultBranch = GithubApiClient.getDefaultBranchName(project);
+        RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
+        project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
 
         project.getCommits().clear();
 

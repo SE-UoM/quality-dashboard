@@ -34,6 +34,7 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private Collection<ProjectLanguage> languages = new ArrayList<>();
     private int totalLanguages;
+    private int totalRefactorings;
 
     @ManyToMany()
     @JoinTable(
