@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import gr.uom.strategicplanning.analysis.external.ExternalServiceClient;
 import gr.uom.strategicplanning.controllers.responses.ErrorResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.services.*;
@@ -29,16 +30,23 @@ public class AnalysisController {
     private final OrganizationAnalysisService organizationAnalysisService;
     private final String GITHUB_URL_PATTERN = "https://github.com/[^/]+/[^/]+" ;
 
+    private final String PYASSESS_URL = "http://localhost:5000/api/analysis";
+
+    private final String CODE_INSPECTOR_URL = "http://localhost:8080/api/analysis";
+
+    private final ExternalServiceClient externalServiceClient;
+
     @Autowired
     public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
                               UserService userService, ProjectService projectService,
-                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService) {
+                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService, ExternalServiceClient externalServiceClient) {
         this.analysisService = analysisService;
         this.projectService = projectService;
         this.userService = userService;
         this.organizationAnalysisService = organizationAnalysisService;
         this.organizationService = organizationService;
         this.projectRepository = projectRepository;
+        this.externalServiceClient = externalServiceClient;
     }
 
     private boolean urlIsValid(String url) {
@@ -81,6 +89,13 @@ public class AnalysisController {
             }
 
             analysisService.startAnalysis(project);
+
+            if(project.getLanguages().contains("Python")) {
+                externalServiceClient.sendPostRequestToAnalysisEndpoint(PYASSESS_URL, project.getRepoUrl(), null, null);
+            }
+
+//            externalServiceClient.sendPostRequestToAnalysisEndpoint(CODE_INSPECTOR_URL, project);
+
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
 
