@@ -2,8 +2,8 @@ package gr.uom.strategicplanning.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import gr.uom.strategicplanning.analysis.external.*;
-import gr.uom.strategicplanning.analysis.external.implementations.CodeInspectorServiceStrategy;
-import gr.uom.strategicplanning.analysis.external.implementations.PyAssessServiceStrategy;
+import gr.uom.strategicplanning.analysis.external.strategies.CodeInspectorServiceStrategy;
+import gr.uom.strategicplanning.analysis.external.strategies.PyAssessServiceStrategy;
 import gr.uom.strategicplanning.controllers.responses.ErrorResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.services.*;

@@ -1,11 +1,9 @@
-package gr.uom.strategicplanning.analysis.external.implementations;
+package gr.uom.strategicplanning.analysis.external.strategies;
 
-import gr.uom.strategicplanning.controllers.AnalysisController;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

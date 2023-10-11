@@ -1,6 +1,4 @@
-package gr.uom.strategicplanning.analysis.external;
-
-import org.springframework.web.client.RestTemplate;
+package gr.uom.strategicplanning.analysis.external.strategies;
 
 import java.util.Map;
 

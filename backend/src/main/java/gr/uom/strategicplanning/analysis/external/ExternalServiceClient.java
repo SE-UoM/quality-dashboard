@@ -1,15 +1,11 @@
 package gr.uom.strategicplanning.analysis.external;
 
-import gr.uom.strategicplanning.analysis.external.implementations.CodeInspectorServiceStrategy;
-import gr.uom.strategicplanning.analysis.external.implementations.PyAssessServiceStrategy;
+import gr.uom.strategicplanning.analysis.external.strategies.CodeInspectorServiceStrategy;
+import gr.uom.strategicplanning.analysis.external.strategies.PyAssessServiceStrategy;
 import gr.uom.strategicplanning.models.domain.Project;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.persistence.SecondaryTable;
 import java.util.HashMap;
 import java.util.Map;
 

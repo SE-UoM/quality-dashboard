@@ -1,4 +1,4 @@
-package gr.uom.strategicplanning.analysis.external.implementations;
+package gr.uom.strategicplanning.analysis.external.strategies;
 
 import gr.uom.strategicplanning.models.domain.Project;
 import lombok.Getter;

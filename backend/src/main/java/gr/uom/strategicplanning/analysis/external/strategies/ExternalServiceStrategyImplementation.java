@@ -1,6 +1,5 @@
-package gr.uom.strategicplanning.analysis.external.implementations;
+package gr.uom.strategicplanning.analysis.external.strategies;
 
-import gr.uom.strategicplanning.analysis.external.ExternalServiceStrategy;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.cfg.NotYetImplementedException;
