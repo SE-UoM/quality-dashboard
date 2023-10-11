@@ -1,9 +1,9 @@
 package gr.uom.strategicplanning.controllers.responses;
 
-import gr.uom.strategicplanning.controllers.responses.implementations.ErrorResponse;
-import gr.uom.strategicplanning.controllers.responses.implementations.OrganizationAnalysisResponse;
-import gr.uom.strategicplanning.controllers.responses.implementations.SimpleResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
+
+import java.util.Collection;
 
 public class ResponseFactory {
     public static ResponseInterface createResponse(int responseCode, String message) {
@@ -18,4 +18,7 @@ public class ResponseFactory {
         return new OrganizationAnalysisResponse(analysis);
     }
 
+    public static ResponseInterface createLanguageDistributionResponse(int totalLanguages, Collection<LanguageResponse> languageDistribution) {
+        return new LanguageDistributionResponse(totalLanguages, languageDistribution);
+    }
 }
