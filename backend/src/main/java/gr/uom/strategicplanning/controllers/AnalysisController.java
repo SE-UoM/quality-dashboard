@@ -1,7 +1,9 @@
 package gr.uom.strategicplanning.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import gr.uom.strategicplanning.analysis.external.ExternalServiceClient;
+import gr.uom.strategicplanning.analysis.external.*;
+import gr.uom.strategicplanning.analysis.external.implementations.CodeInspectorServiceStrategy;
+import gr.uom.strategicplanning.analysis.external.implementations.PyAssessServiceStrategy;
 import gr.uom.strategicplanning.controllers.responses.ErrorResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.services.*;
@@ -16,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @RestController
@@ -32,14 +33,18 @@ public class AnalysisController {
 
     private final String PYASSESS_URL = "http://localhost:5000/api/analysis";
 
-    private final String CODE_INSPECTOR_URL = "http://localhost:8080/api/analysis";
+    private final String CODE_INSPECTOR_URL = "http://localhost:8000/api/analysis/prioritize_hotspots";
 
     private final ExternalServiceClient externalServiceClient;
+
+    private PyAssessServiceStrategy pyAssessServiceStrategy;
+    private CodeInspectorServiceStrategy codeInspectorServiceStrategy;
 
     @Autowired
     public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
                               UserService userService, ProjectService projectService,
-                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService, ExternalServiceClient externalServiceClient) {
+                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService, ExternalServiceClient externalServiceClient,
+                              PyAssessServiceStrategy pyAssessServiceStrategy) {
         this.analysisService = analysisService;
         this.projectService = projectService;
         this.userService = userService;
@@ -47,6 +52,7 @@ public class AnalysisController {
         this.organizationService = organizationService;
         this.projectRepository = projectRepository;
         this.externalServiceClient = externalServiceClient;
+        this.pyAssessServiceStrategy = pyAssessServiceStrategy;
     }
 
     private boolean urlIsValid(String url) {
@@ -89,12 +95,7 @@ public class AnalysisController {
             }
 
             analysisService.startAnalysis(project);
-
-            if(project.getLanguages().contains("Python")) {
-                externalServiceClient.sendPostRequestToAnalysisEndpoint(PYASSESS_URL, project.getRepoUrl(), null, null);
-            }
-
-//            externalServiceClient.sendPostRequestToAnalysisEndpoint(CODE_INSPECTOR_URL, project);
+            externalServiceClient.analyzeWithExternalServices(project);
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
