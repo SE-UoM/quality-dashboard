@@ -44,7 +44,6 @@ public class CodeInspectorServiceStrategy extends ExternalServiceStrategyImpleme
         String analysisEndpointUrl = constructUrl(params);
         HttpHeaders headers = createJsonHttpHeaders();
 
-        headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = super.getRestTemplate();
@@ -55,11 +54,8 @@ public class CodeInspectorServiceStrategy extends ExternalServiceStrategyImpleme
                 String.class
         );
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException("Error while sending request to external service");
-        }
-
-        System.out.println(response);
+        boolean responseFailed = response.getStatusCode() != HttpStatus.OK;
+        if (responseFailed) throw new RuntimeException("Error when sending request to CodeInspector service");
     }
 
     public static void main(String[] args) {

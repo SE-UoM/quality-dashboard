@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -69,8 +70,7 @@ public class PyAssessServiceStrategy extends ExternalServiceStrategyImplementati
                 Project.class
         );
 
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException("Error while sending request to external service");
-        }
+        boolean responseFailed = response.getStatusCode() != HttpStatus.OK;
+        if (responseFailed) throw new RuntimeException("Error when sending request to PyAssess service");
     }
 }
