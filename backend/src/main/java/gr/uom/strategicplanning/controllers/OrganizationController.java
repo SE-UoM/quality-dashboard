@@ -485,7 +485,8 @@ public class OrganizationController {
         catch (EntityNotFoundException e) {
             e.printStackTrace();
             ResponseInterface errorResponse = ResponseFactory.createErrorResponse(HttpStatus.NOT_FOUND.value(), "Organization not found", "Organization not found");
-            return ResponseEntity.notFound(errorResponse).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(errorResponse);
         }
     }
 
