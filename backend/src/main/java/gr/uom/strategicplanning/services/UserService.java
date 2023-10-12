@@ -1,12 +1,11 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.controllers.requests.UserRegistrationRequest;
-import gr.uom.strategicplanning.controllers.responses.UserResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.UserResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.repositories.UserRepository;
-import net.bytebuddy.utility.nullability.AlwaysNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.controllers.responses.UserResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.UserResponse;
 import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.services.ProjectService;
 import gr.uom.strategicplanning.services.UserPrivilegedService;

@@ -1,20 +1,14 @@
 package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
-import gr.uom.strategicplanning.controllers.responses.CommitResponse;
-import gr.uom.strategicplanning.controllers.responses.DeveloperResponse;
-import gr.uom.strategicplanning.controllers.responses.LanguageResponse;
-import gr.uom.strategicplanning.models.domain.Developer;
-import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.controllers.responses.implementations.DeveloperResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.LanguageResponse;
 import gr.uom.strategicplanning.models.domain.OrganizationCodeSmellDistribution;
-import gr.uom.strategicplanning.models.domain.Project;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;

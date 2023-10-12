@@ -1,4 +1,4 @@
-package gr.uom.strategicplanning.controllers.responses;
+package gr.uom.strategicplanning.controllers.responses.implementations;
 
 import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.ProjectLanguage;

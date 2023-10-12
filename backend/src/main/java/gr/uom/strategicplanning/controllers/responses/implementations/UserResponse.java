@@ -1,8 +1,6 @@
-package gr.uom.strategicplanning.controllers.responses;
+package gr.uom.strategicplanning.controllers.responses.implementations;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.users.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

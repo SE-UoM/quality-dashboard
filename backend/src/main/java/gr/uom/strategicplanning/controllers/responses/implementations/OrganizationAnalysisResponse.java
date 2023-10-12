@@ -1,12 +1,11 @@
-package gr.uom.strategicplanning.controllers.responses;
+package gr.uom.strategicplanning.controllers.responses.implementations;
 
 import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.TechDebtStatsDTO;
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
-import gr.uom.strategicplanning.models.domain.Language;
 import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
-import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
@@ -15,16 +14,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class OrganizationAnalysisResponse {
+public class OrganizationAnalysisResponse implements ResponseInterface {
 
     private Long id;
     private String orgName;
