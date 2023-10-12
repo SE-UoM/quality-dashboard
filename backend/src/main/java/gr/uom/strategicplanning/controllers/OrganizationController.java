@@ -2,20 +2,19 @@ package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
-import gr.uom.strategicplanning.controllers.responses.*;
+import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
+import gr.uom.strategicplanning.controllers.responses.implementations.*;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
 import gr.uom.strategicplanning.models.stats.GeneralStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
-import gr.uom.strategicplanning.repositories.CodeSmellRepository;
-import gr.uom.strategicplanning.repositories.DeveloperRepository;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.services.DeveloperService;
 import gr.uom.strategicplanning.services.OrganizationService;
 import gr.uom.strategicplanning.utils.TechDebtUtils;
-import org.eclipse.egit.github.core.Contributor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -466,34 +465,41 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}/language-distribution")
-    public ResponseEntity<Map> getOrganizationLanguageDistribution(@PathVariable Long id) {
+    public ResponseEntity<ResponseInterface> getOrganizationLanguageDistribution(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
 
             Collection<OrganizationLanguage> languages = organizationAnalysis.getLanguages();
 
-            Collection<LanguageResponse> languageDistribution = new ArrayList<>();
-
-            for (OrganizationLanguage language : languages) {
-                if (language.getName() != null && !language.getName().equals("none")) {
-                    LanguageResponse languageResponse = new LanguageResponse(language);
-                    languageDistribution.add(languageResponse);
-                }
-            }
-
+            Collection<LanguageResponse> languageDistribution = getLanguageDistribution(languages);
             int totalLanguages = languageDistribution.size();
 
-            Map<String, Object> languageDistributionResponse = new HashMap<>();
-            languageDistributionResponse.put("totalLanguages", totalLanguages);
-            languageDistributionResponse.put("languageDistribution", languageDistribution);
+            ResponseInterface languageDistributionResponse = ResponseFactory.createLanguageDistributionResponse(
+                    totalLanguages,
+                    languageDistribution
+            );
 
             return ResponseEntity.ok(languageDistributionResponse);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            ResponseInterface errorResponse = ResponseFactory.createErrorResponse(HttpStatus.NOT_FOUND.value(), "Organization not found", "Organization not found");
+            return ResponseEntity.notFound(errorResponse).build();
         }
+    }
+
+    private Collection<LanguageResponse> getLanguageDistribution(Collection<OrganizationLanguage> languages) {
+        Collection<LanguageResponse> languageDistribution = new ArrayList<>();
+
+        for (OrganizationLanguage language : languages) {
+            if (language.getName() != null && !language.getName().equals("none")) {
+                LanguageResponse languageResponse = new LanguageResponse(language);
+                languageDistribution.add(languageResponse);
+            }
+        }
+
+        return languageDistribution;
     }
 
     @GetMapping("/{id}/code-smells-distribution")

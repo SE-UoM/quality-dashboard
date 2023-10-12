@@ -1,14 +1,12 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.controllers.responses.DeveloperResponse;
-import gr.uom.strategicplanning.controllers.responses.OrganizationAnalysisResponse;
+import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
+import gr.uom.strategicplanning.controllers.responses.implementations.OrganizationAnalysisResponse;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
-import gr.uom.strategicplanning.models.domain.Developer;
-import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.repositories.OrganizationAnalysisRepository;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,18 +24,24 @@ public class OrganizationAnalysisController {
     private OrganizationRepository organizationRepository;
 
     @GetMapping
-    public ResponseEntity<List<OrganizationAnalysisResponse>> getAllOrganizationAnalysis() {
+    public ResponseEntity<List<ResponseInterface>> getAllOrganizationAnalysis() {
         List<OrganizationAnalysis> organizationAnalyses = organizationAnalysisRepository.findAll();
-        List<OrganizationAnalysisResponse> organizationAnalysisResponses = organizationAnalyses.stream()
-                .map(OrganizationAnalysisResponse::new)
+        List<ResponseInterface> organizationAnalysisResponses = organizationAnalyses.stream()
+                .map(ResponseFactory::createOrganizationAnalysisResponse)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(organizationAnalysisResponses);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrganizationAnalysisResponse> getOrganizationAnalysisById(@PathVariable Long id) {
+    public ResponseEntity<ResponseInterface> getOrganizationAnalysisById(@PathVariable Long id) {
         Optional<OrganizationAnalysis> organizationAnalysisOptional = organizationAnalysisRepository.findById(id);
-        return organizationAnalysisOptional.map(organizationAnalysisResponse -> ResponseEntity.ok(new OrganizationAnalysisResponse(organizationAnalysisResponse)))
+        return organizationAnalysisOptional
+                .map(
+                        organizationAnalysisResponse ->
+                                ResponseEntity
+                                        .ok(ResponseFactory.createOrganizationAnalysisResponse(organizationAnalysisResponse))
+                )
                 .orElse(ResponseEntity.notFound().build());
     }
 
