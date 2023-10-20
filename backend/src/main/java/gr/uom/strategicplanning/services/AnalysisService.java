@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
+import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalysis;
 import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalyzer;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
@@ -21,6 +22,7 @@ public class AnalysisService {
     private final GithubApiClient githubApiClient;
     private final CommitService commitService;
     private final ProjectService projectService;
+    private SonarAnalysis sonarAnalysis;
     @Autowired
     private LanguageService languageService;
 
@@ -47,21 +49,22 @@ public class AnalysisService {
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
         for (String commitSHA : commitList) {
+            System.out.println("Analyzing " + commitList.indexOf(commitSHA) + " out of " + commitList.size() + " commits");
             githubApiClient.checkoutCommit(project, commitSHA);
 
             Commit commit = new Commit();
             commit.setHash(commitSHA);
 
-            sonarAnalyzer = new SonarAnalyzer(commitSHA);
-
-            sonarAnalyzer.analyzeProject(project);
+//            sonarAnalyzer = new SonarAnalyzer(commitSHA);
+            sonarAnalysis = new SonarAnalysis(project, commitSHA);
+//            sonarAnalyzer.analyzeProject(project);
 
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
 
             // Maybe if we set sonarAnalyzer to null, the object will be ellible for garbage collection
             // this could potentially save memory and help with the outOfMemory error we are getting
-            sonarAnalyzer = null;
+            sonarAnalysis = null;
         }
     }
 
@@ -127,10 +130,11 @@ public class AnalysisService {
         project.getCommits().clear();
 
         analyzeCommits(project);
-        analyzeMaster(project);
+//        analyzeMaster(project);
 
-        extractAnalysisDataForProject(project);
+//        extractAnalysisDataForProject(project);
 
+        //ToDo Check this save
         projectService.saveProject(project);
 
         GithubApiClient.deleteRepository(project);

@@ -99,8 +99,6 @@ public class AnalysisController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            e.printStackTrace();
-
             ResponseInterface response = ResponseFactory.createErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     "Analysis failed",
