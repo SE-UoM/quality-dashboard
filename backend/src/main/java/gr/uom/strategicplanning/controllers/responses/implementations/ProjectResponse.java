@@ -1,4 +1,4 @@
-package gr.uom.strategicplanning.controllers.responses;
+package gr.uom.strategicplanning.controllers.responses.implementations;
 
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.domain.*;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

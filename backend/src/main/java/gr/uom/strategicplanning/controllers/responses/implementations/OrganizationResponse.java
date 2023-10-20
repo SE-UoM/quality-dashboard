@@ -1,7 +1,5 @@
-package gr.uom.strategicplanning.controllers.responses;
+package gr.uom.strategicplanning.controllers.responses.implementations;
 
-import gr.uom.strategicplanning.controllers.responses.UserResponse;
-import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Organization;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

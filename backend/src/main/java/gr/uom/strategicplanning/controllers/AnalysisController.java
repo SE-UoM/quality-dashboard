@@ -1,7 +1,9 @@
 package gr.uom.strategicplanning.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import gr.uom.strategicplanning.controllers.responses.ErrorResponse;
+import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
+import gr.uom.strategicplanning.controllers.responses.implementations.ErrorResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.services.*;
 import gr.uom.strategicplanning.models.domain.Project;
@@ -15,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @RestController
@@ -46,7 +47,7 @@ public class AnalysisController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
+    public ResponseEntity<ResponseInterface> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
         try{
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
             String email = decodedJWT.getSubject();
@@ -54,14 +55,16 @@ public class AnalysisController {
             Organization organization = user.getOrganization();
 
             boolean urlIsInvalid = !urlIsValid(githubUrl);
-            if (urlIsInvalid)
-                return ResponseEntity.badRequest().
-                        body(new ErrorResponse(
-                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                                "Invalid github url",
-                                "The url you provided is not a valid github url"
-                        ));
+            if (urlIsInvalid) {
+                ResponseInterface response = ResponseFactory.createErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Invalid github url",
+                        "The url you provided is not a valid github url"
+                );
 
+                return ResponseEntity.badRequest().
+                        body(response);
+            }
 
             Project project = new Project();
             project.setRepoUrl(githubUrl);
@@ -77,16 +80,32 @@ public class AnalysisController {
 
             if (!project.canBeAnalyzed()) {
                 project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
-                return ResponseEntity.ok("Project has been added to the queue");
+
+                ResponseInterface response = ResponseFactory.createResponse(
+                        HttpStatus.OK.value(),
+                        "Project has been added to the queue"
+                );
+                return ResponseEntity.ok(response);
             }
 
             analysisService.startAnalysis(project);
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
 
-            return ResponseEntity.ok(Collections.singletonMap("message", "Analysis ended successfully"));
+            ResponseInterface response = ResponseFactory.createResponse(
+                    HttpStatus.OK.value(),
+                    "Analysis started successfully"
+            );
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-             return ResponseEntity.badRequest().body(e.getMessage());
+            ResponseInterface response = ResponseFactory.createErrorResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Analysis failed",
+                    e.getMessage()
+            );
+
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

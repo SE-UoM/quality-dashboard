@@ -34,6 +34,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.github.tsantalis</groupId>
+			<artifactId>refactoring-miner</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
 			<version>6.6.0.202305301015-r</version>

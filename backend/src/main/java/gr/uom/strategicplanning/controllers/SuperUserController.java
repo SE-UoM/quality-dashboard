@@ -1,8 +1,7 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.controllers.responses.OrganizationResponse;
-import gr.uom.strategicplanning.controllers.responses.ProjectResponse;
-import gr.uom.strategicplanning.controllers.responses.UserResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.OrganizationResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.UserResponse;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.repositories.*;

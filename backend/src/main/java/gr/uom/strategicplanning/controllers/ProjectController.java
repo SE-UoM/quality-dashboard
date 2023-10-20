@@ -1,14 +1,13 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.controllers.responses.CommitResponse;
-import gr.uom.strategicplanning.controllers.responses.DeveloperResponse;
-import gr.uom.strategicplanning.controllers.responses.LanguageResponse;
-import gr.uom.strategicplanning.controllers.responses.ProjectResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.CommitResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.DeveloperResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.LanguageResponse;
+import gr.uom.strategicplanning.controllers.responses.implementations.ProjectResponse;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
