@@ -1,5 +1,8 @@
 version: "3.3"
 services:
+  pyassess-dashboard:
+    image: geoapos/pyassess_raise
+    container_name: pyassess-dashboard
   backend-dashboard:
     build:
       context: ./backend/.
@@ -10,6 +13,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/test_db
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=30a301d7257
+      - SERVICES_EXTERNAL_PYASSESS_URL=pyassess-dashboard:8080
     ports:
       - '8088:8080'
 
