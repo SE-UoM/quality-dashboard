@@ -75,12 +75,8 @@ public class Project {
         return true;
     }
 
-    public void addLanguage(ProjectLanguage language) {
-        boolean languageIsNotPresent = !languageExists(language);
-        if (languageIsNotPresent) {
-            this.languages.add(language);
-            language.setProject(this);
-        }
+    public boolean hasLanguage(String language) {
+        return this.languages.contains("Python");
     }
 
     private boolean developerExists(Developer developer) {

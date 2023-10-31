@@ -8,5 +8,4 @@ RUN chmod a+x /sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner
 RUN chmod 755 /sonar-scanner-4.7.0.2747-linux/jre/bin/java
 
 COPY --from=build /target/*.jar /app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
-
+ENTRYPOINT ["java", "-jar", "/app.jar", "--services.external.pyassess.url=${SERVICES_EXTERNAL_PYASSESS_URL}", "--services.external.codeInspector.url=${SERVICES_EXTERNAL_CODE}"]

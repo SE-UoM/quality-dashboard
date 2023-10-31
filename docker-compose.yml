@@ -1,5 +1,36 @@
 version: "3.3"
 services:
+  pyassess-dashboard:
+    image: geoapos/pyassess_raise
+    container_name: pyassess-dashboard
+    environment:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess:5432/test_db
+        - SPRING_DATASOURCE_USERNAME=root
+        - SPRING_DATASOURCE_PASSWORD=30a301d7257
+
+  db-pyassess:
+    image: postgres:14.7
+    container_name: db-pyassess
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 30a301d7257
+      POSTGRES_DB: test_db
+
+  code-inspector-dashboard:
+    image: archontisk/codeinspector
+    container_name: code-inspector-dashboard
+    environment:
+        - SPRING_DATASOURCE_URL=jdbc:mysql://db-code-inspector:3306/code_inspector_db
+        - SPRING_DATASOURCE_USERNAME=root
+        - SPRING_DATASOURCE_PASSWORD=root
+
+  db-code-inspector:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: code_inspector_db
+      MYSQL_PASSWORD: root
+
   backend-dashboard:
     build:
       context: ./backend/.
@@ -10,6 +41,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/test_db
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=30a301d7257
+      - SERVICES_EXTERNAL_PYASSESS_URL=pyassess-dashboard:8080
+      - SERVICES_EXTERNAL_CODEINSPECTOR_URL=code-inspector-dashboard:8000
     ports:
       - '8088:8080'
 
