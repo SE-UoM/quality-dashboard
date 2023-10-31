@@ -16,11 +16,9 @@
   <p align="center">
     by the Software Engineering Lab of the Department of Applied Informatics, University of Macedonia
     <br />
-    <a href="https://github.com/SE-UoM/quality-dashboar"><strong>.... » (Not Implemented)</strong></a>
+    <a href="http://195.251.210.147:3009/"><strong>View Demo »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/SE-UoM/quality-dashboard">View Demo (Not Implemented)</a>
-    ·
     <a href="https://github.com/SE-UoM/quality-dashboard/discussions/categories/bug-report">Report a Bug</a>
     ·
     <a href="https://github.com/SE-UoM/quality-dashboard/graphs/contributors">Contributors</a>

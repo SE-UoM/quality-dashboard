@@ -3,7 +3,6 @@ package gr.uom.strategicplanning.controllers;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
 import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
-import gr.uom.strategicplanning.controllers.responses.implementations.ErrorResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.services.*;
 import gr.uom.strategicplanning.models.domain.Project;
@@ -29,17 +28,20 @@ public class AnalysisController {
     private final UserService userService;
     private final OrganizationAnalysisService organizationAnalysisService;
     private final String GITHUB_URL_PATTERN = "https://github.com/[^/]+/[^/]+" ;
+    private final ExternalAnalysisService externalAnalysisService;
 
     @Autowired
     public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
                               UserService userService, ProjectService projectService,
-                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService) {
+                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService,
+                              ExternalAnalysisService externalAnalysisService) {
         this.analysisService = analysisService;
         this.projectService = projectService;
         this.userService = userService;
         this.organizationAnalysisService = organizationAnalysisService;
         this.organizationService = organizationService;
         this.projectRepository = projectRepository;
+        this.externalAnalysisService = externalAnalysisService;
     }
 
     private boolean urlIsValid(String url) {
@@ -89,6 +91,8 @@ public class AnalysisController {
             }
 
             analysisService.startAnalysis(project);
+            externalAnalysisService.analyzeWithExternalServices(project);
+
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
 
