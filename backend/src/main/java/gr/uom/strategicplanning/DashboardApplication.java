@@ -10,4 +10,7 @@ public class DashboardApplication {
 		SpringApplication.run(DashboardApplication.class, args);
 	}
 
+	public static boolean isWindows() {
+		return System.getProperty("os.name").toLowerCase().startsWith("windows");
+	}
 }
