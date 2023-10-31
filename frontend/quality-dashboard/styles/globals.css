@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#__next {
+  width: 100%;
+  min-height: 100vh;
+}
+
+html {
+  overflow-x: hidden;
+}
