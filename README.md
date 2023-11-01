@@ -2,23 +2,20 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://github.com/SE-UoM/quality-dashboard/assets/77233507/7904ff64-10ce-43ed-8835-705a09afec2f" alt="Logo" width="180" height="auto">
+    <img src="http://dev.miloxaraktis.gr/assets/dashboard_banner.png" alt="Logo" height="auto">
   </a>
+
+  <br />
   
-  <h2 align="center">QualityDashboard</h2>
-  <p style="align:center;">
-    <img src="https://img.shields.io/github/contributors/SE-UoM/quality-dashboard?style=for-the-badge"/>
-    <img src="https://img.shields.io/github/forks/SE-UoM/quality-dashboard?style=for-the-badge"/>
-    <img src="https://img.shields.io/github/stars/SE-UoM/quality-dashboard?style=for-the-badge"/>
-    <img src="https://img.shields.io/github/issues/SE-UoM/quality-dashboard?style=for-the-badge"/>
-  </p>
+  
   
   <p align="center">
-    by the Software Engineering Lab of the Department of Applied Informatics, University of Macedonia
-    <br />
-    <a href="http://195.251.210.147:3009/"><strong>View Demo »</strong></a>
-    <br />
-    <br />
+    <p style="align:center;">
+      <img src="https://img.shields.io/github/contributors/SE-UoM/quality-dashboard?style=for-the-badge"/>
+      <img src="https://img.shields.io/github/forks/SE-UoM/quality-dashboard?style=for-the-badge"/>
+      <img src="https://img.shields.io/github/stars/SE-UoM/quality-dashboard?style=for-the-badge"/>
+      <img src="https://img.shields.io/github/issues/SE-UoM/quality-dashboard?style=for-the-badge"/>
+    </p>
     <a href="https://github.com/SE-UoM/quality-dashboard/discussions/categories/bug-report">Report a Bug</a>
     ·
     <a href="https://github.com/SE-UoM/quality-dashboard/graphs/contributors">Contributors</a>
