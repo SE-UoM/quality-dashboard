@@ -20,7 +20,7 @@ const valueFormatter = (num: number) =>
 
 export default function TopLanguages() {
   return (
-    <div className="col-span-2 bg-white h-full flex flex-col items-center rounded-2xl gap-12 justify-between pt-12 p-6">
+    <div className="col-span-2 row-span-3 bg-white h-full flex flex-col items-center rounded-2xl gap-12 justify-between pt-12 p-6">
       <span className="text-black tracking-tighter font-medium text-3xl">
         Top Languages
       </span>

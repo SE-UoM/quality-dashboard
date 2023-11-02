@@ -15,7 +15,8 @@
     "geist": "^1.0.0",
     "next": "14.0.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-wordcloud": "^1.2.7"
   },
   "devDependencies": {
     "@types/node": "^20",
