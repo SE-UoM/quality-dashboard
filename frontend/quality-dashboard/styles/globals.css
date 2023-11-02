@@ -12,3 +12,17 @@ body,
 html {
   overflow-x: hidden;
 }
+
+.recharts-layer:nth-child(1) > rect {
+  fill: #555b6e !important;
+}
+.recharts-layer:nth-child(2) > rect {
+  fill: #ee6c4d !important;
+}
+.recharts-layer:nth-child(3) > rect {
+  fill: #bee3db !important;
+}
+
+.recharts-wrapper {
+  pointer-events: none;
+}
