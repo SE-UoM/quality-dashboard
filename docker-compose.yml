@@ -20,16 +20,29 @@ services:
     image: archontisk/codeinspector
     container_name: code-inspector-dashboard
     environment:
-        - SPRING_DATASOURCE_URL=jdbc:mysql://db-code-inspector:3306/code_inspector_db
-        - SPRING_DATASOURCE_USERNAME=root
-        - SPRING_DATASOURCE_PASSWORD=root
+        - DB_URL=mysql+pymysql://root:root@db-code-inspector:3306/code_inspector_db
+    depends_on:
+      db-code-inspector:
+        # Warning: depends_on does not wait for db to be ready. Read more: https://docs.docker.com/compose/startup-order/
+        # Conditionally start this service only if the database service is healthy.
+        # The database service is considered healthy if the healthcheck command exits with a code > 0.
+        condition: service_healthy
 
   db-code-inspector:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: code_inspector_db
-      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    # Checks if MySQL server is healthy by running 'mysqladmin ping' every 10 seconds.
+    # Considers the service unhealthy if the check fails to complete within 5 seconds or fails 3 times in a row.
+    # Read more: https://docs.docker.com/compose/compose-file
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   backend-dashboard:
     build:
