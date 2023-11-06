@@ -5,6 +5,7 @@ import Dashboard1 from "../features/MainDashboard/Screen_1";
 import Dashboard2 from "../features/MainDashboard/Screen_2";
 import Dashboard3 from "../features/MainDashboard/Screen_3";
 import Dashboard4 from "../features/MainDashboard/Screen_4";
+import Dashboard5 from "../features/MainDashboard/Screen_5";
 import { useEffect, useState } from "react";
 import RotatingLine from "../components/RotatingLine";
 
@@ -13,7 +14,7 @@ import { ArrowRightIcon } from "@chakra-ui/icons";
 // import "react-multi-carousel/lib/styles.css";
 // import "swiper/css";
 
-const dashboards = [Dashboard1, Dashboard2, Dashboard3, Dashboard4];
+const dashboards = [Dashboard1, Dashboard2, Dashboard3, Dashboard4, Dashboard5];
 
 const getNextIndex = (arr: any[], currentIndex: number) => {
   if (currentIndex === arr.length - 1) return 0;
