@@ -1,4 +1,4 @@
-version: "3.3"
+version: "2.2"
 services:
   pyassess-dashboard:
     image: geoapos/pyassess_raise
@@ -7,7 +7,8 @@ services:
         - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess:5432/test_db
         - SPRING_DATASOURCE_USERNAME=root
         - SPRING_DATASOURCE_PASSWORD=30a301d7257
-
+    ports:
+        - '8091:8080'
   db-pyassess:
     image: postgres:14.7
     container_name: db-pyassess
@@ -15,57 +16,26 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 30a301d7257
       POSTGRES_DB: test_db
-
   code-inspector-dashboard:
     image: archontisk/codeinspector
     container_name: code-inspector-dashboard
+    depends_on:
+      db-code-inspector:
+          condition: service_healthy
     environment:
-        - SPRING_DATASOURCE_URL=jdbc:mysql://db-code-inspector:3306/code_inspector_db
-        - SPRING_DATASOURCE_USERNAME=root
-        - SPRING_DATASOURCE_PASSWORD=root
-
+        - DB_URL=mysql+pymysql://root:root@195.251.210.147:3366/code_inspector_db
+    ports:
+        - '8092:8000'
   db-code-inspector:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: code_inspector_db
       MYSQL_PASSWORD: root
-
-  backend-dashboard:
-    build:
-      context: ./backend/.
-    container_name: backend-dashboard
-    depends_on:
-      - db-dashboard
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/test_db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=30a301d7257
-      - SERVICES_EXTERNAL_PYASSESS_URL=pyassess-dashboard:8080
-      - SERVICES_EXTERNAL_CODEINSPECTOR_URL=code-inspector-dashboard:8000
     ports:
-      - '8088:8080'
-
-  db-dashboard:
-    image: postgres:14.7
-    container_name: db-dashboard
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 30a301d7257
-      POSTGRES_DB: test_db
-    volumes:
-       - dashboard_postgresql:/var/lib/postgresql
-       - dashboard_postgresql_data:/var/lib/postgresql/data
-    ports:
-      - '5458:5432'
-
-volumes:
-  dashboard_postgresql:
-  dashboard_postgresql_data:
-
-
-
-
-
-
-
+      - '3366:3306'
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
