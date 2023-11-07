@@ -4,11 +4,11 @@ services:
     image: geoapos/pyassess_raise
     container_name: pyassess-dashboard
     environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess:5432/test_db
-        - SPRING_DATASOURCE_USERNAME=root
-        - SPRING_DATASOURCE_PASSWORD=30a301d7257
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess:5432/test_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=30a301d7257
     ports:
-        - '8091:8080'
+      - '8091:8080'
   db-pyassess:
     image: postgres:14.7
     container_name: db-pyassess
@@ -21,11 +21,13 @@ services:
     container_name: code-inspector-dashboard
     depends_on:
       db-code-inspector:
-          condition: service_healthy
+        condition: service_healthy
+    security_opt:
+      - seccomp:unconfined
     environment:
-        - DB_URL=mysql+pymysql://root:root@195.251.210.147:3366/code_inspector_db
+      - DB_URL=mysql+pymysql://root:root@195.251.210.147:3366/code_inspector_db
     ports:
-        - '8092:8000'
+      - '8092:8000'
   db-code-inspector:
     image: mysql:latest
     environment:
@@ -38,4 +40,32 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
-      retries: 3
+  backend-dashboard:
+    build:
+      context: ./backend/.
+    container_name: backend-dashboard
+    depends_on:
+      - db-dashboard
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/test_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=30a301d7257
+      - SERVICES_EXTERNAL_PYASSESS_URL=http://localhost:8091
+      - SERVICES_EXTERNAL_CODEINSPECTOR_URL=http://localhost:8092
+    ports:
+      - '8088:8080'
+  db-dashboard:
+    image: postgres:14.7
+    container_name: db-dashboard
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 30a301d7257
+      POSTGRES_DB: test_db
+    volumes:
+      - dashboard_postgresql:/var/lib/postgresql
+      - dashboard_postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5458:5432'
+volumes:
+  dashboard_postgresql:
+  dashboard_postgresql_data:
