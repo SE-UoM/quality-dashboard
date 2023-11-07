@@ -49,16 +49,17 @@ function Dashboard5() {
   return (
     <Grid
       templateAreas={templateAreas}
-      m="1rem"
       templateColumns={"repeat(5,1fr)"}
       templateRows={"repeat(4,1fr)"}
+      height={"92vh"}
+      padding={"1rem"}
       gap="1rem"
     >
       <GridItem gridArea={"ctypes"}>
         <CommitTypesChart data={commitTypesData.data || resultForCommitTypes} />
       </GridItem>
       <GridItem gridArea={"cover"}>
-        <CoverageTile data={codeCoverageData.data || resultForCommitTypes} />
+        <CoverageTile data={codeCoverageData.data || resultForCoverage} />
       </GridItem>
       <GridItem gridArea={"hspot"}>
         <HotspotsChart data={hotspotsData.data || resultForHotspots} />
