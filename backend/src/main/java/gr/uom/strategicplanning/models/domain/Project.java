@@ -70,7 +70,14 @@ public class Project {
     }
 
     public boolean hasLanguage(String language) {
-        return this.languages.contains(language);
+        for (ProjectLanguage projectLanguage : this.languages) {
+            String languageName = projectLanguage.getName();
+            if (projectLanguage.getName().equalsIgnoreCase(language)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean developerExists(Developer developer) {
