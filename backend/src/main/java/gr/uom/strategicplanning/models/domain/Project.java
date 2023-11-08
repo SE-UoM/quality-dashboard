@@ -76,7 +76,7 @@ public class Project {
     }
 
     public boolean hasLanguage(String language) {
-        return this.languages.contains("Python");
+        return this.languages.contains(language);
     }
 
     private boolean developerExists(Developer developer) {
