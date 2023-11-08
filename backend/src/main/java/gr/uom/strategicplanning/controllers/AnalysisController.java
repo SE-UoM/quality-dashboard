@@ -91,7 +91,7 @@ public class AnalysisController {
             }
 
             analysisService.startAnalysis(project);
-            externalAnalysisService.analyzeWithExternalServices(project);
+//            externalAnalysisService.analyzeWithExternalServices(project);
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
@@ -108,6 +108,8 @@ public class AnalysisController {
                     "Analysis failed",
                     e.getMessage()
             );
+
+            e.printStackTrace();
 
             return ResponseEntity.badRequest().body(response);
         }
