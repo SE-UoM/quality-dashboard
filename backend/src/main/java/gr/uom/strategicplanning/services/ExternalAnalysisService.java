@@ -31,7 +31,7 @@ public class ExternalAnalysisService {
         params.put("endpointUrl", CODE_INSPECTOR_URL+"/api/analysis/prioritize_hotspots");
         params.put("gitUrl", project.getRepoUrl());
 
-        codeInspectorServiceStrategy.sendRequest(params);
+        // codeInspectorServiceStrategy.sendRequest(params);
 
         if (!project.hasLanguage("Python")) return false;
 
@@ -45,7 +45,7 @@ public class ExternalAnalysisService {
         params.put("gitUrl", project.getRepoUrl());
         params.put("token", null);
         params.put("ciToken", null);
-        pyAssessServiceStrategy.sendRequest(params);
+        // pyAssessServiceStrategy.sendRequest(params);
 
         return true;
     }
