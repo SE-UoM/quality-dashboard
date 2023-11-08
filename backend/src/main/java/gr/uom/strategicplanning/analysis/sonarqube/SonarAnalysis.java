@@ -88,7 +88,7 @@ public class SonarAnalysis {
         else {
             try {
                 ProcessBuilder pbuilder = new ProcessBuilder("bash", "-c",
-                        "cd '" + System.getProperty("user.dir") +"/repos/"+ projectName+"' ; ../sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner");
+                        "cd '" + System.getProperty("user.dir") +"/repos/"+ projectName+"' ; ../../sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner");
                 File err = new File("err.txt");
                 pbuilder.redirectError(err);
                 Process p = pbuilder.start();

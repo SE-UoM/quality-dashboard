@@ -44,6 +44,7 @@ public class OrganizationAnalysisService {
 
         Collection<Project> projects = organization.getProjects();
 
+        // TODO: Check that this works correctly
         languageService.updateOrganizationLanguages(organization);
 
         getGeneralStats(organization);
