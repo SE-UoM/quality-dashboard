@@ -13,8 +13,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.lang.System.exit;
-
 /**
  * This class is responsible for interacting with the SonarQube API to fetch project data and statistics.
  */
@@ -217,7 +215,7 @@ public class SonarApiClient extends HttpClient {
         loginResponse = this.sentPostAuthRequest(SONARQUBE_AUTH_URL);
     }
 
-    public Collection<CodeSmellDistribution> fetchCodeSmellsDistribution(Project project) throws IOException {
+    public Collection<ProjectCodeSmellDistribution> fetchCodeSmellsDistribution(Project project) throws IOException {
         Optional<JSONObject> projectComponent = findProjectComponentByName(project);
         String componentKey = findComponentKey(projectComponent);
 
@@ -232,18 +230,18 @@ public class SonarApiClient extends HttpClient {
 
         int valuesSize = values.length();
 
-        Collection<CodeSmellDistribution> codeSmellsDistribution = new ArrayList<>();
+        Collection<ProjectCodeSmellDistribution> codeSmellsDistribution = new ArrayList<>();
         for (int i = 0; i < valuesSize; i++) {
             JSONObject value = values.getJSONObject(i);
             String name = value.getString("val");
             int count = value.getInt("count");
 
-            CodeSmellDistribution codeSmellDistribution = new CodeSmellDistribution();
-            codeSmellDistribution.setProjectStats(project.getProjectStats());
-            codeSmellDistribution.setCodeSmell(name);
-            codeSmellDistribution.setCount(count);
+            ProjectCodeSmellDistribution projectCodeSmellDistribution = new ProjectCodeSmellDistribution();
+            projectCodeSmellDistribution.setProjectStats(project.getProjectStats());
+            projectCodeSmellDistribution.setCodeSmell(name);
+            projectCodeSmellDistribution.setCount(count);
 
-            codeSmellsDistribution.add(codeSmellDistribution);
+            codeSmellsDistribution.add(projectCodeSmellDistribution);
         }
 
         return codeSmellsDistribution;

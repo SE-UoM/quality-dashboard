@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
-public class CodeSmellDistribution {
+public class ProjectCodeSmellDistribution {
     @Id
     @GeneratedValue
     private Long id;

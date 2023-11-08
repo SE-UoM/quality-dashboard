@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.services;
 
-import gr.uom.strategicplanning.models.domain.CodeSmellDistribution;
+import gr.uom.strategicplanning.models.domain.ProjectCodeSmellDistribution;
 import gr.uom.strategicplanning.repositories.CodeSmellDistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,25 +13,25 @@ public class CodeSmellDistributionService {
     @Autowired
     private CodeSmellDistributionRepository codeSmellDistributionRepository;
 
-    public void save(CodeSmellDistribution codeSmellDistribution) {
-        codeSmellDistributionRepository.save(codeSmellDistribution);
+    public void save(ProjectCodeSmellDistribution projectCodeSmellDistribution) {
+        codeSmellDistributionRepository.save(projectCodeSmellDistribution);
     }
 
-    public CodeSmellDistribution saveOrUpdate(CodeSmellDistribution codeSmellDistribution) {
-        Optional<CodeSmellDistribution> codeSmellDistributionOptional = codeSmellDistributionRepository.findByCodeSmell(codeSmellDistribution.getCodeSmell());
+    public ProjectCodeSmellDistribution saveOrUpdate(ProjectCodeSmellDistribution projectCodeSmellDistribution) {
+        Optional<ProjectCodeSmellDistribution> codeSmellDistributionOptional = codeSmellDistributionRepository.findByCodeSmell(projectCodeSmellDistribution.getCodeSmell());
 
-        CodeSmellDistribution codeSmellDistributionToSave = codeSmellDistribution;
+        ProjectCodeSmellDistribution projectCodeSmellDistributionToSave = projectCodeSmellDistribution;
 
         if (codeSmellDistributionOptional.isPresent()) {
-            codeSmellDistributionToSave = codeSmellDistributionOptional.get();
+            projectCodeSmellDistributionToSave = codeSmellDistributionOptional.get();
         }
 
-        return codeSmellDistributionRepository.save(codeSmellDistributionToSave);
+        return codeSmellDistributionRepository.save(projectCodeSmellDistributionToSave);
     }
 
-    public void saveCollectionOfCodeSmellDistribution(Collection<CodeSmellDistribution> codeSmellDistributions) {
-        for (CodeSmellDistribution codeSmellDistribution : codeSmellDistributions) {
-            save(codeSmellDistribution);
+    public void saveCollectionOfCodeSmellDistribution(Collection<ProjectCodeSmellDistribution> projectCodeSmellDistributions) {
+        for (ProjectCodeSmellDistribution projectCodeSmellDistribution : projectCodeSmellDistributions) {
+            save(projectCodeSmellDistribution);
         }
     }
 }

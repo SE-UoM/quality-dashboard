@@ -1,12 +1,9 @@
 package gr.uom.strategicplanning.services;
 
-import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
-import gr.uom.strategicplanning.repositories.CodeSmellDistributionRepository;
 import gr.uom.strategicplanning.repositories.OrganizationCodeSmellsRepository;
 import gr.uom.strategicplanning.repositories.TechDebtStatsRepository;
-import org.aspectj.bridge.ICommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,9 +73,9 @@ public class TechDebtStatsService {
         techDebtStats.resetCodeSmellDistribution();
 
         for (Project project : allProjects) {
-            Collection<CodeSmellDistribution> projectCodeSmellDistributions = project.getProjectStats().getCodeSmellDistributions();
+            Collection<ProjectCodeSmellDistribution> projectProjectCodeSmellDistributions = project.getProjectStats().getCodeSmellDistributions();
 
-            for (CodeSmellDistribution codeSmell : projectCodeSmellDistributions) {
+            for (ProjectCodeSmellDistribution codeSmell : projectProjectCodeSmellDistributions) {
                 String severity = codeSmell.getCodeSmell();
                 int projectCodeSmellCount = codeSmell.getCount();
 

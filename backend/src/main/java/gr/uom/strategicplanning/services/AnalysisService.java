@@ -76,7 +76,7 @@ public class AnalysisService {
         int totalDevelopers = project.getDevelopers().size();
         int totalCommits = project.getCommits().size();
 
-        Collection<CodeSmellDistribution> codeSmellsDistribution = sonarApiClient.fetchCodeSmellsDistribution(project);
+        Collection<ProjectCodeSmellDistribution> codeSmellsDistribution = sonarApiClient.fetchCodeSmellsDistribution(project);
         codeSmellDistributionService.saveCollectionOfCodeSmellDistribution(codeSmellsDistribution);
 
         ProjectStats projectStats = project.getProjectStats();
