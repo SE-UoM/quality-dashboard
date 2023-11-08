@@ -130,7 +130,7 @@ public class AnalysisService {
         clonedGit.close();
         Git.shutdown();
 
-        GithubApiClient.deleteRepository(project);
+        // GithubApiClient.deleteRepository(project);
 
     }
 
