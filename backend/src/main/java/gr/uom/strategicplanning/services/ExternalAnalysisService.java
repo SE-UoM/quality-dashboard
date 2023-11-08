@@ -25,13 +25,26 @@ public class ExternalAnalysisService {
         this.codeInspectorServiceStrategy = new CodeInspectorServiceStrategy(restTemplate);
     }
 
+
+    // Simulate analysis (just to make sure language finding works)
+    private void fakeAnalysis(String name, int waitTime) {
+        // Simulate analysis with CodeInspector (wait and print "waiting for CodeInspector")
+        try {
+            Thread.sleep(waitTime);
+            System.out.println("--------- Simulated Analysis with " + name + " ---------");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean analyzeWithExternalServices(Project project) {
         // Analysis with CodeInspector
         Map<String, String> params = new HashMap<>();
         params.put("endpointUrl", CODE_INSPECTOR_URL+"/api/analysis/prioritize_hotspots");
         params.put("gitUrl", project.getRepoUrl());
-
         // codeInspectorServiceStrategy.sendRequest(params);
+
+        fakeAnalysis("CodeInspector", 1000);
 
         if (!project.hasLanguage("Python")) return false;
 
@@ -46,6 +59,8 @@ public class ExternalAnalysisService {
         params.put("token", null);
         params.put("ciToken", null);
         // pyAssessServiceStrategy.sendRequest(params);
+
+        fakeAnalysis("PyAssess", 1000);
 
         return true;
     }
