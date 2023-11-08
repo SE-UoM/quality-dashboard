@@ -91,7 +91,7 @@ public class AnalysisController {
             }
 
             analysisService.startAnalysis(project);
-            externalAnalysisService.analyzeWithExternalServices(project);
+            //externalAnalysisService.analyzeWithExternalServices(project);
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
