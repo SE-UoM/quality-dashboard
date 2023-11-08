@@ -128,8 +128,6 @@ public class AnalysisService {
         projectService.saveProject(project);
 
          clonedGit.close();
-         Git.shutdown();
-
          GithubApiClient.deleteRepository(project);
 
     }
