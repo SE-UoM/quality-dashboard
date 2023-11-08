@@ -69,12 +69,6 @@ public class Project {
         }
     }
 
-    private boolean languageExists(ProjectLanguage language) {
-        if (!this.languages.contains(language)) return false;
-
-        return true;
-    }
-
     public boolean hasLanguage(String language) {
         return this.languages.contains(language);
     }
