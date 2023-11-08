@@ -127,10 +127,10 @@ public class AnalysisService {
         //ToDo Check this save
         projectService.saveProject(project);
 
-        clonedGit.close();
-        // Git.shutdown();
+         clonedGit.close();
+         Git.shutdown();
 
-        // GithubApiClient.deleteRepository(project);
+         GithubApiClient.deleteRepository(project);
 
     }
 
