@@ -13,6 +13,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.System.exit;
+
 /**
  * This class is responsible for interacting with the SonarQube API to fetch project data and statistics.
  */
@@ -30,6 +32,46 @@ public class SonarApiClient extends HttpClient {
     
     private final int ARRAY_INDEX = 0;
     private final String EMPTY_PARAM = "";
+
+    /**
+     * Some SonarQube projects have the component key as owner:projectName
+     * This method tries to find the correct component key by searching by name
+     * @return An Optional object containing the component key if found, or an empty Optional if not found
+     */
+    private Optional<JSONObject> findProjectComponentByName(Project project) throws IOException {
+        String projectName = project.getName();
+        String projectOwner = project.getOwnerName();
+
+        String componentName = projectName;
+        String searchByComponentKeyUrl = SONARQUBE_URL + "/api/components/show?component=" + componentName;
+
+        Response response = this.sendGetRequest(searchByComponentKeyUrl);
+
+        // Check if we got a valid response and if not try to search by user:name
+        if (!response.isSuccessful())
+            componentName =  projectOwner + ":" + projectName;
+
+        searchByComponentKeyUrl = SONARQUBE_URL + "/api/components/show?component=" + componentName;
+
+        response = this.sendGetRequest(searchByComponentKeyUrl);
+
+        if (!response.isSuccessful())
+            return Optional.empty();
+
+        JSONObject jsonObject = this.convertResponseToJson(response);
+
+        return Optional.of(jsonObject);
+    }
+
+    private String findComponentKey(Optional componentOptional) throws IOException {
+        if (componentOptional.isEmpty())
+            throw new IOException("Component optional is empty | File: SonarApiClient.java | Method: findComponentKey");
+
+        JSONObject componentJSON = (JSONObject) componentOptional.get();
+        JSONObject projectJSON = componentJSON.getJSONObject("component");
+
+        return projectJSON.getString("key");
+    }
 
     /**
      * Fetches project data and statistics from SonarQube API and updates the provided project object with the results.
@@ -73,20 +115,19 @@ public class SonarApiClient extends HttpClient {
      * @throws IOException If an I/O error occurs while communicating with the SonarQube API.
      */
     private int fetchComponentMetrics(Project project, String metricKey) throws IOException {
-        String apiUrl = SONARQUBE_URL + "/api/measures/component?metricKeys=" + metricKey + "&component=" + project.getName();
+        Optional<JSONObject> component = findProjectComponentByName(project);
+        String componentKey = findComponentKey(component);
+        String apiUrl = SONARQUBE_URL + "/api/measures/component?metricKeys=" + metricKey + "&component=" + componentKey;
 
         loginToSonar();
 
         Response response = this.sendGetRequest(apiUrl);
-
         JSONObject jsonObject = this.convertResponseToJson(response);
 
-        JSONObject component = jsonObject.getJSONObject("component");
-        JSONArray measures = component.getJSONArray("measures");
+        JSONObject componentJSON = jsonObject.getJSONObject("component");
+        JSONArray measures = componentJSON.getJSONArray("measures");
 
-        if (measures.length() == 0) {
-            return -1;
-        }
+        if (measures.isEmpty()) return -1;
 
         Map metrics_map = measures.getJSONObject(ARRAY_INDEX).toMap();
         String value = (String) metrics_map.get("value");
@@ -105,7 +146,10 @@ public class SonarApiClient extends HttpClient {
      */
     private JSONObject fetchIssues(Project project, String types) throws IOException {
         // Send the GET request
-        Response response = this.sendGetRequest(ISSUES_SEARCH_URL + project.getName() + "&types=" + types);
+        Optional<JSONObject> component = findProjectComponentByName(project);
+        String componentKey = findComponentKey(component);
+
+        Response response = this.sendGetRequest(ISSUES_SEARCH_URL + componentKey + "&types=" + types);
 
         return this.convertResponseToJson(response);
     }
@@ -120,8 +164,11 @@ public class SonarApiClient extends HttpClient {
     public Collection<ProjectLanguage> fetchLanguages(Project project) throws IOException {
         Collection<ProjectLanguage> languages = new ArrayList<>();
 
+        Optional<JSONObject> projectComponent = findProjectComponentByName(project);
+        String componentKey = findComponentKey(projectComponent);
+
         try {
-            Response response = this.sendGetRequest(LANGUAGES_URL + project.getName());
+            Response response = this.sendGetRequest(LANGUAGES_URL + componentKey);
 
             JSONObject jsonObject = this.convertResponseToJson(response);
             JSONObject component = jsonObject.getJSONObject("component");
@@ -171,7 +218,10 @@ public class SonarApiClient extends HttpClient {
     }
 
     public Collection<CodeSmellDistribution> fetchCodeSmellsDistribution(Project project) throws IOException {
-        String apiUrl = SONARQUBE_URL + "/api/issues/search?componentKeys=" + project.getName() + "&types=CODE_SMELL&&facets=severities";
+        Optional<JSONObject> projectComponent = findProjectComponentByName(project);
+        String componentKey = findComponentKey(projectComponent);
+
+        String apiUrl = SONARQUBE_URL + "/api/issues/search?componentKeys=" + componentKey + "&types=CODE_SMELL&&facets=severities";
 
         Response response = this.sendGetRequest(apiUrl);
         JSONObject jsonObject = this.convertResponseToJson(response);
@@ -201,7 +251,6 @@ public class SonarApiClient extends HttpClient {
 
     public int retrieveDataFromMeasures(Project project, String metric) throws IOException {
         this.loginToSonar();
-        int totalNumber = this.fetchComponentMetrics(project, metric);
-        return totalNumber;
+        return this.fetchComponentMetrics(project, metric);
     }
 }
