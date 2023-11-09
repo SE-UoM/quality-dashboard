@@ -25,7 +25,7 @@ services:
     security_opt:
       - seccomp:unconfined
     environment:
-      - DB_URL=mysql+pymysql://root:root@127.0.0.1:3366/code_inspector_db
+      - DB_URL=mysql+pymysql://root:root@db-code-inspector:3306/code_inspector_db
     ports:
       - '8092:8000'
   db-code-inspector:
