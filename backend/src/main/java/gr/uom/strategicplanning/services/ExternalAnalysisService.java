@@ -20,6 +20,9 @@ public class ExternalAnalysisService {
     @Value("${services.external.codeInspector.url}")
     private String CODE_INSPECTOR_URL;
 
+    private String CODE_INSPECTOR_ANALYZE_HOTSPOTS = "/api/analysis/prioritize_hotspots";
+    private String PYASSESS_ANALYZE_REPO = "/api/analysis";
+
     public ExternalAnalysisService(RestTemplate restTemplate) {
         this.pyAssessServiceStrategy = new PyAssessServiceStrategy(restTemplate);
         this.codeInspectorServiceStrategy = new CodeInspectorServiceStrategy(restTemplate);
@@ -40,7 +43,7 @@ public class ExternalAnalysisService {
     public boolean analyzeWithExternalServices(Project project) {
         // Analysis with CodeInspector
         Map<String, String> params = new HashMap<>();
-        params.put("endpointUrl", CODE_INSPECTOR_URL+"/api/analysis/prioritize_hotspots");
+        params.put("endpointUrl", CODE_INSPECTOR_URL + CODE_INSPECTOR_ANALYZE_HOTSPOTS);
         params.put("gitUrl", project.getRepoUrl());
         codeInspectorServiceStrategy.sendRequest(params);
 
@@ -54,7 +57,7 @@ public class ExternalAnalysisService {
         params.clear();
 
         // Analysis with PyAssess
-        params.put("endpointUrl", PYASSESS_URL+"/api/analysis");
+        params.put("endpointUrl", PYASSESS_URL + PYASSESS_ANALYZE_REPO);
         params.put("gitUrl", project.getRepoUrl());
         params.put("token", null);
         params.put("ciToken", null);
