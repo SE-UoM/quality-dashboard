@@ -77,7 +77,7 @@ public class ExternalAnalysisService {
                     project.setCodeInspectorStatus(ProjectStatus.ANALYSIS_FAILED);
 
                 if (serviceName.equalsIgnoreCase("PyAssess"))
-                    project.setPyAssessStatus(ProjectStatus.ANALYSIS_COMPLETED);
+                    project.setPyAssessStatus(ProjectStatus.ANALYSIS_FAILED);
             }
         }
         return true;
