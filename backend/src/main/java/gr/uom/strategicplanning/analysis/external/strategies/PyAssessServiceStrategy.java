@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.analysis.external.strategies;
 
 import gr.uom.strategicplanning.models.domain.Project;
+import gr.uom.strategicplanning.models.exceptions.ExternalAnalysisException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.*;
@@ -71,6 +72,7 @@ public class PyAssessServiceStrategy extends ExternalServiceStrategyImplementati
         );
 
         boolean responseFailed = response.getStatusCode() != HttpStatus.OK;
-        if (responseFailed) throw new RuntimeException("Error when sending request to PyAssess service");
+
+        if (responseFailed) throw new ExternalAnalysisException("PYASSESS");
     }
 }

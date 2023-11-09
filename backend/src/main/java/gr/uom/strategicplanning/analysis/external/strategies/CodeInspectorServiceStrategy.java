@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.analysis.external.strategies;
 
+import gr.uom.strategicplanning.models.exceptions.ExternalAnalysisException;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -55,7 +56,7 @@ public class CodeInspectorServiceStrategy extends ExternalServiceStrategyImpleme
         );
 
         boolean responseFailed = response.getStatusCode() != HttpStatus.OK;
-        if (responseFailed) throw new RuntimeException("Error when sending request to CodeInspector service");
+        if (responseFailed) throw new ExternalAnalysisException("CODEINSPECTOR");
     }
 
     public static void main(String[] args) {
