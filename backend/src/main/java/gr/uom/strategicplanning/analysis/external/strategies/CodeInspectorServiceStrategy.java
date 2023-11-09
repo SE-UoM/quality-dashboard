@@ -24,7 +24,7 @@ public class CodeInspectorServiceStrategy extends ExternalServiceStrategyImpleme
     @Override
     public String constructUrl(Map<String, String> params) {
         String endpointUrl = params.get("endpointUrl");
-        String gitUrl = params.get("repoUrl");
+        String gitUrl = params.get("gitUrl");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(endpointUrl);
         builder.queryParam("repo_url", gitUrl);
