@@ -75,7 +75,7 @@ public class Project {
     public boolean hasLanguage(String language) {
         for (ProjectLanguage projectLanguage : this.languages) {
             String languageName = projectLanguage.getName();
-            if (projectLanguage.getName().equalsIgnoreCase(language)) {
+            if (languageName.equalsIgnoreCase(language)) {
                 return true;
             }
         }
