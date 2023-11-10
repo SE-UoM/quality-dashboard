@@ -31,7 +31,7 @@ public class ProjectLanguage {
         if (this == o) return true;
         if (!(o instanceof ProjectLanguage)) return false;
         ProjectLanguage that = (ProjectLanguage) o;
-        return getName().equals(that.getName());
+        return getName().equalsIgnoreCase(that.getName());
     }
 
     public boolean isTheSame(OrganizationLanguage other) {

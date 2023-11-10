@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -28,12 +29,12 @@ public abstract class ExternalServiceStrategyImplementation implements ExternalS
     }
 
     @Override
-    public String constructUrl(Map<String, String> params) {
+    public String constructUrl(Map<String, Object> params) {
         throw new NotYetImplementedException("ExternalServiceStrategyImplementation.constructUrl() not implemented");
     }
 
     @Override
-    public void sendRequest(Map<String, String> params) {
+    public ResponseEntity sendRequest(Map<String, Object> params) {
          throw new NotYetImplementedException("ExternalServiceStrategyImplementation.sendRequest() not implemented");
     }
 }

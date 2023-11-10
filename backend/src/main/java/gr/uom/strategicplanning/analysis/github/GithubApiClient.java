@@ -7,23 +7,17 @@ import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
 
-import gr.uom.strategicplanning.utils.FileUtils;
 import org.eclipse.jgit.api.CheckoutCommand;
-import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -151,20 +145,11 @@ public class GithubApiClient extends HttpClient {
     public static void deleteRepository(Project project) throws Exception {
         String repoName = project.getName();
         String pathToRepo = System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + repoName;
-
         Path path = Paths.get(pathToRepo);
-        Path gitFolderPath = Paths.get(pathToRepo + System.getProperty("file.separator") + ".git");
 
-        if (!Files.exists(path)) throw new FileNotFoundException("Directory " + repoName + "not found | " + pathToRepo);
+        org.eclipse.jgit.util.FileUtils.delete(path.toFile(), org.eclipse.jgit.util.FileUtils.RECURSIVE);
 
-        // Close git
-        Repository repository = FileRepositoryBuilder.create(gitFolderPath.toFile());
-        Git git = new Git(repository);
-        git.close();
-        git.getRepository().close();
-
-        // Delete all the contents of the directory
-        FileUtils.deleteDirectoryContents(path);
+        System.out.println("Deleted repository: " + repoName);
     }
 
     /**
@@ -173,15 +158,18 @@ public class GithubApiClient extends HttpClient {
      * @param project The Project object representing the project whose repository is to be cloned.
      * @throws Exception if an error occurs during the cloning process
      */
-    public static void cloneRepository(Project project) throws Exception {
+    public static Git cloneRepository(Project project) throws Exception {
         System.out.println("Cloning repository: " + project.getName());
         System.out.println("User dir: " + System.getProperty("user.dir"));
-        CloneCommand cloneCommand = new CloneCommand();
-        cloneCommand.setURI(project.getRepoUrl());
-        cloneCommand.setDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + project.getName()));
+        String pathToRepo = System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + project.getName();
 
-        Git git = cloneCommand.call();
-        git.close();
+        Git git = Git.cloneRepository()
+                .setURI(project.getRepoUrl())
+                .setDirectory(new File(pathToRepo))
+                .call();
+
+        System.out.println("Cloned repository: " + project.getName());
+        return git;
     }
 
     /**

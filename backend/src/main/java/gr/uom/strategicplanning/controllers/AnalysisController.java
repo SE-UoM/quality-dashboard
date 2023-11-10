@@ -91,10 +91,12 @@ public class AnalysisController {
             }
 
             analysisService.startAnalysis(project);
-            externalAnalysisService.analyzeWithExternalServices(project);
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
+
+            // Analyze with external tools
+            externalAnalysisService.analyzeWithExternalServices(project);
 
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
@@ -108,6 +110,8 @@ public class AnalysisController {
                     "Analysis failed",
                     e.getMessage()
             );
+
+            e.printStackTrace();
 
             return ResponseEntity.badRequest().body(response);
         }

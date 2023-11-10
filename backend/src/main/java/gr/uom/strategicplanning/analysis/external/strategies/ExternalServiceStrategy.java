@@ -1,5 +1,7 @@
 package gr.uom.strategicplanning.analysis.external.strategies;
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.Map;
 
 /**
@@ -12,12 +14,12 @@ public interface ExternalServiceStrategy {
      * @param params A map of parameters used to construct the URL.
      * @return The constructed URL as a string.
      */
-    String constructUrl(Map<String, String> params);
+    String constructUrl(Map<String, Object> params);
 
     /**
      * Sends a request to the external service using the provided parameters.
      *
      * @param params A map of parameters needed for the request.
      */
-    void sendRequest(Map<String, String> params);
+    ResponseEntity sendRequest(Map<String, Object> params);
 }

@@ -44,6 +44,9 @@ public class Project {
     private Set<Developer> developers = new HashSet<>();
 
     private ProjectStatus status = ProjectStatus.ANALYSIS_NOT_STARTED;
+    private ProjectStatus codeInspectorStatus = ProjectStatus.ANALYSIS_NOT_STARTED;
+    private ProjectStatus pyAssessStatus = ProjectStatus.ANALYSIS_NOT_STARTED;
+
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
     
@@ -69,14 +72,15 @@ public class Project {
         }
     }
 
-    private boolean languageExists(ProjectLanguage language) {
-        if (!this.languages.contains(language)) return false;
-
-        return true;
-    }
-
     public boolean hasLanguage(String language) {
-        return this.languages.contains("Python");
+        for (ProjectLanguage projectLanguage : this.languages) {
+            String languageName = projectLanguage.getName();
+            if (languageName.equalsIgnoreCase(language)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean developerExists(Developer developer) {

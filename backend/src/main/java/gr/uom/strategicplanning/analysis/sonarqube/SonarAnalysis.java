@@ -40,16 +40,11 @@ public class SonarAnalysis {
         this.projectOwner = project.getOwnerName();
         this.version = version;
 
-        //create file
         createSonarFile();
-        //start analysis
         makeSonarAnalysis();
-        //Get TD from SonarQube
-//        getMetricFromSonarQube();
     }
 
-
-    //Create Sonar Properties file
+    // Create Sonar Properties file
     private void createSonarFile() throws IOException {
         BufferedWriter writer = null;
         try {
@@ -72,7 +67,7 @@ public class SonarAnalysis {
     private void makeSonarAnalysis() throws IOException, InterruptedException {
         if (DashboardApplication.isWindows()) {
             Process proc = Runtime.getRuntime().exec("cmd /c cd " +System.getProperty("user.dir")+ "\\repos\\" + projectName +
-                    " && ..\\sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat");
+                    " && ..\\..\\sonar-scanner\\sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat");
             System.out.println("start analysis");
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String inputLine;
@@ -162,10 +157,12 @@ public class SonarAnalysis {
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
+
             int responsecode = conn.getResponseCode();
             if(responsecode != 200)
                 throw new RuntimeException("HttpResponseCode: "+responsecode);
-            else{
+
+            else {
                 Scanner sc = new Scanner(url.openStream());
                 while(sc.hasNext()){
                     String line=sc.nextLine();

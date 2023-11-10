@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalys
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
+import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -76,7 +77,7 @@ public class AnalysisService {
         int totalDevelopers = project.getDevelopers().size();
         int totalCommits = project.getCommits().size();
 
-        Collection<CodeSmellDistribution> codeSmellsDistribution = sonarApiClient.fetchCodeSmellsDistribution(project);
+        Collection<ProjectCodeSmellDistribution> codeSmellsDistribution = sonarApiClient.fetchCodeSmellsDistribution(project);
         codeSmellDistributionService.saveCollectionOfCodeSmellDistribution(codeSmellsDistribution);
 
         ProjectStats projectStats = project.getProjectStats();
@@ -110,7 +111,7 @@ public class AnalysisService {
     }
 
     public void startAnalysis(Project project) throws Exception {
-        GithubApiClient.cloneRepository(project);
+        Git clonedGit = GithubApiClient.cloneRepository(project);
 
         String defaultBranch = GithubApiClient.getDefaultBranchName(project);
         RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
@@ -126,7 +127,8 @@ public class AnalysisService {
         //ToDo Check this save
         projectService.saveProject(project);
 
-        GithubApiClient.deleteRepository(project);
+         clonedGit.close();
+         GithubApiClient.deleteRepository(project);
 
     }
 
