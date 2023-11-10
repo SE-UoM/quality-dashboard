@@ -91,10 +91,12 @@ public class AnalysisController {
             }
 
             analysisService.startAnalysis(project);
-            externalAnalysisService.analyzeWithExternalServices(project);
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
+
+            // Analyze with external tools
+            externalAnalysisService.analyzeWithExternalServices(project);
 
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
