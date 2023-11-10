@@ -30,11 +30,11 @@ public class PyAssessServiceStrategy extends ExternalServiceStrategyImplementati
      * @return The constructed URL as a string.
      */
     @Override
-    public String constructUrl(Map<String, String> params) {
-        String endpointUrl = params.get("endpointUrl");
-        String gitUrl = params.get("gitUrl");
-        String token = params.get("token");
-        String ciToken = params.get("ciToken");
+    public String constructUrl(Map<String, Object> params) {
+        String endpointUrl = (String) params.get("endpointUrl");
+        String gitUrl = (String) params.get("gitUrl");
+        String token = (String) params.get("token");
+        String ciToken = (String) params.get("ciToken");
 
         // Construct the URL with query parameters
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(endpointUrl);
@@ -57,16 +57,17 @@ public class PyAssessServiceStrategy extends ExternalServiceStrategyImplementati
      * @param params A map of parameters used for the request ("endpointUrl," "gitUrl," "token," and "ciToken").
      */
     @Override
-    public void sendRequest(Map<String, String> params) {
+    public ResponseEntity sendRequest(Map<String, Object> params) {
         String analysisEndpointUrl = constructUrl(params);
         HttpHeaders headers = createJsonHttpHeaders();
+        HttpMethod method = (HttpMethod) params.get("method");
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = super.getRestTemplate();
         ResponseEntity<Project> response = restTemplate.exchange(
                 analysisEndpointUrl,
-                HttpMethod.POST,
+                method,
                 requestEntity,
                 Project.class
         );
@@ -74,5 +75,7 @@ public class PyAssessServiceStrategy extends ExternalServiceStrategyImplementati
         boolean responseFailed = response.getStatusCode() != HttpStatus.OK;
 
         if (responseFailed) throw new ExternalAnalysisException("PYASSESS");
+
+        return response;
     }
 }

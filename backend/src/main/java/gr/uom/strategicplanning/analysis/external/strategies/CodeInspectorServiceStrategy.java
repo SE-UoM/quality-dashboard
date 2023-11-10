@@ -23,40 +23,42 @@ public class CodeInspectorServiceStrategy extends ExternalServiceStrategyImpleme
      */
 
     @Override
-    public String constructUrl(Map<String, String> params) {
-        String endpointUrl = params.get("endpointUrl");
-        String gitUrl = params.get("gitUrl");
+    public String constructUrl(Map<String, Object> params) {
+        String endpointUrl = (String) params.get("endpointUrl");
+        String gitUrl = (String) params.get("gitUrl");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(endpointUrl);
-        builder.queryParam("repo_url", gitUrl);
 
-        String analysisEndpointUrl = builder.toUriString();
+        if (gitUrl != null) builder.queryParam("repo_url", gitUrl);
 
-        return analysisEndpointUrl;
+        return builder.toUriString();
     }
 
     /**
      * Sends a request to the Code Inspector service using the provided parameters.
-     *
      * @param params A map of parameters used for the request.
      */
     @Override
-    public void sendRequest(Map<String, String> params) {
+    public ResponseEntity sendRequest(Map<String, Object> params) {
+        HttpMethod method = (HttpMethod) params.get("method");
+
         String analysisEndpointUrl = constructUrl(params);
         HttpHeaders headers = createJsonHttpHeaders();
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = super.getRestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(
+        ResponseEntity<Map> response = restTemplate.exchange(
                 analysisEndpointUrl,
-                HttpMethod.GET,
+                method,
                 requestEntity,
-                String.class
+                Map.class
         );
 
         boolean responseFailed = response.getStatusCode() != HttpStatus.OK;
         if (responseFailed) throw new ExternalAnalysisException("CODEINSPECTOR");
+
+        return response;
     }
 
     public static void main(String[] args) {
