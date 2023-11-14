@@ -1,12 +1,12 @@
 package gr.uom.strategicplanning.controllers.dtos;
 
 import gr.uom.strategicplanning.controllers.responses.implementations.ProjectResponse;
-import gr.uom.strategicplanning.models.domain.OrganizationCodeSmellDistribution;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
 import lombok.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +24,7 @@ public class TechDebtStatsDTO {
     private ProjectResponse projectWithMaxTechDebt;
     private Collection<ProjectResponse> bestTechDebtProjects;
     private Collection<ProjectResponse> bestCodeSmellProjects;
-    private Collection<OrganizationCodeSmellDistribution> codeSmells;
+    private Map<String, Integer> codeSmells;
 
     public TechDebtStatsDTO(TechDebtStats techDebtStats) {
         this.id = techDebtStats.getId();
