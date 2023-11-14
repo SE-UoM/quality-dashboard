@@ -24,7 +24,6 @@ public class AnalysisController {
     private final AnalysisService analysisService;
     private final ProjectRepository projectRepository;
     private final OrganizationService organizationService;
-    private final ProjectService projectService;
     private final UserService userService;
     private final OrganizationAnalysisService organizationAnalysisService;
     private final String GITHUB_URL_PATTERN = "https://github.com/[^/]+/[^/]+" ;
@@ -32,11 +31,9 @@ public class AnalysisController {
 
     @Autowired
     public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
-                              UserService userService, ProjectService projectService,
-                              ProjectRepository projectRepository, OrganizationAnalysisService organizationAnalysisService,
-                              ExternalAnalysisService externalAnalysisService) {
+                              UserService userService, ProjectRepository projectRepository,
+                              OrganizationAnalysisService organizationAnalysisService, ExternalAnalysisService externalAnalysisService) {
         this.analysisService = analysisService;
-        this.projectService = projectService;
         this.userService = userService;
         this.organizationAnalysisService = organizationAnalysisService;
         this.organizationService = organizationService;
