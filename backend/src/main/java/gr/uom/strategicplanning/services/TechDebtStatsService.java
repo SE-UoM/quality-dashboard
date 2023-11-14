@@ -2,20 +2,18 @@ package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.TechDebtStats;
-import gr.uom.strategicplanning.repositories.OrganizationCodeSmellsRepository;
 import gr.uom.strategicplanning.repositories.TechDebtStatsRepository;
+import gr.uom.strategicplanning.utils.OrganizationTechDebtCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TechDebtStatsService {
 
     private TechDebtStatsRepository techDebtStatsRepository;
-    @Autowired
-    private OrganizationCodeSmellsRepository organizationCodeSmellsRepository;
+    private final int PROJECTS_TO_SHOW = 20;
 
     @Autowired
     public TechDebtStatsService(TechDebtStatsRepository techDebtStatsRepository) {
@@ -24,87 +22,59 @@ public class TechDebtStatsService {
 
     public TechDebtStats getTechDebtStats(Organization organization) {
         TechDebtStats techDebtStats = organization.getOrganizationAnalysis().getTechDebtStats();
+        List<Project> projects = organization.getProjects();
 
-        List<Project> projects = organization.getProjects(); // Collect the projects for reuse
-        float averageTechDebt = calculateAverageTechDebt(projects);
+        // Find and set the average tech debt
+        float averageTechDebt = OrganizationTechDebtCalculator.calculateAvgTD(projects);
         techDebtStats.setAverageTechDebt(averageTechDebt);
 
-        Map<Project, Float> projectTechDebt = projects.stream()
-                .collect(Collectors.toMap(project -> project, project -> (float) project.getProjectStats().getTechDebt()));
-
-        float minTechDebtValue = projectTechDebt.values().stream().min(Float::compareTo).orElse(0f);
-
-
-        Collection<Project> bestTechDebtProjects = projectTechDebt.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(minTechDebtValue))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-        Map<Project, Long> projectCodeSmellCounts = projects.stream()
-                .collect(Collectors.toMap(
-                        project -> project,
-                        project -> project.getCommits().stream()
-                                .flatMap(commit -> commit.getCodeSmells().stream())
-                                .count()
-                ));
-
-        long minCodeSmells = projectCodeSmellCounts.values().stream()
-                .min(Long::compareTo)
-                .orElse(0L);
-
-        Collection<Project> bestCodeSmellProjects = projectCodeSmellCounts.entrySet().stream()
-                .filter(entry -> entry.getValue() == minCodeSmells)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-        techDebtStats.setTotalTechDebt(projectTechDebt.values().stream().reduce(0f, Float::sum));
-        techDebtStats.setAverageTechDebt(averageTechDebt);
-        techDebtStats.setAverageTechDebtPerLoC((float) (averageTechDebt / projects.stream().mapToDouble(project -> project.getProjectStats().getTotalLoC()).sum()));
+        // Find and set the best tech debt projects
+        Collection<Project> bestTechDebtProjects = OrganizationTechDebtCalculator.findBestTechDebtProjects(projects, PROJECTS_TO_SHOW);
         techDebtStats.setBestTechDebtProjects(bestTechDebtProjects);
-        techDebtStats.setProjectWithMinTechDebt(Objects.requireNonNull(bestTechDebtProjects.stream().findFirst().map(Project::getProjectStats).orElse(null)).getProject());
-        techDebtStats.setProjectWithMaxTechDebt(Objects.requireNonNull(projectTechDebt.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .map(Project::getProjectStats)
-                .orElse(null)).getProject());
+
+        // Find and set the best code smell projects
+        Collection<Project> bestCodeSmellProjects = OrganizationTechDebtCalculator.findBestCodeSmellProjects(projects, PROJECTS_TO_SHOW);
+        techDebtStats.setBestCodeSmellProjects(bestCodeSmellProjects);
+
+        // Find and set the project with the min tech debt
+        Optional<Project> projectWithMinTD = OrganizationTechDebtCalculator.findProjectWithMinTD(projects);
+        techDebtStats.setProjectWithMinTechDebt(projectWithMinTD.orElse(null));
+
+        // Find and set the project with the max tech debt
+        Optional<Project> projectWithMaxTD = OrganizationTechDebtCalculator.findProjectWithMaxTD(projects);
+        techDebtStats.setProjectWithMaxTechDebt(projectWithMaxTD.orElse(null));
+
+        // Find and set total tech debt
+        float totalTD = OrganizationTechDebtCalculator.calculateTotalTD(projects);
+        techDebtStats.setTotalTechDebt(totalTD);
+
+        // Find and set the average tech debt per LoC
+        float avgTechDebtPerLoC = OrganizationTechDebtCalculator.calculateAvgTechDebtPerLOC(projects);
+        techDebtStats.setAverageTechDebtPerLoC(avgTechDebtPerLoC);
+
+        // Find and set the total code smells
+        int totalCodeSmells = OrganizationTechDebtCalculator.calculateTotalCodeSmells(projects);
+        techDebtStats.setTotalCodeSmells(totalCodeSmells);
 
         // Find Code Smells Distribution for the whole organization
         Collection<Project> allProjects = organization.getProjects();
-        techDebtStats.resetCodeSmellDistribution();
 
-        for (Project project : allProjects) {
-            Collection<ProjectCodeSmellDistribution> projectProjectCodeSmellDistributions = project.getProjectStats().getCodeSmellDistributions();
+        // Find and set the code smell distribution
+        Map<String, Integer> codeSmellDistributionMap = OrganizationTechDebtCalculator.findCodeSmellsDistribution(allProjects);
+        techDebtStats.initCodeSmellsDistribution();
 
-            for (ProjectCodeSmellDistribution codeSmell : projectProjectCodeSmellDistributions) {
-                String severity = codeSmell.getCodeSmell();
-                int projectCodeSmellCount = codeSmell.getCount();
+        for (Map.Entry<String, Integer> entry : codeSmellDistributionMap.entrySet()) {
+            // Get the calculated code smell distribution values
+            String severity = entry.getKey();
+            int count = entry.getValue();
 
-                Optional<OrganizationCodeSmellDistribution> organizationCodeSmellDistribution = techDebtStats.getCodeSmellDistribution(severity);
-
-                if (organizationCodeSmellDistribution.isPresent()) {
-                    OrganizationCodeSmellDistribution organizationCodeSmell = organizationCodeSmellDistribution.get();
-                    organizationCodeSmell.updateCount(projectCodeSmellCount);
-
-                    organizationCodeSmellsRepository.save(organizationCodeSmell);
-                }
-            }
+            techDebtStats.updateCodeSmellDistribution(severity, count);
         }
 
-        techDebtStats.setTotalCodeSmells(techDebtStats.getCodeSmells().size());
-        techDebtStats.setBestCodeSmellProjects(bestCodeSmellProjects);
-
         techDebtStats.setOrganizationAnalysis(organization.getOrganizationAnalysis());
-
         saveTechDebtStats(techDebtStats);
 
         return techDebtStats;
-    }
-
-    private float calculateAverageTechDebt(List<Project> projects) {
-        return (float) projects.stream()
-                .flatMap(project -> project.getCommits().stream())
-                .mapToDouble(Commit::getTechnicalDebt)
-                .sum() / projects.size();
     }
 
     private void saveTechDebtStats(TechDebtStats techDebtStats) {
