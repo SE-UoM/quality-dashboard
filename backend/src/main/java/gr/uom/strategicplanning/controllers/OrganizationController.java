@@ -510,19 +510,13 @@ public class OrganizationController {
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
             TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
 
-            Collection<OrganizationCodeSmellDistribution> codeSmellsDistribution = techDebtStats.getCodeSmells();
-
-            int totalCodeSmells = 0;
-
-            for (OrganizationCodeSmellDistribution codeSmell : codeSmellsDistribution) {
-                totalCodeSmells += codeSmell.getCount();
-            }
-
-
             Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
-            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
-            codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmellsDistribution);
 
+            int totalCodeSmells = techDebtStats.getTotalCodeSmells();
+            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
+
+            Map<String, Integer> codeSmellsDistribution = techDebtStats.getCodeSmells();
+            codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmellsDistribution);
 
             return ResponseEntity.ok(codeSmellsDistributionResponse);
         }
