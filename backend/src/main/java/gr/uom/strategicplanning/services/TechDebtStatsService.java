@@ -49,7 +49,7 @@ public class TechDebtStatsService {
         techDebtStats.setTotalTechDebt(totalTD);
 
         // Find and set the average tech debt per LoC
-        float avgTechDebtPerLoC = OrganizationTechDebtCalculator.calculateAvgTechDebtPerLOC(projects);
+        float avgTechDebtPerLoC = OrganizationTechDebtCalculator.calculateTechDebtPerLOC(projects);
         techDebtStats.setAverageTechDebtPerLoC(avgTechDebtPerLoC);
 
         // Find and set the total code smells
@@ -57,14 +57,10 @@ public class TechDebtStatsService {
         techDebtStats.setTotalCodeSmells(totalCodeSmells);
 
         // Find Code Smells Distribution for the whole organization
-        Collection<Project> allProjects = organization.getProjects();
-
-        // Find and set the code smell distribution
-        Map<String, Integer> codeSmellDistributionMap = OrganizationTechDebtCalculator.findCodeSmellsDistribution(allProjects);
+        Map<String, Integer> codeSmellDistributionMap = OrganizationTechDebtCalculator.findCodeSmellsDistribution(projects);
         techDebtStats.initCodeSmellsDistribution();
 
         for (Map.Entry<String, Integer> entry : codeSmellDistributionMap.entrySet()) {
-            // Get the calculated code smell distribution values
             String severity = entry.getKey();
             int count = entry.getValue();
 

@@ -17,11 +17,17 @@ public class OrganizationTechDebtCalculator {
                 .orElse(0);
     }
 
-    public static float calculateAvgTechDebtPerLOC(List<Project> projects) {
-        return (float) projects.stream()
-                .mapToDouble(project -> project.getProjectStats().getTechDebtPerLoC())
-                .average()
-                .orElse(0);
+    public static int calculateTotalLOC(List<Project> projects) {
+        return projects.stream()
+                .map(project -> project.getProjectStats().getTotalLoC())
+                .reduce(0, Integer::sum);
+    }
+
+    public static float calculateTechDebtPerLOC(List<Project> projects) {
+        int totalLoC = calculateTotalLOC(projects);
+        int totalTD = calculateTotalTD(projects);
+
+        return (float) totalTD / totalLoC;
     }
 
     public static Optional<Project> findProjectWithMinTD(List<Project> projects) {
