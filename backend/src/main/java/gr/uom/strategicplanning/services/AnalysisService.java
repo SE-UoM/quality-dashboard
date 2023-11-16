@@ -75,7 +75,6 @@ public class AnalysisService {
 
         int totalLanguages = languages.size();
         int totalDevelopers = project.getDevelopers().size();
-        int totalCommits = project.getCommits().size();
 
         Collection<ProjectCodeSmellDistribution> codeSmellsDistribution = sonarApiClient.fetchCodeSmellsDistribution(project);
         codeSmellDistributionService.saveCollectionOfCodeSmellDistribution(codeSmellsDistribution);
@@ -84,7 +83,6 @@ public class AnalysisService {
         projectStats.setCodeSmellDistributions(codeSmellsDistribution);
         projectStatsService.saveProjectStats(projectStats);
 
-        project.setTotalCommits(totalCommits);
         project.setTotalDevelopers(totalDevelopers);
         project.setTotalLanguages(totalLanguages);
         project.setLanguages(languages);
