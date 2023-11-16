@@ -11,6 +11,7 @@ import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import gr.uom.strategicplanning.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,9 @@ public class AnalysisController {
     private final OrganizationAnalysisService organizationAnalysisService;
     private final String GITHUB_URL_PATTERN = "https://github.com/[^/]+/[^/]+" ;
     private final ExternalAnalysisService externalAnalysisService;
+
+    @Value("${services.external.activated}")
+    private boolean EXTERNAL_ANALYSIS_IS_ACTIVATED;
 
     @Autowired
     public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
@@ -92,8 +96,7 @@ public class AnalysisController {
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
 
-            // Analyze with external tools
-            externalAnalysisService.analyzeWithExternalServices(project);
+            if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
 
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
