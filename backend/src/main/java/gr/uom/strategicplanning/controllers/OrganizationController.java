@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
+import gr.uom.strategicplanning.controllers.dtos.OrganizationCodeSmellDistribution;
 import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
 import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
 import gr.uom.strategicplanning.controllers.responses.implementations.*;
@@ -515,7 +516,13 @@ public class OrganizationController {
             int totalCodeSmells = techDebtStats.getTotalCodeSmells();
             codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
 
-            Map<String, Integer> codeSmellsDistribution = techDebtStats.getCodeSmells();
+            Map<String, Integer> codeSmellsDistributionMap = techDebtStats.getCodeSmells();
+            List<OrganizationCodeSmellDistribution> codeSmellsDistribution = new ArrayList<>();
+            
+            for (Map.Entry<String, Integer> entry : codeSmellsDistributionMap.entrySet()) {
+                codeSmellsDistribution.add(new OrganizationCodeSmellDistribution(entry.getKey(),entry.getValue()));
+            }
+
             codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmellsDistribution);
 
             return ResponseEntity.ok(codeSmellsDistributionResponse);
