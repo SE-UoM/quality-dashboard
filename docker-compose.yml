@@ -53,6 +53,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=30a301d7257
       - SERVICES_EXTERNAL_PYASSESS_URL=http://localhost:8091
       - SERVICES_EXTERNAL_CODEINSPECTOR_URL=http://localhost:8092
+      - EXTERNAL_SERVICES_ACTIVATED=false
     ports:
       - '8088:8080'
   db-dashboard:

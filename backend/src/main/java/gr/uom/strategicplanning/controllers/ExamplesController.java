@@ -3,7 +3,6 @@ package gr.uom.strategicplanning.controllers;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
 import gr.uom.strategicplanning.controllers.responses.implementations.DeveloperResponse;
 import gr.uom.strategicplanning.controllers.responses.implementations.LanguageResponse;
-import gr.uom.strategicplanning.models.domain.OrganizationCodeSmellDistribution;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -349,22 +348,19 @@ public class ExamplesController {
 
     @GetMapping("/code-smells-distribution")
     public ResponseEntity getCodeSmellsDistribution() {
-        Collection<OrganizationCodeSmellDistribution> codeSmells = new ArrayList<>();
+        Map<String, Integer> distribution = new HashMap<>();
+        distribution.put("MINOR", 10);
+        distribution.put("MAJOR", 20);
+        distribution.put("CRITICAL", 30);
+        distribution.put("BLOCKER", 40);
+        distribution.put("INFO", 50);
 
-        for (int i = 0; i < 10; i++) {
-            OrganizationCodeSmellDistribution codeSmell = new OrganizationCodeSmellDistribution();
-            codeSmell.setId((long) i);
-            codeSmell.setSeverity("Minor");
-            codeSmell.setCount(10 + i);
+        int totalCodeSmells = distribution.values().stream().mapToInt(Integer::intValue).sum();
 
-            codeSmells.add(codeSmell);
-        }
-
-        int totalCodeSmells = codeSmells.size();
 
         Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
         codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
-        codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmells);
+        codeSmellsDistributionResponse.put("codeSmellsDistribution", distribution);
 
         return ResponseEntity.ok(codeSmellsDistributionResponse);
     }

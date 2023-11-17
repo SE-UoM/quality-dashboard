@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 @Entity
@@ -34,59 +35,35 @@ public class TechDebtStats {
     @OneToMany(cascade = CascadeType.PERSIST)
     private Collection<Project> bestCodeSmellProjects = new ArrayList<>();
     private int totalCodeSmells;
-    @OneToMany(cascade = CascadeType.PERSIST)
-    private Collection<OrganizationCodeSmellDistribution> codeSmells = new ArrayList<>();
+
+    @ElementCollection
+    private Map<String, Integer> codeSmells = Map.of(
+            "MAJOR", 0,
+            "MINOR", 0,
+            "CRITICAL", 0,
+            "BLOCKER", 0
+    );
+
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;
 
     public TechDebtStats(OrganizationAnalysis organizationAnalysis) {
         this.organizationAnalysis = organizationAnalysis;
-        initCodeSmellsDistribution();
     }
 
-    private void initCodeSmellsDistribution() {
-        OrganizationCodeSmellDistribution majorCodeSmell = new OrganizationCodeSmellDistribution();
-        majorCodeSmell.setSeverity("Major");
-        majorCodeSmell.setCount(0);
-        majorCodeSmell.setTechDebtStats(this);
-
-        OrganizationCodeSmellDistribution minorCodeSmell = new OrganizationCodeSmellDistribution();
-        minorCodeSmell.setSeverity("Minor");
-        minorCodeSmell.setCount(0);
-        minorCodeSmell.setTechDebtStats(this);
-
-        OrganizationCodeSmellDistribution criticalCodeSmell = new OrganizationCodeSmellDistribution();
-        criticalCodeSmell.setSeverity("Critical");
-        criticalCodeSmell.setCount(0);
-        criticalCodeSmell.setTechDebtStats(this);
-
-        OrganizationCodeSmellDistribution blockerCodeSmell = new OrganizationCodeSmellDistribution();
-        blockerCodeSmell.setSeverity("Blocker");
-        blockerCodeSmell.setCount(0);
-        blockerCodeSmell.setTechDebtStats(this);
-
-        OrganizationCodeSmellDistribution infoCodeSmell = new OrganizationCodeSmellDistribution();
-        infoCodeSmell.setSeverity("Info");
-        infoCodeSmell.setCount(0);
-        infoCodeSmell.setTechDebtStats(this);
-
-        codeSmells.add(majorCodeSmell);
-        codeSmells.add(minorCodeSmell);
-        codeSmells.add(criticalCodeSmell);
-        codeSmells.add(blockerCodeSmell);
-        codeSmells.add(infoCodeSmell);
-    }
-
-    public Optional<OrganizationCodeSmellDistribution> getCodeSmellDistribution(String severity) {
-        for (OrganizationCodeSmellDistribution codeSmellDistribution : codeSmells) {
-            if (codeSmellDistribution.severityEquals(severity)) return Optional.of(codeSmellDistribution);
+    public Optional<Integer> updateCodeSmellDistribution(String key, int value) {
+        if (codeSmells.containsKey(key)) {
+            codeSmells.put(key, value);
+            return Optional.of(value);
         }
         return Optional.empty();
     }
 
-    public void resetCodeSmellDistribution() {
-        for (OrganizationCodeSmellDistribution codeSmellDistribution : codeSmells) {
-            codeSmellDistribution.setCount(0);
-        }
+    public void initCodeSmellsDistribution() {
+        codeSmells.put("MAJOR", 0);
+        codeSmells.put("MINOR", 0);
+        codeSmells.put("CRITICAL", 0);
+        codeSmells.put("BLOCKER", 0);
+        codeSmells.put("INFO", 0);
     }
 }

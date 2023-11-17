@@ -19,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 @Component
 @AllArgsConstructor
@@ -34,6 +35,7 @@ public class SonarAnalysis {
     Integer Complexity;
     Integer LOC;
     String version;
+    Logger logger = Logger.getLogger(SonarAnalysis.class.getName());
 
     public SonarAnalysis(Project project, String version) throws IOException, InterruptedException {
         this.projectName = project.getName();
@@ -63,40 +65,44 @@ public class SonarAnalysis {
         }
     }
 
-    //Start Analysis with sonar scanner
+    // Start Analysis with sonar scanner
     private void makeSonarAnalysis() throws IOException, InterruptedException {
+        String projectDir = System.getProperty("user.dir");
+        String reposDir = projectDir + File.separator + "repos";
+        String sonnarScannerDir = projectDir + File.separator + "sonar-scanner";
+
+        logger.info("projectDir: " + projectDir);
+        logger.info("reposDir: " + reposDir);
+        logger.info("sonnarScannerDir: " + sonnarScannerDir);
+
         if (DashboardApplication.isWindows()) {
-            Process proc = Runtime.getRuntime().exec("cmd /c cd " +System.getProperty("user.dir")+ "\\repos\\" + projectName +
-                    " && ..\\..\\sonar-scanner\\sonar-scanner-5.0.1.3006-windows\\bin\\sonar-scanner.bat");
-            System.out.println("start analysis");
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-            String inputLine;
-            while ((inputLine = inputReader.readLine()) != null) {
-                System.out.println(" "+inputLine);
-            }
-            BufferedReader errorReader = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-            String errorLine;
-            while ((errorLine = errorReader.readLine()) != null) {
-                System.out.println(errorLine);
-            }
+            String batPath = sonnarScannerDir + File.separator + "sonar-scanner-5.0.1.3006-windows" + File.separator + "bin" + File.separator + "sonar-scanner.bat";
+            logger.info("batPath: " + batPath);
+
+            String command = "cmd /c cd " + reposDir + File.separator + projectName + " && " + batPath;
+            logger.info("command: " + command);
+
+            Process proc = Runtime.getRuntime().exec(command);
+
+            logger.info("SonarQube analysis started for project: " + projectName);
+            readProcessStreams(proc);
         }
         else {
             try {
-                ProcessBuilder pbuilder = new ProcessBuilder("bash", "-c",
-                        "cd '" + System.getProperty("user.dir") +"/repos/"+ projectName+"' ; ../../sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner");
+                String bashPath = sonnarScannerDir + File.separator + "sonar-scanner-5.0.1.3006-linux" + File.separator + "bin" + File.separator + "sonar-scanner";
+                logger.info("bashPath: " + bashPath);
+
+                String command = "cd '" + reposDir + File.separator + projectName + "' ; " + bashPath;
+                logger.info("command: " + command);
+
+                ProcessBuilder pbuilder = new ProcessBuilder("bash", "-c", command);
+
                 File err = new File("err.txt");
                 pbuilder.redirectError(err);
                 Process p = pbuilder.start();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(" "+line);
-                }
-                BufferedReader reader_2 = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                String line_2;
-                while ((line_2 = reader_2.readLine()) != null) {
-                    System.out.println(line_2);
-                }
+
+                logger.info("SonarQube analysis started for project: " + projectName);
+                readProcessStreams(p);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -107,6 +113,19 @@ public class SonarAnalysis {
             Thread.sleep(1000);
         }
         Thread.sleep(500);
+    }
+
+    private void readProcessStreams(Process process) throws IOException {
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String inputLine;
+        while ((inputLine = inputReader.readLine()) != null) {
+            System.out.println(" " + inputLine);
+        }
+        BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        String errorLine;
+        while ((errorLine = errorReader.readLine()) != null) {
+            System.out.println(errorLine);
+        }
     }
 
     private void getMetricFromSonarQube() {

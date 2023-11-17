@@ -67,9 +67,12 @@ public class Config {
 
             Collection<BestPractice> bestPracticesCollection = bestPracticesRepository.findAll();
 
-            if (bestPracticesCollection.size() == 0) {
+            if (bestPracticesCollection.size() < bestPractices.length) {
                 for (BestPractice bestPractice : bestPractices) {
-                    bestPracticesRepository.save(bestPractice);
+                    String currentPracticeTitle = bestPractice.getTitle();
+                    Optional<BestPractice> bestPracticeFound = bestPracticesRepository.findByTitle(currentPracticeTitle);
+
+                    if (bestPracticeFound.isEmpty()) bestPracticesRepository.save(bestPractice);
                 }
             }
         };

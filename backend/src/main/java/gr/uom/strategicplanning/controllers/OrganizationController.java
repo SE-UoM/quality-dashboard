@@ -2,6 +2,7 @@ package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
+import gr.uom.strategicplanning.controllers.dtos.OrganizationCodeSmellDistribution;
 import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
 import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
 import gr.uom.strategicplanning.controllers.responses.implementations.*;
@@ -510,19 +511,19 @@ public class OrganizationController {
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
             TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
 
-            Collection<OrganizationCodeSmellDistribution> codeSmellsDistribution = techDebtStats.getCodeSmells();
+            Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
 
-            int totalCodeSmells = 0;
+            int totalCodeSmells = techDebtStats.getTotalCodeSmells();
+            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
 
-            for (OrganizationCodeSmellDistribution codeSmell : codeSmellsDistribution) {
-                totalCodeSmells += codeSmell.getCount();
+            Map<String, Integer> codeSmellsDistributionMap = techDebtStats.getCodeSmells();
+            List<OrganizationCodeSmellDistribution> codeSmellsDistribution = new ArrayList<>();
+            
+            for (Map.Entry<String, Integer> entry : codeSmellsDistributionMap.entrySet()) {
+                codeSmellsDistribution.add(new OrganizationCodeSmellDistribution(entry.getKey(),entry.getValue()));
             }
 
-
-            Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
-            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
             codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmellsDistribution);
-
 
             return ResponseEntity.ok(codeSmellsDistributionResponse);
         }
