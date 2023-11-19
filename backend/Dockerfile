@@ -9,9 +9,4 @@ RUN curl -L -o /sonar-scanner-cli-4.7.0.2747-linux.zip https://binaries.sonarsou
 RUN chmod a+x /sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner
 RUN chmod 755 /sonar-scanner-4.7.0.2747-linux/jre/bin/java
 COPY --from=build /target/*.jar /app.jar
-ENTRYPOINT [
-    "java", "-jar", "/app.jar",
-    "--services.external.pyassess.url=${SERVICES_EXTERNAL_PYASSESS_URL}",
-    "--services.external.codeInspector.url=${SERVICES_EXTERNAL_CODEINSPECTOR_URL}",
-    "--services.external.activated=${EXTERNAL_SERVICES_ACTIVATED}"
-]
+ENTRYPOINT ["java", "-jar", "/app.jar", "--services.external.pyassess.url=${SERVICES_EXTERNAL_PYASSESS_URL}", "--services.external.codeInspector.url=${SERVICES_EXTERNAL_CODEINSPECTOR_URL}", "--services.external.activated=${EXTERNAL_SERVICES_ACTIVATED}"]
