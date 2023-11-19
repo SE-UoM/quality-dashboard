@@ -19,6 +19,8 @@
     <a href="https://github.com/SE-UoM/quality-dashboard/discussions/categories/bug-report">Report a Bug</a>
     ·
     <a href="https://github.com/SE-UoM/quality-dashboard/graphs/contributors">Contributors</a>
+    ·
+    <a href="http://195.251.210.147:3009/">View Demo</a>
   </p>
 
   
