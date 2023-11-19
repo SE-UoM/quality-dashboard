@@ -70,7 +70,7 @@ function TotalCodeSmells() {
         (severityWithCount: any) => severityWithCount.severity === label
       )?.count
   );
-  const bgColors = ["#67b279", "#fdd835", "#ff7f50", "#ff5252", "#58bbfb"];
+  const bgColors = ["#fdd835", "#67b279", "#ff7f50", "#ff5252", "#58bbfb"];
   const datalabel = "Number of Code Smells";
 
   const allData = {
@@ -121,7 +121,7 @@ interface LegendProps {
   colors: string[];
 }
 function ChartLegend({ labels, colors }: LegendProps) {
-  const colorsOfChart = ["major", "minor", "critical", "blocker", "info"];
+  const colorsOfChart = ["minor", "major", "critical", "blocker", "info"];
   console.log("The colors are: ", colors);
   return (
     <Flex direction={"column"} rowGap="0.5rem" alignSelf={"center"}>
