@@ -39,7 +39,7 @@ services:
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 3
   backend-dashboard:
     build:
