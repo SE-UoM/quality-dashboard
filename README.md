@@ -34,7 +34,7 @@ By integrating both software quality data and repository statistics, the dashboa
   <img style="height:10em; width:auto;" src="https://github.com/devicons/devicon/blob/master/icons/java/java-original-wordmark.svg"/>
   <img style="height:10em; width:auto;" src="https://github.com/devicons/devicon/blob/master/icons/spring/spring-original-wordmark.svg"/>
   <img style="height:10em; width:auto;" src="https://github.com/devicons/devicon/blob/master/icons/postgresql/postgresql-plain.svg"/>
-  <img style="height:10em; width:25em;" src="https://assets-eu-01.kc-usercontent.com/b41f2e46-b5e6-01a3-0879-16969c63381e/aedb7b5e-8556-4840-a69c-bce396891b0e/sonar-logo-horizontal-dark-bg.svg?w=170&h=42&auto=format&fit=crop"/>
+  <img style="height:10em; width:25em;" src="https://www.aviator.co/blog/wp-content/uploads/2023/01/sonarqube-1024x567.png"/>
 </div>
 
 <hr/>
