@@ -63,6 +63,7 @@ function TotalCodeSmells() {
   const labels = distribution.map(
     (severityWithCount: any) => severityWithCount.severity
   );
+  console.log("The labels:", labels);
   const thedata = labels.map(
     (label: string) =>
       distribution.find(
@@ -120,8 +121,8 @@ interface LegendProps {
   colors: string[];
 }
 function ChartLegend({ labels, colors }: LegendProps) {
-  const colorsOfChart = ["minor", "major", "critical", "blocker", "info"];
-
+  const colorsOfChart = ["major", "minor", "critical", "blocker", "info"];
+  console.log("The colors are: ", colors);
   return (
     <Flex direction={"column"} rowGap="0.5rem" alignSelf={"center"}>
       {labels.map((label, index) => {
