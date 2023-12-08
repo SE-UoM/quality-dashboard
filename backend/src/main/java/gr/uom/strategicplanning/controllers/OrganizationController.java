@@ -438,15 +438,15 @@ public class OrganizationController {
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
             TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
 
-            int minProjectTechDebt = techDebtStats
+            String minProjectTechDebt = techDebtStats
                     .getProjectWithMinTechDebt()
                     .getProjectStats()
-                    .getTechDebt();
+                    .getProject().getName();
 
-            int maxProjectTechDebt = techDebtStats
+            String maxProjectTechDebt = techDebtStats
                     .getProjectWithMaxTechDebt()
                     .getProjectStats()
-                    .getTechDebt();
+                    .getProject().getName();
 
             float avgTechDebt = techDebtStats.getAverageTechDebt();
             float avgTechDebtPerLOC = techDebtStats.getAverageTechDebtPerLoC();
