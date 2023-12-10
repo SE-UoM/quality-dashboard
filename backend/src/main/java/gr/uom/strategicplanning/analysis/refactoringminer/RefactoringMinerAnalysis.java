@@ -34,9 +34,7 @@ public class RefactoringMinerAnalysis {
             miner.detectAll(repo, branch, new RefactoringHandler() {
                 @Override
                 public void handle(String commitId, List<Refactoring> refactorings) {
-                    for (Refactoring ref : refactorings) {
-                        numberOfRefactorings ++;
-                    }
+                    numberOfRefactorings = refactorings.size();
                 }
             });
 
