@@ -10,10 +10,13 @@ import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
 import gr.uom.strategicplanning.utils.TokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +24,10 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/analysis")
+@Slf4j
 public class AnalysisController {
+    private static final long ONE_HOUR = 3600000;
+    private static final long  TEN_SECONDS = 10000;
     private final AnalysisService analysisService;
     private final ProjectRepository projectRepository;
     private final OrganizationService organizationService;
@@ -70,37 +76,26 @@ public class AnalysisController {
             }
 
             Project project = new Project();
+
+            Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
+            if (projectOptional.isPresent()) project = projectOptional.get();
+
             project.setRepoUrl(githubUrl);
             project.setOrganization(organization);
 
-            Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
+            Date submittedDate = new Date();
+            project.setSubmittedDate(submittedDate);
 
             organization.addProject(project);
 
-            if (projectOptional.isPresent()) project = projectOptional.get();
-
-            analysisService.fetchGithubData(project);
-
-            if (!project.canBeAnalyzed()) {
-                project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
-
-                ResponseInterface response = ResponseFactory.createResponse(
-                        HttpStatus.OK.value(),
-                        "Project has been added to the queue"
-                );
-                return ResponseEntity.ok(response);
-            }
-
-            analysisService.startAnalysis(project);
-
-            organizationAnalysisService.updateOrganizationAnalysis(organization);
+            projectRepository.save(project);
             organizationService.saveOrganization(organization);
 
-            if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
+            // if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
 
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
-                    "Analysis started successfully"
+                    "Project Submitted successfully"
             );
 
             return ResponseEntity.ok(response);
@@ -116,4 +111,45 @@ public class AnalysisController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
+    @Scheduled(fixedRate = ONE_HOUR)
+    public void analysisCode() throws Exception {
+
+        try {
+            List<Project> projects = projectRepository.findAllByStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
+
+            log.info("Starting analysis for " + projects.size() + " projects");
+
+            for (Project project : projects) {
+                log.info("Starting analysis for " + project.getRepoUrl());
+
+                log.info("Fetching github data for " + project.getRepoUrl());
+                analysisService.fetchGithubData(project);
+
+                Organization organization = project.getOrganization();
+
+                log.info("Saving organization " + organization.getName());
+                organizationService.saveOrganization(organization);
+
+                log.info("Starting analysis for " + project.getName());
+                // Calculate how long it takes to analyze a project
+                long start = System.currentTimeMillis();
+
+                analysisService.startAnalysis(project);
+
+                long end = System.currentTimeMillis();
+                int timeInMinutes = (int) ((end - start) / ONE_HOUR);
+
+                log.info("Analysis for " + project.getName() + " finished in " + timeInMinutes + " minutes");
+
+                organizationAnalysisService.updateOrganizationAnalysis(organization);
+            }
+        }
+        catch (Exception e) {
+            log.error("Analysis failed", e);
+
+            e.printStackTrace();
+        }
+    }
+
 }
