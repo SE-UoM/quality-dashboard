@@ -4,6 +4,7 @@ import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalysis;
 import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
+import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.eclipse.jgit.api.Git;
@@ -122,7 +123,8 @@ public class AnalysisService {
 
         extractAnalysisDataForProject(project);
 
-        //ToDo Check this save
+        project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
+
         projectService.saveProject(project);
 
          clonedGit.close();
