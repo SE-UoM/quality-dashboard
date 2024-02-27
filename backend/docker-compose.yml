@@ -1,0 +1,42 @@
+services:
+  # Database configuration
+  postgres:
+    container_name: postgres-school
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres   # Mount the 'postgres' volume to persist PostgreSQL data
+    ports:
+      - "5432:5432"   # Expose container's port 5432 to host's port 5432
+    networks:
+      - postgres   # Attach to the 'postgres' network
+    restart: unless-stopped   # Restart the container unless explicitly stopped
+
+  # Config pg admin (we can visit it by going to localhost:5050 on a browser)
+  pgadmin:
+    container_name: pgadmin-school
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-user@root.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin   # Mount the 'pgadmin' volume to persist pgAdmin data
+    ports:
+      - "5050:80"   # Expose container's port 80 to host's port 5050
+    networks:
+      - postgres   # Attach to the 'postgres' network
+    restart: unless-stopped   # Restart the container unless explicitly stopped
+
+networks:
+  postgres:
+    driver: bridge   # Define a bridge network 'postgres'
+  spring:
+    driver: bridge   # Define a bridge network 'spring'
+
+volumes:
+  postgres:   # Define a volume 'postgres'
+  pgadmin:   # Define a volume 'pgadmin'
