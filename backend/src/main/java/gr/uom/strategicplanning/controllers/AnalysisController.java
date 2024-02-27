@@ -111,45 +111,4 @@ public class AnalysisController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
-    @Scheduled(fixedRate = ONE_HOUR)
-    public void analysisCode() throws Exception {
-
-        try {
-            List<Project> projects = projectRepository.findAllByStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
-
-            log.info("Starting analysis for " + projects.size() + " projects");
-
-            for (Project project : projects) {
-                log.info("Starting analysis for " + project.getRepoUrl());
-
-                log.info("Fetching github data for " + project.getRepoUrl());
-                analysisService.fetchGithubData(project);
-
-                Organization organization = project.getOrganization();
-
-                log.info("Saving organization " + organization.getName());
-                organizationService.saveOrganization(organization);
-
-                log.info("Starting analysis for " + project.getName());
-                // Calculate how long it takes to analyze a project
-                long start = System.currentTimeMillis();
-
-                analysisService.startAnalysis(project);
-
-                long end = System.currentTimeMillis();
-                int timeInMinutes = (int) ((end - start) / ONE_HOUR);
-
-                log.info("Analysis for " + project.getName() + " finished in " + timeInMinutes + " minutes");
-
-                organizationAnalysisService.updateOrganizationAnalysis(organization);
-            }
-        }
-        catch (Exception e) {
-            log.error("Analysis failed", e);
-
-            e.printStackTrace();
-        }
-    }
-
 }
