@@ -1,0 +1,18 @@
+# Configuration for the Config Server
+server:
+  port: 8888
+
+spring:
+  profiles:
+    active: native  # Load the native profile
+
+  application:
+    name: config-server
+
+  cloud:
+    config:
+      server:
+        native:
+          # Where the config server will fetch the configuration files (in this case, from the configuration folder)
+          search-locations:
+            - classpath:/configurations
