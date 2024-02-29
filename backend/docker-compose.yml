@@ -4,7 +4,7 @@ services:
     container_name: postgres-school
     image: postgres
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: dashboard
       POSTGRES_PASSWORD: pass
       PGDATA: /data/postgres
     volumes:
@@ -20,7 +20,7 @@ services:
     container_name: pgadmin-school
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-user@root.com}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-dashboard-db@uom.edu.gr}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
