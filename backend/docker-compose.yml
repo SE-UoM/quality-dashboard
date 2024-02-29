@@ -33,12 +33,24 @@ services:
       - postgres   # Attach to the 'postgres' network
     restart: unless-stopped   # Restart the container unless explicitly stopped
 
+  # Zipkin configuration
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - zipkin
+
 networks:
   postgres:
     driver: bridge   # Define a bridge network 'postgres'
   spring:
     driver: bridge   # Define a bridge network 'spring'
+  zipkin:
+    driver: bridge   # Define a bridge network 'zipkin'
 
 volumes:
   postgres:   # Define a volume 'postgres'
   pgadmin:   # Define a volume 'pgadmin'
+  zipkin:    # Define a volume 'zipkin'
