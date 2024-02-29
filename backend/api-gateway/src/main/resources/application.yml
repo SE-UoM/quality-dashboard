@@ -1,0 +1,8 @@
+# Spring Cloud Gateway Configuration
+spring:
+  application:
+    name: gateway
+
+  # Import the externalized configuration from the Config Server
+  config:
+    import: optional:configserver:http://localhost:8888

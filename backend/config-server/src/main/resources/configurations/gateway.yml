@@ -1,0 +1,22 @@
+# Server Configuration
+server:
+  port: 8088  # The Gateway Server will run on this port
+
+# Eureka Configuration
+eureka:
+  client:
+    register-with-eureka: false # Gateway Server won't register itself with Eureka Server
+
+# Spring Cloud Gateway Configuration
+spring:
+  cloud:
+    discovery:
+      enabled: true # Gateway Server will use Eureka Server to discover other microservices
+    # Config the API Gateway (How requests will be forwarded and to where they will be forwarded to)
+    gateway:
+      mvc:
+        routes:
+          - id: organization-service
+            uri: http://localhost:8070 # Where the request will be forwarded (eg where the organization-microservice is running)
+            predicates:
+              - Path=/api/v1/organization/** # The path that will be forwarded to the student-microservice
