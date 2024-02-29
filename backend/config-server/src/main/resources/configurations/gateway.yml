@@ -19,7 +19,12 @@ spring:
           - id: organization-service
             uri: http://localhost:8070 # Where the request will be forwarded (eg where the organization-microservice is running)
             predicates:
-              - Path=/api/v1/organization/** # The path that will be forwarded to the student-microservice
+              - Path=/api/v1/organization/** # The path that will be forwarded to the organization-microservice
+
+          - id: user-service
+            uri: http://localhost:8071 # Where the request will be forwarded (eg where the user-microservice is running)
+            predicates:
+              - Path=/api/v1/users/** # The path that will be forwarded to the user-microservice
 
 # Zipkin Configuration
 management:
