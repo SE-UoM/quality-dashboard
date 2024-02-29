@@ -26,6 +26,11 @@ spring:
             predicates:
               - Path=/api/v1/users/** # The path that will be forwarded to the user-microservice
 
+          - id: project-submission-service
+            uri: http://localhost:8072 # Where the request will be forwarded (eg where the project-submission-microservice is running)
+            predicates:
+              - Path=/api/v1/projects/submissions/** # The path that will be forwarded to the project-submission-microservice
+
 # Zipkin Configuration
 management:
   tracing:
