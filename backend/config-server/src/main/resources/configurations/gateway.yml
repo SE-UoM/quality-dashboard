@@ -20,3 +20,9 @@ spring:
             uri: http://localhost:8070 # Where the request will be forwarded (eg where the organization-microservice is running)
             predicates:
               - Path=/api/v1/organization/** # The path that will be forwarded to the student-microservice
+
+# Zipkin Configuration
+management:
+  tracing:
+    sampling:
+      probability: 0.3 # 30% of the requests will be traced (MEDIUM SAMPLING)
