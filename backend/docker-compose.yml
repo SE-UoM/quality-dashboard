@@ -1,7 +1,9 @@
+name: uom-quality-dashboard-backend-microservices
+
 services:
   # Database configuration
   postgres:
-    container_name: postgres-school
+    container_name: postgres-dashboard
     image: postgres
     environment:
       POSTGRES_USER: dashboard
@@ -17,7 +19,7 @@ services:
 
   # Config pg admin (we can visit it by going to localhost:5050 on a browser)
   pgadmin:
-    container_name: pgadmin-school
+    container_name: pgadmin-dashboard
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-dashboard-db@uom.edu.gr}
