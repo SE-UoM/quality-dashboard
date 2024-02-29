@@ -1,15 +1,3 @@
-# Eureka Server Configuration
-eureka:
-  instance:
-    hostname: localhost
-
-  client:
-    defaultZone: http://localhost:8761/eureka/
-
-# Server Configuration
-server:
-  port: 8072
-
 # Spring Boot Configuration
 spring:
   application:
@@ -18,24 +6,3 @@ spring:
   # Externalize Configuration to the Config Server
   config:
     import: optional:configserver:http://localhost:8888
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/submitted-project
-    username: dashboard
-    password: pass
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    # Hibernate Configuration
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-# Zipkin Configuration
-management:
-  tracing:
-    sampling:
-      probability: 0.3 # 30% of the requests will be traced (MEDIUM SAMPLING)
