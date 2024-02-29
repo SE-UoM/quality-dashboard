@@ -1,0 +1,18 @@
+# Configuration for Netflix Eureka
+eureka:
+  instance: # Configuration for the local instance of the service
+    hostname: localhost # Specifies the hostname that this Eureka instance should use
+
+  # Configuration for the Eureka client behavior
+  client:
+    register-with-eureka: false  # Indicates whether this service instance should register itself with the Eureka server
+
+    fetch-registry: false # Indicates whether this service instance should fetch the registry information from the Eureka server
+
+    # Configuration for the URLs of the Eureka server
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Specifies the URL of the Eureka server.
+
+# Configuration for the embedded web server
+server:
+  port: 8761  # Specifies the port on which the embedded web server should listen
