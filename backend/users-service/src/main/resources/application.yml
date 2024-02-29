@@ -1,0 +1,8 @@
+# Spring Boot Configuration
+spring:
+  application:
+    name: users-service
+
+  # Externalize Configuration to the Config Server
+  config:
+    import: optional:configserver:http://localhost:8888
