@@ -20,6 +20,16 @@ public class AnalysisScheduler {
 
     @Scheduled(fixedRate = ONE_MINUTE)
     public void scheduleAnalysis() {
-        log.info("Running scheduled analysis for organization: {}", organizationId);
+        runWithLock();
+    }
+
+    private void runWithLock() {
+        if (taskLock.tryLock()) {
+            try {
+                log.info("Scheduling analysis for organization: {}", organizationId);
+            } finally {
+                taskLock.unlock();
+            }
+        }
     }
 }
