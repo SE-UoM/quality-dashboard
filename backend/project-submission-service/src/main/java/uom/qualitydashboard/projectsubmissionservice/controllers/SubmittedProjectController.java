@@ -15,12 +15,12 @@ public class SubmittedProjectController {
     private final SubmittedProjectService submittedProjectService;
 
     @GetMapping("/all")
-    public ResponseEntity<Collection<?>> getAllSubmissions() {
+    public ResponseEntity<?> getAllSubmissions() {
         return ResponseEntity.ok(submittedProjectService.getAllSubmissions());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Collection<?>> getSubmissionsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<?> getSubmissionsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(submittedProjectService.getSubmissionsByUserId(userId));
     }
 
