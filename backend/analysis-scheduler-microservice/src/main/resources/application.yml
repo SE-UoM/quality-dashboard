@@ -1,0 +1,11 @@
+# Spring Boot Configuration
+spring:
+  application:
+    name: analysis-scheduler-microservice
+
+  # Externalize Configuration to the Config Server
+  config:
+    import: optional:configserver:http://localhost:8888
+
+analysis:
+  organization: 1
