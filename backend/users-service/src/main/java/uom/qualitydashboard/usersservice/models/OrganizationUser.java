@@ -24,7 +24,10 @@ public class OrganizationUser {
     private String email;
     private String password;
     private Long organizationId;
-    private String roles = "";
-    private boolean verified = false;
     private String userType;
+
+    @Builder.Default
+    private String roles = "SIMPLE_USER";
+    @Builder.Default
+    private boolean verified = false;
 }
