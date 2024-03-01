@@ -24,7 +24,7 @@ public class AnalysisScheduler {
     @Value("${analysis.organization}")
     private Long organizationId;
 
-    @Scheduled(fixedRate = 1)
+    @Scheduled(fixedRate = ONE_MINUTE)
     public void scheduleAnalysis() {
         runWithLock();
     }
