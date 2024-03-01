@@ -1,0 +1,9 @@
+# Spring Boot Configuration
+spring:
+  application:
+    name: github-analysis
+
+  # Externalize Configuration to the Config Server
+  config:
+    import: optional:configserver:http://localhost:8888
+
