@@ -28,11 +28,15 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.CREATED).body(analysis);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
+            Map<String, String> response = Map.of("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -43,8 +47,10 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.OK).body(analyses);
         }
         catch (Exception e) {
+            Map<String, String> response = Map.of("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -55,11 +61,15 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.OK).body(analyses);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
+            Map<String, String> response = Map.of("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -70,11 +80,15 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.OK).body(analysis);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
+            Map<String, String> response = Map.of("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -85,11 +99,15 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.OK).body(analysis);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
+            Map<String, String> response = Map.of("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -100,11 +118,15 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.OK).body(analysis);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
+            Map<String, String> response = Map.of("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -115,11 +137,15 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.OK).body(analysis);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
+            Map<String, String> response = Map.of("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }
