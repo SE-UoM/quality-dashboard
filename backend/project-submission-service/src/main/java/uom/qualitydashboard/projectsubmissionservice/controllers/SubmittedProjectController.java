@@ -10,6 +10,8 @@ import uom.qualitydashboard.projectsubmissionservice.models.ProjectSubmissionReq
 import uom.qualitydashboard.projectsubmissionservice.services.SubmittedProjectService;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/projects/submissions")
@@ -42,23 +44,25 @@ public class SubmittedProjectController {
         try {
             return ResponseEntity.ok(submittedProjectService.submitProject(projectSubmissionRequest));
         }
-        catch (IllegalArgumentException e) {
-            String message = e.getMessage();
-
-            if (!message.equals("Invalid Github repository URL")) e.printStackTrace();
-
-            return ResponseEntity.badRequest().body(message);
-        }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (EntityExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
 
+            e.printStackTrace();
+
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }
