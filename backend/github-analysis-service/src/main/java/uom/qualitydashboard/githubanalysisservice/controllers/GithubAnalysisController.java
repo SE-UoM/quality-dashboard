@@ -107,4 +107,19 @@ public class GithubAnalysisController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("/project/latest/{projectId}")
+    public ResponseEntity<?> getLatestAnalysisByProjectId(@PathVariable Long projectId) {
+        try {
+            GithubAnalysis analysis = githubAnalysisService.getLatestAnalysisByProjectId(projectId);
+            return ResponseEntity.status(HttpStatus.OK).body(analysis);
+        }
+        catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

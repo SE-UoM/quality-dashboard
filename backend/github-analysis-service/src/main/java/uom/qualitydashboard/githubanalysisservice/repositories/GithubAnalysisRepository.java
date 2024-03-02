@@ -11,4 +11,7 @@ public interface GithubAnalysisRepository extends JpaRepository<GithubAnalysis, 
     Collection<GithubAnalysis> findByProjectName(String projectName);
     Collection<GithubAnalysis> findByProjectFullName(String projectFullName);
     Collection<GithubAnalysis> findByProjectUrl(String projectUrl);
+
+    // Get the latest analysis for a project
+    Optional<GithubAnalysis> findTopByProjectIdOrderByLastAnalysisDateDesc(Long projectId);
 }

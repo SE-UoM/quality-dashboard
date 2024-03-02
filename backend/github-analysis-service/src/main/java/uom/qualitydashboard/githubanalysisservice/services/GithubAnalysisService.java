@@ -106,6 +106,14 @@ public class GithubAnalysisService {
         return analysis;
     }
 
+    public GithubAnalysis getLatestAnalysisByProjectId(Long projectId) {
+        Optional<GithubAnalysis> analysis = githubAnalysisRepository.findTopByProjectIdOrderByLastAnalysisDateDesc(projectId);
+
+        if (analysis.isEmpty()) throw new EntityNotFoundException("Analysis for project with id '" + projectId + "' not found");
+
+        return analysis.get();
+    }
+
     public Collection<GithubAnalysis> getAllGithubAnalyses() {
         return githubAnalysisRepository.findAll();
     }
