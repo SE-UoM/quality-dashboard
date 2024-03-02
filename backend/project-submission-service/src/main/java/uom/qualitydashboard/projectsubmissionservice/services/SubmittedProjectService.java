@@ -1,5 +1,7 @@
 package uom.qualitydashboard.projectsubmissionservice.services;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uom.qualitydashboard.projectsubmissionservice.client.UserMicroserviceClient;
@@ -26,7 +28,11 @@ public class SubmittedProjectService {
 
         Optional<User> foundUser = userMicroserviceClient.getUserById(userId);
 
-        if (foundUser.isEmpty()) throw new IllegalArgumentException("User not found");
+        if (foundUser.isEmpty()) throw new EntityNotFoundException("User not found");
+
+        Optional<SubmittedProject> projectWithSameUrl = submittedProjectRepository.findByRepoUrl(repoUrl);
+
+        if (projectWithSameUrl.isPresent()) throw new EntityExistsException("Project with the same URL already exists");
 
         User user = foundUser.get();
         Long organizationId = user.getOrganizationId();
