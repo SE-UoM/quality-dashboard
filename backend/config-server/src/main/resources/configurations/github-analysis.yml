@@ -34,4 +34,4 @@ github:
 management:
   tracing:
     sampling:
-      probability: 0.3 # 30% of the requests will be traced (MEDIUM SAMPLING)
+      probability: 1 # 100% of the requests will be traced (FULL SAMPLING)

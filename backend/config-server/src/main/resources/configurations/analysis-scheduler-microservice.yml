@@ -3,3 +3,9 @@ analysis:
 
 server:
   port: 8074
+
+# Zipkin Configuration
+management:
+  tracing:
+    sampling:
+      probability: 1 # 100% of the requests will be traced (FULL SAMPLING)
