@@ -18,13 +18,17 @@ spring:
     password: pass
     driver-class-name: org.postgresql.Driver
 
+  jpa:
+    # Hibernate Configuration
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
-# Github API & Analysis Configuration
 github:
-  api:
-    token: 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
-    repo-info-api-url: https://api.github.com/repos/{owner}/{repo}
-
+  token: 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
 
 # Zipkin Configuration
 management:

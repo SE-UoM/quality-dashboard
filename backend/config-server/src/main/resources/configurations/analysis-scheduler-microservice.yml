@@ -1,2 +1,5 @@
 analysis:
   organization: 1
+
+server:
+  port: 8074

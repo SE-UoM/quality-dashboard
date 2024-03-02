@@ -2,6 +2,7 @@ package uom.qualitydashboard.githubanalysisservice.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,12 @@ public class GithubAnalysisService {
     private final ProjectSubmissionMicroserviceClient projectSubmissionMicroserviceClient;
     private final GithubAnalysisRepository githubAnalysisRepository;
 
+    @Value("${github.token}")
+    public String GITHUB_API_TOKEN;
+
     public GithubAnalysis startAnalysis(Long projectId) {
+        String token = "Bearer " + GITHUB_API_TOKEN;
+
         Optional<SubmittedProjectDTO> submittedProject = projectSubmissionMicroserviceClient.getSubmittedProjectById(projectId);
 
         if (submittedProject.isEmpty()) throw new EntityNotFoundException("Project not found");
@@ -36,8 +42,9 @@ public class GithubAnalysisService {
         String owner = repoUrlParts[repoUrlParts.length - 2];
         String repo = repoUrlParts[repoUrlParts.length - 1];
 
-        // Get the repo details from the github api
-        Map<String, ?> repoDetails = githubApiClient.getRepoDetails(owner, repo);
+        System.out.println("API:" + token);
+
+        Map<String, ?> repoDetails = githubApiClient.getRepoDetails(owner, repo, token);
 
         // Extract the details and save them to the database
         String name = (String) repoDetails.get("name");
@@ -104,7 +111,8 @@ public class GithubAnalysisService {
     }
 
     private int calculateTotalCommits(String owner, String repo) {
-        Collection<?> contributors = githubApiClient.getRepoContributors(owner, repo);
+        String token = "Bearer " + GITHUB_API_TOKEN;
+        Collection<?> contributors = githubApiClient.getRepoContributors(owner, repo, token);
 
         int totalCommits = 0;
         for (Object contributor : contributors) {
