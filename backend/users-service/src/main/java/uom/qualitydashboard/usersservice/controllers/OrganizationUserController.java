@@ -12,6 +12,8 @@ import uom.qualitydashboard.usersservice.models.OrganizationUser;
 import uom.qualitydashboard.usersservice.services.OrganizationUserService;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -62,14 +64,24 @@ public class OrganizationUserController {
 
         // EXCEPTION HANDLING
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body(response);
         }
         catch (EntityExistsException e) {
-            return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(e.getMessage());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.SC_CONFLICT).body(response);
         }
         catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }
