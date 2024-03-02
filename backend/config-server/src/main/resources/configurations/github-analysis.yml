@@ -30,7 +30,7 @@ spring:
 # Github API & Analysis Configuration
 github:
   api:
-    token: <GITHUB_API_TOKEN>
+    token: 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
     repo-info-api-url: https://api.github.com/repos/{owner}/{repo}
 
 

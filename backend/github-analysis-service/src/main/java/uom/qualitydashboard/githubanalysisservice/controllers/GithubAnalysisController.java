@@ -1,5 +1,6 @@
 package uom.qualitydashboard.githubanalysisservice.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import uom.qualitydashboard.githubanalysisservice.client.GithubApiClient;
 import uom.qualitydashboard.githubanalysisservice.client.ProjectSubmissionMicroserviceClient;
 import uom.qualitydashboard.githubanalysisservice.models.GithubAnalysis;
 import uom.qualitydashboard.githubanalysisservice.models.SubmittedProjectDTO;
+import uom.qualitydashboard.githubanalysisservice.services.GithubAnalysisService;
 
 import java.util.Collection;
 import java.util.Map;
@@ -17,69 +19,92 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/github-analysis")
 public class GithubAnalysisController {
-    private final ProjectSubmissionMicroserviceClient projectSubmissionMicroserviceClient;
-    private final GithubApiClient githubApiClient;
+    private final GithubAnalysisService githubAnalysisService;
 
     @PostMapping("/start")
     public ResponseEntity<?> startAnalysis(@RequestParam(name = "projectId") Long projectId) {
-
-        Optional<SubmittedProjectDTO> submittedProject = projectSubmissionMicroserviceClient.getSubmittedProjectById(projectId);
-
-        if (submittedProject.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found");
+        try {
+            GithubAnalysis analysis = githubAnalysisService.startAnalysis(projectId);
+            return ResponseEntity.status(HttpStatus.CREATED).body(analysis);
         }
-
-        // Start the analysis
-        SubmittedProjectDTO project = submittedProject.get();
-        String repoUrl = project.getRepoUrl();
-
-        // Get repo name and owner from the URL
-        String[] repoUrlParts = repoUrl.split("/");
-        String owner = repoUrlParts[repoUrlParts.length - 2];
-        String repo = repoUrlParts[repoUrlParts.length - 1];
-
-        // Get the repo details from the github api
-        Map<String, ?> repoDetails = githubApiClient.getRepoDetails(owner, repo);
-
-        // Extract the details and save them to the database
-        String name = (String) repoDetails.get("name");
-        String fullName = (String) repoDetails.get("full_name");
-        String description = (String) repoDetails.get("description");
-        String url = project.getRepoUrl();
-        String defaultBranch = (String) repoDetails.get("default_branch");
-        int stars = (int) repoDetails.get("stargazers_count");
-        int forks = (int) repoDetails.get("forks_count");
-        int openIssues = (int) repoDetails.get("open_issues_count");
-
-        // Get the total number of commits
-        int totalCommits = calculateTotalCommits(owner, repo);
-
-        // Create a new GithubAnalysis object and save it to the database
-        GithubAnalysis analysis = GithubAnalysis.builder()
-                .projectId(projectId)
-                .projectName(name)
-                .projectFullName(fullName)
-                .projectDescription(description)
-                .projectUrl(url)
-                .defaultBranch(defaultBranch)
-                .stars(stars)
-                .forks(forks)
-                .openIssues(openIssues)
-                .totalCommits(totalCommits)
-                .build();
-
-        return ResponseEntity.ok(analysis);
+        catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
-    private int calculateTotalCommits(String owner, String repo) {
-        Collection<?> contributors = githubApiClient.getRepoContributors(owner, repo);
-
-        int totalCommits = 0;
-        for (Object contributor : contributors) {
-            Map<String, ?> contributorMap = (Map<String, ?>) contributor;
-            totalCommits += (int) contributorMap.get("contributions");
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllAnalyses() {
+        try {
+            Collection<GithubAnalysis> analyses = githubAnalysisService.getAllGithubAnalyses();
+            return ResponseEntity.status(HttpStatus.OK).body(analyses);
         }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
-        return totalCommits;
+    @GetMapping("/project/id/{projectId}")
+    public ResponseEntity<?> getAnalysisByProjectId(@PathVariable Long projectId) {
+        try {
+            Collection<GithubAnalysis> analyses = githubAnalysisService.getAnalysisByProjectId(projectId);
+            return ResponseEntity.status(HttpStatus.OK).body(analyses);
+        }
+        catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/project")
+    public ResponseEntity<?> getAnalysisByProjectName(@RequestParam(name = "pname") String projectName) {
+        try {
+            Collection<GithubAnalysis> analysis = githubAnalysisService.getAnalysisByProjectName(projectName);
+            return ResponseEntity.status(HttpStatus.OK).body(analysis);
+        }
+        catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/project/full-name/{projectFullName}")
+    public ResponseEntity<?> getAnalysisByProjectFullName(@PathVariable String projectFullName) {
+        try {
+            Collection<GithubAnalysis> analysis = githubAnalysisService.getAnalysisByProjectFullName(projectFullName);
+            return ResponseEntity.status(HttpStatus.OK).body(analysis);
+        }
+        catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/project/url")
+    public ResponseEntity<?> getAnalysisByProjectUrl(@RequestParam(name = "key") String projectUrl) {
+        try {
+            Collection<GithubAnalysis> analysis = githubAnalysisService.getAnalysisByProjectUrl(projectUrl);
+            return ResponseEntity.status(HttpStatus.OK).body(analysis);
+        }
+        catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package uom.qualitydashboard.githubanalysisservice.models;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
@@ -7,6 +8,7 @@ import lombok.*;
 
 import java.util.Date;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
@@ -22,6 +24,7 @@ public class GithubAnalysis {
     private Long id;
 
     private Long projectId;
+    private Long organizationId;
     private String projectName;
     private String projectFullName;
     private String projectDescription;
