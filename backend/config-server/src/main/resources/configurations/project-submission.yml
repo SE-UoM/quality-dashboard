@@ -27,8 +27,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  # Zipkin Configuration
-  management:
-    tracing:
-      sampling:
-        probability: 0.3 # 30% of the requests will be traced (MEDIUM SAMPLING)
+# Zipkin Configuration
+management:
+  tracing:
+    sampling:
+      probability: 0.3 # 30% of the requests will be traced (MEDIUM SAMPLING)
