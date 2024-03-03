@@ -30,6 +30,7 @@ public class GithubAnalysis {
     private String projectDescription;
     private String projectUrl;
     private String defaultBranch;
+    private String ownerName;
 
     private int stars;
     private int forks;

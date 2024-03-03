@@ -44,6 +44,7 @@ public class GithubAnalysisService {
 
         System.out.println("API:" + token);
 
+        // Call the Github API to get the details of the repository
         Map<String, ?> repoDetails = githubApiClient.getRepoDetails(owner, repo, token);
 
         // Extract the details and save them to the database
@@ -52,6 +53,9 @@ public class GithubAnalysisService {
         String description = (String) repoDetails.get("description");
         String url = project.getRepoUrl();
         String defaultBranch = (String) repoDetails.get("default_branch");
+        Map<String, String> ownerDetails = (Map) repoDetails.get("owner");
+        String ownerName = ownerDetails.get("login");
+
         int stars = (int) repoDetails.get("stargazers_count");
         int forks = (int) repoDetails.get("forks_count");
         int openIssues = (int) repoDetails.get("open_issues_count");
@@ -65,6 +69,7 @@ public class GithubAnalysisService {
                 .projectId(projectId)
                 .projectName(name)
                 .projectFullName(fullName)
+                .ownerName(ownerName)
                 .projectDescription(description)
                 .projectUrl(url)
                 .defaultBranch(defaultBranch)
