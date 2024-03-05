@@ -20,7 +20,7 @@ spring:
     import: optional:configserver:http://localhost:8888
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/users
+    url: jdbc:postgresql://localhost:5432/developers
     username: dashboard
     password: pass
     driver-class-name: org.postgresql.Driver
