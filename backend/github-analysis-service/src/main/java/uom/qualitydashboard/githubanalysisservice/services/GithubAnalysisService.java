@@ -1,13 +1,18 @@
 package uom.qualitydashboard.githubanalysisservice.services;
 
+import feign.FeignException;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import uom.qualitydashboard.githubanalysisservice.client.DeveloperMicroservice;
 import uom.qualitydashboard.githubanalysisservice.client.GithubApiClient;
 import uom.qualitydashboard.githubanalysisservice.client.ProjectSubmissionMicroserviceClient;
+import uom.qualitydashboard.githubanalysisservice.models.CreateDeveloperRequest;
+import uom.qualitydashboard.githubanalysisservice.models.DeveloperDTO;
 import uom.qualitydashboard.githubanalysisservice.models.GithubAnalysis;
 import uom.qualitydashboard.githubanalysisservice.models.SubmittedProjectDTO;
 import uom.qualitydashboard.githubanalysisservice.repositories.GithubAnalysisRepository;
@@ -22,6 +27,7 @@ public class GithubAnalysisService {
     private final GithubApiClient githubApiClient;
     private final ProjectSubmissionMicroserviceClient projectSubmissionMicroserviceClient;
     private final GithubAnalysisRepository githubAnalysisRepository;
+    private final DeveloperMicroservice developerMicroservice;
 
     @Value("${github.token}")
     public String GITHUB_API_TOKEN;
@@ -29,21 +35,40 @@ public class GithubAnalysisService {
     public GithubAnalysis startAnalysis(Long projectId) {
         String token = "Bearer " + GITHUB_API_TOKEN;
 
-        Optional<SubmittedProjectDTO> submittedProject = projectSubmissionMicroserviceClient.getSubmittedProjectById(projectId);
-
-        if (submittedProject.isEmpty()) throw new EntityNotFoundException("Project not found");
-
         // Start the analysis
-        SubmittedProjectDTO project = submittedProject.get();
+        SubmittedProjectDTO project = this.getSubmittedProjectById(projectId);
         String repoUrl = project.getRepoUrl();
 
         // Get repo name and owner from the URL
+        Map<String, String> repoDetails = this.extractRepoDetails(repoUrl);
+        String owner = repoDetails.get("owner");
+        String repo = repoDetails.get("repo");
+
+        GithubAnalysis analysis = this.extractGithubAnalysis(project, owner, repo, token);
+
+        this.findRepositoryDevelopers(owner, repo, token);
+
+        return githubAnalysisRepository.save(analysis);
+    }
+
+    private Map<String, String> extractRepoDetails(String repoUrl) {
         String[] repoUrlParts = repoUrl.split("/");
         String owner = repoUrlParts[repoUrlParts.length - 2];
         String repo = repoUrlParts[repoUrlParts.length - 1];
 
-        System.out.println("API:" + token);
+        return Map.of("owner", owner, "repo", repo);
+    }
 
+    private SubmittedProjectDTO getSubmittedProjectById(Long projectId) {
+        Optional<SubmittedProjectDTO> project = projectSubmissionMicroserviceClient.getSubmittedProjectById(projectId);
+
+        if (project.isEmpty()) throw new EntityNotFoundException("Project not found");
+
+        return project.get();
+
+    }
+
+    private GithubAnalysis extractGithubAnalysis(SubmittedProjectDTO project, String owner, String repo, String token) {
         // Call the Github API to get the details of the repository
         Map<String, ?> repoDetails = githubApiClient.getRepoDetails(owner, repo, token);
 
@@ -55,6 +80,7 @@ public class GithubAnalysisService {
         String defaultBranch = (String) repoDetails.get("default_branch");
         Map<String, String> ownerDetails = (Map) repoDetails.get("owner");
         String ownerName = ownerDetails.get("login");
+        Long projectId = project.getId();
 
         int stars = (int) repoDetails.get("stargazers_count");
         int forks = (int) repoDetails.get("forks_count");
@@ -80,7 +106,43 @@ public class GithubAnalysisService {
                 .organizationId(organizationId)
                 .build();
 
-        return githubAnalysisRepository.save(analysis);
+        return analysis;
+    }
+
+    private void findRepositoryDevelopers(String owner, String repo, String token) {
+        // Now Find the project developers
+        Collection<?> developers = githubApiClient.getRepoContributors(owner, repo, token);
+
+        for (Object developer : developers) {
+            Map<String, ?> developerMap = (Map<String, ?>) developer;
+
+            Optional<DeveloperDTO> developerResponse = tryToCallCreateDevAPI(developerMap);
+        }
+    }
+
+    private Optional<DeveloperDTO> tryToCallCreateDevAPI(Map<String, ?> developerMap) {
+        // Set Up Data
+        String developerName = (String) developerMap.get("login");
+        String avatarUrl = (String) developerMap.get("avatar_url");
+        String profileUrl = (String) developerMap.get("html_url");
+
+        CreateDeveloperRequest request = CreateDeveloperRequest.builder()
+                .name(developerName)
+                .githubProfileURL(profileUrl)
+                .imageURI(avatarUrl)
+                .build();
+
+        // Try to create the developer
+        try {
+            DeveloperDTO developerResponse = developerMicroservice.createDeveloper(request);
+
+            return Optional.of(developerResponse);
+        }
+        catch (FeignException.Conflict e) {
+            // If the developer already exists, do nothing
+        }
+
+        return Optional.empty();
     }
 
     public Collection<GithubAnalysis> getAnalysisByProjectId(Long projectId) {
