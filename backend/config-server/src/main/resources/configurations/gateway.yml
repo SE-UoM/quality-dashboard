@@ -36,6 +36,11 @@ spring:
             predicates:
               - Path=/api/v1/github-analysis/** # The path that will be forwarded to the github-analysis-microservice
 
+          - id: developer-service
+            uri: http://localhost:8076 # Where the request will be forwarded (eg where the developer-microservice is running)
+            predicates:
+              - Path=/api/v1/developers/** # The path that will be forwarded to the developer-microservice
+
 # Zipkin Configuration
 management:
   tracing:
