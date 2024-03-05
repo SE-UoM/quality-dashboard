@@ -11,6 +11,7 @@ import uom.qualitydashboard.developerservice.models.Developer;
 import uom.qualitydashboard.developerservice.services.DeveloperService;
 
 import java.util.Collection;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,11 +33,32 @@ public class DeveloperController {
             return ResponseEntity.ok(developer);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
+
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/github-profile-url")
+    public ResponseEntity<?> getDeveloperByGithubProfileURL(@RequestParam(name = "key") String githubProfileURL) {
+        try {
+            Developer developer = developerService.getDeveloperByGithubProfileURL(githubProfileURL);
+            return ResponseEntity.ok(developer);
+        }
+        catch (EntityNotFoundException e) {
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -47,11 +69,14 @@ public class DeveloperController {
             return ResponseEntity.ok(developer);
         }
         catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
+
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -62,11 +87,14 @@ public class DeveloperController {
             return ResponseEntity.ok(newDeveloper);
         }
         catch (EntityExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
+
+            Map<String, String> response = Map.of("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

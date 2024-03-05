@@ -39,6 +39,17 @@ public class DeveloperService {
         return developer.get();
     }
 
+    public Developer getDeveloperByGithubProfileURL(String githubProfileURL) {
+        Optional<Developer> developer = developerRepository.findDeveloperByGithubProfileURL(githubProfileURL);
+
+        if (developer.isEmpty()) {
+            String message = String.format("Developer with github profile URL %s not found", githubProfileURL);
+            throw new EntityNotFoundException(message);
+        }
+
+        return developer.get();
+    }
+
     public Developer createDeveloper(CreateDeveloperRequest request) {
         String name = request.getName();
         String imageURI = request.getImageURI();
