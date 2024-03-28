@@ -28,7 +28,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 github:
-  token: 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
+  token: token_not_added_on_github_analysis_yml_in_config_server
 
 # Zipkin Configuration
 management:
