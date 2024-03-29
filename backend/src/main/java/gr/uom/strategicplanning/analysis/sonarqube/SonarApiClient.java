@@ -7,6 +7,8 @@ import gr.uom.strategicplanning.models.domain.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -16,9 +18,12 @@ import java.util.regex.Pattern;
 /**
  * This class is responsible for interacting with the SonarQube API to fetch project data and statistics.
  */
+@Component
 public class SonarApiClient extends HttpClient {
     private Response loginResponse;
-    public static final String SONARQUBE_URL = "http://195.251.210.147:9952";
+
+    @Value("${sonar.sonarqube.url}")
+    public String SONARQUBE_URL;
     public static final String LOGIN_USERNAME = "admin";
     public static final String LOGIN_PASSWORD = "admin1";
 

@@ -3,6 +3,7 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 import org.sonarsource.scanner.api.EmbeddedScanner;
 import org.sonarsource.scanner.api.LogOutput;
 import org.sonarsource.scanner.api.StdOutLogOutput;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,9 @@ public class SonarScanner {
     private EmbeddedScanner scanner;
     private LogOutput logOutput;
     private Map<String, String> sonarProperties;
+
+    @Value("${sonar.sonarqube.url}")
+    private String sonarqubeUrl;
 
     /**
      * Constructs a new SonarScanner instance with the provided name and version.
@@ -36,7 +40,7 @@ public class SonarScanner {
      * - sonar.password: admin1
      */
     private void initProps() {
-        this.sonarProperties.put("sonar.host.url", SonarApiClient.SONARQUBE_URL);
+        this.sonarProperties.put("sonar.host.url", sonarqubeUrl);
 //        this.sonarProperties.put("sonar.login", SonarApiClient.LOGIN_USERNAME);
 //        this.sonarProperties.put("sonar.password", SonarApiClient.LOGIN_PASSWORD);
         this.sonarProperties.put("sonar.scm.disabled", "true");
