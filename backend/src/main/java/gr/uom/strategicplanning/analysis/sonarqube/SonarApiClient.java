@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class SonarApiClient extends HttpClient {
     private Response loginResponse;
 
-    @Value("${sonar.sonarqube_url}")
+    @Value("${sonar.sonarqube.url}")
     public String SONARQUBE_URL;
     public static final String LOGIN_USERNAME = "admin";
     public static final String LOGIN_PASSWORD = "admin1";

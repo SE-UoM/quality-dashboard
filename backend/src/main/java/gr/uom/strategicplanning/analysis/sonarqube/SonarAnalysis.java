@@ -38,7 +38,7 @@ public class SonarAnalysis {
     String version;
     Logger logger = Logger.getLogger(SonarAnalysis.class.getName());
 
-    @Value("${sonar.sonarqube_url}")
+    @Value("${sonar.sonarqube.url}")
     private String sonarqubeUrl;
 
     public SonarAnalysis(Project project, String version) throws IOException, InterruptedException {

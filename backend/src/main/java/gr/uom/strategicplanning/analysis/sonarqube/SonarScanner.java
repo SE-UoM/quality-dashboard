@@ -16,7 +16,7 @@ public class SonarScanner {
     private LogOutput logOutput;
     private Map<String, String> sonarProperties;
 
-    @Value("${sonar.sonarqube_url}")
+    @Value("${sonar.sonarqube.url}")
     private String sonarqubeUrl;
 
     /**
