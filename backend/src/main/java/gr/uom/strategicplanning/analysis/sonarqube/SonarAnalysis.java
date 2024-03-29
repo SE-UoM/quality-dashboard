@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -37,6 +38,9 @@ public class SonarAnalysis {
     String version;
     Logger logger = Logger.getLogger(SonarAnalysis.class.getName());
 
+    @Value("${sonar.sonarqube_url}")
+    private String sonarqubeUrl;
+
     public SonarAnalysis(Project project, String version) throws IOException, InterruptedException {
         this.projectName = project.getName();
         this.projectOwner = project.getOwnerName();
@@ -57,7 +61,7 @@ public class SonarAnalysis {
             writer.append("sonar.sourceEncoding=UTF-8" + System.lineSeparator());
             writer.append("sonar.sources=." + System.lineSeparator());
             writer.append("sonar.java.binaries=." + System.lineSeparator());
-            writer.append("sonar.host.url=" + SonarApiClient.SONARQUBE_URL + System.lineSeparator());
+            writer.append("sonar.host.url=" + sonarqubeUrl + System.lineSeparator());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -130,7 +134,7 @@ public class SonarAnalysis {
 
     private void getMetricFromSonarQube() {
         try {
-            URL url = new URL( SonarApiClient.SONARQUBE_URL +"/api/measures/component?component=" + projectOwner + ":" + projectName+
+            URL url = new URL( sonarqubeUrl +"/api/measures/component?component=" + projectOwner + ":" + projectName+
                     "&metricKeys=sqale_index,complexity,ncloc");
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
@@ -172,7 +176,7 @@ public class SonarAnalysis {
     public boolean isFinishedAnalyzing(){
         boolean finished=false;
         try {
-            URL url = new URL(SonarApiClient.SONARQUBE_URL +"/api/ce/component?component=" + projectOwner + ":" + projectName);
+            URL url = new URL(sonarqubeUrl +"/api/ce/component?component=" + projectOwner + ":" + projectName);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
