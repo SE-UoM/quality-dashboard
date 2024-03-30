@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,11 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    MailSendingService mailSendingService;
+
+    SecureRandom secureRandom = new SecureRandom();
+
     public User createUser(UserRegistrationRequest registrationRequest) {
         String email = registrationRequest.getEmail();
         String password = registrationRequest.getPassword();
@@ -53,6 +60,32 @@ public class UserService {
         user.setOrganization(organizationOptional.get());
         user.setRoles("SIMPLE");
 
+        String verificationCode = generateCode(150);
+        user.setVerificationCode(passwordEncoder.encode(verificationCode));
+
+        User savedUser = userRepository.save(user);
+        mailSendingService.sendVerificationEmail(
+                savedUser.getEmail(),
+                savedUser.getVerificationCode(),
+                savedUser.getId()
+        );
+
+        return savedUser;
+    }
+
+    public User verifyUser(String token, Long uid) {
+        Optional<User> userOptional = userRepository.findById(uid);
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Verification request for user not found");
+
+        User user = userOptional.get();
+        boolean verificationIsValid = user.verificationIsValid(token);
+
+        if(!verificationIsValid) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Invalid verification token");
+
+        user.setVerified(true);
+        user.setVerificationCode(null);
         return userRepository.save(user);
     }
 
@@ -98,5 +131,15 @@ public class UserService {
         List<User> users = organization.getUsers();
         List<UserResponse> userResponses = UserResponse.convertToUserResponseList(users);
         return Optional.of(userResponses);
+    }
+
+    private String generateCode(int length) {
+        byte[] buffer = new byte[length];
+        secureRandom.nextBytes(buffer);
+
+        String encodedBuffer = Base64.getEncoder().encodeToString(buffer);
+        String code = encodedBuffer.substring(0, length);
+
+        return code;
     }
 }

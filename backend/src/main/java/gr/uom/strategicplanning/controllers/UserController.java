@@ -40,6 +40,13 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<UserResponse> verifyUser(@RequestParam String token, @RequestParam Long uid){
+        User user = userService.verifyUser(token, uid);
+        UserResponse userResponse = new UserResponse(user);
+        return ResponseEntity.ok(userResponse);
+    }
+
     @GetMapping("/all")
     List<UserResponse> getAllUser(){
         List<User> users = userService.getAllUsers();
@@ -52,6 +59,8 @@ public class UserController {
 
         return userResponses;
     }
+
+
 
     @GetMapping("/{id}")
     UserResponse getUserById(@PathVariable Long id){
@@ -66,7 +75,6 @@ public class UserController {
         boolean authHeaderIsNotPresent = authorizationHeader == null || !authorizationHeader.startsWith("Bearer ");
 
         if(authHeaderIsNotPresent) throw new RuntimeException("Refresh token is missing");
-
 
         try {
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(authorizationHeader);
