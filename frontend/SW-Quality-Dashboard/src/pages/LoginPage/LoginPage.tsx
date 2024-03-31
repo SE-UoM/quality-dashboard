@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Box, Flex, Button, FormControl, FormLabel, Input, Grid } from '@chakra-ui/react';
-import LoginForm from "../components/LoginForm/LoginForm.tsx";
+import LoginForm from "../../components/LoginForm/LoginForm.tsx";
+import './LoginPage.css';
 
 function LoginPage() {
     const [username, setUsername] = useState('');

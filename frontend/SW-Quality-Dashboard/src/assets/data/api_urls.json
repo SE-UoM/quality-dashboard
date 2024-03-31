@@ -3,6 +3,7 @@
   "developmentBackend": "http://localhost:8080",
 
   "routes": {
+    "login": "/login",
     "getAllOrganizationNames": "/api/organizations/names",
     "createUser": "/api/user/register",
     "resendUserVerification": "/api/user/verify/resend"

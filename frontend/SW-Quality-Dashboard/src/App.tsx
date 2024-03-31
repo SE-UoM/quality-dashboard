@@ -7,7 +7,7 @@ import AdminPanel from './pages/AdminPanel.tsx'
 import RegisterOrganisationPage from './pages/RegisterOrganisationPage.tsx'
 import AboutPage from './pages/AboutPage.tsx'
 import SubmitProjectPage from './pages/SubmitProjectPage.tsx'
-import LoginPage from './pages/LoginPage.tsx'
+import LoginPage from './pages/LoginPage/LoginPage.tsx'
 import VerifyUserPage from "./pages/VerifyUserPage.tsx"
 import HomePage from "./pages/HomePage/HomePage.tsx";
 import DashboardNavbar from "./components/DashboardNavbar/DashboardNavbar.tsx";
