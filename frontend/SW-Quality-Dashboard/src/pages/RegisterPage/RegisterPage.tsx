@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Flex, Text, Button, FormControl, FormLabel, Input, FormErrorMessage, Select } from '@chakra-ui/react';
 import Navbar from '../components/DashboardNavbar/DashboardNavbar.tsx';
+import axios from "axios";
 
 interface Organization {
     id: string;
@@ -16,11 +17,16 @@ function RegisterPage() {
     const [selectedOrganization, setSelectedOrganization] = useState("");
 
     useEffect(() => {
-        setOrganizations([
-            { id: '1', name: 'Organization 1' },
-            { id: '2', name: 'Organization 2' },
-            { id: '3', name: 'Organization 3' },
-        ])
+        // Call API to get organizations
+        let url = 'http://localhost:8080/api/organizations/names';
+
+        axios.get(url)
+            .then((response) => {
+                setOrganizations(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
     const handleSignUp = () => {
         if (password.length < 6) {
