@@ -11,15 +11,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriUtils;
 
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
+    private final int VERIFICATION_CODE_LENGTH = 150;
 
     @Autowired
     UserRepository userRepository;
@@ -60,10 +63,11 @@ public class UserService {
         user.setOrganization(organizationOptional.get());
         user.setRoles("SIMPLE");
 
-        String verificationCode = generateCode(150);
+        String verificationCode = generateCode(VERIFICATION_CODE_LENGTH);
         user.setVerificationCode(verificationCode);
 
         User savedUser = userRepository.save(user);
+
         mailSendingService.sendVerificationEmail(
                 savedUser.getEmail(),
                 savedUser.getVerificationCode(),
@@ -80,13 +84,43 @@ public class UserService {
         if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Verification request for user not found");
 
         User user = userOptional.get();
+
+        // encode the token
+        token = UriUtils.encode(token, "UTF-8");
+        System.out.println("Given token: " + token);
+        System.out.println("User token: " + user.getVerificationCode());
+
+        boolean verificationCodeExpired = user.verificationCodeExpired();
+        if(verificationCodeExpired) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Verification has expired. Please request a new verification email.");
+
         boolean verificationIsValid = user.verificationIsValid(token);
 
+        System.out.println("Verification is valid: " + verificationIsValid);
         if(!verificationIsValid) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Invalid verification token");
 
         user.setVerified(true);
         user.setVerificationCode(null);
         return userRepository.save(user);
+    }
+
+    public User resendVerification(Long uid) {
+        Optional<User> userOptional = userRepository.findById(uid);
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Verification request for user not found");
+
+        User user = userOptional.get();
+        String verificationCode = generateCode(VERIFICATION_CODE_LENGTH);
+        user.setVerificationCode(verificationCode);
+
+        userRepository.save(user);
+        mailSendingService.sendVerificationEmail(
+                user.getEmail(),
+                user.getVerificationCode(),
+                user.getId()
+        );
+
+        return user;
     }
 
     public List<User> getAllUsers() {
@@ -140,6 +174,7 @@ public class UserService {
         String encodedBuffer = Base64.getEncoder().encodeToString(buffer);
         String code = encodedBuffer.substring(0, length);
 
-        return code;
+        // Url Encode the code
+        return UriUtils.encode(code, "UTF-8");
     }
 }

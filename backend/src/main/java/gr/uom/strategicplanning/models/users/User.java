@@ -52,4 +52,10 @@ public class User {
     public boolean verificationIsValid(String code) {
         return code.equals(verificationCode) && !verificationCodeExpired();
     }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+        this.verificationIssuedDate = new Date();
+        this.verificationExpirationDate = new Date(System.currentTimeMillis() + verCodeExpiryTime);
+    }
 }

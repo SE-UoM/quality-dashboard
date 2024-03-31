@@ -47,6 +47,13 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @PostMapping("/verify/resend")
+    public ResponseEntity<UserResponse> resendVerification(@RequestParam Long uid){
+        User user = userService.resendVerification(uid);
+        UserResponse userResponse = new UserResponse(user);
+        return ResponseEntity.ok(userResponse);
+    }
+
     @GetMapping("/all")
     List<UserResponse> getAllUser(){
         List<User> users = userService.getAllUsers();

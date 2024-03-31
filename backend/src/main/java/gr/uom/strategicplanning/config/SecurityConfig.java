@@ -42,6 +42,7 @@ public class SecurityConfig {
             "/user/token/refresh",
             "/api/user/register",
             "/api/user/verify",
+            "/api/user/verify/resend",
             "/login",
             "/api/organizations",
             "/api/best-practices",

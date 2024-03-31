@@ -27,6 +27,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         ALLOWED_PATHS.add("/login");
         ALLOWED_PATHS.add("/api/user/register");
         ALLOWED_PATHS.add("/api/user/verify");
+        ALLOWED_PATHS.add("/api/user/verify/resend");
         ALLOWED_PATHS.add("/user/token/refresh");
         ALLOWED_PATHS.add("/swagger-ui");
         ALLOWED_PATHS.add("/api-ui");
