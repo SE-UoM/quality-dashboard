@@ -61,7 +61,7 @@ public class UserService {
         user.setRoles("SIMPLE");
 
         String verificationCode = generateCode(150);
-        user.setVerificationCode(passwordEncoder.encode(verificationCode));
+        user.setVerificationCode(verificationCode);
 
         User savedUser = userRepository.save(user);
         mailSendingService.sendVerificationEmail(
