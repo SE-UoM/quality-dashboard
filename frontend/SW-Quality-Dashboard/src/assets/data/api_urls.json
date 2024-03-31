@@ -1,0 +1,10 @@
+{
+  "productionBackend": "http://195.251.210.248:8088",
+  "developmentBackend": "http://localhost:8080",
+
+  "routes": {
+    "getAllOrganizationNames": "/api/organizations/names",
+    "createUser": "/api/user/register",
+    "resendUserVerification": "/api/user/verify/resend"
+  }
+}

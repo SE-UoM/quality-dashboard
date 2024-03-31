@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Box,
     Flex,
@@ -9,7 +9,6 @@ import {
     Button,
     Text,
 } from '@chakra-ui/react';
-import Navbar from '../components/DashboardNavbar/DashboardNavbar.tsx';
 
 const locations = ['Athens', 'Thessaloniki', 'Heraklion', 'Patras', 'Larissa'];
 

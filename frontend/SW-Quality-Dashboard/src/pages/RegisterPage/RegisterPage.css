@@ -1,0 +1,17 @@
+.register-page {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--org-color-primary);
+}
+
+.register-form {
+    width: 100vw;
+    height: 50vh;
+    max-width: 330px;
+    padding: 1em;
+    background: var(--org-color-secondary);
+    border-radius: 1em;
+}
