@@ -23,6 +23,7 @@ function SignUpForm() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("");
     const [selectedOrganization, setSelectedOrganization] = useState("");
 
     // Call API to get organizations for the dropdown
@@ -67,6 +68,13 @@ function SignUpForm() {
         if (password.length < 6) {
             setError(true);
             setErrorMessage("Password must be at least 6 characters long");
+            return;
+        }
+
+        // Make sure the passwords match
+        if (password !== repeatPassword) {
+            setError(true);
+            setErrorMessage("Passwords do not match");
             return;
         }
 
@@ -152,13 +160,30 @@ function SignUpForm() {
                                 type="password"
                                 className="form-control"
                                 id="passInput"
-                                placeholder="123456"
+                                placeholder="something safe"
                                 required={true}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                             <label htmlFor="floatingInput">
                                 <i className="bi bi-shield-lock-fill"> </i>
                                 Password
+                            </label>
+                        </div>
+                    </Form.Group>
+
+                    <Form.Group controlId="formBasicRepeatPassword">
+                        <div className="form-floating mb-3">
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="repeatPassInput"
+                                placeholder="something safe"
+                                required={true}
+                                onChange={(e) => setRepeatPassword(e.target.value)}
+                            />
+                            <label htmlFor="floatingInput">
+                                <i className="bi bi-shield-lock-fill"> </i>
+                                Repeat Password
                             </label>
                         </div>
                     </Form.Group>
