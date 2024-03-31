@@ -43,6 +43,7 @@ public class SecurityConfig {
             "/api/user/register",
             "/api/user/verify",
             "/api/user/verify/resend",
+            "/api/organizations/names",
             "/login",
             "/api/organizations",
             "/api/best-practices",

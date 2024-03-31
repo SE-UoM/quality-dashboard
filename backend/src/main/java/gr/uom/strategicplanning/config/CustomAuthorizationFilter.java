@@ -31,6 +31,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         ALLOWED_PATHS.add("/user/token/refresh");
         ALLOWED_PATHS.add("/swagger-ui");
         ALLOWED_PATHS.add("/api-ui");
+        ALLOWED_PATHS.add("/api/organizations/names");
     }
 
 
