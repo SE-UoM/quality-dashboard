@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage/LoginPage.tsx'
 import VerifyUserPage from "./pages/VerifyUserPage.tsx"
 import HomePage from "./pages/HomePage/HomePage.tsx";
 import DashboardNavbar from "./components/DashboardNavbar/DashboardNavbar.tsx";
+import Footer from "./components/Footer/Footer.tsx";
 
 function App() {
     const isVerifyPage = window.location.pathname.includes('verify');
@@ -43,6 +44,8 @@ function App() {
 
                     </Routes>
                 </BrowserRouter>
+
+                {!isVerifyPage && <Footer />}
             </ChakraProvider>
         </>
     )

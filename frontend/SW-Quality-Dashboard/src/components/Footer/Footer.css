@@ -1,0 +1,20 @@
+.dashboard-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 10vh;
+    text-align: center;
+}
+
+.footer-bottom p {
+    padding: 0;
+    margin: 0;
+}

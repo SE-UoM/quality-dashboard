@@ -1,0 +1,38 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    background-color: var(--org-color-primary);
+    color: white;
+}
+
+.home-page h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.home-page p {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--org-color-secondary);
+    font-style: italic;
+    text-align: center;
+}
+
+.attribution-url {
+    color: var(--org-color-primary);
+    font-weight: bold;
+}
+
+.attribution-url:hover {
+    text-decoration: underline;
+}
+
+.homepage-action-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
