@@ -1,8 +1,11 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+
+  /* Custom Colors */
+  --org-color-primary: #015092;
+  --org-color-secondary: #ffe248;
+  --org-color-secondary-dark-version: #cba400;
+  --dark-gray: #333;
 }
 
 .logo {

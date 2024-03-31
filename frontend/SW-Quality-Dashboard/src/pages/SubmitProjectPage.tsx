@@ -1,13 +1,12 @@
 import React from 'react';
 import { Box, Flex, FormControl, FormLabel, Input, Select, Button, Text } from '@chakra-ui/react';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/DashboardNavbar/DashboardNavbar.tsx';
 
 const industries = ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail'];
 
 function SubmitProjectForm() {
     return (
         <Flex direction={"column"}>
-            <Navbar />
             <Flex align="center" justify="center" py={4}>
                 <Box p={4} width="50%" bg="gray.100" borderRadius="md">
                     <Text fontSize="xl" fontWeight="bold" mb={4} textAlign="center">

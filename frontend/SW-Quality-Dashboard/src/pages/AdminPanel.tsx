@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Text, VStack, Divider, chakra, Button, Flex } from '@chakra-ui/react';
 import { Organization, Project, Developer, mockDeveloper, mockProject } from '../assets/models';
 import { mockOrganization } from '../assets/models';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/DashboardNavbar/DashboardNavbar.tsx';
 function OrganizationList({ organization }: { organization: Organization }) {
     return (
 

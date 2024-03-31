@@ -1,5 +1,49 @@
-.navbar-logo-url {
+.navbar-brand {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    width: 30vw;
+}
+
+.navbar-brand img {
+    width: 3em;
+}
+
+.navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1em;
+}
+
+.navbar-brand-text span {
+    font-size: 0.8em;
+    color: var(--org-color-secondary-dark-version);
+}
+
+.navbar-brand-text h1 {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--org-color-primary);
+}
+
+#github-repo-icon {
+    font-size: 2.5em;
+    color: var(--org-color-primary);
+    opacity: 0.8;
+    transition: all 0.3s ease-in-out;
+}
+
+#github-repo-icon:hover {
+    opacity: 0.6;
+}
+
+.btn-link {
+    background: var(--org-color-secondary);
+    color: var(--org-color-primary);
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+    .navbar-brand-text {
+        display: none;
+    }
 }

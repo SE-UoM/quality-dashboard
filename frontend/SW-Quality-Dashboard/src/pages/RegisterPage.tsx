@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Flex, Text, Button, FormControl, FormLabel, Input, FormErrorMessage, Select } from '@chakra-ui/react';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/DashboardNavbar/DashboardNavbar.tsx';
 
 interface Organization {
     id: string;
@@ -37,7 +37,6 @@ function RegisterPage() {
 
     return (
         <Flex direction={"column"}>
-            <Navbar />
             <Box p={4}>
                 <Text fontSize="xl" fontWeight="bold">
                     Welcome to SW-UoM Dashboard

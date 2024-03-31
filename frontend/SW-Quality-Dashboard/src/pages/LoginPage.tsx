@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { Box, Flex, Text, Button, FormControl, FormLabel, Input, FormErrorMessage, Select, Grid } from '@chakra-ui/react';
-import Navbar from '../components/Navbar';
+import { useState } from 'react'
+import { Box, Flex, Button, FormControl, FormLabel, Input, Grid } from '@chakra-ui/react';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -15,7 +14,6 @@ function LoginPage() {
 
     return (
         <Flex direction={"column"}>
-            <Navbar />
             <Grid placeItems={"center"} height="65vh" width="100vw">
                 <Box width="65%">
                     <FormControl>
@@ -46,8 +44,6 @@ function LoginPage() {
                         </Flex>
                     </FormControl>
                 </Box>
-
-
             </Grid >
         </Flex>
 

@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {BrowserRouter, Outlet, Route, Routes, useLocation} from "react-router-dom"
+import Dashboard from './pages/Dashboard.tsx'
+import { ChakraProvider } from '@chakra-ui/react'
+import RegisterPage from './pages/RegisterPage.tsx'
+import AdminPanel from './pages/AdminPanel.tsx'
+import RegisterOrganisationPage from './pages/RegisterOrganisationPage.tsx'
+import AboutPage from './pages/AboutPage.tsx'
+import SubmitProjectPage from './pages/SubmitProjectPage.tsx'
+import LoginPage from './pages/LoginPage.tsx'
+import VerifyUserPage from "./pages/VerifyUserPage.tsx"
+import HomePage from "./pages/HomePage/HomePage.tsx";
+import DashboardNavbar from "./components/DashboardNavbar/DashboardNavbar.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const isVerifyPage = window.location.pathname.includes('verify');
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    console.log(isVerifyPage)
+
+    return (
+        <>
+            <ChakraProvider>
+                {!isVerifyPage && <DashboardNavbar />}
+                <BrowserRouter>
+                    <Routes>
+                        {/* Public Routes */}
+                        <Route path="/">
+                            <Route index element={<HomePage />} />
+                            <Route path="dashboard" element={<Dashboard />} />
+                            <Route path="about" element={<AboutPage />} />
+                            <Route path="register" element={<RegisterPage />} />
+                            <Route path="login" element={<LoginPage />} />
+                            <Route path="verify" element={<VerifyUserPage />} />
+                        </Route>
+
+                        {/* Protected Routes */}
+                        <Route path="/" element={<RequireAuth />}>
+                            <Route path="register-organisation" element={<RegisterOrganisationPage />} />
+                            <Route path="admin-panel" element={<AdminPanel />} />
+                            <Route path="submit-project" element={<SubmitProjectPage />} />
+                        </Route>
+                        {/* <Route path="/admin-login" element={<RegisterPage />} /> */}
+
+                    </Routes>
+                </BrowserRouter>
+            </ChakraProvider>
+        </>
+    )
+}
+
+function RequireAuth() {
+    return (
+        <div>
+            <Outlet />
+        </div>
+    )
 }
 
 export default App

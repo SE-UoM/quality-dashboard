@@ -9,7 +9,7 @@ import {
     Button,
     Text,
 } from '@chakra-ui/react';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/DashboardNavbar/DashboardNavbar.tsx';
 
 const locations = ['Athens', 'Thessaloniki', 'Heraklion', 'Patras', 'Larissa'];
 
@@ -25,7 +25,6 @@ function OrganisationForm() {
 
     return (
         <Flex direction='column'>
-            <Navbar />
             <Box p={8} bg="gray.100" flex="1">
                 <Text fontWeight="bold" fontSize="xl" mb={4}>
                     Organisation Data (Required)
