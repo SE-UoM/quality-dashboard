@@ -5,6 +5,7 @@ import './LoginForm.css';
 import apiUrls from "../../assets/data/api_urls.json";
 import { isProduction, acceptedUserMailDomains } from "../../assets/data/config.json";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
+import useLocalStorage from "../../hooks/useLocalStorage.ts";
 
 interface Organization {
     id: string;
@@ -17,13 +18,13 @@ function LoginForm() {
     const [loginSuccess, setLoginSuccess] = useState(false);
 
     const [baseApiUrl, setBaseApiUrl] = useState(isProduction ? apiUrls.productionBackend : apiUrls.developmentBackend);
-    const [highlySophisticatedBotDetectionCheck, setHighlySophisticatedBotDetectionCheck] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false); // State to track checkbox status
     const [showPassword, setShowPassword] = useState(false); // State to track password visibility
-    const [accessToken, setAccessToken] = useState("");
-    const [refreshToken, setRefreshToken] = useState("");
+
+    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+    const [refreshToken, setRefreshToken] = useLocalStorage("refreshToken", "");
 
 
     const handleLogin = (e) => {
@@ -66,12 +67,13 @@ function LoginForm() {
                 setAccessToken(data.accessToken);
                 setRefreshToken(data.refreshToken);
 
-                console.log("Access token: " + accessToken);
-                console.log("Refresh token: " + refreshToken);
+                // Save the tokens to local storage
+                localStorage.setItem("accessToken", data.accessToken);
+                localStorage.setItem("refreshToken", data.refreshToken);
 
                 // Redirect to the dashboard after 2 seconds
                 setTimeout(() => {
-                    window.location.href = "/dashboard";
+                    window.location.href = "/";
                 }, 2000);
 
             })

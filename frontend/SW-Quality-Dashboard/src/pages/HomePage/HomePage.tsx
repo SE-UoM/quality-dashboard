@@ -3,10 +3,11 @@ import { Button } from 'react-bootstrap';
 import useLocalStorage from '../../hooks/useLocalStorage.ts';
 import axios from 'axios';
 import './HomePage.css';
+import useAuthenticationCheck from "../../hooks/useAuthenticationCheck.ts";
 
 function HomePage() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [accessToken, setAccessToken] = useLocalStorage<string>('accessToken', '');
+    const [accessToken] = useLocalStorage<string>('accessToken', '');
+    const [isAuthenticated, setIsAuthenticated] = useAuthenticationCheck(accessToken)
 
     // Call a random API to check if the user is authenticated
     useEffect(() => {

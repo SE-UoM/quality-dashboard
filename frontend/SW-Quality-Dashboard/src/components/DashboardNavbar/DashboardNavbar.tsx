@@ -2,7 +2,13 @@ import logo from '../../assets/dashboard_logo_transparent.png'
 import './DashboardNavbar.css'
 import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 
-function DashboardNavbar() {
+function DashboardNavbar({isAuthenticated, isAdmin}) {
+    let handleLogout = () => {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        window.location.href = '/'
+    }
+
     return (
         <>
             <Navbar expand="lg" className="bg-body-tertiary" style={{borderBottom: "2px solid var(--org-color-primary)"}}>
@@ -19,31 +25,60 @@ function DashboardNavbar() {
 
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="/register">
-                                <i className="bi bi-person-fill-add"> </i>
-                                Sign Up
-                            </Nav.Link>
+                            {!isAuthenticated && (
+                                <>
+                                    <Nav.Link href="/register">
+                                        <i className="bi bi-person-fill-add"> </i>
+                                        Sign Up
+                                    </Nav.Link>
 
-                            <Nav.Link href="/login">
-                                <i className="bi bi-person-fill"> </i>
-                                Login
-                            </Nav.Link>
+                                    <Nav.Link href="/login">
+                                        <i className="bi bi-person-fill"> </i>
+                                        Login
+                                    </Nav.Link>
+                                </>
+                            )}
 
-                            <NavDropdown title={<i className="bi bi-rocket-takeoff-fill" style={{fontStyle: "initial"}}> Actions</i>} id="actions-dropdown">
-                                <NavDropdown.Item href="/register-organisation">
-                                    <i className="bi bi-building-fill-add"> </i>
-                                    Create an Organization
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="/submit-project">
-                                    <i className="bi bi-plus-circle-fill"> </i>
-                                    Submit a Project
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <Nav.Link href="/dashboard" >
-                                    <i className="bi bi-speedometer2"> </i>
-                                    View Dashboard
-                                </Nav.Link>
-                            </NavDropdown>
+                            {isAuthenticated && (
+                                <>
+                                    <Nav.Link href="/dashboard">
+                                        <i className="bi bi-speedometer2"> </i>
+                                        View Dashboard
+                                    </Nav.Link>
+
+                                    <NavDropdown title={<i className="bi bi-rocket-takeoff-fill" style={{fontStyle: "initial"}}> My Actions</i>} id="actions-dropdown">
+                                        {isAdmin &&
+                                            <NavDropdown.Item href="/register-organisation" color={"var(--org-color-primary)"}>
+                                                <i className="bi bi-building-fill-add"> </i>
+                                                Create an Organization
+                                            </NavDropdown.Item>
+                                        }
+
+                                        <NavDropdown.Item href="/submit-project" color={"var(--org-color-primary)"}>
+                                            <i className="bi bi-plus-circle-fill"> </i>
+                                            Submit a Project
+                                        </NavDropdown.Item>
+
+                                        <NavDropdown.Item href="/submit-project" color={"var(--org-color-primary)"}>
+                                            <i className="bi bi-folder-fill"> </i>
+                                            View Submitted Projects
+                                        </NavDropdown.Item>
+
+                                        <NavDropdown.Divider id={"nav-dropdown-logout-divider"} />
+
+                                        <Nav.Item
+                                            href="/logout"
+                                            id={"nav-logout-link"}
+                                            style={{}}
+
+                                            onClick={handleLogout}
+                                        >
+                                            <i className="bi bi-power"> </i>
+                                            Logout
+                                        </Nav.Item>
+                                    </NavDropdown>
+                                </>
+                            )}
                         </Nav>
                     </Navbar.Collapse>
 
