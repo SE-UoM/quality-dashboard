@@ -19,8 +19,6 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
 
                 const response = await axios.get('http://localhost:8080/api/organizations', { headers });
 
-                console.log('response', response)
-
                 if (response.status === 200) {
                     setIsAuthenticated(true);
                 } else {
