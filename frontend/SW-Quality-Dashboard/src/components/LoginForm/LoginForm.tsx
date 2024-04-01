@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from "axios";
-import {Form, Button, Alert} from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import './LoginForm.css';
 import apiUrls from "../../assets/data/api_urls.json";
-import {isProduction, acceptedUserMailDomains} from "../../assets/data/config.json";
-import AccountVerificationModal from "../modals/AccountVerificationModal/AccountVerificationModal.tsx";
-import * as url from "url";
+import { isProduction, acceptedUserMailDomains } from "../../assets/data/config.json";
+import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 
 interface Organization {
     id: string;
@@ -22,9 +21,10 @@ function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false); // State to track checkbox status
-
+    const [showPassword, setShowPassword] = useState(false); // State to track password visibility
     const [accessToken, setAccessToken] = useState("");
     const [refreshToken, setRefreshToken] = useState("");
+
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -55,7 +55,7 @@ function LoginForm() {
 
         let apiUrl = baseApiUrl + apiUrls.routes.login;
 
-        axios.post(apiUrl, data, {headers: headers})
+        axios.post(apiUrl, data, { headers: headers })
             .then((response) => {
                 console.log("Login successful");
                 let data = response.data;
@@ -108,37 +108,35 @@ function LoginForm() {
 
                 <Form className="sign-up-form-content">
                     <Form.Group controlId="formBasicEmail">
-                        <div className="form-floating mb-3">
-                            <input
-                                type="email"
-                                className="form-control"
-                                id="emailInput"
-                                placeholder="name@example.com"
-                                required={true}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <label htmlFor="floatingInput">
-                                <i className="bi bi-at"> </i>
-                                Email
-                            </label>
-                        </div>
-
+                        <FloatingFormInput
+                            type="email"
+                            id="emailInput"
+                            placeholder="icsXXXX@uom.edu.gr"
+                            isRequired={true}
+                            onChange={(e) => setEmail(e.target.value)}
+                            icon="bi bi-at"
+                            labelText="Email"
+                        />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
-                        <div className="form-floating mb-3">
-                            <input
-                                type="password"
-                                className="form-control"
+                        <div className="form-pass-container">
+                            <FloatingFormInput
+                                type={showPassword ? "text" : "password"}
                                 id="passInput"
                                 placeholder="something safe"
-                                required={true}
+                                isRequired={true}
                                 onChange={(e) => setPassword(e.target.value)}
+                                icon="bi bi-shield-lock-fill"
+                                labelText="Password"
                             />
-                            <label htmlFor="floatingInput">
-                                <i className="bi bi-shield-lock-fill"> </i>
-                                Password
-                            </label>
+
+                            <Button
+                                variant="outline-secondary"
+                                className="show-password-btn"
+                                onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
+                            </Button>
                         </div>
                     </Form.Group>
 

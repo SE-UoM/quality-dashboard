@@ -5,6 +5,7 @@ import './SignUpForm.css';
 import apiUrls from "../../assets/data/api_urls.json";
 import {isProduction, acceptedUserMailDomains} from "../../assets/data/config.json";
 import AccountVerificationModal from "../modals/AccountVerificationModal/AccountVerificationModal.tsx";
+import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 
 interface Organization {
     id: string;
@@ -13,6 +14,8 @@ interface Organization {
 
 function SignUpForm() {
     const [showModal, setShowModal] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -120,20 +123,15 @@ function SignUpForm() {
 
                 <Form className="sign-up-form-content">
                     <Form.Group controlId="formBasicName">
-                        <div className="form-floating mb-3">
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="nameInput"
-                                placeholder="Jane Doe"
-                                required={true}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            <label htmlFor="floatingInput">
-                                <i className="bi bi-person-circle"> </i>
-                                Name
-                            </label>
-                        </div>
+                        <FloatingFormInput
+                            type="text"
+                            id="nameInput"
+                            placeholder="Jane Doe"
+                            isRequired={true}
+                            onChange={(e) => setName(e.target.value)}
+                            icon="bi bi-person-circle"
+                            labelText="Name"
+                        />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicEmail">
@@ -155,36 +153,45 @@ function SignUpForm() {
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
-                        <div className="form-floating mb-3">
-                            <input
-                                type="password"
-                                className="form-control"
+                        <div className="form-pass-container">
+                            <FloatingFormInput
+                                type={showPassword ? "text" : "password"}
                                 id="passInput"
                                 placeholder="something safe"
-                                required={true}
+                                isRequired={true}
                                 onChange={(e) => setPassword(e.target.value)}
+                                icon="bi bi-shield-lock-fill"
+                                labelText="Password"
                             />
-                            <label htmlFor="floatingInput">
-                                <i className="bi bi-shield-lock-fill"> </i>
-                                Password
-                            </label>
+
+                            <Button
+                                variant="outline-secondary"
+                                className="show-password-btn"
+                                onClick={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
+                            </Button>
                         </div>
+
                     </Form.Group>
 
                     <Form.Group controlId="formBasicRepeatPassword">
-                        <div className="form-floating mb-3">
-                            <input
-                                type="password"
-                                className="form-control"
+                        <div className="form-pass-container">
+                            <FloatingFormInput
+                                type={showRepeatPassword ? "text" : "password"}
                                 id="repeatPassInput"
-                                placeholder="something safe"
-                                required={true}
+                                placeholder="repeat your password"
+                                isRequired={true}
                                 onChange={(e) => setRepeatPassword(e.target.value)}
+                                icon="bi bi-shield-lock-fill"
+                                labelText="Repeat Password"
                             />
-                            <label htmlFor="floatingInput">
-                                <i className="bi bi-shield-lock-fill"> </i>
-                                Repeat Password
-                            </label>
+
+                            <Button
+                                variant="outline-secondary"
+                                className="show-password-btn"
+                                onClick={() => setShowRepeatPassword(!showRepeatPassword)}>
+                                {showRepeatPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
+                            </Button>
                         </div>
                     </Form.Group>
 
