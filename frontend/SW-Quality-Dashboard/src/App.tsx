@@ -17,6 +17,7 @@ import useAuthenticationCheck from "./hooks/useAuthenticationCheck.ts";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "./interfaces/DecodedToken.ts";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
 
 function App() {
     const isVerifyPage = window.location.pathname.includes('verify');
@@ -62,6 +63,7 @@ function App() {
                             <Route path="login" element={<LoginPage />} />
                             <Route path="verify" element={<VerifyUserPage />} />
                             <Route path="submit-project" element={<SubmitProjectPage />} />
+                            <Route path='*' element={<NotFoundPage />} />
 
                             {/* Protected Routes */}
                             {isAuthenticated && (
