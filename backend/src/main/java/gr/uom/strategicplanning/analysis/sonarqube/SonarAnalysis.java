@@ -180,7 +180,7 @@ public class SonarAnalysis {
         boolean finished=false;
         try {
             URL url = new URL(sonarqubeUrl +"/api/ce/component?component=" + projectOwner + ":" + projectName);
-            
+
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
