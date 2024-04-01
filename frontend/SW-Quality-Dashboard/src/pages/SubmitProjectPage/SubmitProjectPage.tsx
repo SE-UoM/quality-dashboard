@@ -3,27 +3,25 @@ import SubmitProjectForm from "../../components/forms/SubmitProjectForm/SubmitPr
 import {useEffect} from "react";
 import useLocalStorage from "../../hooks/useLocalStorage.ts";
 import useAuthenticationCheck from "../../hooks/useAuthenticationCheck.ts";
+import {Spinner} from "react-bootstrap";
 
 function SubmitProjectPage() {
-    let [accessToken] = useLocalStorage<string>('accessToken', '');
-    let [isAuthenticated] = useAuthenticationCheck(accessToken)
+    const [accessToken] = useLocalStorage<string>('accessToken', '');
+    const [isAuthenticated, setIsAuthenticated] = useAuthenticationCheck(accessToken)
 
-    // If the user is not authenticated, redirect to the login page
+    // Redirect to login page if not authenticated
     useEffect(() => {
-        // Wait for the authentication check to finish
-        if (isAuthenticated === null)
-            return
-
-        if (!isAuthenticated || accessToken === "" || accessToken === null) {
-            window.location.href = '/login'
+        if (isAuthenticated === false || accessToken === "" || accessToken === null) {
+            window.location.href = '/login';
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, accessToken]);
 
 
     return (
         <>
             <div className="submit-project-page">
-                <SubmitProjectForm />
+                {!isAuthenticated && <Spinner animation="grow" />}
+                {isAuthenticated && <SubmitProjectForm/>}
             </div>
         </>
     )

@@ -21,6 +21,7 @@
     border-radius: 10em;
     transition: all 0.3s ease;
     opacity: 1;
+    margin-bottom: 1em;
 }
 
 .sign-up-form-submit-btn:hover {

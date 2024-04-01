@@ -6,6 +6,7 @@ import apiUrls from "../../../assets/data/api_urls.json";
 import { isProduction, acceptedUserMailDomains } from "../../../assets/data/config.json";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
+import {Divider} from "@chakra-ui/react";
 
 interface Organization {
     id: string;
@@ -151,10 +152,20 @@ function LoginForm() {
                         />
                     </Form.Group>
 
-                    <Button className="sign-up-form-submit-btn" type="submit" onClick={handleLogin}>
+                    <Button className="sign-up-form-submit-btn " type="submit" onClick={handleLogin}>
                         <i className="bi bi-arrow-right-circle-fill"> </i>
                         Login
                     </Button>
+
+                    <Divider />
+
+                    <Form.Group className="m-0" controlId="formBasicRegisterUrl">
+                        <Form.Label>
+                            <i className="bi bi-link-45deg"> </i>Don't have an account? <a href="/register" className={"sign-up-link-login-form"}> Sign up here.</a>
+                        </Form.Label>
+                    </Form.Group>
+
+
                 </Form>
             </div>
         </>

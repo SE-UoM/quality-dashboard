@@ -68,7 +68,7 @@ function VerifyUserPage() {
                     }}
                 >
                     {statusText}
-                    <Link to="/"
+                    <a href="/"
                         style={{
                             marginTop: '1em',
                             fontStyle: 'italic',
@@ -77,7 +77,7 @@ function VerifyUserPage() {
                         }}
                     >
                         Go to Home page
-                    </Link>
+                    </a>
                 </p>
 
             </div>

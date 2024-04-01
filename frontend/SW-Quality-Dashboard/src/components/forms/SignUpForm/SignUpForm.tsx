@@ -6,6 +6,7 @@ import apiUrls from "../../../assets/data/api_urls.json";
 import {isProduction, acceptedUserMailDomains} from "../../../assets/data/config.json";
 import AccountVerificationModal from "../../modals/AccountVerificationModal/AccountVerificationModal.tsx";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
+import {Divider} from "@chakra-ui/react";
 
 interface Organization {
     id: string;
@@ -224,6 +225,14 @@ function SignUpForm() {
                         <i className="bi bi-arrow-right-circle-fill"> </i>
                         Sign Up
                     </Button>
+
+                    <Divider/>
+
+                    <Form.Group className="m-0" controlId="formBasicRegisterUrl">
+                        <Form.Label>
+                            <i className="bi bi-link-45deg"> </i>Already have an account? <a href="/login" className={"sign-up-link-login-form"}> Login Instead.</a>
+                        </Form.Label>
+                    </Form.Group>
                 </Form>
             </div>
         </>
