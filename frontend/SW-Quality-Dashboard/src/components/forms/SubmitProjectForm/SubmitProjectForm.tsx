@@ -11,7 +11,14 @@ import LoadingBar from "../../ui/LoadingBar/LoadingBar.tsx";
 
 function SubmitProjectForm() {
     const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorAlertMessage, setErrorAlertMessage] = useState("");
+
+    const [showSimpleAlert, setShowSimpleAlert] = useState(false);
+    const [simpleAlertMessage, setSimpleAlertMessage] = useState("");
+    const [simpleAlertHeader, setSimpleAlertHeader] = useState("Info");
+    const [simpleAlertVariant, setSimpleAlertVariant] = useState("info");
+    const [simpleAlertIcon, setSimpleAlertIcon] = useState("bi bi-info-circle-fill");
+
     const [baseApiUrl, setBaseApiUrl] = useState(isProduction ? apiUrls.productionBackend : apiUrls.developmentBackend);
     const [githubUrl, setGithubUrl] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +36,7 @@ function SubmitProjectForm() {
 
         if (!isValidGithubUrl) {
             setError(true);
-            setErrorMessage("Please enter a valid Github URL");
+            setErrorAlertMessage("Please enter a valid Github URL");
             return;
         }
 
@@ -41,24 +48,38 @@ function SubmitProjectForm() {
         }
 
         setIsLoading(true);
+        setShowSimpleAlert(true);
+        setSimpleAlertIcon("bi bi-info-circle-fill");
+        setSimpleAlertVariant("info");
+        setSimpleAlertHeader("Submitting Project");
+        setSimpleAlertMessage("Please wait...")
 
         axios.post(apiUrl, {}, { headers: headers })
             .then((response) => {
-                console.log(response);
-                console.log("Project submitted successfully");
+                setShowSimpleAlert(true);
+                setSimpleAlertIcon("bi bi-check-circle-fill");
+                setSimpleAlertVariant("success");
+
+                let backendMessage = response.data.message;
+                setSimpleAlertHeader(backendMessage)
+                setSimpleAlertMessage("It will take a while to analyze the project depending on the size and the total commits.");
+
                 setIsLoading(false);
             })
             .catch((error) => {
                 console.log(error);
                 setError(true);
                 setIsLoading(false);
-                setErrorMessage("Error submitting project. Please try again.");
+                setSimpleAlertMessage("Error submitting project. Please try again.");
             });
 
-        // Hide the error message after 5 seconds
+        // Hide the alerts after 10 seconds
         setTimeout(() => {
             setError(false);
-            setErrorMessage("");
+            setErrorAlertMessage("");
+
+            setShowSimpleAlert(false);
+            setSimpleAlertMessage("");
         }, 5000);
     };
 
@@ -73,18 +94,22 @@ function SubmitProjectForm() {
                 {error &&
                     <Alert variant="danger">
                         <i className="bi bi-exclamation-triangle-fill"> </i>
-                        <strong> {errorMessage} </strong>
+                        <strong> {errorAlertMessage} </strong>
+                    </Alert>
+                }
+
+                {showSimpleAlert &&
+                    <Alert variant={simpleAlertVariant}>
+                        <Alert.Heading>
+                            <i className={simpleAlertIcon}> </i>
+                            {simpleAlertHeader}
+                        </Alert.Heading>
+                        <strong> {simpleAlertMessage} </strong>
                     </Alert>
                 }
 
                 {isLoading && (
-                    <div className="analyzing-progress">
-                        <Alert variant="info">
-                            <i className="bi bi-info-circle-fill"> </i>
-                            <strong> Analyzing Project... This might take a while! </strong>
-                        </Alert>
-                        <LoadingBar />
-                    </div>
+                    <LoadingBar />
                 )}
 
                 <Form className="sign-up-form-content">

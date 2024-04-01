@@ -8,9 +8,6 @@ function SubmitProjectPage() {
     let [accessToken] = useLocalStorage<string>('accessToken', '');
     let [isAuthenticated] = useAuthenticationCheck(accessToken)
 
-    console.log("accessToken: ", accessToken)
-    console.log("isAuthenticated: ", isAuthenticated)
-
     // If the user is not authenticated, redirect to the login page
     useEffect(() => {
         // Wait for the authentication check to finish
