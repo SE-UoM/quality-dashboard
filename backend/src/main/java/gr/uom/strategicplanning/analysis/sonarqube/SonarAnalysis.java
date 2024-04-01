@@ -37,14 +37,13 @@ public class SonarAnalysis {
     Integer LOC;
     String version;
     Logger logger = Logger.getLogger(SonarAnalysis.class.getName());
-
-    @Value("${sonar.sonarqube.url}")
     private String sonarqubeUrl;
 
-    public SonarAnalysis(Project project, String version) throws IOException, InterruptedException {
+    public SonarAnalysis(Project project, String version, String sonarqubeUrl) throws IOException, InterruptedException {
         this.projectName = project.getName();
         this.projectOwner = project.getOwnerName();
         this.version = version;
+        this.sonarqubeUrl = sonarqubeUrl;
 
         createSonarFile();
         makeSonarAnalysis();
@@ -129,6 +128,10 @@ public class SonarAnalysis {
         String errorLine;
         while ((errorLine = errorReader.readLine()) != null) {
             System.out.println(errorLine);
+            // Show what path could not be found
+            if (errorLine.contains("java.io.FileNotFoundException")) {
+                System.out.println("File not found: " + errorLine.substring(errorLine.indexOf("java.io.FileNotFoundException")));
+            }
         }
     }
 
@@ -177,6 +180,7 @@ public class SonarAnalysis {
         boolean finished=false;
         try {
             URL url = new URL(sonarqubeUrl +"/api/ce/component?component=" + projectOwner + ":" + projectName);
+            
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
             conn.connect();

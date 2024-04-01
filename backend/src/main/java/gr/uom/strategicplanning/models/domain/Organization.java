@@ -24,7 +24,7 @@ public class Organization {
     private String name;
     @OneToMany(mappedBy = "organization")
     private List<User> users = new ArrayList<>();
-    @OneToMany(mappedBy = "organization")
+    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
     private List<Project> projects = new ArrayList<>();
     @OneToOne
     private OrganizationAnalysis organizationAnalysis = new OrganizationAnalysis();

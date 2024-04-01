@@ -21,6 +21,10 @@ public class AnalysisService {
     private final CommitService commitService;
     private final ProjectService projectService;
     private SonarAnalysis sonarAnalysis;
+
+    @Value("${sonar.sonarqube.url}")
+    private String SONARQUBE_URL;
+
     @Autowired
     private LanguageService languageService;
 
@@ -53,7 +57,7 @@ public class AnalysisService {
             Commit commit = new Commit();
             commit.setHash(commitSHA);
 
-            sonarAnalysis = new SonarAnalysis(project, commitSHA);
+            sonarAnalysis = new SonarAnalysis(project, commitSHA, SONARQUBE_URL);
 
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
@@ -64,7 +68,7 @@ public class AnalysisService {
     private void analyzeMaster(Project project) throws Exception {
         githubApiClient.checkoutCommit(project, GithubApiClient.getDefaultBranchName(project));
 
-        sonarAnalysis = new SonarAnalysis(project, "master");
+        sonarAnalysis = new SonarAnalysis(project, "master", SONARQUBE_URL);
 
         // Wait a bit to make sure the analysis data is available
         Thread.sleep(5000);
@@ -117,7 +121,7 @@ public class AnalysisService {
 
         project.getCommits().clear();
 
-        analyzeCommits(project);
+        //analyzeCommits(project);
         analyzeMaster(project);
 
         extractAnalysisDataForProject(project);

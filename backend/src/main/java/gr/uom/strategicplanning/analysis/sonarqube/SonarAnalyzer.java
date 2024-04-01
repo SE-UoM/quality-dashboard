@@ -8,8 +8,7 @@ import gr.uom.strategicplanning.models.domain.Project;
  */
 public class SonarAnalyzer {
     private SonarScanner sonarScanner;
-    SonarApiClient sonarApiClient = new SonarApiClient();
-    
+
     /**
      * Constructs a new SonarAnalyzer instance.
      */

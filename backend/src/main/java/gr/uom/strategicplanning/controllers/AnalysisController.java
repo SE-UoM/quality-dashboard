@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/analysis")
@@ -49,9 +51,10 @@ public class AnalysisController {
         return url.matches(GITHUB_URL_PATTERN);
     }
 
+    @Async
     @PostMapping("/start")
-    public ResponseEntity<ResponseInterface> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
-        try{
+    public CompletableFuture<ResponseEntity<ResponseInterface>> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) {
+        try {
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
             String email = decodedJWT.getSubject();
             User user = userService.getUserByEmail(email);
@@ -65,55 +68,53 @@ public class AnalysisController {
                         "The url you provided is not a valid github url"
                 );
 
-                return ResponseEntity.badRequest().
-                        body(response);
+                return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(response));
             }
 
-            Project project = new Project();
-            project.setRepoUrl(githubUrl);
-            project.setOrganization(organization);
+            // Start the background task
+            CompletableFuture<Void> backgroundTask = CompletableFuture.runAsync(() -> {
+                try {
+                    Project project = new Project();
+                    project.setRepoUrl(githubUrl);
+                    project.setOrganization(organization);
 
-            Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
+                    Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
 
-            organization.addProject(project);
+                    organization.addProject(project);
 
-            if (projectOptional.isPresent()) project = projectOptional.get();
+                    if (projectOptional.isPresent()) project = projectOptional.get();
 
-            analysisService.fetchGithubData(project);
+                    analysisService.fetchGithubData(project);
 
-            if (!project.canBeAnalyzed()) {
-                project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+                    if (!project.canBeAnalyzed()) {
+                        project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+                    } else {
+                        analysisService.startAnalysis(project);
+                    }
 
-                ResponseInterface response = ResponseFactory.createResponse(
-                        HttpStatus.OK.value(),
-                        "Project has been added to the queue"
-                );
-                return ResponseEntity.ok(response);
-            }
+                    organizationAnalysisService.updateOrganizationAnalysis(organization);
+                    organizationService.saveOrganization(organization);
 
-            analysisService.startAnalysis(project);
+                    if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
-            organizationAnalysisService.updateOrganizationAnalysis(organization);
-            organizationService.saveOrganization(organization);
-
-            if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
-
+            // Return response immediately
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
-                    "Analysis started successfully"
+                    "Analysis started in the background"
             );
-
-            return ResponseEntity.ok(response);
+            return CompletableFuture.completedFuture(ResponseEntity.ok(response));
         } catch (Exception e) {
             ResponseInterface response = ResponseFactory.createErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     "Analysis failed",
                     e.getMessage()
             );
-
             e.printStackTrace();
-
-            return ResponseEntity.badRequest().body(response);
+            return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(response));
         }
     }
 }
