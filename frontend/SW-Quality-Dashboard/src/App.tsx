@@ -6,12 +6,12 @@ import RegisterPage from './pages/RegisterPage/RegisterPage.tsx'
 import AdminPanel from './pages/AdminPanel.tsx'
 import RegisterOrganisationPage from './pages/RegisterOrganisationPage.tsx'
 import AboutPage from './pages/AboutPage.tsx'
-import SubmitProjectPage from './pages/SubmitProjectPage.tsx'
+import SubmitProjectPage from './pages/SubmitProjectPage/SubmitProjectPage.tsx'
 import LoginPage from './pages/LoginPage/LoginPage.tsx'
 import VerifyUserPage from "./pages/VerifyUserPage.tsx"
 import HomePage from "./pages/HomePage/HomePage.tsx";
-import DashboardNavbar from "./components/DashboardNavbar/DashboardNavbar.tsx";
-import Footer from "./components/Footer/Footer.tsx";
+import DashboardNavbar from "./components/ui/DashboardNavbar/DashboardNavbar.tsx";
+import Footer from "./components/ui/Footer/Footer.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.ts";
 import useAuthenticationCheck from "./hooks/useAuthenticationCheck.ts";
 import {useEffect, useState} from "react";
@@ -60,13 +60,14 @@ function App() {
                             <Route path="register" element={<RegisterPage />} />
                             <Route path="login" element={<LoginPage />} />
                             <Route path="verify" element={<VerifyUserPage />} />
+                            <Route path="submit-project" element={<SubmitProjectPage />} />
 
                             {/* Protected Routes */}
                             {isAuthenticated && (
                                 <>
                                     <Route path="register-organisation" element={<RegisterOrganisationPage />} />
                                     <Route path="admin-panel" element={<AdminPanel />} />
-                                    <Route path="submit-project" element={<SubmitProjectPage />} />
+
                                 </>
                             )}
                         </Route>

@@ -4,7 +4,6 @@ const useLocalStorage = <T>(key: string, initialValue: T): [T, React.Dispatch<Re
     const [value, setValue] = useState<T>(() => {
         // Retrieve value from local storage
         const storedValue = localStorage.getItem(key);
-        console.log("Retrieved value from local storage:", storedValue);
         return storedValue;
     });
 

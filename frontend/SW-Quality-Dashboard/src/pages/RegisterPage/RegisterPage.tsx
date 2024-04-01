@@ -1,4 +1,4 @@
-import SignUpForm from "../../components/SignUpForm/SignUpForm.tsx";
+import SignUpForm from "../../components/forms/SignUpForm/SignUpForm.tsx";
 import './RegisterPage.css';
 
 

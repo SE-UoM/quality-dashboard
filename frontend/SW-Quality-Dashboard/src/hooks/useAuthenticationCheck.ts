@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const useAuthenticationCheck = (accessToken: string | null): [boolean, React.Dispatch<React.SetStateAction<boolean>>] => {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+const useAuthenticationCheck = (accessToken: string | null): [boolean | null, React.Dispatch<React.SetStateAction<boolean | null>>] => {
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,6 +18,8 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean, React.Dis
                 };
 
                 const response = await axios.get('http://localhost:8080/api/organizations', { headers });
+
+                console.log('response', response)
 
                 if (response.status === 200) {
                     setIsAuthenticated(true);

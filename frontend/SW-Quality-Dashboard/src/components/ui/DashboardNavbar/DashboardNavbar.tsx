@@ -1,4 +1,4 @@
-import logo from '../../assets/dashboard_logo_transparent.png'
+import logo from '../../../assets/dashboard_logo_transparent.png'
 import './DashboardNavbar.css'
 import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 

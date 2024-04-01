@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import {Form, Button, Alert} from "react-bootstrap";
 import './SignUpForm.css';
-import apiUrls from "../../assets/data/api_urls.json";
-import {isProduction, acceptedUserMailDomains} from "../../assets/data/config.json";
-import AccountVerificationModal from "../modals/AccountVerificationModal/AccountVerificationModal.tsx";
+import apiUrls from "../../../assets/data/api_urls.json";
+import {isProduction, acceptedUserMailDomains} from "../../../assets/data/config.json";
+import AccountVerificationModal from "../../modals/AccountVerificationModal/AccountVerificationModal.tsx";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 
 interface Organization {
