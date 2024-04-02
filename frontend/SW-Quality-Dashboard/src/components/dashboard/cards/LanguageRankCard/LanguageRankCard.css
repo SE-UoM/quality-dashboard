@@ -1,0 +1,70 @@
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+}
+
+.dashboard-card#languageRank {
+    grid-area: languageRank;
+}
+
+.dashboard-card#languageRank h2 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.language-rank-container {
+    display: flex;
+    flex-direction: row;
+
+    height: 100%;
+    width: 100%;
+}
+
+.language-rank {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 1em;
+}
+
+.language-rank-line {
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    padding: 1em;
+}
+
+.language-rank-line img {
+    height: 5em;
+}
+
+.lang-name-rank {
+    font-size: 1.7em;
+    margin: 0;
+    font-weight: bold;
+}
+
+.language-rank-line#first {
+    background-color: var(--gold);
+    height: 80%;
+}
+
+.language-rank-line#second {
+    background-color: var(--silver);
+    height: 50%;
+}
+
+.language-rank-line#third {
+    background-color: var(--bronze);
+    height: 35%;
+}

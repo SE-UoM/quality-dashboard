@@ -48,10 +48,17 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
 
                                     <NavDropdown title={<i className="bi bi-rocket-takeoff-fill" style={{fontStyle: "initial"}}> My Actions</i>} id="actions-dropdown">
                                         {isAdmin &&
-                                            <NavDropdown.Item href="/register-organisation" color={"var(--org-color-primary)"}>
-                                                <i className="bi bi-building-fill-add"> </i>
-                                                Create an Organization
-                                            </NavDropdown.Item>
+                                            <>
+                                                <NavDropdown.Item href="/register-organisation" color={"var(--org-color-primary)"}>
+                                                    <i className="bi bi-building-fill-add"> </i>
+                                                    Create an Organization
+                                                </NavDropdown.Item>
+
+                                                <NavDropdown.Item href="/admin" color={"var(--org-color-primary)"}>
+                                                    <i className="bi bi-gear-fill"> </i>
+                                                    Admin Panel
+                                                </NavDropdown.Item>
+                                            </>
                                         }
 
                                         <NavDropdown.Item href="/submit-project" color={"var(--org-color-primary)"}>

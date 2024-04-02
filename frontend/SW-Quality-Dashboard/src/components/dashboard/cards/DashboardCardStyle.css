@@ -1,0 +1,6 @@
+.dashboard-card {
+    background-color: white;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+    border-radius: 1em;
+    color: var(--text-primary);
+}
