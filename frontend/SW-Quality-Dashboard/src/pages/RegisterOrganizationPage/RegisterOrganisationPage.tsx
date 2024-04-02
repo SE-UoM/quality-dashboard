@@ -9,6 +9,7 @@ import {
     Button,
     Text,
 } from '@chakra-ui/react';
+import './RegisterOrganizationPage.css';
 
 const locations = ['Athens', 'Thessaloniki', 'Heraklion', 'Patras', 'Larissa'];
 

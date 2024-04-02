@@ -1,11 +1,12 @@
 import { Flex, Grid, GridItem } from '@chakra-ui/react'
-import ShowTotalCommits from '../features/MainDashboard/ShowTotalCommits'
-import ShowTotalFiles from '../features/MainDashboard/ShowTotalFiles'
-import ShowTotalProjects from '../features/MainDashboard/ShowTotalProjects'
-import ShowTotalDevs from '../features/MainDashboard/ShowTotalDevs'
-import ShowTotalLoC from '../features/MainDashboard/ShowTotalLoC'
-import ShowTopLanguages from '../features/MainDashboard/ShowTopLanguages'
-import ShowAllLanguages from '../features/MainDashboard/ShowAllLanguages'
+import ShowTotalCommits from '../../features/MainDashboard/ShowTotalCommits.tsx'
+import ShowTotalFiles from '../../features/MainDashboard/ShowTotalFiles.tsx'
+import ShowTotalProjects from '../../features/MainDashboard/ShowTotalProjects.tsx'
+import ShowTotalDevs from '../../features/MainDashboard/ShowTotalDevs.tsx'
+import ShowTotalLoC from '../../features/MainDashboard/ShowTotalLoC.tsx'
+import ShowTopLanguages from '../../features/MainDashboard/ShowTopLanguages.tsx'
+import ShowAllLanguages from '../../features/MainDashboard/ShowAllLanguages.tsx'
+import './DashboardPage.css'
 
 const layoutConfig = [
     {
