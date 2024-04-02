@@ -69,7 +69,7 @@ function App() {
                             {isAuthenticated && (
                                 <>
                                     <Route path="register-organisation" element={<RegisterOrganisationPage />} />
-                                    <Route path="admin-panel" element={<AdminPanel />} />
+                                    <Route path="admin" element={<AdminPanel />} />
 
                                 </>
                             )}
