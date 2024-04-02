@@ -2,9 +2,9 @@
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-template-areas:
-        "languageRank languageRank space space totalProjects"
-        "languageRank languageRank space space totalLanguages"
-        "languageRank languageRank space space totalDevelopers"
+        "languageRank languageRank languageDistribution languageDistribution totalProjects"
+        "languageRank languageRank languageDistribution languageDistribution totalLanguages"
+        "languageRank languageRank languageDistribution languageDistribution totalDevelopers"
         "languageRank languageRank totalContributions totalLinesOfCode totalFiles"
         "footerCard footerCard footerCard footerCard footerCard"
 }

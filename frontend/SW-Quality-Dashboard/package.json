@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.7.1",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.14",
+    "@mui/x-charts": "^7.1.0",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",

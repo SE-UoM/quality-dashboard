@@ -10,58 +10,109 @@ import totalContributionsIcon from "../../../../assets/svg/dashboardIcons/contri
 
 import IconCard from "../../cards/IconCard/IconCard.tsx";
 import FooterCard from "../../cards/FooterCard/FooterCard.tsx";
+import LanguageDistributionCard from "../../cards/LanguageDistributionCard/LanguageDistributionCard.tsx";
+import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
+import {useEffect, useState} from "react";
+import apiUrls from "../../../../assets/data/api_urls.json";
+import axios from "axios";
+import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 
 function DashboardSlideOne() {
+    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+    const [totalProjects, setTotalProjects] = useState(0);
+    const [totalLanguages, setTotalLanguages] = useState(0);
+    const [totalDevelopers, setTotalDevelopers] = useState(0);
+    const [totalFiles, setTotalFiles] = useState(0);
+    const [totalContributions, setTotalContributions] = useState(0);
+    const [totalLoc, setTotalLoc] = useState(0);
+
+    const [error, setError] = useState(false);
+    const [errorTitle, setErrorTitle] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    // Call the API to get the general statistics
+    useEffect(() => {
+        let url = apiUrls.developmentBackend + apiUrls.routes.examples.generalStats;
+        let headers = {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        }
+
+        axios.get(url, { headers: headers })
+            .then((response) => {
+                console.log("General stats fetched successfully");
+                let data = response.data;
+                setTotalProjects(data.totalProjects);
+                setTotalLanguages(data.totalLanguages);
+                setTotalDevelopers(data.totalDevs);
+                setTotalFiles(data.totalFiles);
+                setTotalContributions(data.totalCommits);
+                setTotalLoc(data.totalLinesOfCode);
+            })
+            .catch((error) => {
+                console.log("Error fetching general stats: ", error);
+                setError(true);
+                setErrorTitle("Error fetching general statistics");
+                setErrorMessage("An error occurred while fetching the general statistics of the organization. Please try again later.");
+            }
+        );
+    }, [totalProjects, totalLanguages, totalDevelopers, totalFiles, totalContributions, totalLoc]);
+
+
     return (
         <>
+            {error &&
+                <ErrorModal
+                    modalTitle={errorTitle}
+                    modalAlertMessage={errorMessage}
+                />
+            }
             <div className="dashboard-slide" id="slide1">
                 <LanguageRankCard />
 
                 <IconCard
                     icon={totalProjectsIcon}
-                    headerText="50"
+                    headerText={totalProjects}
                     caption="Projects"
                     gridAreaName="totalProjects"
                 />
 
                 <IconCard
                     icon={totalLanguagesIcon}
-                    headerText="50"
+                    headerText={totalLanguages}
                     caption="Languages"
                     gridAreaName="totalLanguages"
                 />
 
                 <IconCard
                     icon={totalDevelopersIcon}
-                    headerText="50"
+                    headerText={totalDevelopers}
                     caption="Developers"
                     gridAreaName="totalDevelopers"
                 />
 
                 <IconCard
                     icon={totalFilesIcon}
-                    headerText="50"
+                    headerText={totalFiles}
                     caption="Files"
                     gridAreaName="totalFiles"
                 />
 
                 <IconCard
                     icon={totalContributionsIcon}
-                    headerText="5000"
+                    headerText={totalContributions}
                     caption="Contributions"
                     gridAreaName="totalContributions"
                 />
 
                 <IconCard
                     icon={totalLocIcon}
-                    headerText="5000"
+                    headerText={totalLoc}
                     caption="Lines of Code"
                     gridAreaName="totalLinesOfCode"
                 />
 
-                <div className="dashboard-card" style={{gridArea: "space"}}>
-                    A Graph should go here
-                </div>
+                <LanguageDistributionCard />
 
                 <FooterCard
                     gridAreaName="footerCard"

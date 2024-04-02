@@ -1,0 +1,30 @@
+.dashboard-card#languageDistribution {
+    grid-area: languageDistribution;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.language-distribution-container {
+    width: 100%;
+    position: relative;
+    display: inline-block; /* Ensures the container doesn't collapse */
+}
+
+.language-distribution-container h2 {
+    position: absolute;
+    top: 53%; /* Adjust as needed */
+    left: 27%; /* Adjust as needed */
+    transform: translate(-50%, -50%); /* Centers the h2 within the container */
+    z-index: 1; /* Ensures the h2 appears above */
+    color: var(--text-primary);
+    font-size: 7em;
+    font-weight: bolder;
+}
+
+.lang-distribution-chart {
+    height: 20em;
+    width: 100%;
+}

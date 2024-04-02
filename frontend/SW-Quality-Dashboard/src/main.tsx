@@ -1,10 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
+import {createTheme, ThemeProvider} from "@mui/material";
+
+const theme = createTheme({
+    palette: {
+        // Define your palette colors here
+    },
+    // Other theme properties
+});
 
 ReactDOM.render(
-    <React.StrictMode>
+    <ThemeProvider theme={theme}>
       <App />
-    </React.StrictMode>,
+    </ThemeProvider>,
     document.getElementById('root')
 )

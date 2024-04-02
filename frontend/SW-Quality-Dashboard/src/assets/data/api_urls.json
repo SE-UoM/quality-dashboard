@@ -7,6 +7,12 @@
     "getAllOrganizationNames": "/api/organizations/names",
     "createUser": "/api/user/register",
     "resendUserVerification": "/api/user/verify/resend",
-    "startAnalysis": "/api/analysis/start"
+    "startAnalysis": "/api/analysis/start",
+
+    "examples": {
+      "languageDistribution": "/api/examples/language-distribution",
+      "generalStats": "/api/examples/general-stats",
+      "topLanguages": "/api/examples/top-languages"
+    }
   }
 }
