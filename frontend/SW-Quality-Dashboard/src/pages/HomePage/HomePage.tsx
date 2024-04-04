@@ -9,36 +9,6 @@ function HomePage() {
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAuthenticated, setIsAuthenticated] = useAuthenticationCheck(accessToken)
 
-    // Call a random API to check if the user is authenticated
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (!accessToken) {
-                    setIsAuthenticated(false);
-                    return;
-                }
-
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
-                };
-
-                const response = await axios.get('http://localhost:8080/api/organizations', { headers });
-
-                if (response.status === 200) {
-                    setIsAuthenticated(true);
-                } else {
-                    setIsAuthenticated(false);
-                }
-            } catch (error) {
-                setIsAuthenticated(false);
-                console.error('Error:', error);
-            }
-        };
-
-        fetchData();
-    }, [accessToken]);
-
     return (
         <div className="home-page">
             <h1>Welcome to UoM Dashboard</h1>
