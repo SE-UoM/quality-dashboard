@@ -1,0 +1,8 @@
+.dashboard-slide#slide3 {
+    grid-template-areas:
+        "bestProjects wordcloud wordcloud wordcloud topCommiters"
+        "bestProjects wordcloud wordcloud wordcloud topCommiters"
+        "bestProjects wordcloud wordcloud wordcloud topCommiters"
+        "bestProjects submittedProjects submittedProjects submittedProjects topCommiters"
+        "footerCard footerCard footerCard footerCard footerCard";
+}

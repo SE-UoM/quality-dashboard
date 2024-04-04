@@ -4,6 +4,7 @@ import CollabsibleNavbar from "../../components/ui/CollabsibleNavbar/Collabsible
 import {useLocation} from "react-router-dom";
 import {useState} from "react";
 import DashboardSlideTwo from "../../components/dashboard/slides/DashboardSlideTwo/DashboardSlideTwo.tsx";
+import DashboardSlideThree from "../../components/dashboard/slides/DashboardSlideThree/DashboardSlideThree.tsx";
 
 function DashboardPage({isAuthenticated, isAdmin}) {
     const location = useLocation()
@@ -33,7 +34,7 @@ function DashboardPage({isAuthenticated, isAdmin}) {
                 }
 
                 {currentSlide === 3 &&
-                    <h1>Slide 3</h1>
+                    <DashboardSlideThree />
                 }
 
                 {currentSlide === 4 &&

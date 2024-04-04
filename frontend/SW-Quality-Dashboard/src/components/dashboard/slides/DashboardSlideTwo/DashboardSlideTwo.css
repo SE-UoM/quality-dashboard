@@ -1,6 +1,4 @@
 .dashboard-slide#slide2 {
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
     grid-template-areas:
         "codeSmellDistribution codeSmellDistribution techDebtStats techDebtStats techDebtStats"
         "codeSmellDistribution codeSmellDistribution techDebtStats techDebtStats techDebtStats"
