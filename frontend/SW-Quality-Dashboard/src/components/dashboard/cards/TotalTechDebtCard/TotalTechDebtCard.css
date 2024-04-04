@@ -1,0 +1,26 @@
+.dashboard-card#totalTD {
+    grid-area: techDebt;
+}
+
+.dashboard-card#totalTD {
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+    align-items: center;
+    justify-items: center;
+}
+
+.total-td-card-header {
+    font-size: 1em;
+    color: var(--text-primary);
+    scale: 1.3;
+}
+
+.td-value {
+    font-size: 4em;
+    font-weight: bold;
+}
+
+.td-value i {
+    font-size: 0.5em;
+    font-weight: normal;
+}

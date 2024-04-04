@@ -6,6 +6,7 @@
     "resendUserVerification": "/api/user/verify/resend",
     "startAnalysis": "/api/analysis/start?github_url=${githubUrl}",
     "getAllOrganizations": "/api/organizations",
+    "getTotalTD": "/api/organizations/:orgId/total-tech-debt",
 
     "verifyUser": "/api/user/verify?token=${token}&uid=${uid}",
 

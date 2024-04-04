@@ -8,6 +8,7 @@ import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 import CodeSmellDistributionCard from "../../cards/CodeSmellDistributionCard/CodeSmellDistributionCard.tsx";
+import TotalTechDebtCard from "../../cards/TotalTechDebtCard/TotalTechDebtCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -31,12 +32,7 @@ function DashboardSlideTwo() {
             }
             <div className="dashboard-slide" id="slide2">
                 <CodeSmellDistributionCard />
-
-                <div className="dashboard-card"
-                     style={{gridArea: "techDebt"}}
-                >
-                    <h1>Tech Debt</h1>
-                </div>
+                <TotalTechDebtCard />
 
                 <div className="dashboard-card"
                      style={{gridArea: "techDebtStats"}}
