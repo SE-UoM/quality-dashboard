@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { PieChart } from '@mui/x-charts';
-import './LanguageDistributionCard.css';
+import './CodeSmellDistributionCard.css';
 import apiRoutes from '../../../../assets/data/api_urls.json';
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import * as url from "url";
@@ -8,21 +8,20 @@ import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 
-const colors = [
-    /* Language Distribution */
-    "#b5da54ff",
-    "#91d2fbff",
-    "#d998cbff",
-    "#5bb9e6",
-    "#f7a35cff"
-];
+const colors = {
+    "MINOR": "#67B279",
+    "MAJOR": "#FDD835",
+    "CRITICAL": "#FF7F50",
+    "BLOCKER": "#FF5252",
+    "INFO": "#58BBFB"
+}
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-function LanguageDistributionCard() {
+function CodeSmellDistributionCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-    const [totalLanguages, setTotalLanguages] = React.useState(0);
-    const [languageDistribution, setLanguageDistribution] = React.useState([]);
+    const [totalCodeSmells, setTotalCodeSmells] = React.useState(0);
+    const [codeSmellDistribution, setCodeSmellDistribution] = React.useState([]);
 
     const [error, setError] = React.useState(false);
     const [errorTitle, setErrorTitle] = React.useState("");
@@ -30,13 +29,7 @@ function LanguageDistributionCard() {
 
     // Call the API to get the language distribution data
     useEffect(() => {
-        let url = baseApiUrl + apiRoutes.routes.dashboard.languageDistribution;
-
-        // Decode the access token to get the organization ID
-        let organizationId = jwtDecode(accessToken).organizationId;
-
-        // Replace ":organizationId" with the actual organization ID
-        url = url.replace(":organizationId", organizationId);
+        let url = baseApiUrl + '/api/examples/code-smells-distribution';
 
         let headers = {
             'Authorization': 'Bearer ' + accessToken,
@@ -44,8 +37,9 @@ function LanguageDistributionCard() {
         }
         axios.get(url, { headers: headers })
             .then(response => {
-                setTotalLanguages(response.data.totalLanguages);
-                setLanguageDistribution(response.data.languageDistribution);
+                setTotalCodeSmells(response.data.totalCodeSmells);
+                setCodeSmellDistribution(response.data.codeSmellsDistribution);
+
             })
             .catch(error => {
                 console.log("Error fetching language distribution data: ", error);
@@ -56,27 +50,12 @@ function LanguageDistributionCard() {
     }, [accessToken]);
 
 
-    // Sort the language distribution by linesOfCode in descending order
-    const sortedLanguages = languageDistribution.sort((a, b) => b.linesOfCode - a.linesOfCode);
-
-    // Extract the first four languages and sum linesOfCode for the rest
-    let topFourLanguages = sortedLanguages.slice(0, 4);
-    let otherLanguagesTotalLines = sortedLanguages.slice(4).reduce((total, language) => total + language.linesOfCode, 0);
-
-    // Add an "Other" label with the total lines of code for other languages
-    topFourLanguages.push({
-        id: 'other',
-        name: 'Other',
-        imageUrl: null,
-        linesOfCode: otherLanguagesTotalLines
-    });
-
-    // Map data to format required by PieChart
-    const pieChartData = topFourLanguages.map(language => ({
-        id: language.id,
-        label: language.name,
-        value: language.linesOfCode,
-        color: colors[topFourLanguages.indexOf(language)]
+    // Format data for PieChart
+    const pieChartData = Object.entries(codeSmellDistribution).map(([key, value]) => ({
+        key: key,
+        value: value,
+        label: key,
+        color: colors[key]
     }));
 
     return (
@@ -87,14 +66,14 @@ function LanguageDistributionCard() {
                     modalAlertMessage={errorMessage}
                 />
             }
-            <div className="dashboard-card" id="languageDistribution">
-                <div className="language-distribution-container">
+            <div className="dashboard-card" id="codeSmellDistribution">
+                <div className="code-smell-distribution-container">
                     <h3>
                         <i className="bi bi-pie-chart-fill"> </i>
-                        Language Distribution
+                        Code Smell Distribution
                     </h3>
-                    <div className="lang-distribution-chart">
-                        <h2>{totalLanguages}</h2>
+                    <div className="code-smells-distribution-chart">
+                        <h2>{totalCodeSmells}</h2>
 
                         <PieChart
                             series={[{
@@ -114,4 +93,4 @@ function LanguageDistributionCard() {
     )
 }
 
-export default LanguageDistributionCard;
+export default CodeSmellDistributionCard;

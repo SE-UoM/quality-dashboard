@@ -7,6 +7,7 @@ import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
+import CodeSmellDistributionCard from "../../cards/CodeSmellDistributionCard/CodeSmellDistributionCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -29,11 +30,7 @@ function DashboardSlideTwo() {
                 />
             }
             <div className="dashboard-slide" id="slide2">
-                <div className="dashboard-card"
-                    style={{gridArea: "codeSmellDistribution"}}
-                >
-                    <h1>CodeSmells</h1>
-                </div>
+                <CodeSmellDistributionCard />
 
                 <div className="dashboard-card"
                      style={{gridArea: "techDebt"}}
