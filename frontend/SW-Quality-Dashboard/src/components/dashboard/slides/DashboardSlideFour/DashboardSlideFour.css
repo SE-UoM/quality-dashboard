@@ -1,0 +1,9 @@
+.dashboard-slide#slide4 {
+    grid-template-areas:
+        "mostActiveDev mostActiveDev commitGraph commitGraph commitGraph"
+        "mostActiveProj mostActiveProj commitGraph commitGraph commitGraph"
+        "mostStarredProj mostStarredProj mostForked mostForked developersSlides"
+        "mostStarredProj mostStarredProj mostForked mostForked developersSlides"
+
+        "footerCard footerCard footerCard footerCard footerCard";
+}

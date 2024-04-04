@@ -5,6 +5,7 @@ import {useLocation} from "react-router-dom";
 import {useState} from "react";
 import DashboardSlideTwo from "../../components/dashboard/slides/DashboardSlideTwo/DashboardSlideTwo.tsx";
 import DashboardSlideThree from "../../components/dashboard/slides/DashboardSlideThree/DashboardSlideThree.tsx";
+import DashboardSlideFour from "../../components/dashboard/slides/DashboardSlideFour/DashboardSlideFour.tsx";
 
 function DashboardPage({isAuthenticated, isAdmin}) {
     const location = useLocation()
@@ -38,7 +39,7 @@ function DashboardPage({isAuthenticated, isAdmin}) {
                 }
 
                 {currentSlide === 4 &&
-                    <h1>Slide 4</h1>
+                    <DashboardSlideFour />
                 }
             </div>
         </>
