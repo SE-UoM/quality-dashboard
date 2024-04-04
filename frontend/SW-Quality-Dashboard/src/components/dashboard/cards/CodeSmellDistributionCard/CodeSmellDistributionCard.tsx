@@ -29,7 +29,12 @@ function CodeSmellDistributionCard() {
 
     // Call the API to get the language distribution data
     useEffect(() => {
-        let url = baseApiUrl + '/api/examples/code-smells-distribution';
+        let url = baseApiUrl + apiRoutes.routes.dashboard.codeSmellDistribution;
+
+        // Get the User Organization from the JWT Token
+        let userOrganization = jwtDecode(accessToken).organizationId;
+
+        url = url.replace(":organizationId", userOrganization);
 
         let headers = {
             'Authorization': 'Bearer ' + accessToken,
