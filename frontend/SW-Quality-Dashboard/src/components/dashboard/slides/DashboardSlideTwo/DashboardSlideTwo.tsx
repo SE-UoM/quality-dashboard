@@ -9,6 +9,7 @@ import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 import CodeSmellDistributionCard from "../../cards/CodeSmellDistributionCard/CodeSmellDistributionCard.tsx";
 import TotalTechDebtCard from "../../cards/TotalTechDebtCard/TotalTechDebtCard.tsx";
+import TechDebtStatsCard from "../../cards/TechDebtStatsCard/TechDebtStatsCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -18,9 +19,6 @@ function DashboardSlideTwo() {
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-
-    // Call the API to get the general statistics
-
 
     return (
         <>
@@ -33,12 +31,7 @@ function DashboardSlideTwo() {
             <div className="dashboard-slide" id="slide2">
                 <CodeSmellDistributionCard />
                 <TotalTechDebtCard />
-
-                <div className="dashboard-card"
-                     style={{gridArea: "techDebtStats"}}
-                >
-                    <h1>Tech Debt Stats</h1>
-                </div>
+                <TechDebtStatsCard />
 
                 <div className="dashboard-card"
                      style={{gridArea: "bestPractices"}}
