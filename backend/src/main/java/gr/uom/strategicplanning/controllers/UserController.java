@@ -93,9 +93,10 @@ public class UserController {
             List<String> roles = stream(user.getRoles().split(",")).collect(Collectors.toList());
             String name = user.getName();
             String id = user.getId().toString();
+            Long organizationId = user.getOrganization().getId();
 
             // Generate tokens
-            String accessToken = TokenUtil.generateAccessToken(email, request.getRequestURL(), id, name, roles);
+            String accessToken = TokenUtil.generateAccessToken(email, request.getRequestURL(), id, name, organizationId, roles);
             String refreshToken = TokenUtil.generateRefreshToken(email, request.getRequestURL());
 
             Map<String,String> tokens= new HashMap<>();

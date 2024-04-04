@@ -31,6 +31,13 @@ public class SecurityUser implements UserDetails {
         return "";
     }
 
+    public Long getOrganizationId() {
+        if(user!=null) {
+            return user.getOrganization().getId();
+        }
+        return null;
+    }
+
     /**
      * The username is actually the email in our case
      * @return
