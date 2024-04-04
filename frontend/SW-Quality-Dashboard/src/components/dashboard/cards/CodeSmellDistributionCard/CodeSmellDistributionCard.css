@@ -13,6 +13,10 @@
     display: inline-block; /* Ensures the container doesn't collapse */
 }
 
+.code-smell-distribution-container h3 {
+    margin-top: 0.5em;
+}
+
 .code-smell-distribution-container h2 {
     position: absolute;
     top: 54%; /* Adjust as needed */
