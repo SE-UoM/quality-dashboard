@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import apiRoutes from '../assets/data/api_urls.json';
+
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 const useAuthenticationCheck = (accessToken: string | null): [boolean | null, React.Dispatch<React.SetStateAction<boolean | null>>] => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -12,12 +15,14 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
                     return;
                 }
 
-                const headers = {
+                const apiURL = baseApiUrl + apiRoutes.routes.getAllOrganizations;
+
+                let headers = {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
+                    'Authorization': 'Bearer ' + accessToken
                 };
 
-                const response = await axios.get('http://localhost:8080/api/organizations', { headers });
+                const response = await axios.get(apiURL, { headers });
 
                 if (response.status === 200) {
                     setIsAuthenticated(true);
@@ -25,8 +30,13 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
                     setIsAuthenticated(false);
                 }
             } catch (error) {
+                let status = error.response.status;
                 setIsAuthenticated(false);
-                console.error('Error:', error);
+
+                if (status === 403)
+                    console.log("The user is not authenticated.");
+                else
+                    console.log("Authentication Check Failed due to an unexpected error. " + error);
             }
         };
 
