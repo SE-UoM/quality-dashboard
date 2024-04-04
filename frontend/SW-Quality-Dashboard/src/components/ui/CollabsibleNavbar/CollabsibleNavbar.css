@@ -1,8 +1,9 @@
 .navbar-close-button {
-    display: flex;
+    display: grid;
     justify-content: center;
     align-items: center;
-    height: 1.5em;
+    grid-template-columns: 1fr 5fr 1fr;
+    height: 1.8em;
     background-color: var(--org-color-primary);
 }
 
