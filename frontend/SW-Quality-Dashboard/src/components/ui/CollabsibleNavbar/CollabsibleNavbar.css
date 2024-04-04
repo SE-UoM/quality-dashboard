@@ -1,0 +1,37 @@
+.navbar-close-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1.5em;
+    background-color: var(--org-color-primary);
+}
+
+.navbar-close-button button  {
+    min-height: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.navbar-close-button button:hover {
+    outline: none;
+    background: none;
+}
+
+.navbar-close-button button:hover i {
+    opacity: 0.9;
+}
+
+.navbar-close-button button:focus,
+.navbar-close-button button:active
+{
+    outline: none !important;
+    background: none !important;
+}
+
+.navbar-close-button button i {
+    height: 0.5em;
+    font-size: 2em;
+    color: white;
+}
+

@@ -18,12 +18,12 @@ import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "./interfaces/DecodedToken.ts";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
-import useBackend from "./hooks/useBackEnd.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function App() {
     const isVerifyPage = window.location.pathname.includes('verify');
+
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAuthenticated] = useAuthenticationCheck(accessToken)
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
@@ -49,12 +49,13 @@ function App() {
     return (
         <>
             <ChakraProvider>
-                {!isVerifyPage &&
+                {!isVerifyPage || !isDashboardPage &&
                     <DashboardNavbar
                         isAuthenticated={isAuthenticated}
                         isAdmin={isAdmin}
                     />
                 }
+
                 <BrowserRouter>
                     <Routes>
                         {/* Public Routes */}
@@ -80,7 +81,7 @@ function App() {
                     </Routes>
                 </BrowserRouter>
 
-                {!isVerifyPage && <Footer />}
+                {!isVerifyPage || !isDashboardPage && <Footer />}
             </ChakraProvider>
         </>
     )
