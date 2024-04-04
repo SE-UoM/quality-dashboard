@@ -2,11 +2,10 @@ import {Alert, Button, Modal} from "react-bootstrap";
 import {useState} from "react";
 import axios from "axios";
 import apiUrls from "../../../assets/data/api_urls.json";
-import {isProduction} from "../../../assets/data/config.json"
+
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
 function AccountVerificationModal({show, setShow, uid}) {
-    const [baseApiUrl, setBaseApiUrl] = useState(isProduction ? apiUrls.productionBackend : apiUrls.developmentBackend);
-
     const [resendBtnText, setResendBtnText] = useState("Resend Verification Email");
     const [resendBtnDisabled, setResendBtnDisabled] = useState(false);
     const [resendSuccess, setResendSuccess] = useState(false);
