@@ -6,20 +6,25 @@
     "resendUserVerification": "/api/user/verify/resend",
     "startAnalysis": "/api/analysis/start?github_url=${githubUrl}",
     "getAllOrganizations": "/api/organizations",
-    "getTotalTD": "/api/organizations/:orgId/total-tech-debt",
 
     "verifyUser": "/api/user/verify?token=${token}&uid=${uid}",
 
     "examples": {
       "languageDistribution": "/api/examples/language-distribution",
       "generalStats": "/api/examples/general-stats",
-      "topLanguages": "/api/examples/top-languages"
+      "topLanguages": "/api/examples/top-languages",
+      "codeSmellDistribution": "/api/examples/code-smells-distribution",
+      "getTotalTD": "/api/examples/total-tech-debt",
+      "getTdStats": "/api/examples/tech-debt-statistics"
     },
 
     "dashboard": {
       "generalStats": "/api/organizations/:organizationId/general-stats",
       "languageDistribution": "/api/organizations/:organizationId/language-distribution",
-      "topLanguages": "/api/organizations/:organizationId/top-languages"
+      "topLanguages": "/api/organizations/:organizationId/top-languages",
+      "codeSmellDistribution": "/api/organizations/:organizationId/code-smells-distribution",
+      "getTotalTD": "/api/organizations/:orgId/total-tech-debt",
+      "getTdStats": "/api/organizations/:orgId/tech-debt-statistics"
     }
   }
 }

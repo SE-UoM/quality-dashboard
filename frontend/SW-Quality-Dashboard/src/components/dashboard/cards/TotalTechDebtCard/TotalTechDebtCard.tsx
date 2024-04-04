@@ -17,7 +17,7 @@ function TotalTechDebtCard() {
 
     // Call the API to get the total technical debt
     useEffect(() => {
-        let url = baseApiUrl + apiUrls.routes.getTotalTD;
+        let url = baseApiUrl + apiUrls.routes.dashboard.getTotalTD;
 
         // Extract the organization ID from the access token
         let decodedToken = jwtDecode(accessToken);
@@ -33,6 +33,7 @@ function TotalTechDebtCard() {
         axios.get(url, { headers: headers })
             .then(response => {
                 console.log(response.data);
+                setTotalTechDebt(response.data.totalTechDebtCost);
             })
             .catch(error => {
                 console.log("Error fetching total technical debt data: ", error);
