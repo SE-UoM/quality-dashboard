@@ -1,18 +1,24 @@
 {
-  "productionBackend": "http://195.251.210.248:8088",
-  "developmentBackend": "http://localhost:8080",
-
   "routes": {
     "login": "/login",
     "getAllOrganizationNames": "/api/organizations/names",
     "createUser": "/api/user/register",
     "resendUserVerification": "/api/user/verify/resend",
-    "startAnalysis": "/api/analysis/start",
+    "startAnalysis": "/api/analysis/start?github_url=${githubUrl}",
+    "getAllOrganizations": "/api/organizations",
+
+    "verifyUser": "/api/user/verify?token=${token}&uid=${uid}",
 
     "examples": {
       "languageDistribution": "/api/examples/language-distribution",
       "generalStats": "/api/examples/general-stats",
       "topLanguages": "/api/examples/top-languages"
+    },
+
+    "dashboard": {
+      "generalStats": "/api/organizations/:organizationId/general-stats",
+      "languageDistribution": "/api/organizations/:organizationId/language-distribution",
+      "topLanguages": "/api/organizations/:organizationId/top-languages"
     }
   }
 }
