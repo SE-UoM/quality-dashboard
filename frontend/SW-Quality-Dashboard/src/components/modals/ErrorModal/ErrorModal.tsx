@@ -12,11 +12,6 @@ function ErrorModal({modalTitle, modalAlertMessage}) {
     const [resendSuccess, setResendSuccess] = useState(false);
     const [show, setShow] = useState(true);
 
-    // Make the modal redirect to the home page after 5 seconds and disappear
-    setTimeout(() => {
-        window.location.href = "/";
-    }, 5000);
-
     return (
         <>
             <Modal
@@ -37,7 +32,7 @@ function ErrorModal({modalTitle, modalAlertMessage}) {
                         <strong> {modalAlertMessage} </strong>
                     </Alert>
                     <p>
-                        You will be redirected to the home page in a few seconds...
+                        Do you want to go back to the home page?
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
