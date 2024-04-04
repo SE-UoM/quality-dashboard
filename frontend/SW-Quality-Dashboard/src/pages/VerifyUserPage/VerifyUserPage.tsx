@@ -4,6 +4,10 @@ import logo from '../../assets/dashboard_logo_transparent.png'
 import axios from "axios";
 import './VerifyUserPage.css'
 
+import apiRoutes from "../../assets/data/api_urls.json";
+
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL
+
 function VerifyUserPage() {
     const location = useLocation()
     const [statusTextTitle, setStatusTextTitle] = React.useState<string>('User Verification in Progress')
@@ -24,7 +28,13 @@ function VerifyUserPage() {
     }, []);
 
     async function callAPI(token, uid) {
-        let url = `http://localhost:8080/api/user/verify?token=${token}&uid=${uid}`
+        let url = baseApiUrl + apiRoutes.routes.verifyUser;
+        console.log(url)
+
+        // Replace ${uid} and ${token} with the actual values
+        url = url.replace('${uid}', uid)
+        url = url.replace('${token}', token)
+
         await axios.post(url)
             .then(response => {
                 if (response.status === 200) {
