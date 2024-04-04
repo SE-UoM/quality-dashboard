@@ -24,7 +24,8 @@
       "topLanguages": "/api/organizations/:organizationId/top-languages",
       "codeSmellDistribution": "/api/organizations/:organizationId/code-smells-distribution",
       "getTotalTD": "/api/organizations/:orgId/total-tech-debt",
-      "getTdStats": "/api/organizations/:orgId/tech-debt-statistics"
+      "getTdStats": "/api/organizations/:orgId/tech-debt-statistics",
+      "randomBestPractice": "/api/best-practices/random"
     }
   }
 }
