@@ -2,7 +2,7 @@ import './CollabsibleNavbar.css'
 import React, {useState} from "react";
 import DashboardNavbar from "../DashboardNavbar/DashboardNavbar.tsx";
 
-function CollabsibleNavbar(props) {
+function CollabsibleNavbar({isAuthenticated, isAdmin}) {
     const [expanded, setExpanded] = useState(true);
     const [buttonIcon, setButtonIcon] = useState('bi bi-chevron-compact-up')
 
@@ -22,7 +22,7 @@ function CollabsibleNavbar(props) {
         <>
 
             {expanded && (
-                <DashboardNavbar {...props} expanded={expanded} />
+                <DashboardNavbar isAuthenticated={isAuthenticated} isAdmin={isAdmin} />
             )}
             <div className="navbar-close-button" onClick={toggleNavbar}>
                 <button className="btn btn-outline-dark">

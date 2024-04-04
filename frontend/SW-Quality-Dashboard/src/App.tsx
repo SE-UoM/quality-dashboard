@@ -61,7 +61,7 @@ function App() {
                         {/* Public Routes */}
                         <Route path="/">
                             <Route index element={<HomePage />} />
-                            <Route path="dashboard" element={<Dashboard />} />
+                            <Route path="dashboard" element={<Dashboard isAdmin={isAdmin} isAuthenticated={isAuthenticated} />} />
                             <Route path="about" element={<AboutPage />} />
                             <Route path="register" element={<RegisterPage />} />
                             <Route path="login" element={<LoginPage />} />
