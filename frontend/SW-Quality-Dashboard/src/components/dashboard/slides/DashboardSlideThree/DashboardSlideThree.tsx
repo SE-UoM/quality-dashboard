@@ -7,7 +7,8 @@ import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
-
+import DashboardProjectComponent from "../../../ui/DashboardProjectComponent/DashboardProjectComponent.tsx";
+import BestProjectsCard from "../../cards/BestProjectsCard/BestProjectsCard.tsx";
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideThree() {
@@ -29,11 +30,7 @@ function DashboardSlideThree() {
                 />
             }
             <div className="dashboard-slide" id="slide3">
-                <div className="dashboard-card"
-                     style={{gridArea: "bestProjects"}}
-                >
-                    <h1>Best Projects</h1>
-                </div>
+                <BestProjectsCard />
 
                 <div className="dashboard-card"
                      style={{gridArea: "wordcloud"}}

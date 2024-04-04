@@ -1,4 +1,5 @@
 .dashboard-slide#slide3 {
+    width: 100%;
     grid-template-areas:
         "bestProjects wordcloud wordcloud wordcloud topCommiters"
         "bestProjects wordcloud wordcloud wordcloud topCommiters"

@@ -1,0 +1,58 @@
+.best-project-component {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    padding: 0 0.5em;
+
+    grid-template-areas:
+        "medal projectTitle projectTitle"
+        "medal projectOwner projectOwner";
+
+    border-bottom: 1px solid var(--dark-gray);
+}
+
+.best-project-medal {
+    grid-area: medal;
+    position: relative;
+    align-items: center;
+}
+
+.best-project-medal img {
+    width: 70%;
+    /* Appear on top */
+    z-index: 1;
+    border-radius: 10em;
+    padding: 0.2em;
+}
+
+.best-project-medal span {
+    position: absolute;
+    top: -0.05em;
+    left: 0.15em;
+    /*background: var(--org-color-primary);*/
+    color: var(--text-primary);
+    font-size: 2em;
+    padding: 0.2em 0.5em;
+    font-weight: bolder;
+}
+
+.best-project-item-title {
+    grid-area: projectTitle;
+}
+
+.best-project-item-owner {
+    grid-area: projectOwner;
+}
+
+.gold {
+    background: var(--gold);
+}
+
+.silver {
+    background: var(--silver);
+}
+
+.bronze {
+    background: var(--bronze);
+}
