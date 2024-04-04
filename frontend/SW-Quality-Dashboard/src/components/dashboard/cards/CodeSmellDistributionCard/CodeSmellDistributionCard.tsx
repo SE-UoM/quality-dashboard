@@ -69,7 +69,7 @@ function CodeSmellDistributionCard() {
             <div className="dashboard-card" id="codeSmellDistribution">
                 <div className="code-smell-distribution-container">
                     <h3>
-                        <i className="bi bi-pie-chart-fill"> </i>
+                        <i className="bi bi-radioactive"> </i>
                         Code Smell Distribution
                     </h3>
                     <div className="code-smells-distribution-chart">
