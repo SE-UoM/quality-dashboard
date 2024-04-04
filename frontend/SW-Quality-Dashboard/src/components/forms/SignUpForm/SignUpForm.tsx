@@ -3,7 +3,7 @@ import axios from "axios";
 import {Form, Button, Alert} from "react-bootstrap";
 import './SignUpForm.css';
 import apiUrls from "../../../assets/data/api_urls.json";
-import {isProduction, acceptedUserMailDomains} from "../../../assets/data/config.json";
+import {acceptedUserMailDomains} from "../../../assets/data/config.json";
 import AccountVerificationModal from "../../modals/AccountVerificationModal/AccountVerificationModal.tsx";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 import {Divider} from "@chakra-ui/react";
@@ -13,6 +13,8 @@ interface Organization {
     name: string;
 }
 
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
+
 function SignUpForm() {
     const [showModal, setShowModal] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +23,6 @@ function SignUpForm() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [organizations, setOrganizations] = useState<Organization[]>([]);
-    const [baseApiUrl, setBaseApiUrl] = useState(isProduction ? apiUrls.productionBackend : apiUrls.developmentBackend);
     const [createdUserId, setCreatedUserId] = useState("");
 
     const [name, setName] = useState("");
@@ -33,7 +34,7 @@ function SignUpForm() {
     // Call API to get organizations for the dropdown
     useEffect(() => {
         // Call API to get organizations
-        let url = baseApiUrl + apiUrls.routes.getAllOrganizationNames;;
+        let url = baseApiUrl + apiUrls.routes.getAllOrganizationNames;
 
         axios.get(url)
             .then((response) => {

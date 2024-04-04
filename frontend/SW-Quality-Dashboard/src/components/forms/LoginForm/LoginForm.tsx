@@ -13,12 +13,13 @@ interface Organization {
     name: string;
 }
 
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL
+
 function LoginForm() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [loginSuccess, setLoginSuccess] = useState(false);
 
-    const [baseApiUrl, setBaseApiUrl] = useState(isProduction ? apiUrls.productionBackend : apiUrls.developmentBackend);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false); // State to track checkbox status
@@ -30,7 +31,6 @@ function LoginForm() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        console.log("Login button clicked");
 
         // Check if the checkbox is checked
         if (!isChecked) {

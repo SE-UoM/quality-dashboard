@@ -3,11 +3,12 @@ import axios from "axios";
 import { Form, Button, Alert } from "react-bootstrap";
 import './SubmitProjectForm.css';
 import apiUrls from "../../../assets/data/api_urls.json";
-import { isProduction, acceptedUserMailDomains } from "../../../assets/data/config.json";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
 import useAuthenticationCheck from "../../../hooks/useAuthenticationCheck.ts";
 import LoadingBar from "../../ui/LoadingBar/LoadingBar.tsx";
+
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
 function SubmitProjectForm() {
     const [error, setError] = useState(false);
@@ -19,7 +20,6 @@ function SubmitProjectForm() {
     const [simpleAlertVariant, setSimpleAlertVariant] = useState("info");
     const [simpleAlertIcon, setSimpleAlertIcon] = useState("bi bi-info-circle-fill");
 
-    const [baseApiUrl, setBaseApiUrl] = useState(isProduction ? apiUrls.productionBackend : apiUrls.developmentBackend);
     const [githubUrl, setGithubUrl] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +40,11 @@ function SubmitProjectForm() {
             return;
         }
 
-        let apiUrl = baseApiUrl + apiUrls.routes.startAnalysis + "?github_url=" + githubUrl;
+        let apiUrl = baseApiUrl + apiUrls.routes.startAnalysis;
+        console.log("API URL: " + apiUrl)
+
+        // Replace the github url with the actual url
+        apiUrl = apiUrl.replace("${githubUrl}", githubUrl);
 
         const headers = {
             'Content-Type': 'application/json',
