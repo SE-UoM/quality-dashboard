@@ -16,9 +16,14 @@ import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+import {jwtDecode} from "jwt-decode";
+
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideOne() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+
+    console.log("Access token: ", accessToken)
     const [totalProjects, setTotalProjects] = useState(0);
     const [totalLanguages, setTotalLanguages] = useState(0);
     const [totalDevelopers, setTotalDevelopers] = useState(0);
@@ -32,7 +37,14 @@ function DashboardSlideOne() {
 
     // Call the API to get the general statistics
     useEffect(() => {
-        let url = apiUrls.developmentBackend + apiUrls.routes.examples.generalStats;
+        let url = baseApiUrl + apiUrls.routes.dashboard.generalStats;
+
+        // Decode the access token to get the organization ID
+        let organizationId = jwtDecode(accessToken).organizationId;
+
+        // Replace ":organizationId" with the actual organization ID
+        url = url.replace(":organizationId", organizationId);
+
         let headers = {
             'Authorization': 'Bearer ' + accessToken,
             'Content-Type': 'application/json'

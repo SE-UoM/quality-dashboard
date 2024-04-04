@@ -6,6 +6,7 @@ import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import * as url from "url";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+import {jwtDecode} from "jwt-decode";
 
 const colors = [
     /* Language Distribution */
@@ -15,6 +16,8 @@ const colors = [
     "#5bb9e6",
     "#f7a35cff"
 ];
+
+const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
 function LanguageDistributionCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
@@ -27,7 +30,13 @@ function LanguageDistributionCard() {
 
     // Call the API to get the language distribution data
     useEffect(() => {
-        let url = apiRoutes.developmentBackend + apiRoutes.routes.examples.languageDistribution;
+        let url = baseApiUrl + apiRoutes.routes.dashboard.languageDistribution;
+
+        // Decode the access token to get the organization ID
+        let organizationId = jwtDecode(accessToken).organizationId;
+
+        // Replace ":organizationId" with the actual organization ID
+        url = url.replace(":organizationId", organizationId);
 
         let headers = {
             'Authorization': 'Bearer ' + accessToken,
