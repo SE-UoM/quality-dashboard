@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import {createTheme, ThemeProvider} from "@mui/material";
+import {BrowserRouter} from "react-router-dom";
 
 const theme = createTheme({
     palette: {
@@ -12,7 +13,9 @@ const theme = createTheme({
 
 ReactDOM.render(
     <ThemeProvider theme={theme}>
-      <App />
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
     </ThemeProvider>,
     document.getElementById('root')
 )

@@ -22,7 +22,8 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function App() {
-    const isVerifyPage = window.location.pathname.includes('verify');
+    const isVerifyPage = useLocation().pathname.includes('verify');
+    const isDashboardPage = useLocation().pathname.includes('dashboard');
 
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAuthenticated] = useAuthenticationCheck(accessToken)
@@ -48,15 +49,14 @@ function App() {
 
     return (
         <>
-            <ChakraProvider>
-                {!isVerifyPage || !isDashboardPage &&
+                {!isVerifyPage && !isDashboardPage &&
                     <DashboardNavbar
                         isAuthenticated={isAuthenticated}
                         isAdmin={isAdmin}
                     />
                 }
 
-                <BrowserRouter>
+
                     <Routes>
                         {/* Public Routes */}
                         <Route path="/">
@@ -79,10 +79,8 @@ function App() {
                             )}
                         </Route>
                     </Routes>
-                </BrowserRouter>
 
-                {!isVerifyPage || !isDashboardPage && <Footer />}
-            </ChakraProvider>
+                    {!isVerifyPage && !isDashboardPage && <Footer />}
         </>
     )
 }
