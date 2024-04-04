@@ -21,16 +21,22 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
     };
 
     const rightBtnClick = () => {
+        console.log("LEFT")
+
         // If the current slide is the last slide, go back to the first slide
         if (currentSlide === totalSlides) {
             setCurrentSlide(1)
             return
         }
 
+        console.log(currentSlide)
+
         setCurrentSlide(currentSlide + 1)
     }
 
     const leftBtnClick = () => {
+        console.log("Previous Clicked")
+
         // If the current slide is the first slide, go to the last slide
         if (currentSlide === 1) {
             setCurrentSlide(totalSlides)
@@ -46,8 +52,8 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
             {expanded && (
                 <DashboardNavbar isAuthenticated={isAuthenticated} isAdmin={isAdmin} />
             )}
-            <div className="navbar-close-button" onClick={leftBtnClick}>
-                <button className="btn">
+            <div className="navbar-close-button">
+                <button className="btn" onClick={leftBtnClick}>
                     <i className="bi bi-arrow-left"></i>
                 </button>
 

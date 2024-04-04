@@ -3,6 +3,7 @@ import DashboardSlideOne from "../../components/dashboard/slides/DashboardSlideO
 import CollabsibleNavbar from "../../components/ui/CollabsibleNavbar/CollabsibleNavbar.tsx";
 import {useLocation} from "react-router-dom";
 import {useState} from "react";
+import DashboardSlideTwo from "../../components/dashboard/slides/DashboardSlideTwo/DashboardSlideTwo.tsx";
 
 function DashboardPage({isAuthenticated, isAdmin}) {
     const location = useLocation()
@@ -10,6 +11,8 @@ function DashboardPage({isAuthenticated, isAdmin}) {
     const slideNumber = urlParams.get('p')
 
     const [currentSlide, setCurrentSlide] = useState<number>(slideNumber ? parseInt(slideNumber) : 1)
+
+    console.log("Current Slide:" + currentSlide)
 
     return (
         <>
@@ -26,7 +29,7 @@ function DashboardPage({isAuthenticated, isAdmin}) {
                 }
 
                 {currentSlide === 2 &&
-                    <h1>Slide 2</h1>
+                    <DashboardSlideTwo />
                 }
 
                 {currentSlide === 3 &&
