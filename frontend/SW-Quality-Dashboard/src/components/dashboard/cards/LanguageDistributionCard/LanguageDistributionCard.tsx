@@ -53,7 +53,7 @@ function LanguageDistributionCard() {
                 setErrorTitle("Error fetching language distribution data");
                 setErrorMessage("An error occurred while fetching the language distribution data of the organization. Please try again later.");
             });
-    }, [totalLanguages, languageDistribution]);
+    }, [accessToken]);
 
 
     // Sort the language distribution by linesOfCode in descending order

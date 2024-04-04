@@ -1,6 +1,4 @@
 .dashboard-slide#slide1 {
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
     grid-template-areas:
         "languageRank languageRank languageDistribution languageDistribution totalProjects"
         "languageRank languageRank languageDistribution languageDistribution totalLanguages"

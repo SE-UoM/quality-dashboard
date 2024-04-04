@@ -68,7 +68,7 @@ function DashboardSlideOne() {
                 setErrorMessage("An error occurred while fetching the general statistics of the organization. Please try again later.");
             }
         );
-    }, [totalProjects, totalLanguages, totalDevelopers, totalFiles, totalContributions, totalLoc]);
+    }, [accessToken]);
 
 
     return (

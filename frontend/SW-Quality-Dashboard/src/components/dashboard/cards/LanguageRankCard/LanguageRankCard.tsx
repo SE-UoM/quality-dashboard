@@ -46,7 +46,7 @@ function LanguageRankCard() {
                 console.log("Error fetching top languages: ", error);
                 setError(true);
             });
-    }, [firstLanguage, secondLanguage, thirdLanguage]);
+    }, [accessToken]);
 
     return (
         <>
