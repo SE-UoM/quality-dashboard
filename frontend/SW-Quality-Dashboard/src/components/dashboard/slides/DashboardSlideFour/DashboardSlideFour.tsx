@@ -33,36 +33,42 @@ function DashboardSlideFour() {
                      style={{gridArea: "mostActiveDev"}}
                 >
                     <h1>Most Active Dev</h1>
+                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 
                 <div className="dashboard-card"
                      style={{gridArea: "mostActiveProj"}}
                 >
                     <h1>Most Active Project</h1>
+                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 
                 <div className="dashboard-card"
                      style={{gridArea: "mostStarredProj"}}
                 >
                     <h1>Most Starred Project</h1>
+                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 
                 <div className="dashboard-card"
                      style={{gridArea: "commitGraph"}}
                 >
                     <h1>Commit Graph</h1>
+                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 
                 <div className="dashboard-card"
                      style={{gridArea: "mostForked"}}
                 >
                     <h1>Most Forked</h1>
+                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 
                 <div className="dashboard-card"
                      style={{gridArea: "developersSlides"}}
                 >
                     <h1>Developers</h1>
+                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 
                 <FooterCard
