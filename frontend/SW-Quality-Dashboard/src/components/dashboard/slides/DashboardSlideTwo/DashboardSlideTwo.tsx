@@ -34,11 +34,7 @@ function DashboardSlideTwo() {
                 <TotalTechDebtCard />
                 <TechDebtStatsCard />
                 <BestPracticesCard />
-
-
-                <FooterCard
-                    gridAreaName="footerCard"
-                />
+                <FooterCard gridAreaName="footerCard" />
             </div>
         </>
     )

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -73,6 +74,13 @@ function SubmittedProjectsCard() {
              id={"submittedProjects"}
              style={{gridArea: "submittedProjects"}}
         >
+            {error &&
+                <ErrorModal
+                    modalTitle={errorTitle}
+                    modalAlertMessage={errorMessage}
+                />
+            }
+
             <h3>
                 <i className={"bi bi-journal-text"}> </i>
                 Submitted Projects
