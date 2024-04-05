@@ -15,8 +15,8 @@ function DashboardProjectComponent({projectName, owner, rank}) {
 
     return (
         <div className="best-project-component">
-            <div className={"best-project-medal "}>
-                <img src={medalIcon} className={rankColor}/>
+            <div className={"best-project-medal " + rankColor}>
+                {/*<img src={medalIcon} className={rankColor}/>*/}
                 <span>{rank}</span>
             </div>
             <h2 className="best-project-item-title">{projectName}</h2>

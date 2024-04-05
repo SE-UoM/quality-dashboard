@@ -41,10 +41,10 @@ public class OrganizationAnalysis {
     private Project mostForkedProject;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "organizationAnalysis")
-    private Collection<OrganizationLanguage> languages;
+    private Collection<OrganizationLanguage> languages = new ArrayList<>();
 
     @ManyToMany
-    private Map<Integer, OrganizationLanguage> topLanguages;
+    private Map<Integer, OrganizationLanguage> topLanguages = new HashMap<>();
 
     @OneToOne
     private Organization organization;
