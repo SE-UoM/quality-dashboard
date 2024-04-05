@@ -1,12 +1,11 @@
-.dashboard-card#bestProjects {
+.dashboard-card#scrollableRankCard {
     width: 100%;
     height: 100%;
-    grid-area: bestProjects;
     padding: 0;
     overflow-y: hidden; /* Change overflow-y to hidden */
 }
 
-.dashboard-card#bestProjects h3 {
+.dashboard-card#scrollableRankCard h3 {
     font-size: 1.7em;
     border-bottom: 1px solid var(--dark-gray);
     width: 100%;

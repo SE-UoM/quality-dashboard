@@ -18,7 +18,7 @@ function ErrorModal({modalTitle, modalAlertMessage}) {
                 show={show}
                 backdrop="static"
                 keyboard={false}
-                onHide={() => setShow(true)}
+                onHide={() => setShow(false)}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>

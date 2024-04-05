@@ -1,7 +1,7 @@
-import './DashboardProjectComponent.css'
+import './DashboardRankedItem.css'
 import medalIcon from '../../../assets/svg/dashboardIcons/simple_medal_icon.svg'
 
-function DashboardProjectComponent({projectName, owner, rank}) {
+function DashboardRankedItem({projectName, owner, rank}) {
     let rankColor;
     if (rank === 1) {
         rankColor = 'gold';
@@ -27,4 +27,4 @@ function DashboardProjectComponent({projectName, owner, rank}) {
     )
 }
 
-export default DashboardProjectComponent
+export default DashboardRankedItem
