@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import { PieChart } from '@mui/x-charts';
 import './LanguageDistributionCard.css';
-import apiRoutes from '../../../../assets/data/api_urls.json';
-import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
+import apiRoutes from '../../../../../assets/data/api_urls.json';
+import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import * as url from "url";
 import axios from "axios";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 
 const colors = [

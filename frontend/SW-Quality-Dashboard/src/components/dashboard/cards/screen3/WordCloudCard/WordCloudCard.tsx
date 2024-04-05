@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './WordCloudCard.css';
-import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
-import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
-import apiUrls from "../../../../assets/data/api_urls.json";
+import WordCloud from "../../../../ui/WordCloud/WordCloud.tsx";
+import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
+import apiUrls from "../../../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 

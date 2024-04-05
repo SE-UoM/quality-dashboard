@@ -1,6 +1,6 @@
 import './DashboardSlideOne.css'
 import '../DashboardSlideStyle.css'
-import LanguageRankCard from "../../cards/LanguageRankCard/LanguageRankCard.tsx";
+import LanguageRankCard from "../../cards/screen1/LanguageRankCard/LanguageRankCard.tsx";
 import totalProjectsIcon from "../../../../assets/svg/dashboardIcons/total_projects_icon.svg";
 import totalLanguagesIcon from "../../../../assets/svg/dashboardIcons/languages_icon.svg";
 import totalDevelopersIcon from "../../../../assets/svg/dashboardIcons/developers_icon.svg";
@@ -8,9 +8,9 @@ import totalFilesIcon from "../../../../assets/svg/dashboardIcons/files_general_
 import totalLocIcon from "../../../../assets/svg/dashboardIcons/loc_icon.svg";
 import totalContributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 
-import IconCard from "../../cards/IconCard/IconCard.tsx";
+import IconCard from "../../cards/screen1/IconCard/IconCard.tsx";
 import FooterCard from "../../cards/FooterCard/FooterCard.tsx";
-import LanguageDistributionCard from "../../cards/LanguageDistributionCard/LanguageDistributionCard.tsx";
+import LanguageDistributionCard from "../../cards/screen1/LanguageDistributionCard/LanguageDistributionCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";

@@ -1,8 +1,8 @@
 import './TotalTechDebtCard.css'
 import React, {useEffect, useState} from "react";
-import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
-import apiUrls from "../../../../assets/data/api_urls.json";
+import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
+import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
+import apiUrls from "../../../../../assets/data/api_urls.json";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 

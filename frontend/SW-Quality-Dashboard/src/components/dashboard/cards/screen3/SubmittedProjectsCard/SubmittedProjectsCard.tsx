@@ -1,13 +1,13 @@
 import './SubmittedProjectsCard.css'
-import ProjectDetailsIcon from "../../../ui/ProjectDetailsIcon/ProjectDetailsIcon.tsx";
-import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
-import contributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
-import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
+import ProjectDetailsIcon from "../../../../ui/ProjectDetailsIcon/ProjectDetailsIcon.tsx";
+import starIcon from "../../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
+import contributionsIcon from "../../../../../assets/svg/dashboardIcons/contributions_icon.svg";
+import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import { useEffect, useState } from "react";
-import apiUrls from "../../../../assets/data/api_urls.json";
+import apiUrls from "../../../../../assets/data/api_urls.json";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 

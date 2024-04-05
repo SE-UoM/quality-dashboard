@@ -6,7 +6,8 @@ import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
-import {jwtDecode} from "jwt-decode";
+import contributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
+import ItemActivityCard from "../../cards/ItemActivityCard/ItemActivityCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -29,19 +30,27 @@ function DashboardSlideFour() {
                 />
             }
             <div className="dashboard-slide" id="slide4">
-                <div className="dashboard-card"
-                     style={{gridArea: "mostActiveDev"}}
-                >
-                    <h1>Most Active Dev</h1>
-                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
-                </div>
+                <ItemActivityCard
+                    cardTitle={"Most Active Developer"}
+                    cardTitleIcon={"bi bi-person-workspace"}
+                    cardImage={"https://via.placeholder.com/150"}
+                    cardIcon={contributionsIcon}
+                    countTitle={"Archontis Kostis"}
+                    count={0}
+                    countCaption={"Commits"}
+                    gridArea={"mostActiveDev"}
+                />
 
-                <div className="dashboard-card"
-                     style={{gridArea: "mostActiveProj"}}
-                >
-                    <h1>Most Active Project</h1>
-                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
-                </div>
+                <ItemActivityCard
+                    cardTitle={"Most Active Project"}
+                    cardTitleIcon={"bi bi-fire"}
+                    cardImage={"https://via.placeholder.com/150"}
+                    cardIcon={contributionsIcon}
+                    countTitle={"PyAssess"}
+                    count={0}
+                    countCaption={"Commits"}
+                    gridArea={"mostActiveProj"}
+                />
 
                 <div className="dashboard-card"
                      style={{gridArea: "mostStarredProj"}}

@@ -7,10 +7,10 @@ import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
-import CodeSmellDistributionCard from "../../cards/CodeSmellDistributionCard/CodeSmellDistributionCard.tsx";
-import TotalTechDebtCard from "../../cards/TotalTechDebtCard/TotalTechDebtCard.tsx";
-import TechDebtStatsCard from "../../cards/TechDebtStatsCard/TechDebtStatsCard.tsx";
-import BestPracticesCard from "../../cards/BestPracticesCard/BestPracticesCard.tsx";
+import CodeSmellDistributionCard from "../../cards/screen2/CodeSmellDistributionCard/CodeSmellDistributionCard.tsx";
+import TotalTechDebtCard from "../../cards/screen2/TotalTechDebtCard/TotalTechDebtCard.tsx";
+import TechDebtStatsCard from "../../cards/screen2/TechDebtStatsCard/TechDebtStatsCard.tsx";
+import BestPracticesCard from "../../cards/screen2/BestPracticesCard/BestPracticesCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 

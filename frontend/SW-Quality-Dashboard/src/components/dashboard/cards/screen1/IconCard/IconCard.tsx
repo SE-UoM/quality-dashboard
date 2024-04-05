@@ -1,5 +1,5 @@
 import './IconCard.css'
-import '../DashboardCardStyle.css'
+import '../../DashboardCardStyle.css'
 
 function IconCard({icon, headerText, caption, gridAreaName}) {
     return (

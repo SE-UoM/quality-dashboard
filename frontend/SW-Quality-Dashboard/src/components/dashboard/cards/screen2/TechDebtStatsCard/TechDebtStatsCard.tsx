@@ -1,7 +1,7 @@
 import './TechDebtStatsCard.css'
-import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
+import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";
-import apiRoutes from '../../../../assets/data/api_urls.json';
+import apiRoutes from '../../../../../assets/data/api_urls.json';
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 

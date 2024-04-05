@@ -1,13 +1,13 @@
 import './LanguageRankCard.css'
-import '../DashboardCardStyle.css'
-import firstMedal from '../../../../assets/svg/dashboardIcons/first_medal_icon.svg'
-import secondMedal from '../../../../assets/svg/dashboardIcons/second_medal_icon.svg'
-import thirdMedal from '../../../../assets/svg/dashboardIcons/third_medal_icon.svg'
-import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
+import '../../DashboardCardStyle.css'
+import firstMedal from '../../../../../assets/svg/dashboardIcons/first_medal_icon.svg'
+import secondMedal from '../../../../../assets/svg/dashboardIcons/second_medal_icon.svg'
+import thirdMedal from '../../../../../assets/svg/dashboardIcons/third_medal_icon.svg'
+import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";
-import apiUrls from "../../../../assets/data/api_urls.json";
+import apiUrls from "../../../../../assets/data/api_urls.json";
 import axios from "axios";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL

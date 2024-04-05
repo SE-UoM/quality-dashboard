@@ -9,10 +9,10 @@ import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 import DashboardRankedItem from "../../../ui/DashboardRankedItem/DashboardRankedItem.tsx";
 import ScrollableRankCard from "../../cards/ScrollableRankCard/ScrollableRankCard.tsx";
-import WordCloudCard from "../../cards/WordCloudCard/WordCloudCard.tsx";
+import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
 import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
 import ProjectDetailsIcon from "../../../ui/ProjectDetailsIcon/ProjectDetailsIcon.tsx";
-import SubmittedProjectsCard from "../../cards/SubmittedProjectsCard/SubmittedProjectsCard.tsx";
+import SubmittedProjectsCard from "../../cards/screen3/SubmittedProjectsCard/SubmittedProjectsCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
