@@ -6,3 +6,15 @@
         "techDebt techDebt bestPractices bestPractices bestPractices"
         "footerCard footerCard footerCard footerCard footerCard";
 }
+
+@media (max-width: 768px) {
+    .dashboard-slide#slide2 {
+        grid-template-rows: auto; /* Let rows adjust based on content */
+        grid-template-areas:
+            "codeSmellDistribution"
+            "techDebtStats"
+            "bestPractices"
+            "techDebt"
+            "footerCard";
+    }
+}

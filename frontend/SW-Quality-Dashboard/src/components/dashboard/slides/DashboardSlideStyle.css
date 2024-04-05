@@ -8,3 +8,11 @@
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
 }
+
+/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+    .dashboard-slide {
+        grid-template-columns: repeat(1, 1fr); /* Change to single column */
+        grid-template-rows: auto; /* Let rows adjust based on content */
+    }
+}

@@ -3,10 +3,11 @@
 
   /* Custom Colors */
   --org-color-primary: #015092;
+  --org-color-primary-dark-version: #003562;
   --org-color-secondary: #ffe248;
   --org-color-secondary-dark-version: #cba400;
   --dark-gray: #333;
-  --light-gray: #f9f9f9;
+  --light-gray: #f5f5f5;
   --danger-red: #ff4d4d;
   --dashboard-bg: #e1e1e1;
   --text-secondary: #666;

@@ -11,7 +11,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
 
     return (
         <>
-            <Navbar expand="lg" className="bg-body-tertiary" style={{borderBottom: "2px solid var(--org-color-primary)"}}>
+            <Navbar expand="lg" className="bg-body-tertiary" style={{borderBottom: "2px solid var(--org-color-primary-dark-version)"}}>
                 <Container>
                     <Navbar.Brand href="/" className="navbar-brand">
                         <img src={logo}/>
