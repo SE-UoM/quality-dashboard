@@ -3,9 +3,6 @@ import './WordCloud.css';
 
 const WordCloud = ({ words }) => {
     const [wordStyles, setWordStyles] = useState([]);
-
-    console.log(words)
-
     // Function to calculate the size of the word based on its frequency
     const calculateSize = (frequency) => {
         return frequency * 10; // Adjust the scaling factor as needed

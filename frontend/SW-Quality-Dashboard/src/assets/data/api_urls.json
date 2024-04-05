@@ -18,7 +18,8 @@
       "getTdStats": "/api/examples/tech-debt-statistics",
       "topProjects": "/api/examples/top-projects",
       "languageNames": "/api/examples/language-names",
-      "topContributors": "/api/examples/top-developers"
+      "topContributors": "/api/examples/top-developers",
+        "projectsInfo": "/api/examples/projects-info"
     },
 
     "dashboard": {
@@ -31,7 +32,8 @@
       "randomBestPractice": "/api/best-practices/random",
       "topProjects": "/api/organizations/:organizationId/top-projects",
       "languageNames": "/api/organizations/:organizationId/language-names",
-      "topContributors": "/api/organizations/:organizationId/top-developers"
+      "topContributors": "/api/organizations/:organizationId/top-developers",
+      "projectsInfo": "/api/organizations/:organizationId/projects-info"
     }
   }
 }
