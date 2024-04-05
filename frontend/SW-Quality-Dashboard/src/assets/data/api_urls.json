@@ -16,7 +16,8 @@
       "codeSmellDistribution": "/api/examples/code-smells-distribution",
       "getTotalTD": "/api/examples/total-tech-debt",
       "getTdStats": "/api/examples/tech-debt-statistics",
-      "topProjects": "/api/examples/top-projects"
+      "topProjects": "/api/examples/top-projects",
+      "languageNames": "/api/examples/language-names"
     },
 
     "dashboard": {
@@ -27,7 +28,8 @@
       "getTotalTD": "/api/organizations/:orgId/total-tech-debt",
       "getTdStats": "/api/organizations/:orgId/tech-debt-statistics",
       "randomBestPractice": "/api/best-practices/random",
-      "topProjects": "/api/organizations/:organizationId/top-projects"
+      "topProjects": "/api/organizations/:organizationId/top-projects",
+      "languageNames": "/api/organizations/:organizationId/language-names"
     }
   }
 }

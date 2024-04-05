@@ -9,6 +9,7 @@ import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 import DashboardProjectComponent from "../../../ui/DashboardProjectComponent/DashboardProjectComponent.tsx";
 import BestProjectsCard from "../../cards/BestProjectsCard/BestProjectsCard.tsx";
+import WordCloudCard from "../../cards/WordCloudCard/WordCloudCard.tsx";
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideThree() {
@@ -17,9 +18,6 @@ function DashboardSlideThree() {
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-
-    // Call the API to get the general statistics
-
 
     return (
         <>
@@ -31,12 +29,7 @@ function DashboardSlideThree() {
             }
             <div className="dashboard-slide" id="slide3">
                 <BestProjectsCard />
-
-                <div className="dashboard-card"
-                     style={{gridArea: "wordcloud"}}
-                >
-                    <h1>World cloud</h1>
-                </div>
+                <WordCloudCard />
 
                 <div className="dashboard-card"
                      style={{gridArea: "topCommiters"}}
