@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.repositories.ProjectStatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,11 +18,15 @@ public class ProjectStatsService {
 
     private ProjectStatsRepository projectStatsRepository;
 
-    private SonarApiClient sonarApiClient = new SonarApiClient();
+    private SonarApiClient sonarApiClient;
 
     @Autowired
-    public ProjectStatsService(ProjectStatsRepository projectStatsRepository) {
+    public ProjectStatsService(
+            ProjectStatsRepository projectStatsRepository,
+            @Value("${sonar.sonarqube.url}") String sonarApiUrl
+    ) {
         this.projectStatsRepository = projectStatsRepository;
+        this.sonarApiClient = new SonarApiClient(sonarApiUrl);
     }
 
     public ProjectStats populateProjectStats(Project project) throws IOException {

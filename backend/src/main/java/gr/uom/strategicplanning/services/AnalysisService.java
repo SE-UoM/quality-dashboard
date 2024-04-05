@@ -10,6 +10,7 @@ import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -35,11 +36,15 @@ public class AnalysisService {
     private CodeSmellDistributionService codeSmellDistributionService;
 
     @Autowired
-    public AnalysisService(CommitService commitService, @Value("${github.token}") String githubToken, ProjectService projectService) {
+    public AnalysisService(
+            CommitService commitService,
+            @Value("${github.token}") String githubToken,
+            @Value("${sonar.sonarqube.url}") String sonarApiUrl,
+            ProjectService projectService) {
         this.commitService = commitService;
         this.projectService = projectService;
         this.githubApiClient = new GithubApiClient(githubToken);
-        this.sonarApiClient = new SonarApiClient();
+        this.sonarApiClient = new SonarApiClient(sonarApiUrl);
     }
     
     public void fetchGithubData(Project project) throws Exception {
@@ -74,6 +79,7 @@ public class AnalysisService {
         Thread.sleep(5000);
     }
 
+    @Transactional
     private void extractAnalysisDataForProject(Project project) throws Exception {
         Collection languages = languageService.extractLanguagesFromProject(project);
 
@@ -112,12 +118,16 @@ public class AnalysisService {
         projectService.populateProjectStats(project);
     }
 
+    @Transactional
     public void startAnalysis(Project project) throws Exception {
         Git clonedGit = GithubApiClient.cloneRepository(project);
 
         String defaultBranch = GithubApiClient.getDefaultBranchName(project);
         RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
         project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
+
+        // Force initialization of the commits collection
+        project.getCommits().size();
 
         project.getCommits().clear();
 
@@ -126,11 +136,11 @@ public class AnalysisService {
 
         extractAnalysisDataForProject(project);
 
-        //ToDo Check this save
+        // Save the project with updated analysis data
         projectService.saveProject(project);
 
-         clonedGit.close();
-         GithubApiClient.deleteRepository(project);
+        clonedGit.close();
+        GithubApiClient.deleteRepository(project);
 
     }
 

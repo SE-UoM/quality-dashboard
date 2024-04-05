@@ -23,16 +23,23 @@ public class CommitService {
     private CodeSmellService codeSmellService;
     private LanguageService languageService;
     private GithubApiClient githubApiClient;
-    private final SonarApiClient sonarApiClient = new SonarApiClient();
+    private final SonarApiClient sonarApiClient;
 
     @Autowired
-    public CommitService(DeveloperService developerService, CommitRepository commitRepository, LanguageService languageService, CodeSmellService codeSmellService
-            , @Value("${github.token}") String githubToken) {
+    public CommitService(
+            DeveloperService developerService,
+            CommitRepository commitRepository,
+            LanguageService languageService,
+            CodeSmellService codeSmellService,
+            @Value("${github.token}") String githubToken,
+            @Value("${sonar.sonarqube.url}") String sonarApiUrl
+    ) {
         this.developerService = developerService;
         this.commitRepository = commitRepository;
         this.codeSmellService = codeSmellService;
         this.languageService = languageService;
         this.githubApiClient = new GithubApiClient(githubToken);
+        this.sonarApiClient = new SonarApiClient(sonarApiUrl);
     }
 
     public void populateCommit(Commit commit, Project project) throws IOException, InterruptedException {

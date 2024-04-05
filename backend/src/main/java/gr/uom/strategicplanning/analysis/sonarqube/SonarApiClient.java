@@ -4,6 +4,10 @@ package gr.uom.strategicplanning.analysis.sonarqube;
 import com.squareup.okhttp.Response;
 import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.domain.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,22 +23,32 @@ import java.util.regex.Pattern;
  * This class is responsible for interacting with the SonarQube API to fetch project data and statistics.
  */
 @Component
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter @Setter
 public class SonarApiClient extends HttpClient {
     private Response loginResponse;
-
-    @Value("${sonar.sonarqube.url}")
     public String SONARQUBE_URL;
-    public static final String LOGIN_USERNAME = "admin";
-    public static final String LOGIN_PASSWORD = "admin1";
 
-    public final String SONARQUBE_AUTH_URL = SONARQUBE_URL + "/api/authentication/login" +
-            "?login=" + LOGIN_USERNAME + "&password=" + LOGIN_PASSWORD;
-
-    public final String ISSUES_SEARCH_URL = SONARQUBE_URL + "/api/issues/search?ps=500&componentKeys=";
-    public final String LANGUAGES_URL = SONARQUBE_URL + "/api/measures/component?metricKeys=ncloc_language_distribution&component=";
+    public String LOGIN_USERNAME;
+    public String LOGIN_PASSWORD;
+    public String SONARQUBE_AUTH_URL;
+    public String ISSUES_SEARCH_URL;
+    public String LANGUAGES_URL;
     
-    private final int ARRAY_INDEX = 0;
-    private final String EMPTY_PARAM = "";
+    private int ARRAY_INDEX;
+    private String EMPTY_PARAM;
+
+    public SonarApiClient(String sonarUrl) {
+        this.SONARQUBE_URL = sonarUrl;
+        this.LOGIN_USERNAME = "admin";
+        this.LOGIN_PASSWORD = "admin1";
+        this.SONARQUBE_AUTH_URL = SONARQUBE_URL + "/api/authentication/login?login=" + LOGIN_USERNAME + "&password=" + LOGIN_PASSWORD;
+        this.ISSUES_SEARCH_URL = SONARQUBE_URL + "/api/issues/search?componentKeys=";
+        this.LANGUAGES_URL = SONARQUBE_URL + "/api/measures/component?metricKeys=ncloc_language_distribution&component=";
+        this.ARRAY_INDEX = 0;
+        this.EMPTY_PARAM = "";
+    }
 
     /**
      * Some SonarQube projects have the component key as owner:projectName
@@ -48,6 +62,9 @@ public class SonarApiClient extends HttpClient {
         String componentName = projectName;
         String searchByComponentKeyUrl = SONARQUBE_URL + "/api/components/show?component=" + componentName;
 
+        System.out.println("In findProjectComponentByName");
+        System.out.println("SONARQUBE_URL: " + SONARQUBE_URL);
+
         Response response = this.sendGetRequest(searchByComponentKeyUrl);
 
         // Check if we got a valid response and if not try to search by user:name
@@ -55,6 +72,8 @@ public class SonarApiClient extends HttpClient {
             componentName =  projectOwner + ":" + projectName;
 
         searchByComponentKeyUrl = SONARQUBE_URL + "/api/components/show?component=" + componentName;
+
+        System.out.println("SONARQUBE URL: " + searchByComponentKeyUrl);
 
         response = this.sendGetRequest(searchByComponentKeyUrl);
 

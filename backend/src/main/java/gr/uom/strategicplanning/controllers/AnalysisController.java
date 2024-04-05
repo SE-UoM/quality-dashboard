@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +53,7 @@ public class AnalysisController {
     }
 
     @Async
+    @Transactional
     @PostMapping("/start")
     public CompletableFuture<ResponseEntity<ResponseInterface>> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) {
         try {
@@ -71,19 +73,25 @@ public class AnalysisController {
                 return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(response));
             }
 
-            // Start the background task
+            // Check if the project already exists
+            Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
+            Project project;
+
+            if (!projectOptional.isPresent()) {
+                // If the project doesn't exist, create and save it
+                project = new Project();
+                project.setRepoUrl(githubUrl);
+                project.setOrganization(organization);
+                projectRepository.save(project);
+                organization.addProject(project);
+            } else {
+                // If the project exists, retrieve it from the database
+                project = projectOptional.get();
+            }
+
+            // Start analysis on the project
             CompletableFuture<Void> backgroundTask = CompletableFuture.runAsync(() -> {
                 try {
-                    Project project = new Project();
-                    project.setRepoUrl(githubUrl);
-                    project.setOrganization(organization);
-
-                    Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
-
-                    organization.addProject(project);
-
-                    if (projectOptional.isPresent()) project = projectOptional.get();
-
                     analysisService.fetchGithubData(project);
 
                     if (!project.canBeAnalyzed()) {

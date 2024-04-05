@@ -8,6 +8,7 @@ import gr.uom.strategicplanning.repositories.CodeSmellRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,12 +20,18 @@ import java.util.regex.Pattern;
 
 @Service
 public class CodeSmellService {
-
-    @Autowired
-    private CodeSmellRepository codeSmellRepository;
-    private final SonarApiClient sonarApiClient = new SonarApiClient();
+    private final CodeSmellRepository codeSmellRepository;
+    private String SONARQUBE_URL;
+    private final SonarApiClient sonarApiClient;
 
     private final int DEFAULT_LINE_NUMBER = -1;
+
+    @Autowired
+    public CodeSmellService(CodeSmellRepository codeSmellRepository, @Value("${sonar.sonarqube.url}") String sonarApiUrl) {
+        this.codeSmellRepository = codeSmellRepository;
+        this.SONARQUBE_URL = sonarApiUrl;
+        this.sonarApiClient = new SonarApiClient(sonarApiUrl);
+    }
 
     public Collection<CodeSmell> populateCodeSmells(Project project, Commit commit) throws IOException {
         JSONObject codeSmells = sonarApiClient.fetchCodeSmells(project);
