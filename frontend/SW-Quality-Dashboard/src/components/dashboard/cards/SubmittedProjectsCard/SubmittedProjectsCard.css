@@ -1,0 +1,47 @@
+.dashboard-card#submittedProjects {
+    width: 100%;
+    height: 100%;
+    grid-area: submittedProjects;
+}
+
+.submitted-project-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.submitted-project-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submitted-project-img i {
+    font-size: 10em;
+    color: var(--dark-gray);
+}
+
+.submitted-project-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.submitted-project-details h4 {
+    font-size: 3em;
+    font-style: italic;
+}
+
+.submitted-project-details-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 3em;
+    padding: 2em;
+}

@@ -10,7 +10,10 @@ import {jwtDecode} from "jwt-decode";
 import DashboardRankedItem from "../../../ui/DashboardRankedItem/DashboardRankedItem.tsx";
 import ScrollableRankCard from "../../cards/ScrollableRankCard/ScrollableRankCard.tsx";
 import WordCloudCard from "../../cards/WordCloudCard/WordCloudCard.tsx";
-import {forEach} from "react-bootstrap/ElementChildren";
+import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
+import ProjectDetailsIcon from "../../../ui/ProjectDetailsIcon/ProjectDetailsIcon.tsx";
+import SubmittedProjectsCard from "../../cards/SubmittedProjectsCard/SubmittedProjectsCard.tsx";
+
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideThree() {
@@ -69,7 +72,6 @@ function DashboardSlideThree() {
             .then((response) => {
                 let data = response.data;
 
-                // Sort based totalCommits
                 data.sort((a, b) => {
                     return b.totalCommits - a.totalCommits;
                 });
@@ -137,11 +139,7 @@ function DashboardSlideThree() {
                     })}
                 </ScrollableRankCard>
 
-                <div className="dashboard-card"
-                     style={{gridArea: "submittedProjects"}}
-                >
-                    <h1>Submitted Projects</h1>
-                </div>
+                <SubmittedProjectsCard />
 
                 <FooterCard
                     gridAreaName="footerCard"
