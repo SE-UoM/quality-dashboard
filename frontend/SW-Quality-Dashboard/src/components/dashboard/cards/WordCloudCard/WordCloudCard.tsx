@@ -25,7 +25,7 @@ const WordCloudCard = () => {
         // Extract the organization id from the access token
         const organizationId = jwtDecode(accessToken).organizationId;
 
-        let url = baseApiUrl + apiUrls.routes.examples.languageNames
+        let url = baseApiUrl + apiUrls.routes.dashboard.languageNames
 
         // Replace the organization id in the URL
         url = url.replace(":organizationId", organizationId);
