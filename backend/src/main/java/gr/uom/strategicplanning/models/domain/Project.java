@@ -4,6 +4,8 @@ import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.*;
@@ -27,7 +29,7 @@ public class Project {
     private String repoUrl;
     private int forks;
     private int stars;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private Collection<Commit> commits = new ArrayList<>();
     private int totalDevelopers = 0;
     private int totalCommits;
@@ -36,7 +38,7 @@ public class Project {
     private int totalLanguages;
     private int totalRefactorings;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "project_developer",
             joinColumns = @JoinColumn(name = "project_id"),
