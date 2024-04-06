@@ -45,6 +45,8 @@ public class SonarAnalysis {
         this.version = version;
         this.sonarqubeUrl = sonarqubeUrl;
 
+        System.out.println("SonarAnalysis Version: " + version);
+
         createSonarFile();
         makeSonarAnalysis();
     }

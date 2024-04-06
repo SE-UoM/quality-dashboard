@@ -52,6 +52,8 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
 
+    private String defaultBranchName;
+
     public void addCommit(Commit commit) {
         this.commits.add(commit);
         commit.setProject(this);

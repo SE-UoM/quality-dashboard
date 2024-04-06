@@ -80,16 +80,27 @@ public class AnalysisService {
     }
 
     private void analyzeMaster(Project project) throws Exception {
-        githubApiClient.checkoutCommit(project, GithubApiClient.getDefaultBranchName(project));
+        githubApiClient.checkoutMaster(project);
 
-        sonarAnalysis = new SonarAnalysis(project, "master", SONARQUBE_URL);
-
-        // Wait a bit to make sure the analysis data is available
-        Thread.sleep(10000);
+        sonarAnalysis = new SonarAnalysis(project, project.getDefaultBranchName(), SONARQUBE_URL);
     }
 
     private void extractAnalysisDataForProject(Project project) throws Exception {
         Collection languages = languageService.extractLanguagesFromProject(project);
+
+        // If the project has no languages try again 5 times waiting 5 seconds between each try
+        int tries = 0;
+        while (languages.isEmpty() && tries < 5) {
+            System.out.println("No languages found, trying again (" + tries + "/5)");
+            Thread.sleep(5000);
+            languages = languageService.extractLanguagesFromProject(project);
+            tries++;
+        }
+
+        // If the project still has no languages, throw an exception
+        if (languages.isEmpty()) {
+            throw new Exception("No languages found for project " + project.getName());
+        }
 
         int totalLanguages = languages.size();
         int totalDevelopers = project.getDevelopers().size();
@@ -129,7 +140,7 @@ public class AnalysisService {
     public void startAnalysis(Project project) throws Exception {
         Git clonedGit = GithubApiClient.cloneRepository(project);
 
-        String defaultBranch = GithubApiClient.getDefaultBranchName(project);
+        String defaultBranch = project.getDefaultBranchName();
         RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
         project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
 
@@ -141,7 +152,12 @@ public class AnalysisService {
         analyzeCommits(project);
         analyzeMaster(project);
 
-        extractAnalysisDataForProject(project);
+        try {
+            extractAnalysisDataForProject(project);
+        } catch (Exception e) {
+            clonedGit.close();
+            GithubApiClient.deleteRepository(project);
+        }
 
         // Set the total commits of the project
         project.setTotalCommits(project.getCommits().size());
@@ -151,7 +167,6 @@ public class AnalysisService {
 
         clonedGit.close();
         GithubApiClient.deleteRepository(project);
-
     }
 
 }

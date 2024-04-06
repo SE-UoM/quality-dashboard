@@ -131,9 +131,10 @@ public class AnalysisController {
                 );
 
                 return ResponseEntity.ok(response);
-            } else {
-                analysisService.startAnalysis(project);
             }
+
+            analysisService.startAnalysis(project);
+
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
