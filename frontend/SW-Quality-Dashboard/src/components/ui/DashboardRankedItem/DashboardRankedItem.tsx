@@ -21,7 +21,9 @@ function DashboardRankedItem({projectName, owner, rank}) {
             </div>
             <h2 className="best-project-item-title">{projectName}</h2>
             <p className="best-project-item-owner">
-                By: {owner}
+                <strong>
+                    {owner}
+                </strong>
             </p>
         </div>
     )

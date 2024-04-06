@@ -21,6 +21,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: 85%;
+    height: 10vh;
     margin: 0.5em;
 }
 
@@ -31,6 +32,11 @@
 
 .best-project-item-title {
     grid-area: projectTitle;
+    font-size: 1.5em;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
 }
 
 .best-project-item-owner {
