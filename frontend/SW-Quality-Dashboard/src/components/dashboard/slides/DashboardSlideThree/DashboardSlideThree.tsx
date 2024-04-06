@@ -77,12 +77,14 @@ function DashboardSlideThree() {
                 });
 
                 setTopContributors(data);
-                console.log(data);
+                console.info("Top contributors API Response: ", data)
             })
             .catch((error) => {
                 setError(true);
                 setErrorTitle("Error");
                 setErrorMessage(error.response.data.message);
+
+                console.warn("Error fetching top contributors: ", error)
             })
     }, [accessToken]);
 

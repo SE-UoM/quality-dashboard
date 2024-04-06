@@ -38,7 +38,7 @@ function AccountVerificationModal({show, setShow, uid}) {
                 }, 1000);
             })
             .catch((error) => {
-                console.log(error);
+                console.warn("Failed to Verify Account: " + error);
             });
     }
 

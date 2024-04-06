@@ -14,8 +14,6 @@ function DashboardPage({isAuthenticated, isAdmin}) {
 
     const [currentSlide, setCurrentSlide] = useState<number>(slideNumber ? parseInt(slideNumber) : 1)
 
-    console.log("Current Slide:" + currentSlide)
-
     return (
         <>
             <CollabsibleNavbar

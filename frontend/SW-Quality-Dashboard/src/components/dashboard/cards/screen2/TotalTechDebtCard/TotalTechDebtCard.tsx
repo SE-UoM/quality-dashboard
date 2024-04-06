@@ -32,11 +32,11 @@ function TotalTechDebtCard() {
 
         axios.get(url, { headers: headers })
             .then(response => {
-                console.log(response.data);
+                console.info("Total Tech Debt API Data: " + response.data);
                 setTotalTechDebt(response.data.totalTechDebtCost);
             })
             .catch(error => {
-                console.log("Error fetching total technical debt data: ", error);
+                console.warn("Error fetching total technical debt data: ", error);
                 setError(true);
                 setErrorTitle("Error fetching total technical debt data");
                 setErrorMessage("An error occurred while fetching the total technical debt data of the organization. Please try again later.");

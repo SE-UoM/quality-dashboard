@@ -12,11 +12,18 @@ import {jwtDecode} from "jwt-decode";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
+const languageImagesApiUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/"
+const noneImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/640px-Blue_question_mark_icon.svg.png"
+
 function LanguageRankCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [firstLanguage, setFirstLanguage] = useState("");
+    const [firstLanguageImage, setFirstLanguageImage] = useState("");
     const [secondLanguage, setSecondLanguage] = useState("");
+    const [secondLanguageImage, setSecondLanguageImage] = useState("");
     const [thirdLanguage, setThirdLanguage] = useState("");
+    const [thirdLanguageImage, setThirdLanguageImage] = useState("");
+
     const [error, setError] = useState(false);
 
     // Call the API to get the top languages
@@ -36,14 +43,28 @@ function LanguageRankCard() {
 
         axios.get(url, { headers: headers })
             .then((response) => {
-                console.log("Top languages fetched successfully");
                 let data = response.data;
-                setFirstLanguage(data.first);
-                setSecondLanguage(data.second);
-                setThirdLanguage(data.third);
+                console.info("Top Languages API response: ", response.data);
+
+                // Get the values from the 1, 2 and 3 keys of the response data (if they exist dont exist, set them to empty string)
+                let first = data[1] ? data[1] : {name: ""};
+                let second = data[2] ? data[2] : {name: ""};
+                let third = data[3] ? data[3] : {name: ""};
+
+                setFirstLanguage(first.name);
+                setSecondLanguage(second.name);
+                setThirdLanguage(third.name);
+
+                // make the language images using the api (if the language does not exist, set the image to a question mark)
+                let firstImageUrl = first.name ? languageImagesApiUrl + first.name + "/" + first.name + "-original.svg" : noneImageUrl;
+                let secondImageUrl = second.name ? languageImagesApiUrl + second.name + "/" + second.name + "-original.svg" : noneImageUrl;
+                let thirdImageUrl = third.name ? languageImagesApiUrl + third.name + "/" + third.name + "-original.svg" : noneImageUrl;
+                setThirdLanguageImage(thirdImageUrl);
+                setSecondLanguageImage(secondImageUrl);
+                setFirstLanguageImage(firstImageUrl);
             })
             .catch((error) => {
-                console.log("Error fetching top languages: ", error);
+                console.warn("Error fetching top languages: ", error);
                 setError(true);
             });
     }, [accessToken]);
@@ -66,6 +87,7 @@ function LanguageRankCard() {
                 <div className="language-rank-container">
                     <div className="language-rank">
                         <span className={"lang-name-rank"}>
+                            <img src={secondLanguageImage}/>
                             {secondLanguage}
                         </span>
                         <div className="language-rank-line" id={"second"}>
@@ -75,6 +97,7 @@ function LanguageRankCard() {
 
                     <div className="language-rank">
                         <span className={"lang-name-rank"}>
+                            <img src={firstLanguageImage}/>
                             {firstLanguage}
                         </span>
                         <div className="language-rank-line" id={"first"}>
@@ -84,6 +107,7 @@ function LanguageRankCard() {
 
                     <div className="language-rank">
                         <span className={"lang-name-rank"}>
+                            <img src={thirdLanguageImage}/>
                             {thirdLanguage}
                         </span>
                         <div className="language-rank-line" id={"third"}>

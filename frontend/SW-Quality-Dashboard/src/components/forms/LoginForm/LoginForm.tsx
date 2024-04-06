@@ -59,7 +59,6 @@ function LoginForm() {
 
         axios.post(apiUrl, data, { headers: headers })
             .then((response) => {
-                console.log("Login successful");
                 let data = response.data;
 
                 setError(false);
@@ -79,7 +78,7 @@ function LoginForm() {
 
             })
             .catch((error) => {
-                console.log(error);
+                console.warn("Auth Error " + error);
                 setError(true);
                 setLoginSuccess(false);
                 setErrorMessage("Invalid email or password.");
@@ -160,7 +159,7 @@ function LoginForm() {
                     <Divider />
 
                     <Form.Group className="m-0" controlId="formBasicRegisterUrl">
-                        <Form.Label>
+                        <Form.Label className="already-registered">
                             <i className="bi bi-link-45deg"> </i>Don't have an account? <a href="/register" className={"sign-up-link-login-form"}> Sign up here.</a>
                         </Form.Label>
                     </Form.Group>

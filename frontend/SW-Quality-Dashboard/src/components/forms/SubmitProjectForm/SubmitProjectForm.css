@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    height: 50vh;
+    min-height: 50vh;
     width: 60vw;
     background: var(--light-gray);
     padding: 1em 2em;
@@ -10,8 +10,21 @@
     border-radius: 1em;
 }
 
+.submit-project-form h1 {
+    text-align: center;
+}
+
 .analyzing-progress {
     display: flex;
     flex-direction: column;
     padding: 1em 0em;
+}
+
+/* Mobile View */
+/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+    .submit-project-form {
+        width: 95vw !important;
+        padding: 0 1em;
+    }
 }

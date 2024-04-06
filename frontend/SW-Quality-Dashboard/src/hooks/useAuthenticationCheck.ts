@@ -34,9 +34,9 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
                 setIsAuthenticated(false);
 
                 if (status === 403)
-                    console.log("The user is not authenticated.");
+                    console.warn("The user is not authenticated.");
                 else
-                    console.log("Authentication Check Failed due to an unexpected error. " + error);
+                    console.warn("Authentication Check Failed due to an unexpected error. " + error);
             }
         };
 

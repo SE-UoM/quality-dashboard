@@ -11,9 +11,6 @@ import LoadingBar from "../../ui/LoadingBar/LoadingBar.tsx";
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
 function SubmitProjectForm() {
-    const [error, setError] = useState(false);
-    const [errorAlertMessage, setErrorAlertMessage] = useState("");
-
     const [showSimpleAlert, setShowSimpleAlert] = useState(false);
     const [simpleAlertMessage, setSimpleAlertMessage] = useState("");
     const [simpleAlertHeader, setSimpleAlertHeader] = useState("Info");
@@ -28,21 +25,21 @@ function SubmitProjectForm() {
 
     const handleSubmitProject = (e) => {
         e.preventDefault();
-        console.log("Submit button clicked");
 
         // Make sure the url is a valid github url
         let githubUrlRegex = new RegExp("^(https:\/\/github.com\/)([a-zA-Z0-9-]+)\/([a-zA-Z0-9-]+)$");
         let isValidGithubUrl = githubUrlRegex.test(githubUrl);
 
         if (!isValidGithubUrl) {
-            setError(true);
-            setErrorAlertMessage("Please enter a valid Github URL");
+            setShowSimpleAlert(true);
+            setSimpleAlertIcon("bi bi-exclamation-triangle-fill");
+            setSimpleAlertVariant("danger");
+            setSimpleAlertHeader("Invalid Github URL");
+            setSimpleAlertMessage("Please enter a valid Github URL");
             return;
         }
 
         let apiUrl = baseApiUrl + apiUrls.routes.startAnalysis;
-        console.log("API URL: " + apiUrl)
-
         // Replace the github url with the actual url
         apiUrl = apiUrl.replace("${githubUrl}", githubUrl);
 
@@ -55,8 +52,10 @@ function SubmitProjectForm() {
         setShowSimpleAlert(true);
         setSimpleAlertIcon("bi bi-info-circle-fill");
         setSimpleAlertVariant("info");
-        setSimpleAlertHeader("Submitting Project");
-        setSimpleAlertMessage("Please wait...")
+
+        let alertMessage = "It will take a while to analyze the project depending on the size and the total commits. You can close this page, grab a coffee sit back and relax! Don't worry, we will send you an email once the analysis is complete.";
+        setSimpleAlertHeader("Analyzing Project");
+        setSimpleAlertMessage(alertMessage)
 
         axios.post(apiUrl, {}, { headers: headers })
             .then((response) => {
@@ -66,25 +65,26 @@ function SubmitProjectForm() {
 
                 let backendMessage = response.data.message;
                 setSimpleAlertHeader(backendMessage)
-                setSimpleAlertMessage("It will take a while to analyze the project depending on the size and the total commits.");
+                setSimpleAlertMessage("");
 
                 setIsLoading(false);
             })
             .catch((error) => {
-                console.log(error);
-                setError(true);
+                console.warn("Error submitting project " + error);
+
+                setShowSimpleAlert(true);
                 setIsLoading(false);
-                setSimpleAlertMessage("Error submitting project. Please try again.");
+                setSimpleAlertIcon("bi bi-exclamation-triangle-fill");
+                setSimpleAlertVariant("danger");
+                setSimpleAlertHeader(error.response.data.message);
+                setSimpleAlertMessage(error.response.data.exceptionMessage);
+
+                // Hide the alerts after 10 seconds
+                setTimeout(() => {
+                    setShowSimpleAlert(false);
+                    setSimpleAlertMessage("");
+                }, 5000);
             });
-
-        // Hide the alerts after 10 seconds
-        setTimeout(() => {
-            setError(false);
-            setErrorAlertMessage("");
-
-            setShowSimpleAlert(false);
-            setSimpleAlertMessage("");
-        }, 5000);
     };
 
     return (
@@ -94,13 +94,6 @@ function SubmitProjectForm() {
                     <i className="bi bi-folder-plus"> </i>
                     Submit a Project
                 </h1>
-
-                {error &&
-                    <Alert variant="danger">
-                        <i className="bi bi-exclamation-triangle-fill"> </i>
-                        <strong> {errorAlertMessage} </strong>
-                    </Alert>
-                }
 
                 {showSimpleAlert &&
                     <Alert variant={simpleAlertVariant}>

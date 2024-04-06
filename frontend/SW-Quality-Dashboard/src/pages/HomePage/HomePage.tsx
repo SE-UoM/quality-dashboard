@@ -22,7 +22,6 @@ function HomePage() {
 
                 {!isAuthenticated && <Button href="/login" variant="outline-light">Login</Button>}
                 {!isAuthenticated && <Button href="/register" variant="outline-light">Register</Button>}
-                {!isAuthenticated && <Button href="/dashboard" variant="outline-light">Dashboard</Button>}
             </section>
         </div>
     );

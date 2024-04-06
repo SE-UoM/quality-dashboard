@@ -50,7 +50,7 @@ function TechDebtStatsCard() {
                 setAverageTechDebtPerLineOfCode(avgTDPerLineOfCode);
             })
             .catch(error => {
-                console.log("Error fetching technical debt statistics: ", error);
+                console.warn("Error fetching technical debt statistics: ", error);
                 setError(true);
                 setErrorTitle("Error fetching technical debt statistics");
                 setErrorMessage("An error occurred while fetching the technical debt statistics of the organization. Please try again later.");

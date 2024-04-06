@@ -29,3 +29,9 @@
     background: var(--org-color-primary);
     opacity: 0.8;
 }
+
+@media (max-width: 768px) {
+    .sign-up-form {
+        width: 90vw;
+    }
+}

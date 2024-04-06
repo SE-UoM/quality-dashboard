@@ -22,8 +22,6 @@ const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideOne() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
-    console.log("Access token: ", accessToken)
     const [totalProjects, setTotalProjects] = useState(0);
     const [totalLanguages, setTotalLanguages] = useState(0);
     const [totalDevelopers, setTotalDevelopers] = useState(0);
@@ -52,8 +50,10 @@ function DashboardSlideOne() {
 
         axios.get(url, { headers: headers })
             .then((response) => {
-                console.log("General stats fetched successfully");
                 let data = response.data;
+
+                console.info("General stats: ", data)
+
                 setTotalProjects(data.totalProjects);
                 setTotalLanguages(data.totalLanguages);
                 setTotalDevelopers(data.totalDevs);
@@ -62,7 +62,7 @@ function DashboardSlideOne() {
                 setTotalLoc(data.totalLinesOfCode);
             })
             .catch((error) => {
-                console.log("Error fetching general stats: ", error);
+                console.warn("Error fetching general stats: ", error);
                 setError(true);
                 setErrorTitle("Error fetching general statistics");
                 setErrorMessage("An error occurred while fetching the general statistics of the organization. Please try again later.");

@@ -43,8 +43,6 @@ const WordCloudCard = () => {
                 });
 
                 setWords(responseWords);
-
-                console.log(words)
             })
             .catch((error) => {
                 setError(true);

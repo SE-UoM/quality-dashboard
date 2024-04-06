@@ -43,7 +43,6 @@ function App() {
 
         let isAdmin = decoded.roles.includes('PRIVILEGED')
         setIsAdmin(isAdmin)
-        console.log(isAdmin)
     }, [isAuthenticated, accessToken, isAdmin])
 
 

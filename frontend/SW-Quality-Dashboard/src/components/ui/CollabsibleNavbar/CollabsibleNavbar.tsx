@@ -6,7 +6,6 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
     const [expanded, setExpanded] = useState(true);
     const [buttonIcon, setButtonIcon] = useState('bi bi-chevron-compact-up')
 
-    console.log(currentSlide)
 
     const toggleNavbar = () => {
         setExpanded(!expanded);
@@ -21,7 +20,7 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
     };
 
     const rightBtnClick = () => {
-        console.log("LEFT")
+        console.info("Clicked Right Button")
 
         // If the current slide is the last slide, go back to the first slide
         if (currentSlide === totalSlides) {
@@ -29,13 +28,11 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
             return
         }
 
-        console.log(currentSlide)
-
         setCurrentSlide(currentSlide + 1)
     }
 
     const leftBtnClick = () => {
-        console.log("Previous Clicked")
+        console.info("Clicked Left Button")
 
         // If the current slide is the first slide, go to the last slide
         if (currentSlide === 1) {

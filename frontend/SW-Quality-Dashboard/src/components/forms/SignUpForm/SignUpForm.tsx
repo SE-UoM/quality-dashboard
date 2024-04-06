@@ -7,6 +7,7 @@ import {acceptedUserMailDomains} from "../../../assets/data/config.json";
 import AccountVerificationModal from "../../modals/AccountVerificationModal/AccountVerificationModal.tsx";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 import {Divider} from "@chakra-ui/react";
+import uomLogo from "../../../assets/img/uom_logo.png";
 
 interface Organization {
     id: string;
@@ -41,14 +42,13 @@ function SignUpForm() {
                 setOrganizations(response.data);
             })
             .catch((error) => {
-                console.log(error);
+                console.warn("Sign Up API Error: " + error);
             });
     }, []);
 
 
     const handleSignUp = (e) => {
         e.preventDefault()
-        console.log('Sign Up Clicked');
 
         // Make sure the user has entered all the required fields
         if (!email || !password || !selectedOrganization || !name) {
@@ -59,10 +59,8 @@ function SignUpForm() {
 
         // Make sure the email is from an accepted domain
         let domain = email.split('@')[1];
-        console.log(domain)
 
         let domainIsAccepted = !acceptedUserMailDomains.includes(domain);
-        console.log(domainIsAccepted)
 
         if (domainIsAccepted) {
             setError(true);
@@ -101,7 +99,7 @@ function SignUpForm() {
                 setShowModal(true)
             })
             .catch((error) => {
-                console.log(error);
+                console.warn(error);
                 setError(true);
                 setErrorMessage(error.response.data.message);
             });
@@ -208,7 +206,10 @@ function SignUpForm() {
                             >
                                 <option selected>Select Organization</option>
                                 {organizations.map((organization) => {
-                                    return <option key={organization.id} value={organization.id}>{organization.name}</option>
+                                    return <option key={organization.id} value={organization.id}>
+                                                <img src={uomLogo}/>
+                                                {organization.name}
+                                           </option>
                                 })}
                             </select>
                             <label htmlFor="floatingSelect">
@@ -230,7 +231,7 @@ function SignUpForm() {
                     <Divider/>
 
                     <Form.Group className="m-0" controlId="formBasicRegisterUrl">
-                        <Form.Label>
+                        <Form.Label className="already-registered">
                             <i className="bi bi-link-45deg"> </i>Already have an account? <a href="/login" className={"sign-up-link-login-form"}> Login Instead.</a>
                         </Form.Label>
                     </Form.Group>

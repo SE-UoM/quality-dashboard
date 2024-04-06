@@ -44,11 +44,12 @@ function LanguageDistributionCard() {
         }
         axios.get(url, { headers: headers })
             .then(response => {
+                console.info("Language distribution data: ", response.data)
                 setTotalLanguages(response.data.totalLanguages);
                 setLanguageDistribution(response.data.languageDistribution);
             })
             .catch(error => {
-                console.log("Error fetching language distribution data: ", error);
+                console.warn("Error fetching language distribution data: ", error);
                 setError(true);
                 setErrorTitle("Error fetching language distribution data");
                 setErrorMessage("An error occurred while fetching the language distribution data of the organization. Please try again later.");

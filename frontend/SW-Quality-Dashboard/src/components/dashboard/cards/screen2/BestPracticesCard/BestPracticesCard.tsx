@@ -40,7 +40,7 @@ function BestPracticesCard() {
                 setBestPracticeDescription(data.explanation);
             })
             .catch((error) => {
-                console.log(error);
+                console.warn("Error Calling Best Practices API: " + error);
                 setError(true);
                 setErrorTitle("Error");
                 setErrorMessage("An error occurred while trying to get the best practices.");

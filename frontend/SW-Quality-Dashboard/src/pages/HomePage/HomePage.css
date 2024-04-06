@@ -6,6 +6,7 @@
     height: 80vh;
     background-color: var(--org-color-primary);
     color: white;
+    text-align: center;
 }
 
 .home-page h1 {
@@ -35,4 +36,18 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .home-page {
+        padding: 1rem;
+    }
+
+    .homepage-action-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .home-page p {
+        font-size: 1.2rem;
+    }
 }

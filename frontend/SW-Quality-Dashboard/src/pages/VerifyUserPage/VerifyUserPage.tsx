@@ -29,8 +29,6 @@ function VerifyUserPage() {
 
     async function callAPI(token, uid) {
         let url = baseApiUrl + apiRoutes.routes.verifyUser;
-        console.log(url)
-
         // Replace ${uid} and ${token} with the actual values
         url = url.replace('${uid}', uid)
         url = url.replace('${token}', token)
