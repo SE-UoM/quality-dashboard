@@ -49,6 +49,7 @@ function DashboardSlideThree() {
                 });
 
                 setBestProjects(data);
+                console.log(data)
             })
             .catch((error) => {
                 setError(true);
@@ -105,13 +106,13 @@ function DashboardSlideThree() {
                 >
                     {bestProjects.map((item, index) => {
                         let name = item.name;
-                        let techDebtPerLoc = item.techDebtPerLoc;
+                        let owner = item.owner;
                         let rank = index + 1;
                         return (
                             <DashboardRankedItem
                                 key={index}
                                 projectName={name}
-                                owner={techDebtPerLoc}
+                                owner={"By: " + owner}
                                 rank={rank}
                             />
                         )
@@ -134,7 +135,7 @@ function DashboardSlideThree() {
                             <DashboardRankedItem
                                 key={index}
                                 projectName={name}
-                                owner={totalCommits}
+                                owner={"Contributions: " + totalCommits}
                                 rank={rank}
                             />
                         )
