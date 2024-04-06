@@ -33,7 +33,9 @@
       "topProjects": "/api/organizations/:organizationId/top-projects",
       "languageNames": "/api/organizations/:organizationId/language-names",
       "topContributors": "/api/organizations/:organizationId/top-developers",
-      "projectsInfo": "/api/organizations/:organizationId/projects-info"
+      "projectsInfo": "/api/organizations/:organizationId/projects-info",
+      "mostActiveDeveloper": "/api/organizations/:organizationId/most-active-developer",
+      "mostActiveProject": "/api/organizations/:organizationId/most-active-project"
     }
   }
 }
