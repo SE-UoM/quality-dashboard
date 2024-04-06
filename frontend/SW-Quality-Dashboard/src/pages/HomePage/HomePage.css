@@ -33,9 +33,11 @@
 }
 
 .homepage-action-buttons {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 1rem;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 @media (max-width: 768px) {
