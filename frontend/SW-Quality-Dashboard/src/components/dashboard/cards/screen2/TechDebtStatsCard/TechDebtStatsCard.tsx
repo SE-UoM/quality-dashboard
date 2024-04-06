@@ -71,7 +71,7 @@ function TechDebtStatsCard() {
                             <i className="bi bi-stopwatch"> </i>
                             Average Project Debt:
                         </strong>
-                        {" " + averageProjectTechDebt} '
+                        {" " + parseFloat(averageProjectTechDebt.toFixed(2))} '
                     </p>
 
                     <p className={"td-stat-item"}>
@@ -79,7 +79,7 @@ function TechDebtStatsCard() {
                             <i className="bi bi-piggy-bank"> </i>
                             Maximum Debt:
                         </strong>
-                        {" " + maxTechDebt} <i className={"bi bi-currency-euro"}> </i>
+                        {" " + parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
                     </p>
 
                     <p className={"td-stat-item"}>
@@ -87,7 +87,7 @@ function TechDebtStatsCard() {
                             <i className="bi bi-stopwatch"> </i>
                             Debt per Line of Code:
                         </strong>
-                        {" " + averageTechDebtPerLineOfCode} '
+                        {" " + parseFloat(averageTechDebtPerLineOfCode.toFixed(2))} '
                     </p>
 
                     <p className={"td-stat-item"}>
@@ -95,7 +95,7 @@ function TechDebtStatsCard() {
                             <i className="bi bi-piggy-bank"> </i>
                             Minimum Debt:
                         </strong>
-                        {" " + minTechDebt} <i className={"bi bi-currency-euro"}> </i>
+                        {" " + parseFloat(minTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
                     </p>
                 </section>
             </div>

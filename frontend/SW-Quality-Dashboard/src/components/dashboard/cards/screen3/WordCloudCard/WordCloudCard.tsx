@@ -34,15 +34,14 @@ const WordCloudCard = () => {
             'Content-Type': 'application/json'
         }
 
+        console.log(url)
+
         axios.get(url, {headers: headers})
             .then((response) => {
                 let data = response.data;
-
-                let responseWords = data.map((word) => {
-                    return word.name;
-                });
-
-                setWords(responseWords);
+                
+                setWords(response.data);
+                console.info(data)
             })
             .catch((error) => {
                 setError(true);

@@ -42,9 +42,17 @@ function CodeSmellDistributionCard() {
         }
         axios.get(url, { headers: headers })
             .then(response => {
-                setTotalCodeSmells(response.data.totalCodeSmells);
-                setCodeSmellDistribution(response.data.codeSmellsDistribution);
+                let data = response.data;
 
+                console.info("Code Smell Distribution Data: ", data);
+
+                let totalCodeSmells = response.data.totalCodeSmells;
+                let codeSmellDistribution = response.data.codeSmellsDistribution;
+
+                console.log(codeSmellDistribution)
+
+                setTotalCodeSmells(totalCodeSmells);
+                setCodeSmellDistribution(codeSmellDistribution);
             })
             .catch(error => {
                 console.warn("Error fetching language distribution data: ", error);
@@ -56,11 +64,11 @@ function CodeSmellDistributionCard() {
 
 
     // Format data for PieChart
-    const pieChartData = Object.entries(codeSmellDistribution).map(([key, value]) => ({
-        key: key,
-        value: value,
-        label: key,
-        color: colors[key]
+    const pieChartData = codeSmellDistribution.map((item, index) => ({
+        key: item.severity,
+        value: item.count,
+        label: item.severity + " (" + item.count + ")",
+        color: colors[item.severity]
     }));
 
     return (

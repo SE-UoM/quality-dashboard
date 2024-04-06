@@ -6,7 +6,7 @@ function ItemActivityCard({cardTitle, cardTitleIcon, cardImage, cardIcon, countT
              id={"itemActivity"}
              style={{gridArea: gridArea}}
         >
-            <h3>
+            <h3 className="header">
                 <i className={cardTitleIcon}> </i>
                 {cardTitle}
             </h3>
@@ -15,7 +15,7 @@ function ItemActivityCard({cardTitle, cardTitleIcon, cardImage, cardIcon, countT
                 <img src={cardImage} className="card-image" />
 
                 <div className="card-content-details">
-                    <h3>
+                    <h3 className={"name"}>
                         {countTitle}
                     </h3>
 
