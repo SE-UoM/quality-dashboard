@@ -83,15 +83,13 @@ public class AnalysisService {
         githubApiClient.checkoutCommit(project, GithubApiClient.getDefaultBranchName(project));
 
         sonarAnalysis = new SonarAnalysis(project, "master", SONARQUBE_URL);
+
+        // Wait a bit to make sure the analysis data is available
+        Thread.sleep(10000);
     }
 
     private void extractAnalysisDataForProject(Project project) throws Exception {
         Collection languages = languageService.extractLanguagesFromProject(project);
-
-        while (languages.isEmpty()) {
-            languages = languageService.extractLanguagesFromProject(project);
-            Thread.sleep(1000);
-        }
 
         int totalLanguages = languages.size();
         int totalDevelopers = project.getDevelopers().size();
