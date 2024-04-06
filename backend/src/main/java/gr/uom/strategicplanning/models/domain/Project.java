@@ -51,16 +51,6 @@ public class Project {
 
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
-    
-    public boolean canBeAnalyzed() {
-        if (this.totalCommits >= OrganizationAnalysis.COMMITS_THRESHOLD) {
-            this.status = ProjectStatus.ANALYSIS_TO_BE_REVIEWED;
-            return false;
-        }
-
-        this.status = ProjectStatus.ANALYSIS_NOT_STARTED;
-        return true;
-    }
 
     public void addCommit(Commit commit) {
         this.commits.add(commit);

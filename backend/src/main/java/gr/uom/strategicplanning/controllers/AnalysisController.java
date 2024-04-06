@@ -114,8 +114,23 @@ public class AnalysisController {
             // Save the project
             projectRepository.save(project);
 
-            if (!project.canBeAnalyzed()) {
+            // Check if the project has less than the required number of commits
+            boolean repoHasLessCommits = analysisService.repoHasLessThatThresholdCommits(project);
+
+            if (!repoHasLessCommits) {
                 project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+
+                // Save the project, organization and update the organization analysis
+                projectRepository.save(project);
+                organizationService.saveOrganization(organization);
+                organizationAnalysisService.updateOrganizationAnalysis(organization);
+
+                ResponseInterface response = ResponseFactory.createResponse(
+                        HttpStatus.OK.value(),
+                        "The Repo has a lot of commits, so we will review it first. We will notify you when the analysis is done"
+                );
+
+                return ResponseEntity.ok(response);
             } else {
                 analysisService.startAnalysis(project);
             }

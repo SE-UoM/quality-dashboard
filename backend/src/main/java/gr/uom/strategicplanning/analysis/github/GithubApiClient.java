@@ -85,6 +85,27 @@ public class GithubApiClient extends HttpClient {
         }
     }
 
+    public boolean repoHasLessThatThresholdCommits(Project project, int thresholdCommits) {
+        String username = extractUsername(project.getRepoUrl());
+        String repoName = extractRepoName(project.getRepoUrl());
+
+        String url = String.format("https://api.github.com/repos/%s/%s/commits?per_page=100", username, repoName);
+
+        try {
+            Response response = sendGithubRequest(url);
+
+            if (response.isSuccessful()) {
+                List<Map<String, Object>> commitsList = gson.fromJson(response.body().string(), List.class);
+                return commitsList.size() < thresholdCommits;
+            } else {
+                throw new IOException("Failed to fetch commits from GitHub API");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * Retrieves the number of stargazers for a GitHub repository.
      *

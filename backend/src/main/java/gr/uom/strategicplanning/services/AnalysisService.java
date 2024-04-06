@@ -4,6 +4,7 @@ import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalysis;
 import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.eclipse.jgit.api.Git;
@@ -54,6 +55,10 @@ public class AnalysisService {
 
     public boolean validateUrlWithGithub(String url) {
         return githubApiClient.repoFoundByGithubAPI(url);
+    }
+
+    public boolean repoHasLessThatThresholdCommits(Project project) {
+        return githubApiClient.repoHasLessThatThresholdCommits(project, OrganizationAnalysis.COMMITS_THRESHOLD);
     }
 
     private void analyzeCommits(Project project) throws Exception {
@@ -137,6 +142,9 @@ public class AnalysisService {
         analyzeMaster(project);
 
         extractAnalysisDataForProject(project);
+
+        // Set the total commits of the project
+        project.setTotalCommits(project.getCommits().size());
 
         // Save the project with updated analysis data
         projectService.saveProject(project);
