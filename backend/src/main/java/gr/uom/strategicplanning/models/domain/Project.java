@@ -29,7 +29,7 @@ public class Project {
     private String repoUrl;
     private int forks;
     private int stars;
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project")
     private Collection<Commit> commits = new ArrayList<>();
     private int totalDevelopers = 0;
     private int totalCommits;
@@ -38,7 +38,7 @@ public class Project {
     private int totalLanguages;
     private int totalRefactorings;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(
             name = "project_developer",
             joinColumns = @JoinColumn(name = "project_id"),

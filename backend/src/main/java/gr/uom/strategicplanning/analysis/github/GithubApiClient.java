@@ -15,6 +15,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +63,26 @@ public class GithubApiClient extends HttpClient {
                 .build();
 
         return client.newCall(request).execute();
+    }
+
+    public boolean repoFoundByGithubAPI(String repoUrl) {
+        String username = extractUsername(repoUrl);
+        String repoName = extractRepoName(repoUrl);
+        String url = String.format("https://api.github.com/repos/%s/%s", username, repoName);
+        try {
+            Response response = sendGithubRequest(url);
+
+            if (response.isSuccessful())
+                return true;
+
+            if (response.code() != HttpStatus.NOT_FOUND.value())
+                throw new IOException("Failed to fetch repository from GitHub API");
+
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**

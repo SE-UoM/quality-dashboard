@@ -52,6 +52,10 @@ public class AnalysisService {
 
     }
 
+    public boolean validateUrlWithGithub(String url) {
+        return githubApiClient.repoFoundByGithubAPI(url);
+    }
+
     private void analyzeCommits(Project project) throws Exception {
         List<String> commitList = githubApiClient.fetchCommitSHA(project);
 
@@ -76,10 +80,9 @@ public class AnalysisService {
         sonarAnalysis = new SonarAnalysis(project, "master", SONARQUBE_URL);
 
         // Wait a bit to make sure the analysis data is available
-        Thread.sleep(5000);
+        Thread.sleep(10000);
     }
 
-    @Transactional
     private void extractAnalysisDataForProject(Project project) throws Exception {
         Collection languages = languageService.extractLanguagesFromProject(project);
 
@@ -118,7 +121,6 @@ public class AnalysisService {
         projectService.populateProjectStats(project);
     }
 
-    @Transactional
     public void startAnalysis(Project project) throws Exception {
         Git clonedGit = GithubApiClient.cloneRepository(project);
 
@@ -131,7 +133,7 @@ public class AnalysisService {
 
         project.getCommits().clear();
 
-        //analyzeCommits(project);
+        analyzeCommits(project);
         analyzeMaster(project);
 
         extractAnalysisDataForProject(project);

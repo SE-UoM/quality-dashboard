@@ -25,5 +25,20 @@ public class MailSendingService {
 
         mailSender.send(mailMessage);
     }
+
+    public void sendAnalysisCompletionEmail(String email, String projectName) {
+        String subject = "UoM Dashboard | Analysis Completed";
+        String message =
+                "Hello! The analysis for project " + projectName + " on UoM Dashboard has been completed."
+                + " You can now view the results on the dashboard."
+                + " Thank you for using UoM Dashboard!";
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(email);
+        mailMessage.setSubject(subject);
+        mailMessage.setText(message);
+
+        mailSender.send(mailMessage);
+    }
 }
 

@@ -32,30 +32,36 @@ public class AnalysisController {
     private final OrganizationAnalysisService organizationAnalysisService;
     private final String GITHUB_URL_PATTERN = "https://github.com/[^/]+/[^/]+" ;
     private final ExternalAnalysisService externalAnalysisService;
+    private final MailSendingService mailSendingService;
 
     @Value("${services.external.activated}")
     private boolean EXTERNAL_ANALYSIS_IS_ACTIVATED;
 
     @Autowired
-    public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
-                              UserService userService, ProjectRepository projectRepository,
-                              OrganizationAnalysisService organizationAnalysisService, ExternalAnalysisService externalAnalysisService) {
+    public AnalysisController(
+            AnalysisService analysisService,
+            OrganizationService organizationService,
+            UserService userService,
+            ProjectRepository projectRepository,
+            OrganizationAnalysisService organizationAnalysisService,
+            ExternalAnalysisService externalAnalysisService,
+            MailSendingService mailSendingService
+    ) {
         this.analysisService = analysisService;
         this.userService = userService;
         this.organizationAnalysisService = organizationAnalysisService;
         this.organizationService = organizationService;
         this.projectRepository = projectRepository;
         this.externalAnalysisService = externalAnalysisService;
+        this.mailSendingService = mailSendingService;
     }
 
     private boolean urlIsValid(String url) {
         return url.matches(GITHUB_URL_PATTERN);
     }
 
-    @Async
-    @Transactional
     @PostMapping("/start")
-    public CompletableFuture<ResponseEntity<ResponseInterface>> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) {
+    public ResponseEntity<ResponseInterface> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) {
         try {
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
             String email = decodedJWT.getSubject();
@@ -70,7 +76,7 @@ public class AnalysisController {
                         "The url you provided is not a valid github url"
                 );
 
-                return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(response));
+                return ResponseEntity.badRequest().body(response);
             }
 
             // Check if the project already exists
@@ -89,32 +95,54 @@ public class AnalysisController {
                 project = projectOptional.get();
             }
 
-            // Start analysis on the project
-            CompletableFuture<Void> backgroundTask = CompletableFuture.runAsync(() -> {
-                try {
-                    analysisService.fetchGithubData(project);
+            // Make sure github can find the repo
+            boolean repoFound = analysisService.validateUrlWithGithub(githubUrl);
 
-                    if (!project.canBeAnalyzed()) {
-                        project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
-                    } else {
-                        analysisService.startAnalysis(project);
-                    }
+            if (!repoFound) {
+                ResponseInterface response = ResponseFactory.createErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Repository not found",
+                        "The repository you provided was not found on github"
+                );
 
-                    organizationAnalysisService.updateOrganizationAnalysis(organization);
-                    organizationService.saveOrganization(organization);
+                return ResponseEntity.badRequest().body(response);
+            }
 
-                    if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            // Get the github data to make sure the repo actually exists
+            analysisService.fetchGithubData(project);
+
+            // Save the project
+            projectRepository.save(project);
+
+            if (!project.canBeAnalyzed()) {
+                project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+            } else {
+                analysisService.startAnalysis(project);
+            }
+
+            organizationAnalysisService.updateOrganizationAnalysis(organization);
+            organizationService.saveOrganization(organization);
+
+            if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
+
+//            // Start analysis on the project
+//            CompletableFuture<Void> backgroundTask = CompletableFuture.runAsync(() -> {
+//                try {
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            });
+
+            // Send a mail to the user to notify them that the analysis has finished
+            mailSendingService.sendAnalysisCompletionEmail(email, project.getName());
 
             // Return response immediately
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
-                    "Analysis started in the background"
+                    "Analysis Finished! You can see the results on the dashboard"
             );
-            return CompletableFuture.completedFuture(ResponseEntity.ok(response));
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             ResponseInterface response = ResponseFactory.createErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -122,7 +150,7 @@ public class AnalysisController {
                     e.getMessage()
             );
             e.printStackTrace();
-            return CompletableFuture.completedFuture(ResponseEntity.badRequest().body(response));
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }
