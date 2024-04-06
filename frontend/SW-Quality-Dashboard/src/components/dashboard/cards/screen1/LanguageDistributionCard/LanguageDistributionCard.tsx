@@ -17,6 +17,15 @@ const colors = [
     "#f7a35cff"
 ];
 
+function formatText(txt) {
+    if (!isNaN(txt) && parseInt(txt) > 1000) {
+        const num = parseInt(txt);
+        const roundedNum = Math.round(num / 100) / 10;
+        return parseInt(roundedNum) + "k";
+    }
+    return txt;
+}
+
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
 function LanguageDistributionCard() {
@@ -95,7 +104,7 @@ function LanguageDistributionCard() {
                         Language Distribution
                     </h3>
                     <div className="lang-distribution-chart">
-                        <h2>{totalLanguages}</h2>
+                        <h2>{formatText(totalLanguages)}</h2>
 
                         <PieChart
                             series={[{

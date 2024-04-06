@@ -16,6 +16,16 @@ const colors = {
     "INFO": "#58BBFB"
 }
 
+function formatText(text) {
+    let roundedNum;
+    if (!isNaN(text) && parseInt(text) > 1000) {
+        const num = parseInt(text);
+        roundedNum = Math.round(num / 100) / 10;
+        return parseInt(roundedNum) + "k";
+    }
+    return text;
+}
+
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
 function CodeSmellDistributionCard() {
@@ -86,7 +96,7 @@ function CodeSmellDistributionCard() {
                         Code Smell Distribution
                     </h3>
                     <div className="code-smells-distribution-chart">
-                        <h2>{totalCodeSmells}</h2>
+                        <h2>{formatText(totalCodeSmells)}</h2>
 
                         <PieChart
                             series={[{
