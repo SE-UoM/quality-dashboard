@@ -35,6 +35,12 @@ public class User {
     private Date verificationIssuedDate= new Date();
     private Date verificationExpirationDate = new Date(System.currentTimeMillis() + verCodeExpiryTime);
 
+    // Password reset related fields
+    private long passResetExpiryTime = 300000; // 5 minutes
+    private String passResetCode;
+    private Date passResetIssuedDate = new Date();
+    private Date passResetExpirationDate = new Date(System.currentTimeMillis() + passResetExpiryTime);
+
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
@@ -51,6 +57,20 @@ public class User {
 
     public boolean verificationIsValid(String code) {
         return code.equals(verificationCode) && !verificationCodeExpired();
+    }
+
+    public boolean passResetCodeExpired() {
+        return new Date().after(passResetExpirationDate);
+    }
+
+    public boolean passResetCodeIsValid(String code) {
+        return code.equals(passResetCode) && !passResetCodeExpired();
+    }
+
+    public void setPassResetCode(String passResetCode) {
+        this.passResetCode = passResetCode;
+        this.passResetIssuedDate = new Date();
+        this.passResetExpirationDate = new Date(System.currentTimeMillis() + passResetExpiryTime);
     }
 
     public void setVerificationCode(String verificationCode) {

@@ -43,11 +43,13 @@ public class SecurityConfig {
             "/api/user/register",
             "/api/user/verify",
             "/api/user/verify/resend",
+            "/api/user/reset-password/request",
             "/api/organizations/names",
             "/login",
             "/api/organizations",
             "/api/best-practices",
             "/api/best-practices/random",
+            "/api/user/reset-password"
     };
 
     @Bean

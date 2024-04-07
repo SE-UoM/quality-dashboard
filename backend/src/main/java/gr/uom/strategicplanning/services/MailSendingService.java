@@ -83,7 +83,7 @@ public class MailSendingService {
 
         // Replace placeholders in the template with actual values
         htmlContent = htmlContent.replace("{{GREETING_TEXT}}", "Hello!");
-        htmlContent = htmlContent.replace("{{GREETING_SUBTEXT}}", "Thank you for signing up to UoM Dashboard!");
+        htmlContent = htmlContent.replace("{{GREETING_SUBTEXT}}", "Thank you for using UoM Dashboard!");
         htmlContent = htmlContent.replace("{{MAIL_BODY_TEXT}}", "We wanted to inform you that the analysis for the project " + projectName + " has been completed.");
         htmlContent = htmlContent.replace("{{BUTTON_SECTION_HEADER_TEXT}}", "View results on the Dashboard!");
         htmlContent = htmlContent.replace("{{BUTTON_SECTION_URL}}", dashboardUrl);
@@ -93,6 +93,27 @@ public class MailSendingService {
 
         // Send email with HTML content
         sendHtmlEmail(email, subject, htmlContent);
+    }
+
+    public void sendPasswordResetEmail(String toEmail, String passResetCode, Long uid, String frontendUrl) {
+        String subject = "UoM Dashboard | Password Reset Request";
+        String resetUrl = frontendUrl + "/reset-password?token=" + passResetCode + "&uid=" + uid;
+
+        // Load HTML template from file
+        String htmlContent = loadHtmlTemplate("template-email-basic.html");
+
+        // Replace placeholders in the template with actual values
+        htmlContent = htmlContent.replace("{{GREETING_TEXT}}", "Hello!");
+        htmlContent = htmlContent.replace("{{GREETING_SUBTEXT}}", "You have requested a password reset for your UoM Dashboard account.");
+        htmlContent = htmlContent.replace("{{MAIL_BODY_TEXT}}", "To reset your password, please click the button below.");
+        htmlContent = htmlContent.replace("{{BUTTON_SECTION_HEADER_TEXT}}", "Click the button to reset your password");
+        htmlContent = htmlContent.replace("{{BUTTON_SECTION_URL}}", resetUrl);
+        htmlContent = htmlContent.replace("{{BUTTON_TEXT}}", "Reset Password");
+        htmlContent = htmlContent.replace("{{BUTTON_SUB_TEXT}}", "If the button does not work, please copy and paste the following link in your browser: ");
+        htmlContent = htmlContent.replace("{{BUTTON_SUB_TEXT_CAPTION}}", resetUrl);
+
+        // Send email with HTML content
+        sendHtmlEmail(toEmail, subject, htmlContent);
     }
 }
 

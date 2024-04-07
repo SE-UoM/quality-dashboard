@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.controllers.requests.ResetPasswordRequest;
 import gr.uom.strategicplanning.controllers.requests.UserRegistrationRequest;
 import gr.uom.strategicplanning.controllers.responses.implementations.UserResponse;
 import gr.uom.strategicplanning.models.domain.Organization;
@@ -127,6 +128,27 @@ public class UserService {
         return user;
     }
 
+    public void resetPasswordRequest(String userEmail) {
+        Optional<User> userOptional = userRepository.findByEmail(userEmail);
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email " + userEmail + " not found.");
+
+        User user = userOptional.get();
+        String passwordResetCode = generateCode(VERIFICATION_CODE_LENGTH);
+        user.setPassResetCode(passwordResetCode);
+
+        userRepository.save(user);
+
+        mailSendingService.sendPasswordResetEmail(
+                user.getEmail(),
+                user.getPassResetCode(),
+                user.getId(),
+                frontEndURL
+        );
+    }
+
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -180,5 +202,28 @@ public class UserService {
 
         // Url Encode the code
         return UriUtils.encode(code, "UTF-8");
+    }
+
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        String token = resetPasswordRequest.getToken();
+        String newPassword = resetPasswordRequest.getPassword();
+        Long uid = resetPasswordRequest.getUid();
+
+        Optional<User> userOptional = userRepository.findById(uid);
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Password Reset request for user not found");
+
+        User user = userOptional.get();
+
+        boolean passResetCodeExpired = user.passResetCodeExpired();
+        if(passResetCodeExpired) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Password Reset has expired. Please request a new password reset email.");
+
+        boolean passResetCodeIsValid = user.passResetCodeIsValid(token);
+        if(!passResetCodeIsValid) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Invalid password reset token");
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassResetCode(null);
+        userRepository.save(user);
     }
 }

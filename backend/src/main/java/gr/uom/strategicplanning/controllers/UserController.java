@@ -2,7 +2,9 @@ package gr.uom.strategicplanning.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gr.uom.strategicplanning.controllers.requests.ResetPasswordRequest;
 import gr.uom.strategicplanning.controllers.requests.UserRegistrationRequest;
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
 import gr.uom.strategicplanning.controllers.responses.implementations.UserResponse;
 import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.UserRepository;
@@ -67,13 +69,23 @@ public class UserController {
         return userResponses;
     }
 
-
-
     @GetMapping("/{id}")
     UserResponse getUserById(@PathVariable Long id){
         User user = userService.getUserById(id);
         UserResponse userResponse = new UserResponse(user);
         return userResponse;
+    }
+
+    @PostMapping("/reset-password/request")
+    public ResponseEntity<ResponseInterface> resetPassword(@RequestParam String userEmail){
+        userService.resetPasswordRequest(userEmail);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ResponseInterface> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
+        userService.resetPassword(resetPasswordRequest);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/token/refresh")
