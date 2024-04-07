@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--org-color-primary);
-    height: 97vh;
+    height: 96vh;
 
     /* Media query for screens smaller than 768px (typical mobile devices) */
     @media (max-width: 768px) {
