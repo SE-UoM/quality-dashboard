@@ -37,6 +37,9 @@ public class AnalysisController {
     @Value("${services.external.activated}")
     private boolean EXTERNAL_ANALYSIS_IS_ACTIVATED;
 
+    @Value("${frontend.url}")
+    private String  frontendURL;
+
     @Autowired
     public AnalysisController(
             AnalysisService analysisService,
@@ -151,7 +154,7 @@ public class AnalysisController {
 //            });
 
             // Send a mail to the user to notify them that the analysis has finished
-            mailSendingService.sendAnalysisCompletionEmail(email, project.getName());
+            mailSendingService.sendAnalysisCompletionEmail(email, project.getName(), frontendURL);
 
             // Return response immediately
             ResponseInterface response = ResponseFactory.createResponse(

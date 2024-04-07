@@ -7,6 +7,7 @@ import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import gr.uom.strategicplanning.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,13 @@ import org.springframework.web.util.UriUtils;
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
+    @Value("${frontend.url}")
+    private String frontEndURL;
     private final int VERIFICATION_CODE_LENGTH = 150;
 
     @Autowired
@@ -71,7 +73,8 @@ public class UserService {
         mailSendingService.sendVerificationEmail(
                 savedUser.getEmail(),
                 savedUser.getVerificationCode(),
-                savedUser.getId()
+                savedUser.getId(),
+                frontEndURL
         );
 
         return savedUser;
@@ -117,7 +120,8 @@ public class UserService {
         mailSendingService.sendVerificationEmail(
                 user.getEmail(),
                 user.getVerificationCode(),
-                user.getId()
+                user.getId(),
+                frontEndURL
         );
 
         return user;
