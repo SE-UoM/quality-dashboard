@@ -8,8 +8,10 @@ import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import contributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 import githubIcon from "../../../../assets/svg/dashboardIcons/github_icon.svg";
+import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
 import ItemActivityCard from "../../cards/ItemActivityCard/ItemActivityCard.tsx";
 import {jwtDecode} from "jwt-decode";
+import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -28,7 +30,23 @@ function DashboardSlideFour() {
     const [mostActiveProjName, setMostActiveProjName] = useState("");
     const [mostActiveProjCommits, setMostActiveProjCommits] = useState(0);
 
-    // Call the API to get the most active developer and project
+    const [mostStarredProjName, setMostStarredProjName] = useState("Test");
+    const [mostStarredProjFiles, setMostStarredProjFiles] = useState(0);
+    const [mostStarredProjLines, setMostStarredProjLines] = useState(0);
+    const [mostStarredProjSmells, setMostStarredProjSmells] = useState(0);
+    const [mostStarredProjDebt, setMostStarredProjDebt] = useState(0);
+    const [mostStarredProjDevName, setMostStarredProjDevName] = useState("Test Dev");
+
+
+    const [mostForkedProjName, setMostForkedProjName] = useState("Test");
+    const [mostForkedProjFiles, setMostForkedProjFiles] = useState(0);
+    const [mostForkedProjLines, setMostForkedProjLines] = useState(0);
+    const [mostForkedProjSmells, setMostForkedProjSmells] = useState(0);
+    const [mostForkedProjDebt, setMostForkedProjDebt] = useState(0);
+    const [mostForkedProjDevName, setMostForkedProjDevName] = useState("Test Dev");
+
+
+    // Call the API to get the most active developer
     useEffect(() => {
         let mostActiveDevUrl = baseApiUrl + apiUrls.routes.dashboard.mostActiveDeveloper
         // Replace the organization id in the URL
@@ -53,6 +71,7 @@ function DashboardSlideFour() {
                 setErrorMessage(error.response.data.message);
             });
 
+
     }, [accessToken]);
 
     // Call the API to get the most active project
@@ -73,6 +92,66 @@ function DashboardSlideFour() {
                 setMostActiveProjImage(githubIcon);
                 setMostActiveProjName(data.name);
                 setMostActiveProjCommits(data.totalCommits);
+            })
+            .catch((error) => {
+                setError(true);
+                setErrorTitle("Error");
+                setErrorMessage(error.response.data.message);
+            });
+    }, [accessToken]);
+
+    // Call the API to get the most starred project
+    useEffect(() => {
+        let mostStarredProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostStarredProject
+
+        // Replace the organization id in the URL
+        mostStarredProjUrl = mostStarredProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
+
+        let headers = {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+
+        axios.get(mostStarredProjUrl, {headers: headers})
+            .then((response) => {
+                let data = response.data;
+
+                setMostStarredProjName(data.name);
+                setMostStarredProjFiles(data.files);
+                setMostStarredProjLines(data.loc);
+                setMostStarredProjSmells(data.totalCodeSmells);
+                setMostStarredProjDebt(data.techDebt);
+                setMostStarredProjDevName(data.owner);
+            })
+            .catch((error) => {
+                setError(true);
+                setErrorTitle("Error");
+                setErrorMessage(error.response.data.message);
+            });
+    }, [accessToken]);
+
+    // Call the API to get the most forked project
+    useEffect(() => {
+        let mostForkedProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostForkedProject
+
+        // Replace the organization id in the URL
+        mostForkedProjUrl = mostForkedProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
+
+        let headers = {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+
+        axios.get(mostForkedProjUrl, {headers: headers})
+            .then((response) => {
+                let data = response.data;
+
+                setMostForkedProjName(data.name);
+                setMostForkedProjFiles(data.files);
+                setMostForkedProjLines(data.loc);
+                setMostForkedProjSmells(data.totalCodeSmells);
+                setMostForkedProjDebt(data.techDebt);
+                setMostForkedProjDevName(data.owner);
             })
             .catch((error) => {
                 setError(true);
@@ -112,31 +191,43 @@ function DashboardSlideFour() {
                     gridArea={"mostActiveProj"}
                 />
 
-                <div className="dashboard-card"
-                     style={{gridArea: "mostStarredProj"}}
-                >
-                    <h1>Most Starred Project</h1>
-                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
-                </div>
+                <ProjectCard
+                    cardHeader={"Most Starred Project"}
+                    cardHeaderIcon={"bi bi-star-fill"}
+                    id={"mostStarredProj"}
+                    contentImage={starIcon}
+                    projectName={mostStarredProjName}
+                    nameSubText={"By: " + mostStarredProjDevName}
+                    totalFiles={mostStarredProjFiles}
+                    totalLines={mostStarredProjLines}
+                    totalDebt={mostStarredProjDebt}
+                    totalCodeSmells={mostStarredProjSmells}
+                />
+
+                <ProjectCard
+                    cardHeader={"Most Forked Project"}
+                    cardHeaderIcon={"bi bi-git"}
+                    id={"mostForked"}
+                    contentImage={githubIcon}
+                    projectName={mostForkedProjName}
+                    nameSubText={"By: " + mostForkedProjDevName}
+                    totalFiles={mostForkedProjFiles}
+                    totalLines={mostForkedProjLines}
+                    totalDebt={mostForkedProjDebt}
+                    totalCodeSmells={mostForkedProjSmells}
+                />
 
                 <div className="dashboard-card"
                      style={{gridArea: "commitGraph"}}
                 >
-                    <h1>Commit Graph</h1>
-                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
-                </div>
-
-                <div className="dashboard-card"
-                     style={{gridArea: "mostForked"}}
-                >
-                    <h1>Most Forked</h1>
+                    <h1> </h1>
                     <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 
                 <div className="dashboard-card"
                      style={{gridArea: "developersSlides"}}
                 >
-                    <h1>Developers</h1>
+                    <h1> </h1>
                     <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
                 </div>
 

@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     grid-template-columns: 1fr 5fr 1fr;
-    height: 1.8em;
+    height: 4vh;
     background-color: var(--org-color-primary-dark-version)
 }
 

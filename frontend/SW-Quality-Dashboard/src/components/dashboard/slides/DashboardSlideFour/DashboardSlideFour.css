@@ -7,3 +7,15 @@
 
         "footerCard footerCard footerCard footerCard footerCard";
 }
+
+#mostStarredProj {
+    grid-area: mostStarredProj;
+    padding: 0;
+    width: 100%;
+}
+
+#mostForked {
+    grid-area: mostForked;
+    padding: 0;
+    width: 100%;
+}

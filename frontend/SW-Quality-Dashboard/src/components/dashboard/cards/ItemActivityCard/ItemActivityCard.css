@@ -19,8 +19,10 @@
 }
 
 .name {
-    font-size: 2em !important;
+    font-size: 1.5em !important;
     font-weight: bold;
+    margin: 0;
+    padding: 0;
 }
 
 .dashboard-card#itemActivity .card-content {
@@ -56,12 +58,14 @@
 .card-content-details-caption {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
     gap: 0.5em;
     width: 100%;
 }
 
 .card-content-details-caption img {
-    height: 4em;
+    height: 3em;
 }
 
 .card-content-details-count {
