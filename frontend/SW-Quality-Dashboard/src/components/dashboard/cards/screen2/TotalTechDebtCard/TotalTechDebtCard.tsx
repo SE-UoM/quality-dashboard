@@ -8,6 +8,16 @@ import {jwtDecode} from "jwt-decode";
 
 let baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
+function formatText(text) {
+    let roundedNum;
+    if (!isNaN(text) && parseInt(text) > 1000) {
+        const num = parseInt(text);
+        roundedNum = Math.round(num / 100) / 10;
+        return roundedNum.toFixed(2) + "k";
+    }
+    return text;
+}
+
 function TotalTechDebtCard() {
     const [totalTechDebt, setTotalTechDebt] = useState(0);
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
@@ -62,7 +72,7 @@ function TotalTechDebtCard() {
 
                 <h2 className="td-value">
                     <i className={"bi bi-currency-euro"}> </i>
-                    {totalTechDebt}
+                    {formatText(totalTechDebt)}
                 </h2>
             </div>
         </>
