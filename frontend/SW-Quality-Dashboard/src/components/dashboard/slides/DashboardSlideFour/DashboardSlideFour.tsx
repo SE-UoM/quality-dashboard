@@ -45,6 +45,9 @@ function DashboardSlideFour() {
     const [mostForkedProjDebt, setMostForkedProjDebt] = useState(0);
     const [mostForkedProjDevName, setMostForkedProjDevName] = useState("Test Dev");
 
+    const [developers, setDevelopers] = useState([]);
+    const [currentDevName, setCurrentDevName] = useState("");
+    const [currentDevImage, setCurrentDevImage] = useState("");
 
     // Call the API to get the most active developer
     useEffect(() => {
@@ -160,6 +163,53 @@ function DashboardSlideFour() {
             });
     }, [accessToken]);
 
+    // Call the API to get the developers
+    useEffect(() => {
+        // Get the organization id from the access token
+        let organizationId = jwtDecode(accessToken).organizationId;
+
+        let developersUrl = baseApiUrl + apiUrls.routes.dashboard.developers;
+
+        // Replace the organization id in the URL
+        developersUrl = developersUrl.replace(":organizationId", organizationId);
+
+        let headers = {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+
+        axios.get(developersUrl, {headers: headers})
+            .then((response) => {
+                let data = response.data;
+                setDevelopers(data);
+
+                // Set the current developer name and image
+                if (data.length < 1) {
+                    setCurrentDevName("No Developers");
+                    setCurrentDevImage("https://via.placeholder.com/80");
+                }
+
+                let currentDev = data[0];
+                setCurrentDevName(currentDev.name);
+                setCurrentDevImage(currentDev.avatarUrl);
+
+                // Every 10 seconds, change the current developer
+                let index = 0;
+                setInterval(() => {
+                    index = (index + 1) % data.length;
+                    setCurrentDevName(data[index].name);
+                    setCurrentDevImage(data[index].avatarUrl);
+                }, 10000);
+            })
+            .catch((error) => {
+                setError(true);
+                setErrorTitle("Error");
+                setErrorMessage(error.response.data.message);
+            });
+
+    }, [accessToken]);
+
+
     return (
         <>
             {error &&
@@ -225,10 +275,17 @@ function DashboardSlideFour() {
                 </div>
 
                 <div className="dashboard-card"
+                     id={"developers"}
                      style={{gridArea: "developersSlides"}}
                 >
-                    <h1> </h1>
-                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
+                    <h4>
+                        <i className="bi bi-person-lines-fill"> </i>
+                        Developers
+                    </h4>
+                    <img src={currentDevImage} alt="Developers" id="devImg" />
+                    <h5>{
+                        currentDevName ? currentDevName : "Anonymous Dev"
+                    }</h5>
                 </div>
 
                 <FooterCard

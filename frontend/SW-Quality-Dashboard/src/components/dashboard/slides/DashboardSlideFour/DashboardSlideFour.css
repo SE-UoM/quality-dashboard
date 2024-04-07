@@ -6,6 +6,9 @@
         "mostStarredProj mostStarredProj mostForked mostForked developersSlides"
 
         "footerCard footerCard footerCard footerCard footerCard";
+
+    /* Define the width of columns */
+    grid-template-columns: repeat(5, minmax(0, 1fr)); /* Adjust the number of columns and their width as needed */
 }
 
 #mostStarredProj {
@@ -18,4 +21,17 @@
     grid-area: mostForked;
     padding: 0;
     width: 100%;
+}
+
+#developers {
+    grid-area: developersSlides;
+    padding: 0.5em;
+}
+
+#devImg {
+    border-radius: 10em;
+    height: 100%;
+    width: auto;
+
+    transition: content 0.5s;
 }
