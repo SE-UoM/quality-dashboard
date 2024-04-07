@@ -18,12 +18,16 @@ import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "./interfaces/DecodedToken.ts";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
+import PasswordResetPage from "./pages/PasswordResetPage/PasswordResetPage.tsx";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function App() {
     const isVerifyPage = useLocation().pathname.includes('verify');
     const isDashboardPage = useLocation().pathname.includes('dashboard');
+    const isResetPasswordPage = useLocation().pathname.includes('reset-password');
+    const isForgotPasswordPage = useLocation().pathname.includes('forgot-password');
 
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAuthenticated] = useAuthenticationCheck(accessToken)
@@ -48,7 +52,7 @@ function App() {
 
     return (
         <>
-                {!isVerifyPage && !isDashboardPage &&
+                {!isVerifyPage && !isDashboardPage && !isResetPasswordPage && !isForgotPasswordPage &&
                     <DashboardNavbar
                         isAuthenticated={isAuthenticated}
                         isAdmin={isAdmin}
@@ -66,6 +70,8 @@ function App() {
                             <Route path="login" element={<LoginPage />} />
                             <Route path="verify" element={<VerifyUserPage />} />
                             <Route path="submit-project" element={<SubmitProjectPage />} />
+                            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+                            <Route path="reset-password" element={<PasswordResetPage />} />
                             <Route path='*' element={<NotFoundPage />} />
 
                             {/* Protected Routes */}
@@ -79,7 +85,9 @@ function App() {
                         </Route>
                     </Routes>
 
-                    {!isVerifyPage && !isDashboardPage && <Footer />}
+                    {!isVerifyPage && !isDashboardPage && !isResetPasswordPage && !isForgotPasswordPage &&
+                        <Footer />
+                    }
         </>
     )
 }

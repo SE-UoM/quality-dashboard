@@ -8,6 +8,8 @@
     "getAllOrganizations": "/api/organizations",
 
     "verifyUser": "/api/user/verify?token=${token}&uid=${uid}",
+    "resetPasswordRequest": "/api/user/reset-password/request",
+    "resetPassword": "/api/user/reset-password",
 
     "examples": {
       "languageDistribution": "/api/examples/language-distribution",

@@ -140,6 +140,9 @@ function LoginForm() {
                                 {showPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
                             </Button>
                         </div>
+                        <Form.Text className="text-muted">
+                            <a href="/forgot-password" className="forgot-password-link">Forgot password?</a>
+                        </Form.Text>
                     </Form.Group>
 
                     <Form.Group className="m-3" controlId="formBasicCheckbox">
