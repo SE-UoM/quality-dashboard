@@ -35,7 +35,9 @@
       "topContributors": "/api/organizations/:organizationId/top-developers",
       "projectsInfo": "/api/organizations/:organizationId/projects-info",
       "mostActiveDeveloper": "/api/organizations/:organizationId/most-active-developer",
-      "mostActiveProject": "/api/organizations/:organizationId/most-active-project"
+      "mostActiveProject": "/api/organizations/:organizationId/most-active-project",
+      "mostStarredProject": "/api/organizations/:organizationId/most-starred-project",
+      "mostForkedProject": "/api/organizations/:organizationId/most-forked-project"
     }
   }
 }
