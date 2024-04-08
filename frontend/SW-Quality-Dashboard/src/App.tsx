@@ -1,15 +1,15 @@
 import './App.css'
 import {BrowserRouter, Outlet, Route, Routes, useLocation} from "react-router-dom"
-import Dashboard from './pages/DashboardPage/DashboardPage.tsx'
+import Dashboard from './pages/general/DashboardPage/DashboardPage.tsx'
 import { ChakraProvider } from '@chakra-ui/react'
-import RegisterPage from './pages/RegisterPage/RegisterPage.tsx'
-import AdminPanel from './pages/AdminPanel/AdminPanel.tsx'
-import RegisterOrganisationPage from './pages/RegisterOrganizationPage/RegisterOrganisationPage.tsx'
-import AboutPage from './pages/AboutPage/AboutPage.tsx'
-import SubmitProjectPage from './pages/SubmitProjectPage/SubmitProjectPage.tsx'
-import LoginPage from './pages/LoginPage/LoginPage.tsx'
-import VerifyUserPage from "./pages/VerifyUserPage/VerifyUserPage.tsx"
-import HomePage from "./pages/HomePage/HomePage.tsx";
+import RegisterPage from './pages/auth/RegisterPage/RegisterPage.tsx'
+import AdminPanel from './pages/admin/AdminPanel/AdminPanel.tsx'
+import RegisterOrganisationPage from './pages/admin/RegisterOrganizationPage/RegisterOrganisationPage.tsx'
+import AboutPage from './pages/general/AboutPage/AboutPage.tsx'
+import SubmitProjectPage from './pages/general/SubmitProjectPage/SubmitProjectPage.tsx'
+import LoginPage from './pages/auth/LoginPage/LoginPage.tsx'
+import VerifyUserPage from "./pages/auth/VerifyUserPage/VerifyUserPage.tsx"
+import HomePage from "./pages/general/HomePage/HomePage.tsx";
 import DashboardNavbar from "./components/ui/DashboardNavbar/DashboardNavbar.tsx";
 import Footer from "./components/ui/Footer/Footer.tsx";
 import useLocalStorage from "./hooks/useLocalStorage.ts";
@@ -17,9 +17,9 @@ import useAuthenticationCheck from "./hooks/useAuthenticationCheck.ts";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "./interfaces/DecodedToken.ts";
-import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
-import PasswordResetPage from "./pages/PasswordResetPage/PasswordResetPage.tsx";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage.tsx";
+import NotFoundPage from "./pages/general/NotFoundPage/NotFoundPage.tsx";
+import PasswordResetPage from "./pages/auth/PasswordResetPage/PasswordResetPage.tsx";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage/ForgotPasswordPage.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -28,6 +28,7 @@ function App() {
     const isDashboardPage = useLocation().pathname.includes('dashboard');
     const isResetPasswordPage = useLocation().pathname.includes('reset-password');
     const isForgotPasswordPage = useLocation().pathname.includes('forgot-password');
+    const isAdminPage = useLocation().pathname.includes('admin');
 
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAuthenticated] = useAuthenticationCheck(accessToken)
@@ -83,7 +84,12 @@ function App() {
                         </Route>
                     </Routes>
 
-                    {!isVerifyPage && !isDashboardPage && !isResetPasswordPage && !isForgotPasswordPage &&
+                    {
+                        !isVerifyPage &&
+                        !isDashboardPage &&
+                        !isResetPasswordPage &&
+                        !isForgotPasswordPage &&
+                        !isAdminPage &&
                         <Footer />
                     }
         </>

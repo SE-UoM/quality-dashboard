@@ -21,7 +21,7 @@
       "topProjects": "/api/examples/top-projects",
       "languageNames": "/api/examples/language-names",
       "topContributors": "/api/examples/top-developers",
-        "projectsInfo": "/api/examples/projects-info"
+      "projectsInfo": "/api/examples/projects-info"
     },
 
     "projects": {
@@ -30,7 +30,9 @@
     },
 
     "admin": {
-      "authorizeProject": "/api/admin/project/:projectId/authorize"
+      "authorizeProject": "/api/admin/project/:projectId/authorize",
+      "getAllUsersByOrgId": "/api/user/all/organization/:organizationId",
+      "updateUser": "/api/admin/user/update/:userId"
     },
 
     "dashboard": {
