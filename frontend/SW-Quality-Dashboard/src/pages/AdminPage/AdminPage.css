@@ -1,0 +1,9 @@
+.admin-page {
+    min-height: 100vh;
+    overflow-y: hidden;
+    background-color: var(--light-gray);
+}
+
+.admin-page h2 {
+    padding-bottom: 1em;
+}

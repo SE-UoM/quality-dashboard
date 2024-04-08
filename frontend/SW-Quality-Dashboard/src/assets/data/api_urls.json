@@ -24,6 +24,10 @@
         "projectsInfo": "/api/examples/projects-info"
     },
 
+    "projects": {
+      "allByOrgId": "/api/projects/organization/:organizationId"
+    },
+
     "dashboard": {
       "generalStats": "/api/organizations/:organizationId/general-stats",
       "languageDistribution": "/api/organizations/:organizationId/language-distribution",

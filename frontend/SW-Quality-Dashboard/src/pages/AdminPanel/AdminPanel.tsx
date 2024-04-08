@@ -1,149 +1,127 @@
-import { useEffect, useState } from 'react';
-import { Box, Text, VStack, Divider, chakra, Button, Flex } from '@chakra-ui/react';
-import { Organization, Project, Developer, mockDeveloper, mockProject } from '../../assets/models.ts';
-import { mockOrganization } from '../../assets/models.ts';
-import Navbar from '../../components/ui/DashboardNavbar/DashboardNavbar.tsx';
+import {Col, Nav, Row, Tab} from 'react-bootstrap';
 import './AdminPanel.css';
-
-function OrganizationList({ organization }: { organization: Organization }) {
-    return (
-
-        <Box bg="gray.100" p={4} mb={4}>
-            <Text fontWeight="normal" fontSize="lg" mb={2}>
-                Organization name: {"  "}
-                <chakra.span fontWeight={'bold'}>{organization.name}</chakra.span>
-            </Text>
-
-            {/* <Text fontWeight="bold" mb={2}>
-                Users:
-                </Text>
-                <ul>
-                {organization.users.map((user, index) => (
-                    <li key={index}>{user.name}</li>
-                    ))}
-                </ul> */}
-
-            <Text fontWeight="bold" mb={2}>
-                Repo URLs:
-            </Text>
-            <ul>
-                {organization.projects.map((project) => (
-                    <li key={project.repoUrl}>{project.repoUrl}</li>
-                ))}
-            </ul>
-        </Box>
-    );
-}
+import {useEffect, useState} from "react";
+import useLocalStorage from "../../hooks/useLocalStorage.ts";
+import useAuthenticationCheck from "../../hooks/useAuthenticationCheck.ts";
+import {jwtDecode} from "jwt-decode";
+import DecodedToken from "../../interfaces/DecodedToken.ts";
+import AdminAllProjectsPage from "../AdminAllProjectsPage/AdminAllProjectsPage.tsx";
 
 
-function DeveloperList({ developers, organisation }: { developers: Developer[], organisation: Organization }) {
-    return (
-        <Box bg="gray.100" p={4} mb={4}>
-            <Text fontWeight="normal" fontSize="lg" mb={2}>
-                Developers for {" "}
-                <chakra.span textDecoration={"underline"} fontWeight={"bold"}>
-
-                    {organisation.name}
-                </chakra.span>
-            </Text>
-            {developers.map((developer, index) => (
-                <Box key={index}>
-                    {index > 0 && <Divider my={4} />}
-                    <Text fontWeight="bold" fontSize="lg" mb={2}>
-                        Name: {" "}
-                        <chakra.span fontWeight={"normal"}>
-
-                            {developer.name}
-                        </chakra.span>
-                    </Text>
-                    <Text fontWeight="bold" fontSize="lg" mb={2}>
-                        Github URL: {" "}
-                        <chakra.span fontWeight={"normal"}>
-
-                            {developer.githubUrl}
-                        </chakra.span>
-                    </Text>
-                    <Text fontWeight="bold" fontSize="lg" mb={2}>
-                        Total Commits: {" "}
-                        <chakra.span fontWeight={"normal"}>
-
-                            {developer.totalCommits}
-                        </chakra.span>
-                    </Text>
-                </Box>
-            ))}
-        </Box>
-    );
-}
-
-function PendingProjects({ projects }: { projects: Project[] }) {
-    return <VStack align={"stretch"} >
-        <Text fontWeight="semibold" fontSize="lg" mb={2}>
-            Pending Projects
-        </Text>
-        {projects.map((project, index) => (
-            <Box key={index} bg="gray.100" p={4} mb={4}>
-                <VStack align={"stretch"}>
-
-                    <Text fontSize={"lg"} textDecoration={"underline"}>
-                        Organisation:
-                    </Text>
-                    <Text fontSize={"lg"}>
-                        {project.organization.name}
-                    </Text>
-                    <Text fontSize={"lg"} textDecoration={"underline"}>
-                        Project URL:
-                    </Text>
-                    <Text fontSize={"lg"}>
-                        {project.repoUrl}
-                        <Button ml="4" colorScheme={"green"}>Copy</Button>
-                    </Text>
-                    <Text fontSize={"lg"} textDecoration={"underline"}>
-                        Submitted at:
-                    </Text>
-                    <Text fontSize={"lg"}>
-                        {new Date().toString()}
-                    </Text>
-                    <Button colorScheme='green' width="60%">Approve</Button>
-                </VStack>
-            </Box>
-        ))
-        }
-    </VStack>;
-}
 
 function AdminPanel() {
-    const [organizations, setOrganizations] = useState<Organization[]>([]);
-    const [projectsAwaitingReview, setProjectsAwaitingReview] = useState<Project[]>([]);
-    useEffect(() => {
-        // Dummy data for organizations
+    const [accessToken] = useLocalStorage<string>('accessToken', '');
+    const [isAdmin, setIsAdmin] = useState<boolean>(false)
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-        setOrganizations([mockOrganization, mockOrganization]);
-    }, []);
+    useEffect(() => {
+        // Call a random API to check if the token is still valid
+
+        // Decode the token to check if the user is an admin
+        let decoded : DecodedToken = jwtDecode(accessToken)
+        if (!decoded) {
+            setIsAdmin(false)
+            window.location.href = '/login'
+            return;
+        }
+
+        let isAdmin = decoded.roles.includes('PRIVILEGED')
+
+        if (!isAdmin) {
+            setIsAdmin(false)
+            window.location.href = '/'
+            return;
+        }
+
+        setIsAdmin(isAdmin)
+    }, [isAuthenticated, accessToken])
 
     return (
-        <Flex direction={"column"}>
+        <>
+            {isAdmin &&
+                <div className="admin-panel-page">
 
-            <Navbar />
+                <Tab.Container id="admin-tabs" defaultActiveKey="first">
+                    <div className="tabs-content">
+                        {/*  ADMIN TAB NAVBAR  */}
+                        <div className="nav-tabs">
+                            <Nav  className="flex-column">
+                                <Nav.Item
+                                    className="admin-navbar-items"
+                                    id="item1"
+                                >
+                                    <Nav.Link className="admin-nav-link"
+                                              eventKey="first"
+                                              style={{
+                                                  borderRadius: "0"
+                                              }}
+                                    >
+                                        <i className="bi bi-journal-code"> </i>
+                                        All Projects
+                                    </Nav.Link>
+                                </Nav.Item>
+
+                                <Nav.Item
+                                    className="admin-navbar-items"
+                                    id="item2"
+                                >
+                                    <Nav.Link
+                                        className="admin-nav-link"
+                                        eventKey="second"
+                                        style={{
+                                            borderRadius: "0"
+                                        }}
+                                    >
+                                        <i className="bi bi-exclamation-octagon"> </i>
+                                        Pending Projects
+                                    </Nav.Link>
+                                </Nav.Item>
+
+                                <Nav.Item
+                                    className="admin-navbar-items"
+                                    id="item3"
+                                >
+                                    <Nav.Link
+                                        className="admin-nav-link"
+                                        eventKey="three"
+                                        style={{
+                                            borderRadius: "0"
+                                        }}
+                                    >
+                                        <i className="bi bi-people"> </i>
+                                        All Users
+                                    </Nav.Link>
+                                </Nav.Item>
+                            </Nav>
+                        </div>
 
 
-            <Box p={4}>
-                <Text fontSize="xl" fontWeight="bold" mb={4}>
-                    Admin Panel
-                </Text>
-                <PendingProjects projects={[mockProject, mockProject]} />
-                {/* these should be separated under a see more page */}
-                {organizations.map((organization) => (
-                    <OrganizationList key={organization.name} organization={organization} />
-                ))}
+                        <div className="nav-tabs-content">
+                            <Tab.Content>
+                                <Tab.Pane eventKey="first">
+                                    <AdminAllProjectsPage/>
+                                </Tab.Pane>
 
-                <VStack align="stretch">
-                    {organizations.map((organization) => (
-                        <DeveloperList key={organization.name} developers={[mockDeveloper, mockDeveloper]} organisation={organization} />
-                    ))}
-                </VStack>
-            </Box>
-        </Flex>
+                                <Tab.Pane eventKey="second">
+                                    <h2>
+                                        <i className="bi bi-exclamation-octagon-fill"> </i>
+                                        Pending Projects
+                                    </h2>
+                                </Tab.Pane>
+
+                                <Tab.Pane eventKey="three">
+                                    <h2>
+                                        <i className="bi bi-people-fill"> </i>
+                                        All Users
+                                    </h2>
+                                </Tab.Pane>
+                            </Tab.Content>
+                        </div>
+                    </div>
+                </Tab.Container>
+
+            </div>}
+        </>
     );
 }
 

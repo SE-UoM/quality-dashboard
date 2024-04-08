@@ -1,0 +1,48 @@
+.admin-panel-page {
+    min-height: 100vh;
+    overflow-y: hidden;
+    background-color: var(--light-gray);
+}
+
+#admin-tabs {
+    height: 100%;
+}
+
+.tabs-content {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+}
+
+.nav-tabs {
+    background-color: var(--org-color-primary);
+    width: 25vw;
+}
+
+.admin-nav-link {
+    padding: 1em;
+    font-size: 1.2em;
+    color: var(--light-gray);
+    border: none !important;
+    font-weight: bolder;
+}
+
+.admin-nav-link:hover {
+    border: none;
+    color: var(--org-color-primary);
+    background-color: var(--org-color-secondary);
+}
+
+.admin-nav-link.active {
+    border: none;
+    color: var(--org-color-primary) !important;
+    background-color: var(--light-gray) !important;
+}
+
+.nav-tabs-content {
+    width: 100%;
+    min-height: 100vh;
+    padding: 2em 4em;
+    color: var(--dark-gray);
+    background: var(--light-gray);
+}
