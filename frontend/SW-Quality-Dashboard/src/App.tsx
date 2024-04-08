@@ -66,20 +66,18 @@ function App() {
                             <Route index element={<HomePage />} />
                             <Route path="dashboard" element={<Dashboard isAdmin={isAdmin} isAuthenticated={isAuthenticated} />} />
                             <Route path="about" element={<AboutPage />} />
-                            <Route path="register" element={<RegisterPage />} />
-                            <Route path="login" element={<LoginPage />} />
                             <Route path="verify" element={<VerifyUserPage />} />
                             <Route path="submit-project" element={<SubmitProjectPage />} />
                             <Route path="forgot-password" element={<ForgotPasswordPage />} />
                             <Route path="reset-password" element={<PasswordResetPage />} />
+                            <Route path="admin" element={<AdminPanel />} />
                             <Route path='*' element={<NotFoundPage />} />
 
-                            {/* Protected Routes */}
-                            {isAuthenticated && (
+                            {/* Non Logged in Routes */}
+                            {!isAuthenticated && (
                                 <>
-                                    <Route path="register-organisation" element={<RegisterOrganisationPage />} />
-                                    <Route path="admin" element={<AdminPanel />} />
-
+                                    <Route path="login" element={<LoginPage />} />
+                                    <Route path="register" element={<RegisterPage />} />
                                 </>
                             )}
                         </Route>
