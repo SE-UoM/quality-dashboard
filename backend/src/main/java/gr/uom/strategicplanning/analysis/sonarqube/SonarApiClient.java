@@ -224,9 +224,32 @@ public class SonarApiClient extends HttpClient {
     }
 
     private void replaceKeyWithLangName(ProjectLanguage language) {
-        if (language.getName().equals("py")) language.setName("python");
-        if (language.getName().equals("cs")) language.setName("c#");
-        if (language.getName().equals("cxx")) language.setName("c++");
+//        if (language.getName().equals("py")) language.setName("python");
+//        if (language.getName().equals("cs")) language.setName("c#");
+//        if (language.getName().equals("cxx")) language.setName("c++");
+
+        // Call the languages/list API to get the full language name
+        // If the language is not found, use the language name as is
+
+        try {
+            String apiUrl = SONARQUBE_URL + "/api/languages/list";
+            Response response = this.sendGetRequest(apiUrl);
+            JSONObject jsonObject = this.convertResponseToJson(response);
+            JSONArray languages = jsonObject.getJSONArray("languages");
+
+            for (int i = 0; i < languages.length(); i++) {
+                JSONObject lang = languages.getJSONObject(i);
+                String key = lang.getString("key");
+                String name = lang.getString("name");
+
+                if (language.getName().equals(key)) {
+                    language.setName(name);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -91,6 +91,7 @@ public class AnalysisController {
                 project = new Project();
                 project.setRepoUrl(githubUrl);
                 project.setOrganization(organization);
+                project.setStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
                 projectRepository.save(project);
                 organization.addProject(project);
             } else {
@@ -113,20 +114,19 @@ public class AnalysisController {
 
             // Get the github data to make sure the repo actually exists
             analysisService.fetchGithubData(project);
-
             // Save the project
             projectRepository.save(project);
 
             // Check if the project has less than the required number of commits
-            boolean repoHasLessCommits = analysisService.repoHasLessThatThresholdCommits(project);
+            boolean repoHasLessCommitsThanThreshold = analysisService.repoHasLessThatThresholdCommits(project);
+            boolean projectNeedsReview = !repoHasLessCommitsThanThreshold && project.getStatus() != ProjectStatus.ANALYSIS_READY;
 
-            if (!repoHasLessCommits) {
+            if (projectNeedsReview) {
                 project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
 
                 // Save the project, organization and update the organization analysis
                 projectRepository.save(project);
                 organizationService.saveOrganization(organization);
-                organizationAnalysisService.updateOrganizationAnalysis(organization);
 
                 ResponseInterface response = ResponseFactory.createResponse(
                         HttpStatus.OK.value(),
@@ -138,20 +138,10 @@ public class AnalysisController {
 
             analysisService.startAnalysis(project);
 
-
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
 
             if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
-
-//            // Start analysis on the project
-//            CompletableFuture<Void> backgroundTask = CompletableFuture.runAsync(() -> {
-//                try {
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            });
 
             // Send a mail to the user to notify them that the analysis has finished
             mailSendingService.sendAnalysisCompletionEmail(email, project.getName(), frontendURL);
@@ -169,6 +159,7 @@ public class AnalysisController {
                     e.getMessage()
             );
             e.printStackTrace();
+
             return ResponseEntity.badRequest().body(response);
         }
     }

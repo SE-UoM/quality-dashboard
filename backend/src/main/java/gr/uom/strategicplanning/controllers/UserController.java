@@ -69,6 +69,20 @@ public class UserController {
         return userResponses;
     }
 
+    @GetMapping("/all/organization/{id}")
+    Collection<UserResponse> getAllUserByOrganization(@PathVariable Long id){
+        Collection<User> users = userService.getAllUsersByOrganizationId(id);
+        List<UserResponse> userResponses = new ArrayList<>();
+
+        for(User user : users){
+            UserResponse userResponse = new UserResponse(user);
+            userResponses.add(userResponse);
+        }
+
+        return userResponses;
+    }
+
+
     @GetMapping("/{id}")
     UserResponse getUserById(@PathVariable Long id){
         User user = userService.getUserById(id);

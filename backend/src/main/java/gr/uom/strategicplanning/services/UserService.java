@@ -17,9 +17,7 @@ import org.springframework.web.util.UriUtils;
 
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -153,6 +151,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public Collection<User> getAllUsersByOrganizationId(Long id) {
+        Optional<Organization> organizationOptional = organizationRepository.findById(id);
+        boolean organizationNotFound = organizationOptional.isEmpty();
+
+        if(organizationNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization not found");
+
+        Organization organization = organizationOptional.get();
+        return organization.getUsers();
+    }
+
     @Transactional
     public Organization createOrganization(String name, User admin) {
         Organization organization = new Organization();
@@ -225,5 +233,35 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setPassResetCode(null);
         userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        User user = userOptional.get();
+        userRepository.delete(user);
+    }
+
+    public void updateUser(Long id, Map<String, String> updateRequest) {
+        // Get the user
+        Optional<User> userOptional = userRepository.findById(id);
+        boolean userNotFound = userOptional.isEmpty();
+
+        if(userNotFound) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+
+        User user = userOptional.get();
+
+        // Get the fields to update
+        String name = updateRequest.get("name");
+        String email = updateRequest.get("email");
+        String password = updateRequest.get("password");
+
+        // Update the fields
+        if(name != null) user.setName(name);
+        if(email != null) user.setEmail(email);
+        if(password != null) user.setPassword(passwordEncoder.encode(password));
     }
 }

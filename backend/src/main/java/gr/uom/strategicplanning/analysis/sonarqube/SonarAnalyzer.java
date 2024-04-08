@@ -25,12 +25,11 @@ public class SonarAnalyzer {
      * @throws Exception If any error occurs during the analysis process.
      */
     public void analyzeProject(Project project) throws Exception {
-        project.setStatus(ProjectStatus.ANALYSIS_STARTED);
+        project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
 
         buildProps(project);
 
         sonarScanner.start();
-        project.setStatus(ProjectStatus.ANALYSIS_IN_PROGRESS);
 
         sonarScanner.execute();
 

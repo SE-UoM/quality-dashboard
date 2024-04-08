@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.controllers.responses.implementations;
 
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
@@ -16,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProjectResponse {
+public class ProjectResponse implements ResponseInterface {
     private Long id;
     private String name;
     private String organizationName;

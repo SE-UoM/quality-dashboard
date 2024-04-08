@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -82,5 +83,28 @@ public class UserPrivilegedController {
             throw new RuntimeException("No users found");
 
         return userResponses.get();
+    }
+
+    @DeleteMapping("/user/delete/{id}")
+    ResponseEntity<String> deleteUser(@PathVariable Long id){
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok("User with id " + id + " is deleted");
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+    @PutMapping("/user/update/{id}")
+    ResponseEntity<String> updateUser(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body
+    ){
+        try {
+            userService.updateUser(id, body);
+            return ResponseEntity.ok("User with id " + id + " is updated");
+        } catch (ResponseStatusException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 }
