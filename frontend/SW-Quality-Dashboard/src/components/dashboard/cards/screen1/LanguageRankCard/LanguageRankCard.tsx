@@ -51,6 +51,16 @@ function LanguageRankCard() {
                 let second = data[2] ? data[2] : {name: ""};
                 let third = data[3] ? data[3] : {name: ""};
 
+                // CSS and HTML on the devicons API are named css3 and html5 respectively, so we need to change them
+                // If we don't do this, the images will not be displayed
+                if (first.name.toUpperCase() === "CSS") first.name = "css3";
+                if (second.name.toUpperCase() === "CSS") second.name = "css3";
+                if (third.name.toUpperCase() === "CSS") third.name = "css3";
+
+                if (first.name.toUpperCase() === "WEB" || first.name.toUpperCase() === "HTML") first.name = "html5";
+                if (second.name.toUpperCase() === "WEB" || second.name.toUpperCase() === "HTML") second.name = "html5";
+                if (third.name.toUpperCase() === "WEB" || third.name.toUpperCase() === "HTML") third.name = "html5";
+
                 setFirstLanguage(first.name);
                 setSecondLanguage(second.name);
                 setThirdLanguage(third.name);
@@ -59,6 +69,7 @@ function LanguageRankCard() {
                 let firstImageUrl = first.name ? languageImagesApiUrl + first.name + "/" + first.name + "-original.svg" : noneImageUrl;
                 let secondImageUrl = second.name ? languageImagesApiUrl + second.name + "/" + second.name + "-original.svg" : noneImageUrl;
                 let thirdImageUrl = third.name ? languageImagesApiUrl + third.name + "/" + third.name + "-original.svg" : noneImageUrl;
+
                 setThirdLanguageImage(thirdImageUrl);
                 setSecondLanguageImage(secondImageUrl);
                 setFirstLanguageImage(firstImageUrl);
