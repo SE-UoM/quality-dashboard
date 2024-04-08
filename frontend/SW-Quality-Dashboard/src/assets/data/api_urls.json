@@ -25,7 +25,12 @@
     },
 
     "projects": {
-      "allByOrgId": "/api/projects/organization/:organizationId"
+      "allByOrgId": "/api/projects/organization/:organizationId",
+      "allByOrgIdAndStatus": "/api/projects/organization/:organizationId/status/:status"
+    },
+
+    "admin": {
+      "authorizeProject": "/api/admin/project/:projectId/authorize"
     },
 
     "dashboard": {

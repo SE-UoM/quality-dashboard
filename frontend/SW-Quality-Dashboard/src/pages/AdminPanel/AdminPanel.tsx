@@ -6,6 +6,7 @@ import useAuthenticationCheck from "../../hooks/useAuthenticationCheck.ts";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "../../interfaces/DecodedToken.ts";
 import AdminAllProjectsPage from "../AdminAllProjectsPage/AdminAllProjectsPage.tsx";
+import AdminPendingProjectsPage from "../AdminPendingProjectsPage/AdminPendingProjectsPage.tsx";
 
 
 
@@ -103,10 +104,7 @@ function AdminPanel() {
                                 </Tab.Pane>
 
                                 <Tab.Pane eventKey="second">
-                                    <h2>
-                                        <i className="bi bi-exclamation-octagon-fill"> </i>
-                                        Pending Projects
-                                    </h2>
+                                    <AdminPendingProjectsPage/>
                                 </Tab.Pane>
 
                                 <Tab.Pane eventKey="three">

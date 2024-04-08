@@ -66,9 +66,9 @@ function LanguageRankCard() {
                 setThirdLanguage(third.name);
 
                 // make the language images using the api (if the language does not exist, set the image to a question mark)
-                let firstImageUrl = first.name ? languageImagesApiUrl + first.name + "/" + first.name + "-original.svg" : noneImageUrl;
-                let secondImageUrl = second.name ? languageImagesApiUrl + second.name + "/" + second.name + "-original.svg" : noneImageUrl;
-                let thirdImageUrl = third.name ? languageImagesApiUrl + third.name + "/" + third.name + "-original.svg" : noneImageUrl;
+                let firstImageUrl = first.name ? languageImagesApiUrl + first.name.toLowerCase() + "/" + first.name.toLowerCase() + "-original.svg" : noneImageUrl;
+                let secondImageUrl = second.name ? languageImagesApiUrl + second.name.toLowerCase() + "/" + second.name.toLowerCase() + "-original.svg" : noneImageUrl;
+                let thirdImageUrl = third.name ? languageImagesApiUrl + third.name.toLowerCase() + "/" + third.name.toLowerCase() + "-original.svg" : noneImageUrl;
 
                 setThirdLanguageImage(thirdImageUrl);
                 setSecondLanguageImage(secondImageUrl);

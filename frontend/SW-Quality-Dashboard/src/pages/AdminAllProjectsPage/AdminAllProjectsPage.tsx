@@ -5,7 +5,7 @@ import {useEffect} from "react";
 import apiUrls from "../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
-import {Alert, Badge, Table} from "react-bootstrap";
+import {Alert, Badge, Button, Table} from "react-bootstrap";
 import React from "react";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
