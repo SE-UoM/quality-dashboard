@@ -29,6 +29,11 @@ function AdminAllUsersPage() {
 
     const [showDeleteUserModal, setShowDeleteUserModal] = React.useState(false)
     const [deleteUser, setDeleteUser] = React.useState({})
+    const [deleteUserButtonDisabled, setDeleteUserButtonDisabled] = React.useState(false)
+    const [deleteAlert, setDeleteAlert] = React.useState(false)
+    const [deleteAlertMessage, setDeleteAlertMessage] = React.useState('')
+    const [deleteAlertVariant, setDeleteAlertVariant] = React.useState('')
+    const [deleteAlertIcon, setDeleteAlertIcon] = React.useState('')
 
     useEffect(() => {
         // Call the api to get all users
@@ -56,6 +61,47 @@ function AdminAllUsersPage() {
                 setError(true)
             })
     }, [accessToken]);
+
+    function handleUserDelete(user) {
+        // Call the api to delete the user
+        let url = baseUrl + apiUrls.routes.admin.deleteUser;
+
+        // Replace the placeholder with the actual user id
+        url = url.replace(':userId', user.id);
+
+        let headers = {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        }
+
+        // Say that the user is being deleted
+        setDeleteAlert(true)
+        setDeleteAlertMessage('Deleting user...')
+        setDeleteAlertVariant('info')
+        setDeleteAlertIcon('bi bi-hourglass-split')
+        setDeleteUserButtonDisabled(true)
+
+        // Wait one second before calling the api
+        setTimeout(() => {
+            axios.delete(url, { headers: headers })
+                .then(response => {
+                    setDeleteAlertMessage('User deleted successfully')
+                    setDeleteAlertVariant('success')
+                    setDeleteAlertIcon('bi bi-check-circle')
+
+                    // Remove the user from the list
+                    let newUsers = users.filter(u => u.id !== user.id)
+                    setUsers(newUsers)
+                })
+                .catch(error => {
+                    console.error(error)
+                    setDeleteAlertMessage('Error deleting user')
+                    setDeleteAlertVariant('danger')
+                    setDeleteAlertIcon('bi bi-x-circle')
+                    setDeleteUserButtonDisabled(false)
+                })
+        }, 1000)
+    }
 
     return (
         <AdminTabContent
@@ -95,12 +141,19 @@ function AdminAllUsersPage() {
                 <Modal.Body>
                     Are you sure you want to delete the user with the email <i>{deleteUser.email}</i>? <br />
                     <strong>This action cannot be undone.</strong>
+
+                    {deleteAlert && (
+                        <Alert variant={deleteAlertVariant}>
+                            <i className={deleteAlertIcon}> </i>
+                            {deleteAlertMessage}
+                        </Alert>
+                    )}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowDeleteUserModal(false)}>
                         Cancel
                     </Button>
-                    <Button variant="danger" onClick={() => setShowDeleteUserModal(false)}>
+                    <Button variant="danger" onClick={() => handleUserDelete(deleteUser)}>
                         Delete
                     </Button>
                 </Modal.Footer>
@@ -113,6 +166,7 @@ function AdminAllUsersPage() {
                 setShowEditUserModal={setShowEditUserModal}
                 setDeleteUser={setDeleteUser}
                 setShowDeleteUserModal={setShowDeleteUserModal}
+                deleteBtnDisabled={deleteUserButtonDisabled}
             />
 
         </AdminTabContent>

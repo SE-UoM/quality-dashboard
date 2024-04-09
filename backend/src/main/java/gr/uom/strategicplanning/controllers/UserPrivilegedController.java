@@ -86,12 +86,15 @@ public class UserPrivilegedController {
     }
 
     @DeleteMapping("/user/delete/{id}")
-    ResponseEntity<String> deleteUser(@PathVariable Long id){
+    ResponseEntity<Map> deleteUser(@PathVariable Long id){
         try {
             userService.deleteUser(id);
-            return ResponseEntity.ok("User with id " + id + " is deleted");
+            Map<String, String> response = Map.of("message", "User with id " + id + " is deleted");
+            return ResponseEntity.ok()
+                    .body(response);
         } catch (ResponseStatusException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            Map<String, String> response = Map.of("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 

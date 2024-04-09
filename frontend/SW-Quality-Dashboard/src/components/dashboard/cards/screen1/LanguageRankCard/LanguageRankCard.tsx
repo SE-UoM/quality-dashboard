@@ -61,14 +61,24 @@ function LanguageRankCard() {
                 if (second.name.toUpperCase() === "WEB" || second.name.toUpperCase() === "HTML") second.name = "html5";
                 if (third.name.toUpperCase() === "WEB" || third.name.toUpperCase() === "HTML") third.name = "html5";
 
-                setFirstLanguage(first.name);
-                setSecondLanguage(second.name);
-                setThirdLanguage(third.name);
+                // CXX is C++ in sonarqube, so we need to change it to cplusplus
+                if (first.name.toUpperCase() === "CXX") first.name = "cplusplus";
+                if (second.name.toUpperCase() === "CXX") second.name = "cplusplus";
+                if (third.name.toUpperCase() === "CXX") third.name = "cplusplus";
 
                 // make the language images using the api (if the language does not exist, set the image to a question mark)
                 let firstImageUrl = first.name ? languageImagesApiUrl + first.name.toLowerCase() + "/" + first.name.toLowerCase() + "-original.svg" : noneImageUrl;
                 let secondImageUrl = second.name ? languageImagesApiUrl + second.name.toLowerCase() + "/" + second.name.toLowerCase() + "-original.svg" : noneImageUrl;
                 let thirdImageUrl = third.name ? languageImagesApiUrl + third.name.toLowerCase() + "/" + third.name.toLowerCase() + "-original.svg" : noneImageUrl;
+
+                // if the language is cplusplus name it C++
+                if (first.name === "cplusplus") first.name = "C++";
+                if (second.name === "cplusplus") second.name = "C++";
+                if (third.name === "cplusplus") third.name = "C++";
+
+                setFirstLanguage(first.name);
+                setSecondLanguage(second.name);
+                setThirdLanguage(third.name);
 
                 setThirdLanguageImage(thirdImageUrl);
                 setSecondLanguageImage(secondImageUrl);

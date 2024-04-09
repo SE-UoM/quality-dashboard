@@ -20,8 +20,8 @@ function HomePage() {
                 {isAuthenticated && <Button href="/dashboard?p=1" variant="outline-light">Dashboard</Button>}
                 {isAuthenticated && <Button href="/" variant="outline-light">View your Projects</Button>}
 
-                {!isAuthenticated && <Button href="/login" variant="outline-light">Login</Button>}
-                {!isAuthenticated && <Button href="/register" variant="outline-light">Register</Button>}
+                {isAuthenticated !== null && !isAuthenticated && <Button href="/login" variant="outline-light">Login</Button>}
+                {isAuthenticated !== null && !isAuthenticated && <Button href="/register" variant="outline-light">Register</Button>}
             </section>
         </div>
     );

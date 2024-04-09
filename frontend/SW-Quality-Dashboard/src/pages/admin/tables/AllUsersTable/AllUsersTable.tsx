@@ -12,7 +12,7 @@ const verifiedColors = {
     'NO': '#e53700'
 }
 
-function AllUsersTable({users, myEmail, setEditUser, setShowEditUserModal, setShowDeleteUserModal, setDeleteUser}) {
+function AllUsersTable({users, myEmail, setEditUser, setShowEditUserModal, setShowDeleteUserModal, setDeleteUser, deleteBtnDisabled}) {
   return (
       <Table striped bordered hover>
           <thead>
@@ -65,7 +65,7 @@ function AllUsersTable({users, myEmail, setEditUser, setShowEditUserModal, setSh
                       <Button variant="danger" onClick={() => {
                             setDeleteUser(user)
                             setShowDeleteUserModal(true)
-                      }}>
+                      }} disabled={deleteBtnDisabled}>
                           <i className="bi bi-trash-fill"> </i>
                       </Button>
 

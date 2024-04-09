@@ -32,7 +32,8 @@
     "admin": {
       "authorizeProject": "/api/admin/project/:projectId/authorize",
       "getAllUsersByOrgId": "/api/user/all/organization/:organizationId",
-      "updateUser": "/api/admin/user/update/:userId"
+      "updateUser": "/api/admin/user/update/:userId",
+      "deleteUser": "/api/admin/user/delete/:userId"
     },
 
     "dashboard": {

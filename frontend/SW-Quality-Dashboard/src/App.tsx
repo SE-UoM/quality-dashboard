@@ -5,7 +5,6 @@ import { ChakraProvider } from '@chakra-ui/react'
 import RegisterPage from './pages/auth/RegisterPage/RegisterPage.tsx'
 import AdminPanel from './pages/admin/AdminPanel/AdminPanel.tsx'
 import RegisterOrganisationPage from './pages/admin/RegisterOrganizationPage/RegisterOrganisationPage.tsx'
-import AboutPage from './pages/general/AboutPage/AboutPage.tsx'
 import SubmitProjectPage from './pages/general/SubmitProjectPage/SubmitProjectPage.tsx'
 import LoginPage from './pages/auth/LoginPage/LoginPage.tsx'
 import VerifyUserPage from "./pages/auth/VerifyUserPage/VerifyUserPage.tsx"
@@ -20,6 +19,7 @@ import DecodedToken from "./interfaces/DecodedToken.ts";
 import NotFoundPage from "./pages/general/NotFoundPage/NotFoundPage.tsx";
 import PasswordResetPage from "./pages/auth/PasswordResetPage/PasswordResetPage.tsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage/ForgotPasswordPage.tsx";
+import LoadingPage from "./pages/general/LoadingPage/LoadingPage.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -33,6 +33,8 @@ function App() {
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAuthenticated] = useAuthenticationCheck(accessToken)
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
+
+    const [loading, setLoading] = useState<boolean>(true)
 
     // Decode the token to check if the user is an admin
     useEffect(() => {
@@ -50,23 +52,28 @@ function App() {
         setIsAdmin(isAdmin)
     }, [isAuthenticated, accessToken, isAdmin])
 
+    setTimeout(() => {
+        setLoading(false);
+    }, 1500);
 
     return (
         <>
-                {!isVerifyPage && !isDashboardPage && !isResetPasswordPage && !isForgotPasswordPage &&
-                    <DashboardNavbar
-                        isAuthenticated={isAuthenticated}
-                        isAdmin={isAdmin}
-                    />
-                }
-
+            {loading ? (
+                <LoadingPage />
+            ) : (
+                <>
+                    {!isVerifyPage && !isDashboardPage && !isResetPasswordPage && !isForgotPasswordPage &&
+                        <DashboardNavbar
+                            isAuthenticated={isAuthenticated}
+                            isAdmin={isAdmin}
+                        />
+                    }
 
                     <Routes>
                         {/* Public Routes */}
                         <Route path="/">
                             <Route index element={<HomePage />} />
                             <Route path="dashboard" element={<Dashboard isAdmin={isAdmin} isAuthenticated={isAuthenticated} />} />
-                            <Route path="about" element={<AboutPage />} />
                             <Route path="verify" element={<VerifyUserPage />} />
                             <Route path="submit-project" element={<SubmitProjectPage />} />
                             <Route path="forgot-password" element={<ForgotPasswordPage />} />
@@ -92,6 +99,8 @@ function App() {
                         !isAdminPage &&
                         <Footer />
                     }
+                </>
+            )}
         </>
     )
 }
