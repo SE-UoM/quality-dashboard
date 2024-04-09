@@ -58,7 +58,9 @@ function AdminAllProjectsPage() {
         >
             {error && (
                 <Alert variant="danger">
-                    Error fetching projects
+                    <Alert.Heading>
+                        Error fetching projects
+                    </Alert.Heading>
                 </Alert>
             )}
 

@@ -18,8 +18,8 @@
 }
 
 .language-rank-container {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 
     height: 100%;
     width: 100%;
@@ -61,6 +61,8 @@
 
 .lang-name-rank img {
     height: 3em;
+    margin-top: 0.5em;
+
 }
 
 .language-rank-line#first {

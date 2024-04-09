@@ -1,0 +1,13 @@
+.user-roles-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.add-role-to-user-select {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+    grid-gap: 0.5rem;
+}
+
