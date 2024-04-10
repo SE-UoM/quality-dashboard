@@ -25,6 +25,7 @@ function LanguageRankCard() {
     const [thirdLanguageImage, setThirdLanguageImage] = useState("");
 
     const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Call the API to get the top languages
     useEffect(() => {
@@ -76,6 +77,11 @@ function LanguageRankCard() {
                 if (second.name === "cplusplus") second.name = "C++";
                 if (third.name === "cplusplus") third.name = "C++";
 
+                // Wait half a second before setting the state to prevent the loading spinner from flashing
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 500);
+
                 setFirstLanguage(first.name);
                 setSecondLanguage(second.name);
                 setThirdLanguage(third.name);
@@ -99,7 +105,7 @@ function LanguageRankCard() {
                 />
             }
 
-            <div className="dashboard-card" id="languageRank">
+            <div className={"dashboard-card"} id="languageRank">
                 <h2>
                     <i className="bi bi-trophy-fill"> </i>
                     Top Languages in UoM
@@ -108,8 +114,19 @@ function LanguageRankCard() {
                 <div className="language-rank-container">
                     <div className="language-rank">
                         <span className={"lang-name-rank"}>
-                            <img src={secondLanguageImage}/>
-                            {secondLanguage}
+
+                            {
+                                isLoading ?
+                                    <>
+                                        <div className="skeleton-lang-img"> </div>
+                                        <div className="skeleton-lang-name"> </div>
+                                    </>
+                                    :
+                                    <>
+                                        <img src={secondLanguageImage}/>
+                                        {secondLanguage}
+                                    </>
+                            }
                         </span>
                         <div className="language-rank-line" id={"second"}>
                             <img src={secondMedal} className="medal-icon"/>
@@ -118,8 +135,18 @@ function LanguageRankCard() {
 
                     <div className="language-rank">
                         <span className={"lang-name-rank"}>
-                            <img src={firstLanguageImage}/>
-                            {firstLanguage}
+                            {
+                                isLoading ?
+                                    <>
+                                        <div className="skeleton-lang-img"> </div>
+                                        <div className="skeleton-lang-name"> </div>
+                                    </>
+                                    :
+                                    <>
+                                        <img src={firstLanguageImage}/>
+                                        {firstLanguage}
+                                    </>
+                            }
                         </span>
                         <div className="language-rank-line" id={"first"}>
                             <img src={firstMedal} className="medal-icon"/>
@@ -128,8 +155,18 @@ function LanguageRankCard() {
 
                     <div className="language-rank">
                         <span className={"lang-name-rank"}>
-                            <img src={thirdLanguageImage}/>
-                            {thirdLanguage}
+                            {
+                                isLoading ?
+                                    <>
+                                        <div className="skeleton-lang-img"> </div>
+                                        <div className="skeleton-lang-name"> </div>
+                                    </>
+                                    :
+                                    <>
+                                        <img src={thirdLanguageImage}/>
+                                        {thirdLanguage}
+                                    </>
+                            }
                         </span>
                         <div className="language-rank-line" id={"third"}>
                             <img src={thirdMedal} className="medal-icon"/>

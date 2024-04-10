@@ -34,7 +34,7 @@ function App() {
     const [isAuthenticated] = useAuthenticationCheck(accessToken)
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
 
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
 
     // Decode the token to check if the user is an admin
     useEffect(() => {
@@ -58,7 +58,7 @@ function App() {
 
     return (
         <>
-            {loading ? (
+            {loading && !isDashboardPage ? (
                 <LoadingPage />
             ) : (
                 <>

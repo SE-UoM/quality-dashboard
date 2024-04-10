@@ -3,7 +3,6 @@ import { PieChart } from '@mui/x-charts';
 import './LanguageDistributionCard.css';
 import apiRoutes from '../../../../../assets/data/api_urls.json';
 import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
-import * as url from "url";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
@@ -36,6 +35,7 @@ function LanguageDistributionCard() {
     const [error, setError] = React.useState(false);
     const [errorTitle, setErrorTitle] = React.useState("");
     const [errorMessage, setErrorMessage] = React.useState("");
+    const [loading, setLoading] = React.useState(true);
 
     // Call the API to get the language distribution data
     useEffect(() => {
@@ -54,6 +54,12 @@ function LanguageDistributionCard() {
         axios.get(url, { headers: headers })
             .then(response => {
                 console.info("Language distribution data: ", response.data)
+
+                // Wait half a second before setting the state to false
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+
                 setTotalLanguages(response.data.totalLanguages);
                 setLanguageDistribution(response.data.languageDistribution);
             })
@@ -99,24 +105,41 @@ function LanguageDistributionCard() {
             }
             <div className="dashboard-card" id="languageDistribution">
                 <div className="language-distribution-container">
-                    <h3>
-                        <i className="bi bi-pie-chart-fill"> </i>
-                        Language Distribution
-                    </h3>
+                    {!loading &&
+                        <h3>
+                            <i className="bi bi-pie-chart-fill"> </i>
+                            Language Distribution
+                        </h3>
+                    }
                     <div className="lang-distribution-chart">
-                        <h2>{formatText(totalLanguages)}</h2>
-
-                        <PieChart
-                            series={[{
-                                data: pieChartData,
-                                innerRadius: 104,
-                                outerRadius: 144,
-                                paddingAngle: 1,
-                                cornerRadius: 5,
-                                startAngle: -90,
-                                highlightScope: { faded: 'global', highlighted: 'item' }
-                            }]}
-                        />
+                        {
+                            loading ?
+                                <>
+                                    <div className="distribution-skeleton">
+                                        <div className="distribution-skeleton-graph"> </div>
+                                        <div className="distribution-skeleton-legend-container">
+                                            <div className="distribution-skeleton-legend"> </div>
+                                            <div className="distribution-skeleton-legend"> </div>
+                                            <div className="distribution-skeleton-legend"> </div>
+                                        </div>
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <h2>{formatText(totalLanguages)}</h2>
+                                    <PieChart
+                                        series={[{
+                                            data: pieChartData,
+                                            innerRadius: 104,
+                                            outerRadius: 144,
+                                            paddingAngle: 1,
+                                            cornerRadius: 5,
+                                            startAngle: -90,
+                                            highlightScope: { faded: 'global', highlighted: 'item' }
+                                        }]}
+                                    />
+                                </>
+                        }
                     </div>
                 </div>
             </div>

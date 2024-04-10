@@ -11,7 +11,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
 
     return (
         <>
-            {isAuthenticated !== null &&
+
                 <Navbar expand="lg" className="bg-body-tertiary" style={{
                 borderBottom: "2px solid var(--org-color-primary-dark-version)",
                 minHeight: "10vh",
@@ -27,7 +27,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                         </Navbar.Brand>
 
                         <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-
+                        {isAuthenticated !== null &&
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="me-auto">
                                 {!isAuthenticated && (
@@ -90,6 +90,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                                 )}
                             </Nav>
                         </Navbar.Collapse>
+                        }
 
                         <Navbar.Collapse className="justify-content-end">
                             <a href="https://github.com/SE-UoM/quality-dashboard" id="github-repo-icon">
@@ -98,7 +99,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
-            }
+
         </>
     )
 }

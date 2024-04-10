@@ -5,7 +5,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding-top: 2.5em;
+    padding-top: 2em;
 }
 
 .language-distribution-container {
@@ -28,4 +28,37 @@
 .lang-distribution-chart {
     height: 20em;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.distribution-skeleton {
+    display: grid;
+    grid-template-columns: 5fr 5fr;
+}
+
+.distribution-skeleton-graph {
+    width: 18vw;
+    height: 18vw;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 10em;
+}
+
+.distribution-skeleton-legend-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+    margin-top: 1em;
+    flex-direction: column;
+}
+
+.distribution-skeleton-legend {
+    width: 15vw;
+    height: 2em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+
 }

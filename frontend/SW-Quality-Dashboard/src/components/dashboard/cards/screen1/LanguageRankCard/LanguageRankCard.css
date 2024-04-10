@@ -80,6 +80,22 @@
     height: 35%;
 }
 
+.skeleton-lang-img {
+    animation: pulse 1.5s infinite ease-in-out;
+    width: 10vh;
+    height: 10vh;
+    border-radius: 0.5em;
+    margin-top: 0.5em;
+}
+
+.skeleton-lang-name {
+    animation: pulse 1.5s infinite ease-in-out;
+    width: 7rem;
+    height: 20px;
+    margin: 1vh 0;
+    border-radius: 4px;
+}
+
 /* Media query for screens smaller than 768px (typical mobile devices) */
 @media (max-width: 768px) {
     .dashboard-card#languageRank {

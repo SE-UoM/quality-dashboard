@@ -1,5 +1,5 @@
-import './DashboardSlideOne.css'
-import '../DashboardSlideStyle.css'
+import './DashboardSlideOne.css';
+import '../DashboardSlideStyle.css';
 import LanguageRankCard from "../../cards/screen1/LanguageRankCard/LanguageRankCard.tsx";
 import totalProjectsIcon from "../../../../assets/svg/dashboardIcons/total_projects_icon.svg";
 import totalLanguagesIcon from "../../../../assets/svg/dashboardIcons/languages_icon.svg";
@@ -22,13 +22,14 @@ const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideOne() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-    const [totalProjects, setTotalProjects] = useState(0);
-    const [totalLanguages, setTotalLanguages] = useState(0);
-    const [totalDevelopers, setTotalDevelopers] = useState(0);
-    const [totalFiles, setTotalFiles] = useState(0);
-    const [totalContributions, setTotalContributions] = useState(0);
-    const [totalLoc, setTotalLoc] = useState(0);
+    const [totalProjects, setTotalProjects] = useState();
+    const [totalLanguages, setTotalLanguages] = useState();
+    const [totalDevelopers, setTotalDevelopers] = useState();
+    const [totalFiles, setTotalFiles] = useState();
+    const [totalContributions, setTotalContributions] = useState();
+    const [totalLoc, setTotalLoc] = useState();
 
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -52,22 +53,27 @@ function DashboardSlideOne() {
             .then((response) => {
                 let data = response.data;
 
-                console.info("General stats: ", data)
-
                 setTotalProjects(data.totalProjects);
                 setTotalLanguages(data.totalLanguages);
                 setTotalDevelopers(data.totalDevs);
                 setTotalFiles(data.totalFiles);
                 setTotalContributions(data.totalCommits);
                 setTotalLoc(data.totalLinesOfCode);
+
+                setTimeout(() => {
+                    // Do nothing
+                    console.log("waiting...")
+                    setLoading(false); // Set loading to false once data is fetched
+                }, 500);
             })
             .catch((error) => {
-                console.warn("Error fetching general stats: ", error);
-                setError(true);
-                setErrorTitle("Error fetching general statistics");
-                setErrorMessage("An error occurred while fetching the general statistics of the organization. Please try again later.");
-            }
-        );
+                    console.warn("Error fetching general stats: ", error);
+                    setError(true);
+                    setErrorTitle("Error fetching general statistics");
+                    setErrorMessage("An error occurred while fetching the general statistics of the organization. Please try again later.");
+                    setLoading(false); // Set loading to false on error
+                }
+            );
     }, [accessToken]);
 
 
@@ -87,6 +93,7 @@ function DashboardSlideOne() {
                     headerText={totalProjects}
                     caption="Projects"
                     gridAreaName="totalProjects"
+                    loading={loading}
                 />
 
                 <IconCard
@@ -94,6 +101,7 @@ function DashboardSlideOne() {
                     headerText={totalLanguages}
                     caption="Languages"
                     gridAreaName="totalLanguages"
+                    loading={loading}
                 />
 
                 <IconCard
@@ -101,6 +109,7 @@ function DashboardSlideOne() {
                     headerText={totalDevelopers}
                     caption="Developers"
                     gridAreaName="totalDevelopers"
+                    loading={loading}
                 />
 
                 <IconCard
@@ -108,6 +117,7 @@ function DashboardSlideOne() {
                     headerText={totalFiles}
                     caption="Files"
                     gridAreaName="totalFiles"
+                    loading={loading}
                 />
 
                 <IconCard
@@ -115,6 +125,7 @@ function DashboardSlideOne() {
                     headerText={totalContributions}
                     caption="Contributions"
                     gridAreaName="totalContributions"
+                    loading={loading}
                 />
 
                 <IconCard
@@ -122,6 +133,7 @@ function DashboardSlideOne() {
                     headerText={totalLoc}
                     caption="Lines of Code"
                     gridAreaName="totalLinesOfCode"
+                    loading={loading}
                 />
 
                 <LanguageDistributionCard />
@@ -134,4 +146,4 @@ function DashboardSlideOne() {
     )
 }
 
-export default DashboardSlideOne
+export default DashboardSlideOne;
