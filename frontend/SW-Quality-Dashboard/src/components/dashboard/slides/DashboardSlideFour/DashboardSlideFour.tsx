@@ -1,6 +1,6 @@
 import './DashboardSlideFour.css'
 import '../DashboardSlideStyle.css'
-import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
+import FooterCard from "../../cards/FooterCard/FooterCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
@@ -9,7 +9,7 @@ import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import contributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 import githubIcon from "../../../../assets/svg/dashboardIcons/github_icon.svg";
 import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
-import ItemActivityCard from "../../cards/general/ItemActivityCard/ItemActivityCard.tsx";
+import ItemActivityCard from "../../cards/ItemActivityCard/ItemActivityCard.tsx";
 import {jwtDecode} from "jwt-decode";
 import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
 

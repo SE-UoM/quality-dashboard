@@ -1,6 +1,6 @@
 import './DashboardSlideThree.css'
 import '../DashboardSlideStyle.css'
-import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
+import FooterCard from "../../cards/FooterCard/FooterCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
@@ -8,7 +8,7 @@ import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 import DashboardRankedItem from "../../../ui/DashboardRankedItem/DashboardRankedItem.tsx";
-import ScrollableRankCard from "../../cards/general/ScrollableRankCard/ScrollableRankCard.tsx";
+import ScrollableRankCard from "../../cards/ScrollableRankCard/ScrollableRankCard.tsx";
 import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
 import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
 import ProjectDetailsIcon from "../../../ui/ProjectDetailsIcon/ProjectDetailsIcon.tsx";

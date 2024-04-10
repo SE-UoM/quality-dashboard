@@ -8,6 +8,7 @@ import axios from "axios";
 import {Alert, Badge, Button, Form, Modal, Table} from "react-bootstrap";
 import React from "react";
 import AllUsersTable from "../tables/AllUsersTable/AllUsersTable.tsx";
+import {Heading} from "@chakra-ui/react";
 import EditUserModal from "../../../components/modals/EditUserModal/EditUserModal.tsx";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;

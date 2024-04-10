@@ -18,6 +18,6 @@
 /* Media query for screens smaller than 768px (typical mobile devices) */
 @media (max-width: 768px) {
     .dashboard-card#footerCard img.sde-uom-logo {
-        content: url("../../../../../assets/img/sde-banner-logo-only.png");
+        content: url("../../../../assets/img/sde-banner-logo-only.png");
     }
 }
