@@ -1,14 +1,4 @@
 import { useState } from 'react';
-import {
-    Box,
-    Flex,
-    FormControl,
-    FormLabel,
-    Input,
-    Select,
-    Button,
-    Text,
-} from '@chakra-ui/react';
 import './RegisterOrganizationPage.css';
 
 const locations = ['Athens', 'Thessaloniki', 'Heraklion', 'Patras', 'Larissa'];

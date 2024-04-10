@@ -9,7 +9,7 @@ import totalLocIcon from "../../../../assets/svg/dashboardIcons/loc_icon.svg";
 import totalContributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 
 import IconCard from "../../cards/screen1/IconCard/IconCard.tsx";
-import FooterCard from "../../cards/FooterCard/FooterCard.tsx";
+import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
 import LanguageDistributionCard from "../../cards/screen1/LanguageDistributionCard/LanguageDistributionCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";

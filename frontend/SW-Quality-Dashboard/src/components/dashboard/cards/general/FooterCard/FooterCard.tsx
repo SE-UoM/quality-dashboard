@@ -1,7 +1,7 @@
 import './FooterCard.css'
-import '../DashboardCardStyle.css'
-import logoOpenSourceUoM from '../../../../assets/img/OS_UoM_Logo.png'
-import sdeLogo from '../../../../assets/img/sde-banner.png'
+import '../../DashboardCardStyle.css'
+import logoOpenSourceUoM from '../../../../../assets/img/OS_UoM_Logo.png'
+import sdeLogo from '../../../../../assets/img/sde-banner.png'
 
 function FooterCard({gridAreaName}) {
     return (
