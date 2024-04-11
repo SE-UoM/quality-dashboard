@@ -12,6 +12,7 @@ import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.sv
 import ItemActivityCard from "../../cards/ItemActivityCard/ItemActivityCard.tsx";
 import {jwtDecode} from "jwt-decode";
 import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
+import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -270,8 +271,14 @@ function DashboardSlideFour() {
                 <div className="dashboard-card"
                      style={{gridArea: "commitGraph"}}
                 >
-                    <h1> </h1>
-                    <i className="bi bi-cone-striped"><strong> Coming Soon...</strong></i>
+                    <WordCloud
+                        words={
+                         // Developers on a list of names
+                            developers.map((dev) => dev.name)
+                        }
+
+                        loading={developers.length < 1}
+                    />
                 </div>
 
                 <div className="dashboard-card"
