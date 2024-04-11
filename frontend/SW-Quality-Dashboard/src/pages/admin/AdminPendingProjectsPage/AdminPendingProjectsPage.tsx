@@ -9,7 +9,7 @@ import axios from "axios";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-function AdminPendingProjectsPage() {
+function AdminPendingProjectsPage({updateCount}) {
     const [accessToken, setAccessToken] = useLocalStorage('accessToken', '')
     const [projects, setProjects] = React.useState([])
     const [alert, setAlert] = React.useState(false)
@@ -32,6 +32,7 @@ function AdminPendingProjectsPage() {
         axios.get(url, { headers: headers })
             .then(response => {
                 setProjects(response.data)
+                updateCount(projects.length);
             })
             .catch(error => {
                 console.error(error)
@@ -39,7 +40,7 @@ function AdminPendingProjectsPage() {
                 setAlertVariant('danger')
                 setAlertMessage('Error fetching projects')
             })
-    }, []);
+    }, [projects]);
 
     const approveProject = (projectId, projectUrl) => {
         // Show the alert to let the user know something is happening

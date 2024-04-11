@@ -5,7 +5,7 @@ import {useEffect} from "react";
 import apiUrls from "../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
-import {Alert, Badge, Button, Table} from "react-bootstrap";
+import {Alert, Badge, Button, OverlayTrigger, Table, Tooltip} from "react-bootstrap";
 import React from "react";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -72,6 +72,7 @@ function AdminAllProjectsPage() {
                     <th>Name</th>
                     <th>Repository URL</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -89,6 +90,25 @@ function AdminAllProjectsPage() {
                                 style={{backgroundColor: statusColors[project.status]}}
                             >
                                 {project.status.replace(/_/g, ' ')}
+                            </div>
+                        </td>
+                        <td>
+                            <div className="project-actions">
+                                <OverlayTrigger placement="bottom" overlay={<Tooltip>Delete This User</Tooltip>}>
+                                    <Button
+                                        variant="danger"
+                                    >
+                                        <i className={"bi bi-trash"}> </i>
+                                    </Button>
+                                </OverlayTrigger>
+
+                                <OverlayTrigger placement="bottom" overlay={<Tooltip>Start a New Analysis</Tooltip>}>
+                                    <Button
+                                        variant="primary"
+                                    >
+                                        <i className="bi bi-layer-forward"></i>
+                                    </Button>
+                                </OverlayTrigger>
                             </div>
                         </td>
                     </tr>

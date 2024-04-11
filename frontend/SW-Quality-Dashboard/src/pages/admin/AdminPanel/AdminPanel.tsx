@@ -1,4 +1,4 @@
-import {Col, Nav, Row, Tab} from 'react-bootstrap';
+import {Badge, Col, Nav, Row, Tab} from 'react-bootstrap';
 import './AdminPanel.css';
 import {useEffect, useState} from "react";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
@@ -15,6 +15,8 @@ function AdminPanel() {
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+    const [pendingProjectsCount, setPendingProjectsCount] = useState<number>(0)
 
     useEffect(() => {
         // Call a random API to check if the token is still valid
@@ -75,7 +77,16 @@ function AdminPanel() {
                                         }}
                                     >
                                         <i className="bi bi-exclamation-octagon"> </i>
-                                        Pending Projects
+                                        Pending Projects &nbsp;
+                                        {
+                                            pendingProjectsCount > 0 && pendingProjectsCount < 100 &&
+                                            <Badge bg="danger">{pendingProjectsCount}</Badge>
+                                        }
+
+                                        {
+                                            pendingProjectsCount > 0 && pendingProjectsCount >= 100 &&
+                                            <Badge bg="danger">99+</Badge>
+                                        }
                                     </Nav.Link>
                                 </Nav.Item>
 
@@ -105,7 +116,7 @@ function AdminPanel() {
                                 </Tab.Pane>
 
                                 <Tab.Pane eventKey="second">
-                                    <AdminPendingProjectsPage/>
+                                    <AdminPendingProjectsPage updateCount={setPendingProjectsCount}/>
                                 </Tab.Pane>
 
                                 <Tab.Pane eventKey="three">

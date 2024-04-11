@@ -20,7 +20,7 @@ function SubmitProjectPage() {
     return (
         <>
             <div className="submit-project-page">
-                {!isAuthenticated && <Spinner animation="grow" />}
+                {!isAuthenticated && <Spinner variant="light" animation="grow" />}
                 {isAuthenticated && <SubmitProjectForm/>}
             </div>
         </>
