@@ -37,6 +37,13 @@
     margin: 0;
 }
 
+.dashboard-card.loading#bestPractices {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
 .best-practices-skeleton {
     display: flex;
     flex-direction: column;
@@ -62,9 +69,10 @@
 
 .best-practices-skeleton-item:nth-child(1) {
     width: 55vw;
-    height: 5em;
+    height: 3em;
     animation: pulse 1.5s ease-in-out infinite;
     border-radius: 0.5em;
+    margin-top: 1em;
 }
 
 .best-practices-skeleton-item:nth-child(2) {

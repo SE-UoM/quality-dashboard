@@ -58,7 +58,7 @@ function BestPracticesCard() {
     }, [accessToken]);
 
     return (
-        <div className="dashboard-card"
+        <div className={"dashboard-card " + (loading ? "loading" : "")}
              id="bestPractices"
              style={{gridArea: "bestPractices"}}
         >
