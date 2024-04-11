@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './WordCloud.css';
+import {Spinner} from "react-bootstrap";
 
-const WordCloud = ({ words }) => {
+
+const WordCloud = ({ words, loading }) => {
     const [wordStyles, setWordStyles] = useState([]);
+
     // Function to calculate the size of the word based on its frequency
     const calculateSize = (frequency) => {
         return frequency * 10; // Adjust the scaling factor as needed
@@ -57,7 +60,13 @@ const WordCloud = ({ words }) => {
     }, [words, boldWords]);
 
     return (
-        <div className="word-cloud" style={{ overflow: 'hidden' }}>
+        <div className="word-cloud" style={{ overflow: 'hidden' }} id={loading ? 'loading' : ''}>
+
+            {loading &&
+                <Spinner animation="border" role="status">
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            }
             {words.map((word, index) => (
                 <span
                     key={index}

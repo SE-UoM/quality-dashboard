@@ -33,7 +33,7 @@ function AllUsersTable({users, myEmail, setEditUser, setShowEditUserModal, setSh
                   <td>{user.email === myEmail ? <b>{user.id}</b> : user.id}</td>
                   <td>{user.email === myEmail ? <b>{user.name}</b> : user.name}</td>
                   <td>
-                      {user.email === myEmail ? <b>{user.email}</b> : user.email}
+                      {user.email === myEmail ? <b><a href={"mailto:" + user.email}>{user.email}</a></b> : <a href={"mailto:" + user.email}>user.email</a>}
                   </td>
                   <td className="admin-users-roles">
                       {// Roles are separated by commas, so we split them and display them as badges

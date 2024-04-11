@@ -22,6 +22,8 @@ function DashboardSlideThree() {
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [loadingTopProjects, setLoadingTopProjects] = useState(true);
+    const [loadingTopContributors, setLoadingTopContributors] = useState(true);
 
     const [bestProjects, setBestProjects] = useState([]);
     const [topContributors, setTopContributors] = useState([]);
@@ -47,6 +49,11 @@ function DashboardSlideThree() {
                 data.sort((a, b) => {
                     return a.techDebtPerLoc - b.techDebtPerLoc;
                 });
+
+                // Wait half a second before setting the state
+                setTimeout(() => {
+                    setLoadingTopProjects(false);
+                }, 500);
 
                 setBestProjects(data);
                 console.log(data)
@@ -76,6 +83,11 @@ function DashboardSlideThree() {
                 data.sort((a, b) => {
                     return b.totalCommits - a.totalCommits;
                 });
+
+                // Wait half a second before setting the state
+                setTimeout(() => {
+                    setLoadingTopContributors(false);
+                },  500);
 
                 setTopContributors(data);
                 console.info("Top contributors API Response: ", data)
@@ -114,6 +126,7 @@ function DashboardSlideThree() {
                                 projectName={name}
                                 owner={"By: " + owner}
                                 rank={rank}
+                                loading={loadingTopProjects}
                             />
                         )
                     })}
@@ -137,6 +150,7 @@ function DashboardSlideThree() {
                                 projectName={name}
                                 owner={"Contributions: " + totalCommits}
                                 rank={rank}
+                                loading={loadingTopContributors}
                             />
                         )
                     })}

@@ -16,6 +16,7 @@ function SubmittedProjectsCard() {
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const [submittedProjects, setSubmittedProjects] = useState([]);
     const [selectedProjectName, setSelectedProjectName] = useState("");
@@ -39,6 +40,12 @@ function SubmittedProjectsCard() {
         axios.get(url, {headers: headers})
             .then((response) => {
                 let data = response.data;
+
+                // Wait half a second to set the state
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+
                 setSubmittedProjects(data);
                 getRandomProject(data);
             })
@@ -81,37 +88,57 @@ function SubmittedProjectsCard() {
                 />
             }
 
-            <h3>
-                <i className={"bi bi-journal-text"}> </i>
-                Submitted Projects
-            </h3>
-            <div className="submitted-project-content">
-                <div className="submitted-project-img">
-                    <i className="bi bi-github"> </i>
+            {loading ? (
+                <div className="submitted-projects-skeleton">
+                    <div className={"submitted-projects-skeleton-header"}> </div>
+                    <div className={"submitted-projects-skeleton-content"}>
+                        <div className={"submitted-projects-skeleton-content-img"}> </div>
+                        <div className={"submitted-projects-skeleton-content-details"}>
+                            <div className={"submitted-projects-skeleton-content-details-title"}> </div>
+                            <div className={"submitted-projects-skeleton-content-details-icons"}>
+                                <div className={"submitted-projects-skeleton-content-details-icon"}> </div>
+                                <div className={"submitted-projects-skeleton-content-details-icon"}> </div>
+                                <div className={"submitted-projects-skeleton-content-details-icon"}> </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="submitted-project-details">
-                    <h4>{selectedProjectOwner + "/" + selectedProjectName}</h4>
-                    <section className="submitted-project-details-icons">
-                        <ProjectDetailsIcon
-                            icon={starIcon}
-                            title={selectedProjectStars}
-                            caption="Stars"
-                        />
+            ) :
+              <>
+                  <h3>
+                      <i className={"bi bi-journal-text"}> </i>
+                      Submitted Projects
+                  </h3>
+                  <div className="submitted-project-content">
+                      <div className="submitted-project-img">
+                          <i className="bi bi-github"> </i>
+                      </div>
+                      <div className="submitted-project-details">
+                          <h4>{selectedProjectOwner + "/" + selectedProjectName}</h4>
+                          <section className="submitted-project-details-icons">
+                              <ProjectDetailsIcon
+                                  icon={starIcon}
+                                  title={selectedProjectStars}
+                                  caption="Stars"
+                              />
 
-                        <ProjectDetailsIcon
-                            icon={contributionsIcon}
-                            title={selectedProjectForks}
-                            caption="Forks"
-                        />
+                              <ProjectDetailsIcon
+                                  icon={contributionsIcon}
+                                  title={selectedProjectForks}
+                                  caption="Forks"
+                              />
 
-                        <ProjectDetailsIcon
-                            icon={contributionsIcon}
-                            title={selectedProjectContributions}
-                            caption="Contributions"
-                        />
-                    </section>
-                </div>
-            </div>
+                              <ProjectDetailsIcon
+                                  icon={contributionsIcon}
+                                  title={selectedProjectContributions}
+                                  caption="Contributions"
+                              />
+                          </section>
+                      </div>
+                  </div>
+              </>
+
+            }
         </div>
     )
 }

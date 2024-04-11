@@ -15,6 +15,7 @@ const WordCloudCard = () => {
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const [words, setWords] = useState([]);
 
@@ -39,6 +40,11 @@ const WordCloudCard = () => {
         axios.get(url, {headers: headers})
             .then((response) => {
                 let data = response.data;
+
+                // Wait half a second before setting the state
+                setTimeout(() => {
+                    setLoading(false);
+                }, 3000);
                 
                 setWords(response.data);
                 console.info(data)
@@ -62,7 +68,10 @@ const WordCloudCard = () => {
                 />
             }
 
-            <WordCloud words={words} />
+            {!loading && words.length > 0 && (
+                // Force re-render by changing key prop
+                <WordCloud words={words} loading={loading} />
+            )}
         </div>
     );
 };

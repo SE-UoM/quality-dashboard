@@ -10,3 +10,9 @@
 .word {
     margin: 5px;
 }
+
+#loading {
+    animation: pulse 1.5s ease-in-out infinite;
+    width: 50vw;
+    height: 50vh;
+}
