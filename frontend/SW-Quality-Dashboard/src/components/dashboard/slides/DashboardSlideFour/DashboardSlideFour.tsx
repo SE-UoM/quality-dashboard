@@ -271,14 +271,16 @@ function DashboardSlideFour() {
                 <div className="dashboard-card"
                      style={{gridArea: "commitGraph"}}
                 >
-                    <WordCloud
-                        words={
-                         // Developers on a list of names
-                            developers.map((dev) => dev.name)
-                        }
+                    {developers.length > 0 &&
+                        <WordCloud
+                            words={
+                                // Developers on a list of names
+                                developers.map((dev) => dev.name)
+                            }
 
-                        loading={developers.length < 1}
-                    />
+                            loading={developers.length < 1}
+                        />
+                    }
                 </div>
 
                 <div className="dashboard-card"

@@ -68,9 +68,9 @@ const WordCloudCard = () => {
                 />
             }
 
-            {!loading && words.length > 0 && (
+            {words.length > 0 && (
                 // Force re-render by changing key prop
-                <WordCloud words={words} loading={loading} />
+                <WordCloud words={words}/>
             )}
         </div>
     );

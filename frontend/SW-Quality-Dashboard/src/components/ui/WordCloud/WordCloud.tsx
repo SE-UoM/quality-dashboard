@@ -3,7 +3,7 @@ import './WordCloud.css';
 import {Spinner} from "react-bootstrap";
 
 
-const WordCloud = ({ words, loading }) => {
+const WordCloud = ({ words }) => {
     const [wordStyles, setWordStyles] = useState([]);
 
     // Function to calculate the size of the word based on its frequency
@@ -41,6 +41,18 @@ const WordCloud = ({ words, loading }) => {
     const boldWords = words.filter(() => Math.random() < 0.5); // Adjust the probability as needed
 
     useEffect(() => {
+        const updatedWordStyles = words.map((word) => ({
+            fontSize: `${getRandomFontSize()}em`,
+            color: getRandomColor(),
+            display: 'inline-block',
+            margin: '5px',
+            transform: `rotate(${getRandomRotation()}deg)`,
+            fontWeight: boldWords.includes(word) ? 'bold' : 'normal',
+            fontFamily: getRandomFont(),
+        }));
+
+        setWordStyles(updatedWordStyles);
+
         const interval = setInterval(() => {
             // Update styles for each word
             const updatedWordStyles = words.map((word) => ({
@@ -54,19 +66,14 @@ const WordCloud = ({ words, loading }) => {
             }));
 
             setWordStyles(updatedWordStyles);
+
         }, 3000); // Adjust the interval as needed
 
         return () => clearInterval(interval); // Cleanup function to clear interval
-    }, [words, boldWords]);
+    }, []);
 
     return (
-        <div className="word-cloud" style={{ overflow: 'hidden' }} id={loading ? 'loading' : ''}>
-
-            {loading &&
-                <Spinner animation="border" role="status">
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
-            }
+        <div className="word-cloud" style={{ overflow: 'hidden' }}>
             {words.map((word, index) => (
                 <span
                     key={index}
