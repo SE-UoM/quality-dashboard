@@ -44,6 +44,35 @@
   }
 }
 
+.distribution-skeleton {
+  display: grid;
+  grid-template-columns: 5fr 5fr;
+}
+
+.distribution-skeleton-graph {
+  width: 18vw;
+  height: 18vw;
+  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: 10em;
+}
+
+.distribution-skeleton-legend-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin-top: 1em;
+  flex-direction: column;
+}
+
+.distribution-skeleton-legend {
+  width: 15vw;
+  height: 2em;
+  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: 0.5em;
+
+}
+
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;

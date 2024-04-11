@@ -36,3 +36,48 @@
     padding: 0;
     margin: 0;
 }
+
+.best-practices-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+.best-practices-skeleton-top {
+    width: 20vw;
+    height: 2em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+}
+
+.best-practices-skeleton-bottom {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.best-practices-skeleton-item:nth-child(1) {
+    width: 55vw;
+    height: 5em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+}
+
+.best-practices-skeleton-item:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: center;
+}
+
+.best-practices-skeleton-item-line {
+    width: 55vw;
+    height: 1em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+}

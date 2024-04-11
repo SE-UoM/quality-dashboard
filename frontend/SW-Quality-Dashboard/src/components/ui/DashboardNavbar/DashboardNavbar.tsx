@@ -46,7 +46,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
 
                                 {isAuthenticated && (
                                     <>
-                                        <Nav.Link href="/dashboard?p=1">
+                                        <Nav.Link href="/dashboard">
                                             <i className="bi bi-speedometer2"> </i>
                                             View Dashboard
                                         </Nav.Link>

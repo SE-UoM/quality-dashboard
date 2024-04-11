@@ -17,7 +17,7 @@ function HomePage() {
             <section className="homepage-action-buttons">
                 {/* These Will show only if the token we have on local storage works */}
                 {isAuthenticated && <Button href="/submit-project" variant="outline-light">Add Project</Button>}
-                {isAuthenticated && <Button href="/dashboard?p=1" variant="outline-light">Dashboard</Button>}
+                {isAuthenticated && <Button href="/dashboard" variant="outline-light">Dashboard</Button>}
                 {isAuthenticated && <Button href="/" variant="outline-light">View your Projects</Button>}
 
                 {isAuthenticated !== null && !isAuthenticated && <Button href="/login" variant="outline-light">Login</Button>}

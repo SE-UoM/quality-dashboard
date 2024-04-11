@@ -36,6 +36,7 @@ function CodeSmellDistributionCard() {
     const [error, setError] = React.useState(false);
     const [errorTitle, setErrorTitle] = React.useState("");
     const [errorMessage, setErrorMessage] = React.useState("");
+    const [loading, setLoading] = React.useState(true);
 
     // Call the API to get the language distribution data
     useEffect(() => {
@@ -59,7 +60,10 @@ function CodeSmellDistributionCard() {
                 let totalCodeSmells = response.data.totalCodeSmells;
                 let codeSmellDistribution = response.data.codeSmellsDistribution;
 
-                console.log(codeSmellDistribution)
+                // Wait half a second before setting the state to false
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
 
                 setTotalCodeSmells(totalCodeSmells);
                 setCodeSmellDistribution(codeSmellDistribution);
@@ -91,24 +95,41 @@ function CodeSmellDistributionCard() {
             }
             <div className="dashboard-card" id="codeSmellDistribution">
                 <div className="code-smell-distribution-container">
-                    <h3>
-                        <i className="bi bi-radioactive"> </i>
-                        Code Smell Distribution
-                    </h3>
+                    {!loading &&
+                        <h3>
+                            <i className="bi bi-radioactive"> </i>
+                            Code Smell Distribution
+                        </h3>
+                    }
                     <div className="code-smells-distribution-chart">
-                        <h2>{formatText(totalCodeSmells)}</h2>
+                        {loading ? (
+                                <div className="distribution-skeleton">
+                                    <div className="distribution-skeleton-graph"> </div>
+                                    <div className="distribution-skeleton-legend-container">
+                                        <div className="distribution-skeleton-legend"> </div>
+                                        <div className="distribution-skeleton-legend"> </div>
+                                        <div className="distribution-skeleton-legend"> </div>
+                                    </div>
+                                </div>
+                            )
+                            :
+                                <>
+                                <h2>{formatText(totalCodeSmells)}</h2>
 
-                        <PieChart
-                            series={[{
-                                data: pieChartData,
-                                innerRadius: 104,
-                                outerRadius: 144,
-                                paddingAngle: 1,
-                                cornerRadius: 5,
-                                startAngle: -90,
-                                highlightScope: { faded: 'global', highlighted: 'item' }
-                            }]}
-                        />
+                                <PieChart
+                                    series={[{
+                                        data: pieChartData,
+                                        innerRadius: 104,
+                                        outerRadius: 144,
+                                        paddingAngle: 1,
+                                        cornerRadius: 5,
+                                        startAngle: -90,
+                                        highlightScope: {faded: 'global', highlighted: 'item'}
+                                    }]}
+                                />
+                                </>
+                        }
+
                     </div>
                 </div>
             </div>

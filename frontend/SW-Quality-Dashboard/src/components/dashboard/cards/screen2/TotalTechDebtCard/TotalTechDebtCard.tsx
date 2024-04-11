@@ -24,6 +24,7 @@ function TotalTechDebtCard() {
     const [error, setError] = React.useState(false);
     const [errorTitle, setErrorTitle] = React.useState("");
     const [errorMessage, setErrorMessage] = React.useState("");
+    const [loading, setLoading] = React.useState(true);
 
     // Call the API to get the total technical debt
     useEffect(() => {
@@ -43,6 +44,12 @@ function TotalTechDebtCard() {
         axios.get(url, { headers: headers })
             .then(response => {
                 console.info("Total Tech Debt API Data: " + response.data);
+
+                // Wait half a second before setting the state
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+
                 setTotalTechDebt(response.data.totalTechDebtCost);
             })
             .catch(error => {
@@ -62,18 +69,27 @@ function TotalTechDebtCard() {
                 />
             }
 
-            <div className="dashboard-card"
+            <div className={"dashboard-card " + (loading ? "loading" : "")}
                  id="totalTD"
             >
-                <section className="total-td-card-header">
-                    <i className="bi bi-cash-coin"> </i>
-                    Total Technical Debt
-                </section>
+                {loading ? (
+                        <div className="total-td-skeleton">
+                            <div className="skeleton-box"> </div>
+                            <div className="skeleton-box"> </div>
+                        </div>
+                    ):
+                    <>
+                        <section className="total-td-card-header">
+                            <i className="bi bi-cash-coin"> </i>
+                            Total Technical Debt
+                        </section>
 
-                <h2 className="td-value">
-                    <i className={"bi bi-currency-euro"}> </i>
-                    {formatText(totalTechDebt)}
-                </h2>
+                        <h2 className="td-value">
+                            <i className={"bi bi-currency-euro"}> </i>
+                            {formatText(totalTechDebt)}
+                        </h2>
+                    </>
+                }
             </div>
         </>
       );

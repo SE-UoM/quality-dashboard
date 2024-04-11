@@ -13,6 +13,7 @@ function TechDebtStatsCard() {
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const [averageProjectTechDebt, setAverageProjectTechDebt] = useState(0);
     const [minTechDebt, setMinTechDebt] = useState(0);
@@ -44,6 +45,11 @@ function TechDebtStatsCard() {
                 let maxTD = data.maxProjectTechDebt;
                 let avgTDPerLineOfCode = data.avgTechDebtPerLOC;
 
+                // Wait half a second before setting the state
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+
                 setAverageProjectTechDebt(avgTD);
                 setMinTechDebt(minTD);
                 setMaxTechDebt(maxTD);
@@ -60,44 +66,58 @@ function TechDebtStatsCard() {
     return (
         <>
             <div className="dashboard-card" id="techDebtStats">
-                <h3>
-                    <i className={"bi bi-bar-chart"}> </i>
-                    Technical Debt Statistics
-                </h3>
+                {loading ? (
+                    <>
+                        <div className="td-stats-skeleton">
+                            <div className="td-stats-skeleton-item-top"> </div>
+                            <div className="td-stats-skeleton-item-bottom">
+                                <div className="td-stats-skeleton-item"> </div>
+                                <div className="td-stats-skeleton-item"> </div>
+                            </div>
+                        </div>
+                    </>
+                    ):
+                    <>
+                        <h3>
+                            <i className={"bi bi-bar-chart"}> </i>
+                            Technical Debt Statistics
+                        </h3>
 
-                <section className="td-stats-container">
-                    <p className={"td-stat-item"}>
-                        <strong>
-                            <i className="bi bi-stopwatch"> </i>
-                            Average Project Debt:
-                        </strong>
-                        {" " + parseFloat(averageProjectTechDebt.toFixed(2))} '
-                    </p>
+                        <section className="td-stats-container">
+                            <p className={"td-stat-item"}>
+                                <strong>
+                                    <i className="bi bi-stopwatch"> </i>
+                                    Average Project Debt:
+                                </strong>
+                                {" " + parseFloat(averageProjectTechDebt.toFixed(2))} '
+                            </p>
 
-                    <p className={"td-stat-item"}>
-                        <strong>
-                            <i className="bi bi-piggy-bank"> </i>
-                            Maximum Debt:
-                        </strong>
-                        {" " + parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
-                    </p>
+                            <p className={"td-stat-item"}>
+                                <strong>
+                                    <i className="bi bi-piggy-bank"> </i>
+                                    Maximum Debt:
+                                </strong>
+                                {" " + parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
+                            </p>
 
-                    <p className={"td-stat-item"}>
-                        <strong>
-                            <i className="bi bi-stopwatch"> </i>
-                            Debt per Line of Code:
-                        </strong>
-                        {" " + parseFloat(averageTechDebtPerLineOfCode.toFixed(2))} '
-                    </p>
+                            <p className={"td-stat-item"}>
+                                <strong>
+                                    <i className="bi bi-stopwatch"> </i>
+                                    Debt per Line of Code:
+                                </strong>
+                                {" " + parseFloat(averageTechDebtPerLineOfCode.toFixed(2))} '
+                            </p>
 
-                    <p className={"td-stat-item"}>
-                        <strong>
-                            <i className="bi bi-piggy-bank"> </i>
-                            Minimum Debt:
-                        </strong>
-                        {" " + parseFloat(minTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
-                    </p>
-                </section>
+                            <p className={"td-stat-item"}>
+                                <strong>
+                                    <i className="bi bi-piggy-bank"> </i>
+                                    Minimum Debt:
+                                </strong>
+                                {" " + parseFloat(minTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
+                            </p>
+                        </section>
+                    </>
+            }
             </div>
         </>
     );
