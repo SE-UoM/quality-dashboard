@@ -14,5 +14,7 @@
     .dashboard-slide {
         grid-template-columns: repeat(1, 1fr); /* Change to single column */
         grid-template-rows: auto; /* Let rows adjust based on content */
+        height: auto;
+        width: 100vw;
     }
 }

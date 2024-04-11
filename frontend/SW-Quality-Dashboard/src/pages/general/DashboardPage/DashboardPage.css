@@ -8,7 +8,7 @@
 
     /* Media query for screens smaller than 768px (typical mobile devices) */
     @media (max-width: 768px) {
-        height: auto; /* Adjust height dynamically for mobile devices */
+        height: auto;
         width: 100vw;
     }
 }

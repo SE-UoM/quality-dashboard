@@ -100,5 +100,25 @@
 @media (max-width: 768px) {
     .dashboard-card#languageRank {
         height: 80vh;
+        padding: 0.5em;
+    }
+
+    .language-rank-line#first,
+    .language-rank-line#second,
+    .language-rank-line#third{
+        width: 100%;
+    }
+
+    .language-rank-container {
+        gap: 0.5em;
+    }
+
+    .language-rank {
+        width: 100%;
+        gap: 0;
+    }
+
+    .language-rank-line img {
+        height: 3.5em;
     }
 }

@@ -46,3 +46,18 @@
     color: var(--dark-gray);
     background: var(--light-gray);
 }
+
+/* Mobile View */
+@media (max-width: 768px) {
+    .tabs-content {
+        flex-direction: column;
+    }
+
+    .nav-tabs {
+        width: 100%;
+    }
+
+    .nav-tabs-content {
+        padding: 2em 1em;
+    }
+}
