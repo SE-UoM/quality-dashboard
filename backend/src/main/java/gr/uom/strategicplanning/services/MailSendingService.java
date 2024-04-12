@@ -25,8 +25,8 @@ public class MailSendingService {
         try {
             //System.getProperty("user.dir") + "\\src\\main\\resources\\emailTemplates" + templateName
             Resource resource = new ClassPathResource("emailTemplates/" + templateName);
-            byte[] bytes = Files.readAllBytes(Paths.get(resource.getURI()));
-            return new String(bytes);
+            byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
+            return new String(bdata, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             // Handle error loading template
