@@ -97,7 +97,7 @@ function TechDebtStatsCard() {
                                     <i className="bi bi-piggy-bank"> </i>
                                     Maximum Debt:
                                 </strong>
-                                {" " + parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
+                                {" " +  parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
                             </p>
 
                             <p className={"td-stat-item"}>
