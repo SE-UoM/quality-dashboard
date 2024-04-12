@@ -7,7 +7,7 @@ function ScrollableRankCard({ title, icon, children, cardId, gridArea }) {
             style={{ gridArea: gridArea }}
         >
             <h3>
-                <i className={icon}></i>
+                <i className={icon}> </i>
                 {title}
             </h3>
 

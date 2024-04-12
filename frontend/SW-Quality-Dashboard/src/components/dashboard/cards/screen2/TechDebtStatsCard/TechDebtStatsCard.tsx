@@ -41,8 +41,8 @@ function TechDebtStatsCard() {
                 let data = response.data;
 
                 let avgTD = data.avgTechDebt;
-                let minTD = data.minProjectTechDebt;
-                let maxTD = data.maxProjectTechDebt;
+                let minTD = data.minProjectTechDebtPerLOC;
+                let maxTD = data.maxProjectTechDebtPerLOC;
                 let avgTDPerLineOfCode = data.avgTechDebtPerLOC;
 
                 // Wait half a second before setting the state

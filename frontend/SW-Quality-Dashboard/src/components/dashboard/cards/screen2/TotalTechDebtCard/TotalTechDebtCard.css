@@ -10,13 +10,12 @@
 }
 
 .total-td-card-header {
-    font-size: 1em;
+    font-size: 2.5vh;
     color: var(--text-primary);
-    scale: 1.3;
 }
 
 .td-value {
-    font-size: 4em;
+    font-size: 9vh;
     font-weight: bold;
 }
 

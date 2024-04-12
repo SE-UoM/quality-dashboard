@@ -16,6 +16,14 @@ import SubmittedProjectsCard from "../../cards/screen3/SubmittedProjectsCard/Sub
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
+function truncateString(str, maxLength) {
+    if (str.length > maxLength) {
+        return str.slice(0, maxLength) + '...';
+    } else {
+        return str;
+    }
+}
+
 function DashboardSlideThree() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
 
@@ -123,11 +131,23 @@ function DashboardSlideThree() {
                         return (
                             <DashboardRankedItem
                                 key={index}
-                                projectName={name}
-                                owner={"By: " + owner}
+                                projectName={truncateString(name, 15)}
                                 rank={rank}
                                 loading={loadingTopProjects}
-                            />
+                                headerUrl={"https://github.com/" + name}
+                            >
+                                By:&nbsp;
+                                <a
+                                    href={"https://github.com/" + owner}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style={{
+                                        color: "var(--text-secondary)",
+                                    }}
+                                >
+                                    {owner}
+                                </a>
+                            </DashboardRankedItem>
                         )
                     })}
                 </ScrollableRankCard>
@@ -148,10 +168,11 @@ function DashboardSlideThree() {
                             <DashboardRankedItem
                                 key={index}
                                 projectName={name}
-                                owner={"Contributions: " + totalCommits}
                                 rank={rank}
                                 loading={loadingTopContributors}
-                            />
+                            >
+                                {"Contributions: " + totalCommits}
+                            </DashboardRankedItem>
                         )
                     })}
                 </ScrollableRankCard>

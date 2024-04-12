@@ -21,7 +21,7 @@
 }
 
 .submitted-project-img i {
-    font-size: 10em;
+    font-size: 25vh;
     color: var(--dark-gray);
 }
 
@@ -30,10 +30,11 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: 100%;
 }
 
 .submitted-project-details h4 {
-    font-size: 3em;
+    font-size: 7vh;
     font-style: italic;
 }
 
@@ -42,8 +43,8 @@
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    gap: 3em;
-    padding: 2em;
+    gap: 2vh;
+    padding: 4vh;
 }
 
 .submitted-projects-skeleton {
@@ -53,7 +54,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1em;
+    gap: 1vh;
 }
 
 .submitted-projects-skeleton-header {
