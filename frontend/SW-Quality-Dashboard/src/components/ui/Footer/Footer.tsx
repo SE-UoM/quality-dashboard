@@ -31,7 +31,7 @@ function Footer() {
                             <h3>Resources</h3>
                             <ul>
                                 <li><a href="https://github.com/SE-UoM/quality-dashboard">Github Repository</a></li>
-                                <li><a href="https://github.com/SE-UoM/quality-dashboard/issues">Report a Bug</a></li>
+                                <li><a href="https://github.com/SE-UoM/quality-dashboard/discussions/categories/bug-report">Report a Bug</a></li>
                                 <li><a href="">Contact</a></li>
                             </ul>
                         </div>
