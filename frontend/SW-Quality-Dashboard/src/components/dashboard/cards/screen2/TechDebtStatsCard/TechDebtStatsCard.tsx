@@ -87,7 +87,7 @@ function TechDebtStatsCard() {
                             <p className={"td-stat-item"}>
                                 <strong>
                                     <i className="bi bi-stopwatch"> </i>
-                                    Average Project Debt:
+                                    Average Debt:
                                 </strong>
                                 {" " + parseFloat(averageProjectTechDebt.toFixed(2))} '
                             </p>
@@ -95,7 +95,7 @@ function TechDebtStatsCard() {
                             <p className={"td-stat-item"}>
                                 <strong>
                                     <i className="bi bi-piggy-bank"> </i>
-                                    Maximum Debt:
+                                    Max Debt per Line:
                                 </strong>
                                 {" " +  parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
                             </p>
@@ -103,7 +103,7 @@ function TechDebtStatsCard() {
                             <p className={"td-stat-item"}>
                                 <strong>
                                     <i className="bi bi-stopwatch"> </i>
-                                    Debt per Line of Code:
+                                    Debt per Line:
                                 </strong>
                                 {" " + parseFloat(averageTechDebtPerLineOfCode.toFixed(2))} '
                             </p>
@@ -111,7 +111,7 @@ function TechDebtStatsCard() {
                             <p className={"td-stat-item"}>
                                 <strong>
                                     <i className="bi bi-piggy-bank"> </i>
-                                    Minimum Debt:
+                                    Min Debt per Line:
                                 </strong>
                                 {" " + parseFloat(minTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
                             </p>

@@ -97,6 +97,9 @@ public class AnalysisController {
             } else {
                 // If the project exists, retrieve it from the database
                 project = projectOptional.get();
+                //toDo
+                // check status
+                // and stop if analysis running
             }
 
             // Make sure github can find the repo
@@ -118,6 +121,8 @@ public class AnalysisController {
             projectRepository.save(project);
 
             // Check if the project has less than the required number of commits
+            //toDo
+            // boolean projectNeedsReview = project.getCommits().size() > OrganizationAnalysis.COMMITS_THRESHOLD;
             boolean repoHasLessCommitsThanThreshold = analysisService.repoHasLessThatThresholdCommits(project);
             boolean projectNeedsReview = !repoHasLessCommitsThanThreshold && project.getStatus() != ProjectStatus.ANALYSIS_READY;
 

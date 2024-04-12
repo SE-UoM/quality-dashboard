@@ -41,7 +41,8 @@ public class TechDebtStats {
             "MAJOR", 0,
             "MINOR", 0,
             "CRITICAL", 0,
-            "BLOCKER", 0
+            "BLOCKER", 0,
+            "INFO", 0
     );
 
     @OneToOne

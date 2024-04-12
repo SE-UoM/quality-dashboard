@@ -461,22 +461,30 @@ public class OrganizationController {
             OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
             TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
 
-            int minProjectTechDebt = techDebtStats
+            double minProjectTechDebtInMins = techDebtStats
                     .getProjectWithMinTechDebt()
-                    .getProjectStats()
-                    .getTechDebt();
+                    .getProjectStats().getTechDebtPerLoC();
 
-            int maxProjectTechDebt = techDebtStats
+            Number minProjectTechDebt = TechDebtUtils.convertTDToHours(minProjectTechDebtInMins);
+
+            double costForAllHoursMin = TechDebtUtils.calculateTechDebtForAllHours(minProjectTechDebt);
+            double tdCostPerMonthMin = TechDebtUtils.calculateTechDebtCostPerMonth(costForAllHoursMin, minProjectTechDebt);
+
+            double maxProjectTechDebtInMins = techDebtStats
                     .getProjectWithMaxTechDebt()
-                    .getProjectStats()
-                    .getTechDebt();
+                    .getProjectStats().getTechDebtPerLoC();
+
+            Number maxProjectTechDebt = TechDebtUtils.convertTDToHours(maxProjectTechDebtInMins);
+
+            double costForAllHoursMax = TechDebtUtils.calculateTechDebtForAllHours(maxProjectTechDebt);
+            double tdCostPerMonthMax = TechDebtUtils.calculateTechDebtCostPerMonth(costForAllHoursMax, maxProjectTechDebt);
 
             float avgTechDebt = techDebtStats.getAverageTechDebt();
             float avgTechDebtPerLOC = techDebtStats.getAverageTechDebtPerLoC();
 
             Map<String, Object> techDebtStatsResponse = new HashMap<>();
-            techDebtStatsResponse.put("minProjectTechDebt", minProjectTechDebt);
-            techDebtStatsResponse.put("maxProjectTechDebt", maxProjectTechDebt);
+            techDebtStatsResponse.put("minProjectTechDebtPerLOC", tdCostPerMonthMin);
+            techDebtStatsResponse.put("maxProjectTechDebtPerLOC", tdCostPerMonthMax);
             techDebtStatsResponse.put("avgTechDebt", avgTechDebt);
             techDebtStatsResponse.put("avgTechDebtPerLOC", avgTechDebtPerLOC);
 
