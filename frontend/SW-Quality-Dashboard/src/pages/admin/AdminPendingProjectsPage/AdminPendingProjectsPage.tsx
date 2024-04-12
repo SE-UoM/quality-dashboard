@@ -40,7 +40,7 @@ function AdminPendingProjectsPage({updateCount}) {
                 setAlertVariant('danger')
                 setAlertMessage('Error fetching projects')
             })
-    }, [projects]);
+    }, []);
 
     const approveProject = (projectId, projectUrl) => {
         // Show the alert to let the user know something is happening
