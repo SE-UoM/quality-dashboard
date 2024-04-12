@@ -1,0 +1,93 @@
+.dashboard-card#itemActivity {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3em;
+    border-bottom: 1px solid var(--dark-gray);
+    padding: 0.5em;
+    font-size: 1.3em;
+}
+
+.name {
+    font-size: 1.5em !important;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-card#itemActivity .card-content {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 80%;
+    padding: 0 1em 1em 1em;
+}
+
+.card-image {
+    width: 20%;
+    border-radius: 10em;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    margin-right: 2em;
+}
+
+.card-content-details {
+    width: 70%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content-details h3 {
+    align-self: flex-start;
+    font-size: 15em;
+}
+
+.card-content-details-caption {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    width: 100%;
+}
+
+.card-content-details-caption img {
+    height: 3em;
+}
+
+.card-content-details-count {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.card-content-details-count h4 {
+    font-size: 2em;
+    padding: 0;
+    margin: 0;
+    font-weight: bolder;
+}
+
+.card-content-details-count p {
+    font-size: 1.5em;
+    padding: 0;
+    margin: 0;
+    color: var(--text-secondary);
+}
+

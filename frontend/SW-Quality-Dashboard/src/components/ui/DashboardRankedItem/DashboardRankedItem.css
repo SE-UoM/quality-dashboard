@@ -1,0 +1,117 @@
+.best-project-component {
+    display: grid;
+    width: 100%;
+    height: 15vh;
+    align-items: center;
+    justify-content: center;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    padding: 0 0.5em;
+
+    grid-template-areas:
+        "medal projectTitle projectTitle"
+        "medal projectOwner projectOwner";
+
+    border-bottom: 1px solid var(--dark-gray);
+}
+
+.best-project-medal {
+    grid-area: medal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../../../assets/svg/dashboardIcons/simple_medal_icon.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 85%;
+    height: 10vh;
+    margin: 0.5em;
+}
+
+.best-project-medal span {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.best-project-item-title {
+    grid-area: projectTitle;
+    font-size: 1.5em;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.best-project-item-owner {
+    grid-area: projectOwner;
+}
+
+.gold,
+.silver,
+.bronze {
+    border-radius: 10em;
+    color: white;
+    background-image: url("../../../assets/svg/dashboardIcons/simple_medal_icon_white.svg");
+}
+
+.gold {
+    background-color: var(--gold);
+}
+
+.silver {
+    background-color: var(--silver);
+}
+
+.bronze {
+    background-color: var(--bronze);
+}
+
+.ranked-item-skeleton {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.ranked-item-skeleton-medal {
+    height: 10vh;
+    width: 10vh;
+    border-radius: 10em;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.best-project-component.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1em 0;
+}
+
+.ranked-item-skeleton-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+.ranked-item-skeleton-title {
+    margin-top: 0.5em;
+    height: 2em;
+    width: 11vw;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 1em;
+}
+
+.ranked-item-skeleton-owner {
+    grid-area: projectOwner;
+    height: 1em;
+    width: 11vw;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 1em;
+
+}

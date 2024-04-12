@@ -14,22 +14,38 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
+    private static final Set<String> ALLOWED_PATHS = new HashSet<>();
+
+    static {
+        ALLOWED_PATHS.add("/login");
+        ALLOWED_PATHS.add("/api/user/register");
+        ALLOWED_PATHS.add("/api/user/verify");
+        ALLOWED_PATHS.add("/api/user/verify/resend");
+        ALLOWED_PATHS.add("/user/token/refresh");
+        ALLOWED_PATHS.add("/swagger-ui");
+        ALLOWED_PATHS.add("/api-ui");
+        ALLOWED_PATHS.add("/api/organizations/names");
+        ALLOWED_PATHS.add("/api/user/reset-password/request");
+        ALLOWED_PATHS.add("/api/user/reset-password");
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals("/login") || request.getServletPath().equals("/user/token/refresh") || request.getServletPath().equals("/swagger-ui") || request.getServletPath().equals("/api-ui")){
-            filterChain.doFilter(request,response);
-        }
+        String servletPath = request.getServletPath();
+        System.out.println("servletPath: "+servletPath);
+        System.out.println("request: "+request);
+        System.out.println(isAllowedPath(servletPath));
+
+        if(isAllowedPath(servletPath)){ filterChain.doFilter(request,response); }
+
         else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
@@ -60,5 +76,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request,response);
             }
         }
+    }
+
+    private boolean isAllowedPath(String path){
+        return ALLOWED_PATHS.contains(path);
     }
 }

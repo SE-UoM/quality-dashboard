@@ -1,0 +1,122 @@
+.dashboard-card#submittedProjects {
+    width: 100%;
+    height: 100%;
+    grid-area: submittedProjects;
+}
+
+.submitted-project-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.submitted-project-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submitted-project-img i {
+    font-size: 10em;
+    color: var(--dark-gray);
+}
+
+.submitted-project-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.submitted-project-details h4 {
+    font-size: 3em;
+    font-style: italic;
+}
+
+.submitted-project-details-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 3em;
+    padding: 2em;
+}
+
+.submitted-projects-skeleton {
+    width: 100%;
+    height: 39vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+
+.submitted-projects-skeleton-header {
+    width: 50%;
+    height: 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 1em;
+}
+
+.submitted-projects-skeleton-content {
+    width: 100%;
+    height: 85%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 3em;
+}
+
+.submitted-projects-skeleton-content-img {
+    width: 15vw;
+    height: 15vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 20em;
+}
+
+.submitted-projects-skeleton-content-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.submitted-projects-skeleton-content-details-title {
+    width: 100%;
+    height: 5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 1em;
+}
+
+.submitted-projects-skeleton-content-details-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 3em;
+}
+
+.submitted-projects-skeleton-content-details-icon {
+    width: 5em;
+    height: 5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 20em;
+}

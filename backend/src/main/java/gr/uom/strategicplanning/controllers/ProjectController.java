@@ -1,16 +1,16 @@
 package gr.uom.strategicplanning.controllers;
 
-import gr.uom.strategicplanning.controllers.responses.implementations.CommitResponse;
-import gr.uom.strategicplanning.controllers.responses.implementations.DeveloperResponse;
-import gr.uom.strategicplanning.controllers.responses.implementations.LanguageResponse;
-import gr.uom.strategicplanning.controllers.responses.implementations.ProjectResponse;
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
+import gr.uom.strategicplanning.controllers.responses.implementations.*;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
+import gr.uom.strategicplanning.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +21,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectService projectService;
 
     @GetMapping
     public ResponseEntity<List<ProjectResponse>> getAllProjects() {
@@ -112,6 +115,28 @@ public class ProjectController {
                .collect(Collectors.toList());
 
         return ResponseEntity.ok(projectLanguages);
+    }
+
+    @GetMapping("/organization/{organization_id}")
+    public ResponseEntity<Collection<SimpleProjectResponse>> getProjectsByOrganization(@PathVariable Long organization_id) {
+        Collection<Project> projects = projectService.getProjectsByOrganization(organization_id);
+
+        Collection<SimpleProjectResponse> projectResponses = projects.stream()
+                .map(SimpleProjectResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(projectResponses);
+    }
+
+    @GetMapping("/organization/{organization_id}/status/{status}")
+    public ResponseEntity<Collection<SimpleProjectResponse>> getProjectsByStatus(@PathVariable Long organization_id, @PathVariable String status) {
+        Collection<Project> projects = projectService.getOrganizationProjectsByStatus(organization_id, status);
+
+        Collection<SimpleProjectResponse> projectResponses = projects.stream()
+                .map(SimpleProjectResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(projectResponses);
     }
 
 }

@@ -4,12 +4,15 @@ import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalysis;
 import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
+import gr.uom.strategicplanning.enums.ProjectStatus;
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -21,6 +24,10 @@ public class AnalysisService {
     private final CommitService commitService;
     private final ProjectService projectService;
     private SonarAnalysis sonarAnalysis;
+
+    @Value("${sonar.sonarqube.url}")
+    private String SONARQUBE_URL;
+
     @Autowired
     private LanguageService languageService;
 
@@ -31,16 +38,27 @@ public class AnalysisService {
     private CodeSmellDistributionService codeSmellDistributionService;
 
     @Autowired
-    public AnalysisService(CommitService commitService, @Value("${github.token}") String githubToken, ProjectService projectService) {
+    public AnalysisService(
+            CommitService commitService,
+            @Value("${github.token}") String githubToken,
+            @Value("${sonar.sonarqube.url}") String sonarApiUrl,
+            ProjectService projectService) {
         this.commitService = commitService;
         this.projectService = projectService;
         this.githubApiClient = new GithubApiClient(githubToken);
-        this.sonarApiClient = new SonarApiClient();
+        this.sonarApiClient = new SonarApiClient(sonarApiUrl);
     }
     
     public void fetchGithubData(Project project) throws Exception {
         githubApiClient.fetchProjectData(project);
+    }
 
+    public boolean validateUrlWithGithub(String url) {
+        return githubApiClient.repoFoundByGithubAPI(url);
+    }
+
+    public boolean repoHasLessThatThresholdCommits(Project project) {
+        return githubApiClient.repoHasLessThatThresholdCommits(project, OrganizationAnalysis.COMMITS_THRESHOLD);
     }
 
     private void analyzeCommits(Project project) throws Exception {
@@ -53,7 +71,7 @@ public class AnalysisService {
             Commit commit = new Commit();
             commit.setHash(commitSHA);
 
-            sonarAnalysis = new SonarAnalysis(project, commitSHA);
+            sonarAnalysis = new SonarAnalysis(project, commitSHA, SONARQUBE_URL);
 
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
@@ -62,16 +80,27 @@ public class AnalysisService {
     }
 
     private void analyzeMaster(Project project) throws Exception {
-        githubApiClient.checkoutCommit(project, GithubApiClient.getDefaultBranchName(project));
+        githubApiClient.checkoutMaster(project);
 
-        sonarAnalysis = new SonarAnalysis(project, "master");
-
-        // Wait a bit to make sure the analysis data is available
-        Thread.sleep(5000);
+        sonarAnalysis = new SonarAnalysis(project, project.getDefaultBranchName(), SONARQUBE_URL);
     }
 
     private void extractAnalysisDataForProject(Project project) throws Exception {
         Collection languages = languageService.extractLanguagesFromProject(project);
+
+        // If the project has no languages try again 5 times waiting 5 seconds between each try
+        int tries = 0;
+        while (languages.isEmpty() && tries < 5) {
+            System.out.println("No languages found, trying again (" + tries + "/5)");
+            Thread.sleep(5000);
+            languages = languageService.extractLanguagesFromProject(project);
+            tries++;
+        }
+
+        // If the project still has no languages, throw an exception
+        if (languages.isEmpty()) {
+            throw new Exception("No languages found for project " + project.getName());
+        }
 
         int totalLanguages = languages.size();
         int totalDevelopers = project.getDevelopers().size();
@@ -111,23 +140,40 @@ public class AnalysisService {
     public void startAnalysis(Project project) throws Exception {
         Git clonedGit = GithubApiClient.cloneRepository(project);
 
-        String defaultBranch = GithubApiClient.getDefaultBranchName(project);
-        RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
-        project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
+        try {
+            project.setStatus(ProjectStatus.ANALYSIS_STARTED);
+            projectService.saveProject(project);
 
-        project.getCommits().clear();
+            String defaultBranch = project.getDefaultBranchName();
+            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
+            project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
 
-        analyzeCommits(project);
-        analyzeMaster(project);
+            // Force initialization of the commits collection
+            project.getCommits().size();
 
-        extractAnalysisDataForProject(project);
+            project.getCommits().clear();
 
-        //ToDo Check this save
-        projectService.saveProject(project);
+            analyzeCommits(project);
+            analyzeMaster(project);
 
-         clonedGit.close();
-         GithubApiClient.deleteRepository(project);
+            extractAnalysisDataForProject(project);
 
+            // Set the total commits of the project
+            project.setTotalCommits(project.getCommits().size());
+
+            project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
+            // Save the project with updated analysis data
+            projectService.saveProject(project);
+
+            clonedGit.close();
+            GithubApiClient.deleteRepository(project);
+        } catch (Exception e) {
+            clonedGit.close();
+            GithubApiClient.deleteRepository(project);
+
+            project.setStatus(ProjectStatus.ANALYSIS_FAILED);
+            projectService.saveProject(project);
+        }
     }
 
 }

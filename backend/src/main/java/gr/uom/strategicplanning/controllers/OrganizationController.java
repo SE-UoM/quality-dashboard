@@ -48,7 +48,30 @@ public class OrganizationController {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
+    }
+
+    @GetMapping("/names")
+    public ResponseEntity<List<Map>> getPublicOrganizations() {
+        try {
+            List<Organization> organizations = organizationRepository.findAll();
+
+            List<Map> publicOrganizations = new ArrayList<>();
+
+            for (Organization organization : organizations) {
+                Map<String, Object> organizationMap = new HashMap<>();
+                organizationMap.put("id", organization.getId());
+                organizationMap.put("name", organization.getName());
+
+                publicOrganizations.add(organizationMap);
+            }
+
+            return ResponseEntity.ok(publicOrganizations);
         }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrganizationResponse> getOrganizationById(@PathVariable Long id) {

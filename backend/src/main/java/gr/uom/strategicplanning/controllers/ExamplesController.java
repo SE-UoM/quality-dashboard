@@ -184,9 +184,8 @@ public class ExamplesController {
         for (int i = 0; i < 10; i++) {
             Map<String, Object> projectMap = new HashMap<>();
             projectMap.put("name", "Project " + i);
-            projectMap.put("totalCommits", 1000 + i);
-            projectMap.put("totalCodeSmells", 100 + i);
-            projectMap.put("codeSmellsPerCommit", 0.1 + i);
+            projectMap.put("owner", "Owner " + i);
+            projectMap.put("techDebtPerLoc", i * 0.12);
             projects.add(projectMap);
         }
 

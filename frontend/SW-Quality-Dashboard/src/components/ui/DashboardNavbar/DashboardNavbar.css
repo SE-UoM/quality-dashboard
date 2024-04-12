@@ -1,0 +1,75 @@
+.navbar-brand {
+    display: flex;
+    flex-direction: row;
+    width: 30vw;
+}
+
+.navbar-brand img {
+    width: 3em;
+}
+
+.navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1em;
+}
+
+.navbar-brand-text span {
+    font-size: 0.8em;
+    color: var(--org-color-secondary-dark-version);
+}
+
+.navbar-brand-text h1 {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: var(--org-color-primary);
+}
+
+#github-repo-icon {
+    font-size: 2.5em;
+    color: var(--org-color-primary);
+    opacity: 0.8;
+    transition: all 0.3s ease-in-out;
+}
+
+#github-repo-icon:hover {
+    opacity: 0.6;
+}
+
+.dropdown-menu {
+    padding: 0 !important;
+}
+
+#nav-dropdown-logout-divider {
+    margin-bottom: 0;
+}
+
+#nav-logout-link {
+    background: var(--danger-red);
+    color: var(--light-gray);
+    font-weight: bold;
+    display: grid;
+    grid-template-columns: 1fr 10fr;
+    gap: 0.2em;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease-in-out;
+    border-bottom-left-radius: 0.3em;
+    border-bottom-right-radius: 0.3em;
+}
+
+#nav-logout-link:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.btn-link {
+    background: var(--org-color-secondary);
+    color: var(--org-color-primary);
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+    .navbar-brand-text {
+        display: none;
+    }
+}

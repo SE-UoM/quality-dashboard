@@ -25,4 +25,8 @@ public class OrganizationService {
 
         return organization.get();
     }
+
+    public boolean organizationExistsById(Long id) {
+        return organizationRepository.existsById(id);
+    }
 }

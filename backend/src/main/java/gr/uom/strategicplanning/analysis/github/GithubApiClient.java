@@ -15,6 +15,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,12 +46,14 @@ public class GithubApiClient extends HttpClient {
 
         String username = extractUsername(project.getRepoUrl());
         String repoName = extractRepoName(project.getRepoUrl());
+        String defaultBranch = getDefaultBranchName(project);
 
         project.setName(repoName);
         project.setOwnerName(username);
         project.setTotalCommits(captureTotalCommits(username, repoName));
         project.setForks(getTotalForks(username, repoName));
         project.setStars(this.getTotalStars(username, repoName));
+        project.setDefaultBranchName(defaultBranch);
     }
 
     private Response sendGithubRequest(String url) throws IOException {
@@ -62,6 +65,47 @@ public class GithubApiClient extends HttpClient {
                 .build();
 
         return client.newCall(request).execute();
+    }
+
+    public boolean repoFoundByGithubAPI(String repoUrl) {
+        String username = extractUsername(repoUrl);
+        String repoName = extractRepoName(repoUrl);
+        String url = String.format("https://api.github.com/repos/%s/%s", username, repoName);
+        try {
+            Response response = sendGithubRequest(url);
+
+            if (response.isSuccessful())
+                return true;
+
+            if (response.code() != HttpStatus.NOT_FOUND.value())
+                throw new IOException("Failed to fetch repository from GitHub API");
+
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean repoHasLessThatThresholdCommits(Project project, int thresholdCommits) {
+        String username = extractUsername(project.getRepoUrl());
+        String repoName = extractRepoName(project.getRepoUrl());
+
+        String url = String.format("https://api.github.com/repos/%s/%s/commits?per_page=100", username, repoName);
+
+        try {
+            Response response = sendGithubRequest(url);
+
+            if (response.isSuccessful()) {
+                List<Map<String, Object>> commitsList = gson.fromJson(response.body().string(), List.class);
+                return commitsList.size() < thresholdCommits;
+            } else {
+                throw new IOException("Failed to fetch commits from GitHub API");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -178,16 +222,23 @@ public class GithubApiClient extends HttpClient {
      * @param project
      * @return the default branch name
      */
-    public static String getDefaultBranchName(Project project){
-        String branch = "";
+    public String getDefaultBranchName(Project project){
+        String repoUrl = project.getRepoUrl();
+        String username = extractUsername(repoUrl);
+        String repoName = extractRepoName(repoUrl);
+        String url = String.format("https://api.github.com/repos/%s/%s", username, repoName);
         try {
-            Git git = Git.open(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "repos" + System.getProperty("file.separator") + project.getName()));
-            branch = git.getRepository().getBranch();
-            git.close(); // Close the Git repository
+            Response response = new GithubApiClient(githubToken).sendGithubRequest(url);
+            if (response.isSuccessful()) {
+                Map<String, Object> jsonMap = gson.fromJson(response.body().string(), Map.class);
+                return (String) jsonMap.get("default_branch");
+            } else {
+                throw new IOException("Failed to fetch default branch from GitHub API");
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return branch;
     }
 
     public List<String> fetchCommitSHA(Project project) {
@@ -235,22 +286,13 @@ public class GithubApiClient extends HttpClient {
      * @param project The Project object representing the project whose repository is to be checked out.
      * @throws Exception if an error occurs during the checkout process
      */
-    public void checkoutMasterWithLatestCommit(Project project) throws Exception {
-        String repoPath = "./repos/" + project.getName();
-        Git git = Git.open(new File(repoPath));
-
-        // Checkout the master branch and reset to the latest commit
-        CheckoutCommand checkoutCommand = git.checkout();
-        checkoutCommand.setName("main");
-
+    public void checkoutMaster(Project project) throws Exception {
         try {
-            checkoutCommand.call();
+            Git git = Git.open(new File("./repos/" + project.getName()));
+            git.checkout().setName(project.getDefaultBranchName()).call();
             git.close();
-        } catch (GitAPIException e) {
+        } catch (IOException | GitAPIException e) {
             e.printStackTrace();
-            checkoutCommand.setName("master");
-            checkoutCommand.call();
-            git.close();
         }
     }
 

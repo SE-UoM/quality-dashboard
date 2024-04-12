@@ -1,0 +1,9 @@
+.register-page {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--org-color-primary);
+    padding: 2em;
+}

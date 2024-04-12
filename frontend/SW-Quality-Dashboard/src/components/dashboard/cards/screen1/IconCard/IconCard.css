@@ -1,0 +1,57 @@
+.dashboard-card#iconCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1em;
+    width: 100%;
+}
+
+.icon-card-icon {
+    height: 3em;
+}
+
+.icon-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-card-header h2 {
+    color: var(--text-primary);
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.icon-card-header h3 {
+    font-size: 1.5em;
+    color: var(--text-secondary);
+}
+
+/* IconCard.css */
+.icon-card-icon.skeleton {
+    width: 10vh;
+    height: 10vh; /* Adjust according to your icon size */
+    background-color: #f0f0f0; /* Light gray background color */
+    border-radius: 50%; /* Makes the skeleton circle-shaped */
+}
+
+.icon-card-header h2.skeleton,
+.icon-card-header h3.skeleton {
+    width: 11vw; /* Adjust width according to your header text length */
+    height: 20px; /* Adjust height based on font size */
+    background-color: #f0f0f0; /* Light gray background color */
+    margin: 1vh 0; /* Adjust spacing */
+    border-radius: 4px; /* Rounded corners */
+}
+
+.icon-card-icon.skeleton {
+    animation: pulse 1.5s infinite ease-in-out; /* Apply pulse animation */
+}
+.icon-card-header h2.skeleton,
+.icon-card-header h3.skeleton {
+    animation: pulse 1.5s infinite ease-in-out; /* Apply pulse animation */
+}

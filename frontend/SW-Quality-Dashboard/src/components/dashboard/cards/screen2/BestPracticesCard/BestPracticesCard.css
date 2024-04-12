@@ -1,0 +1,91 @@
+.dashboard-card#bestPractices {
+    grid-area: bestPractices;
+
+    display: grid;
+    grid-template-rows: 1fr 5fr;
+    padding: 1em;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.dashboard-card#bestPractices h3 {
+    margin: 0;
+    font-size: 1.7em;
+}
+
+.best-practices-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.best-practices-content h4 {
+    font-size: 2.5em;
+    font-weight: bolder;
+    text-decoration: underline;
+    margin: 0;
+    padding: 0;
+}
+
+.best-practices-content p {
+    font-size: 1.5em;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-card.loading#bestPractices {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.best-practices-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+.best-practices-skeleton-top {
+    width: 20vw;
+    height: 2em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+}
+
+.best-practices-skeleton-bottom {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.best-practices-skeleton-item:nth-child(1) {
+    width: 55vw;
+    height: 3em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+    margin-top: 1em;
+}
+
+.best-practices-skeleton-item:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: center;
+}
+
+.best-practices-skeleton-item-line {
+    width: 55vw;
+    height: 1em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+}

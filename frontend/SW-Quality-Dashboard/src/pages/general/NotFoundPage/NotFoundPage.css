@@ -1,0 +1,21 @@
+.not-found-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background-color: var(--org-color-primary);
+    color: var(--light-gray);
+}
+
+.not-found-page img {
+    height: 50%;
+    background-color: var(--light-gray);
+    padding: 2em;
+    border-radius: 5em;
+}
+
+.not-found-page h2 {
+    font-size: 2em;
+    margin-top: 1em;
+}

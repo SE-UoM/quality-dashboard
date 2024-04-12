@@ -1,48 +1,21 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom"
-import Dashboard from './pages/Dashboard.tsx'
-import { ChakraProvider } from '@chakra-ui/react'
-import Navbar from './components/Navbar.tsx'
-import RegisterPage from './pages/RegisterPage.tsx'
-import AdminPanel from './pages/AdminPanel.tsx'
-import RegisterOrganisationPage from './pages/RegisterOrganisationPage.tsx'
-import AboutPage from './pages/AboutPage.tsx'
-import SubmitProjectPage from './pages/SubmitProjectPage.tsx'
-import LoginPage from './pages/LoginPage.tsx'
+import ReactDOM from 'react-dom'
+import App from './App'
+import {createTheme, ThemeProvider} from "@mui/material";
+import {BrowserRouter} from "react-router-dom";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ChakraProvider>
+const theme = createTheme({
+    palette: {
+        // Define your palette colors here
+    },
+    // Other theme properties
+});
 
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/">
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Route>
-
-          {/* Protected Routes */}
-          <Route path="/" element={<RequireAuth />}>
-            <Route path="/register-organisation" element={<RegisterOrganisationPage />} />
-
-            <Route path="/admin-panel" element={<AdminPanel />} />
-            <Route path="/submit-project" element={<SubmitProjectPage />} />
-          </Route>
-          {/* <Route path="/admin-login" element={<RegisterPage />} /> */}
-
-        </Routes>
-      </BrowserRouter>
-    </ChakraProvider>
-  </React.StrictMode>,
+ReactDOM.render(
+    <ThemeProvider theme={theme}>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </ThemeProvider>,
+    document.getElementById('root')
 )
-
-
-function RequireAuth() {
-  return (<div>
-    <Outlet />
-  </div>)
-}

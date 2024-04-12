@@ -14,10 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/analysis")
@@ -29,20 +32,31 @@ public class AnalysisController {
     private final OrganizationAnalysisService organizationAnalysisService;
     private final String GITHUB_URL_PATTERN = "https://github.com/[^/]+/[^/]+" ;
     private final ExternalAnalysisService externalAnalysisService;
+    private final MailSendingService mailSendingService;
 
     @Value("${services.external.activated}")
     private boolean EXTERNAL_ANALYSIS_IS_ACTIVATED;
 
+    @Value("${frontend.url}")
+    private String  frontendURL;
+
     @Autowired
-    public AnalysisController(AnalysisService analysisService, OrganizationService organizationService,
-                              UserService userService, ProjectRepository projectRepository,
-                              OrganizationAnalysisService organizationAnalysisService, ExternalAnalysisService externalAnalysisService) {
+    public AnalysisController(
+            AnalysisService analysisService,
+            OrganizationService organizationService,
+            UserService userService,
+            ProjectRepository projectRepository,
+            OrganizationAnalysisService organizationAnalysisService,
+            ExternalAnalysisService externalAnalysisService,
+            MailSendingService mailSendingService
+    ) {
         this.analysisService = analysisService;
         this.userService = userService;
         this.organizationAnalysisService = organizationAnalysisService;
         this.organizationService = organizationService;
         this.projectRepository = projectRepository;
         this.externalAnalysisService = externalAnalysisService;
+        this.mailSendingService = mailSendingService;
     }
 
     private boolean urlIsValid(String url) {
@@ -50,8 +64,8 @@ public class AnalysisController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<ResponseInterface> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) throws Exception {
-        try{
+    public ResponseEntity<ResponseInterface> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) {
+        try {
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
             String email = decodedJWT.getSubject();
             User user = userService.getUserByEmail(email);
@@ -65,29 +79,60 @@ public class AnalysisController {
                         "The url you provided is not a valid github url"
                 );
 
-                return ResponseEntity.badRequest().
-                        body(response);
+                return ResponseEntity.badRequest().body(response);
             }
 
-            Project project = new Project();
-            project.setRepoUrl(githubUrl);
-            project.setOrganization(organization);
-
+            // Check if the project already exists
             Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
+            Project project;
 
-            organization.addProject(project);
+            if (!projectOptional.isPresent()) {
+                // If the project doesn't exist, create and save it
+                project = new Project();
+                project.setRepoUrl(githubUrl);
+                project.setOrganization(organization);
+                project.setStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
+                projectRepository.save(project);
+                organization.addProject(project);
+            } else {
+                // If the project exists, retrieve it from the database
+                project = projectOptional.get();
+            }
 
-            if (projectOptional.isPresent()) project = projectOptional.get();
+            // Make sure github can find the repo
+            boolean repoFound = analysisService.validateUrlWithGithub(githubUrl);
 
+            if (!repoFound) {
+                ResponseInterface response = ResponseFactory.createErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Repository not found",
+                        "The repository you provided was not found on github"
+                );
+
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Get the github data to make sure the repo actually exists
             analysisService.fetchGithubData(project);
+            // Save the project
+            projectRepository.save(project);
 
-            if (!project.canBeAnalyzed()) {
+            // Check if the project has less than the required number of commits
+            boolean repoHasLessCommitsThanThreshold = analysisService.repoHasLessThatThresholdCommits(project);
+            boolean projectNeedsReview = !repoHasLessCommitsThanThreshold && project.getStatus() != ProjectStatus.ANALYSIS_READY;
+
+            if (projectNeedsReview) {
                 project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+
+                // Save the project, organization and update the organization analysis
+                projectRepository.save(project);
+                organizationService.saveOrganization(organization);
 
                 ResponseInterface response = ResponseFactory.createResponse(
                         HttpStatus.OK.value(),
-                        "Project has been added to the queue"
+                        "The Repo has a lot of commits, so we will review it first. We will notify you when the analysis is done"
                 );
+
                 return ResponseEntity.ok(response);
             }
 
@@ -98,11 +143,14 @@ public class AnalysisController {
 
             if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
 
+            // Send a mail to the user to notify them that the analysis has finished
+            mailSendingService.sendAnalysisCompletionEmail(email, project.getName(), frontendURL);
+
+            // Return response immediately
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
-                    "Analysis started successfully"
+                    "Analysis Finished! You can see the results on the dashboard"
             );
-
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             ResponseInterface response = ResponseFactory.createErrorResponse(
@@ -110,7 +158,6 @@ public class AnalysisController {
                     "Analysis failed",
                     e.getMessage()
             );
-
             e.printStackTrace();
 
             return ResponseEntity.badRequest().body(response);

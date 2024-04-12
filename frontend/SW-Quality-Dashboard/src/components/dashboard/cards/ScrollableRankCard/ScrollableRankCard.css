@@ -1,0 +1,34 @@
+.dashboard-card#scrollableRankCard {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    overflow-y: hidden; /* Change overflow-y to hidden */
+}
+
+.dashboard-card#scrollableRankCard h3 {
+    font-size: 1.7em;
+    border-bottom: 1px solid var(--dark-gray);
+    width: 100%;
+    text-align: center;
+    padding: 0.5em;
+    margin: 0;
+}
+
+.best-projects-list {
+    width: 100%;
+    height: 100%;
+    max-height: calc(100% - 2.5em); /* Subtract the height of the header */
+    overflow-y: auto; /* Add vertical scroll when content exceeds the height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Additional styling for scrollbar if needed */
+.best-projects-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.best-projects-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}

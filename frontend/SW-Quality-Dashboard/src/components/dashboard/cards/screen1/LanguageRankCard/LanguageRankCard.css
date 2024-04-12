@@ -1,0 +1,124 @@
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+}
+
+.dashboard-card#languageRank {
+    grid-area: languageRank;
+}
+
+.dashboard-card#languageRank h2 {
+    font-size: 2em;
+    margin: 0;
+    text-align: center;
+}
+
+.language-rank-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    height: 100%;
+    width: 100%;
+}
+
+.language-rank {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 1em;
+}
+
+.language-rank-line {
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    padding: 1em;
+}
+
+.language-rank-line img {
+    height: 5em;
+}
+
+.lang-name-rank {
+    font-size: 1.7em;
+    margin: 0;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.lang-name-rank img {
+    height: 3em;
+    margin-top: 0.5em;
+
+}
+
+.language-rank-line#first {
+    background-color: var(--gold);
+    height: 80%;
+}
+
+.language-rank-line#second {
+    background-color: var(--silver);
+    height: 50%;
+}
+
+.language-rank-line#third {
+    background-color: var(--bronze);
+    height: 35%;
+}
+
+.skeleton-lang-img {
+    animation: pulse 1.5s infinite ease-in-out;
+    width: 10vh;
+    height: 10vh;
+    border-radius: 0.5em;
+    margin-top: 0.5em;
+}
+
+.skeleton-lang-name {
+    animation: pulse 1.5s infinite ease-in-out;
+    width: 7rem;
+    height: 20px;
+    margin: 1vh 0;
+    border-radius: 4px;
+}
+
+/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+    .dashboard-card#languageRank {
+        height: 80vh;
+        padding: 0.5em;
+    }
+
+    .language-rank-line#first,
+    .language-rank-line#second,
+    .language-rank-line#third{
+        width: 100%;
+    }
+
+    .language-rank-container {
+        gap: 0.5em;
+    }
+
+    .language-rank {
+        width: 100%;
+        gap: 0;
+    }
+
+    .language-rank-line img {
+        height: 3.5em;
+    }
+}

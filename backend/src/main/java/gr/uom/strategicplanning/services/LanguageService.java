@@ -16,15 +16,18 @@ import java.util.*;
 public class LanguageService {
 
     private final SonarApiClient sonarApiClient;
-
-    @Autowired
     private ProjectLanguageRepository projectLanguageRepository;
-    @Autowired
     private OrganizationLanguageRepository organizationLanguageRepository;
 
     @Autowired
-    public LanguageService(@Value("${github.token}") String githubToken) {
-        this.sonarApiClient = new SonarApiClient();
+    public LanguageService(
+            @Value("${sonar.sonarqube.url}") String sonarApiUrl,
+            ProjectLanguageRepository projectLanguageRepository,
+            OrganizationLanguageRepository organizationLanguageRepository
+    ) {
+        this.sonarApiClient = new SonarApiClient(sonarApiUrl);
+        this.projectLanguageRepository = projectLanguageRepository;
+        this.organizationLanguageRepository = organizationLanguageRepository;
     }
 
     public void updateOrganizationLanguages(Organization organization) {

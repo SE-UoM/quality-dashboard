@@ -1,0 +1,25 @@
+.dashboard-slide#slide1 {
+    grid-template-areas:
+        "languageRank languageRank languageDistribution languageDistribution totalProjects"
+        "languageRank languageRank languageDistribution languageDistribution totalLanguages"
+        "languageRank languageRank languageDistribution languageDistribution totalDevelopers"
+        "languageRank languageRank totalContributions totalLinesOfCode totalFiles"
+        "footerCard footerCard footerCard footerCard footerCard"
+}
+
+/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+    .dashboard-slide#slide1 {
+        grid-template-rows: auto; /* Let rows adjust based on content */
+        grid-template-areas:
+            "languageRank"
+            "languageDistribution"
+            "totalProjects"
+            "totalLanguages"
+            "totalDevelopers"
+            "totalContributions"
+            "totalLinesOfCode"
+            "totalFiles"
+            "footerCard";
+    }
+}

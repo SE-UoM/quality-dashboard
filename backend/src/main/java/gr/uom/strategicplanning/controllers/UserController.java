@@ -2,7 +2,9 @@ package gr.uom.strategicplanning.controllers;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gr.uom.strategicplanning.controllers.requests.ResetPasswordRequest;
 import gr.uom.strategicplanning.controllers.requests.UserRegistrationRequest;
+import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
 import gr.uom.strategicplanning.controllers.responses.implementations.UserResponse;
 import gr.uom.strategicplanning.models.users.User;
 import gr.uom.strategicplanning.repositories.UserRepository;
@@ -40,6 +42,20 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<UserResponse> verifyUser(@RequestParam String token, @RequestParam Long uid){
+        User user = userService.verifyUser(token, uid);
+        UserResponse userResponse = new UserResponse(user);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    @PostMapping("/verify/resend")
+    public ResponseEntity<UserResponse> resendVerification(@RequestParam Long uid){
+        User user = userService.resendVerification(uid);
+        UserResponse userResponse = new UserResponse(user);
+        return ResponseEntity.ok(userResponse);
+    }
+
     @GetMapping("/all")
     List<UserResponse> getAllUser(){
         List<User> users = userService.getAllUsers();
@@ -53,11 +69,37 @@ public class UserController {
         return userResponses;
     }
 
+    @GetMapping("/all/organization/{id}")
+    Collection<UserResponse> getAllUserByOrganization(@PathVariable Long id){
+        Collection<User> users = userService.getAllUsersByOrganizationId(id);
+        List<UserResponse> userResponses = new ArrayList<>();
+
+        for(User user : users){
+            UserResponse userResponse = new UserResponse(user);
+            userResponses.add(userResponse);
+        }
+
+        return userResponses;
+    }
+
+
     @GetMapping("/{id}")
     UserResponse getUserById(@PathVariable Long id){
         User user = userService.getUserById(id);
         UserResponse userResponse = new UserResponse(user);
         return userResponse;
+    }
+
+    @PostMapping("/reset-password/request")
+    public ResponseEntity<ResponseInterface> resetPassword(@RequestParam String userEmail){
+        userService.resetPasswordRequest(userEmail);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<ResponseInterface> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest){
+        userService.resetPassword(resetPasswordRequest);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/token/refresh")
@@ -66,7 +108,6 @@ public class UserController {
         boolean authHeaderIsNotPresent = authorizationHeader == null || !authorizationHeader.startsWith("Bearer ");
 
         if(authHeaderIsNotPresent) throw new RuntimeException("Refresh token is missing");
-
 
         try {
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(authorizationHeader);
@@ -78,9 +119,10 @@ public class UserController {
             List<String> roles = stream(user.getRoles().split(",")).collect(Collectors.toList());
             String name = user.getName();
             String id = user.getId().toString();
+            Long organizationId = user.getOrganization().getId();
 
             // Generate tokens
-            String accessToken = TokenUtil.generateAccessToken(email, request.getRequestURL(), id, name, roles);
+            String accessToken = TokenUtil.generateAccessToken(email, request.getRequestURL(), id, name, organizationId, roles);
             String refreshToken = TokenUtil.generateRefreshToken(email, request.getRequestURL());
 
             Map<String,String> tokens= new HashMap<>();

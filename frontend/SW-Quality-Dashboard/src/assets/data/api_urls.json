@@ -1,0 +1,58 @@
+{
+  "routes": {
+    "login": "/login",
+    "getAllOrganizationNames": "/api/organizations/names",
+    "createUser": "/api/user/register",
+    "resendUserVerification": "/api/user/verify/resend",
+    "startAnalysis": "/api/analysis/start?github_url=${githubUrl}",
+    "getAllOrganizations": "/api/organizations",
+
+    "verifyUser": "/api/user/verify?token=${token}&uid=${uid}",
+    "resetPasswordRequest": "/api/user/reset-password/request",
+    "resetPassword": "/api/user/reset-password",
+
+    "examples": {
+      "languageDistribution": "/api/examples/language-distribution",
+      "generalStats": "/api/examples/general-stats",
+      "topLanguages": "/api/examples/top-languages",
+      "codeSmellDistribution": "/api/examples/code-smells-distribution",
+      "getTotalTD": "/api/examples/total-tech-debt",
+      "getTdStats": "/api/examples/tech-debt-statistics",
+      "topProjects": "/api/examples/top-projects",
+      "languageNames": "/api/examples/language-names",
+      "topContributors": "/api/examples/top-developers",
+      "projectsInfo": "/api/examples/projects-info"
+    },
+
+    "projects": {
+      "allByOrgId": "/api/projects/organization/:organizationId",
+      "allByOrgIdAndStatus": "/api/projects/organization/:organizationId/status/:status"
+    },
+
+    "admin": {
+      "authorizeProject": "/api/admin/project/:projectId/authorize",
+      "getAllUsersByOrgId": "/api/user/all/organization/:organizationId",
+      "updateUser": "/api/admin/user/update/:userId",
+      "deleteUser": "/api/admin/user/delete/:userId"
+    },
+
+    "dashboard": {
+      "generalStats": "/api/organizations/:organizationId/general-stats",
+      "languageDistribution": "/api/organizations/:organizationId/language-distribution",
+      "topLanguages": "/api/organizations/:organizationId/top-languages",
+      "codeSmellDistribution": "/api/organizations/:organizationId/code-smells-distribution",
+      "getTotalTD": "/api/organizations/:orgId/total-tech-debt",
+      "getTdStats": "/api/organizations/:orgId/tech-debt-statistics",
+      "randomBestPractice": "/api/best-practices/random",
+      "topProjects": "/api/organizations/:organizationId/top-projects",
+      "languageNames": "/api/organizations/:organizationId/language-names",
+      "topContributors": "/api/organizations/:organizationId/top-developers",
+      "projectsInfo": "/api/organizations/:organizationId/projects-info",
+      "mostActiveDeveloper": "/api/organizations/:organizationId/most-active-developer",
+      "mostActiveProject": "/api/organizations/:organizationId/most-active-project",
+      "mostStarredProject": "/api/organizations/:organizationId/most-starred-project",
+      "mostForkedProject": "/api/organizations/:organizationId/most-forked-project",
+      "developers": "/api/organizations/:organizationId/developers-info"
+    }
+  }
+}

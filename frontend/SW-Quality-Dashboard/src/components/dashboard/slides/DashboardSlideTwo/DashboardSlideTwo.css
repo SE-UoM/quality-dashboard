@@ -1,0 +1,20 @@
+.dashboard-slide#slide2 {
+    grid-template-areas:
+        "codeSmellDistribution codeSmellDistribution techDebtStats techDebtStats techDebtStats"
+        "codeSmellDistribution codeSmellDistribution bestPractices bestPractices bestPractices"
+        "codeSmellDistribution codeSmellDistribution bestPractices bestPractices bestPractices"
+        "techDebt techDebt bestPractices bestPractices bestPractices"
+        "footerCard footerCard footerCard footerCard footerCard";
+}
+
+@media (max-width: 768px) {
+    .dashboard-slide#slide2 {
+        grid-template-rows: auto; /* Let rows adjust based on content */
+        grid-template-areas:
+            "codeSmellDistribution"
+            "techDebtStats"
+            "bestPractices"
+            "techDebt"
+            "footerCard";
+    }
+}

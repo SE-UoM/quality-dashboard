@@ -1,0 +1,13 @@
+.dashboard-card {
+    background-color: white;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.1);
+    border-radius: 1em;
+    color: var(--text-primary);
+}
+
+/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+    .dashboard-card {
+        width: 90vw !important;
+    }
+}

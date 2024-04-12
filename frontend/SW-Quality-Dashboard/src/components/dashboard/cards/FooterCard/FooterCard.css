@@ -1,0 +1,23 @@
+.dashboard-card#footerCard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.dashboard-card#footerCard img {
+    height: 10vh;
+}
+
+.sde-uom-logo {
+    align-self: center;
+}
+
+/* Media query for screens smaller than 768px (typical mobile devices) */
+@media (max-width: 768px) {
+    .dashboard-card#footerCard img.sde-uom-logo {
+        content: url("../../../../assets/img/sde-banner-logo-only.png");
+    }
+}

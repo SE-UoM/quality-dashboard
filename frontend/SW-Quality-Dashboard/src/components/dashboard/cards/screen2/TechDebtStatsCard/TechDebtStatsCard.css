@@ -1,0 +1,52 @@
+.dashboard-card#techDebtStats {
+    grid-area: techDebtStats;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1em;
+    align-items: center;
+    justify-content: start;
+}
+
+.dashboard-card#techDebtStats h3 {
+    font-size: 1.5em;
+    justify-self: start;
+}
+
+.td-stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    font-size: 1.8em;
+    gap: 1em;
+}
+
+.td-stats-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+}
+
+.td-stats-skeleton-item-top {
+    width: 20vw;
+    height: 2em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+}
+
+.td-stats-skeleton-item-bottom {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.td-stats-skeleton-item {
+    width: 55vw;
+    height: 5em;
+    animation: pulse 1.5s ease-in-out infinite;
+    border-radius: 0.5em;
+}

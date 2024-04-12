@@ -1,8 +1,23 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+
+  /* Custom Colors */
+  --org-color-primary: #015092;
+  --org-color-primary-dark-version: #003562;
+  --org-color-secondary: #ffe248;
+  --org-color-secondary-dark-version: #cba400;
+  --dark-gray: #333;
+  --light-gray: #f5f5f5;
+  --light-gray-darker: #e0e0e0;
+  --danger-red: #ff4d4d;
+  --dashboard-bg: #e1e1e1;
+  --text-secondary: #666;
+  --text-primary: #404852;
+
+  /* Languages Ranking */
+  --gold: #dcb706;
+  --silver: #a4a3a3;
+  --bronze: #cd7f32;
 }
 
 .logo {
@@ -18,13 +33,45 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes pulse {
+  0% {
+    background-color: #e0e0e0;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    background-color: #f0f0f0;
   }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
+
+.distribution-skeleton {
+  display: grid;
+  grid-template-columns: 5fr 5fr;
+}
+
+.distribution-skeleton-graph {
+  width: 18vw;
+  height: 18vw;
+  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: 10em;
+}
+
+.distribution-skeleton-legend-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin-top: 1em;
+  flex-direction: column;
+}
+
+.distribution-skeleton-legend {
+  width: 15vw;
+  height: 2em;
+  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: 0.5em;
+
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -1,0 +1,37 @@
+.sign-up-form {
+    width: 50vw;
+    background: var(--light-gray);
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
+    padding: 2em;
+    border-radius: 1em;
+}
+
+.sign-up-form h1 {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.sign-up-form-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.sign-up-form-submit-btn {
+    background: var(--org-color-primary);
+    border-radius: 10em;
+    transition: all 0.3s ease;
+    opacity: 1;
+    margin-bottom: 1em;
+}
+
+.sign-up-form-submit-btn:hover {
+    transform: scale(1.05);
+    background: var(--org-color-primary);
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .sign-up-form {
+        width: 90vw;
+    }
+}
