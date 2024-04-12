@@ -15,7 +15,7 @@ function formatText(text) {
         roundedNum = Math.round(num / 100) / 10;
         return roundedNum.toFixed(2) + "k";
     }
-    return text;
+    return text.toFixed(2);
 }
 
 function TotalTechDebtCard() {
