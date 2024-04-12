@@ -1,46 +1,55 @@
 version: "2.2"
 services:
+
   pyassess-dashboard:
     image: geoapos/pyassess_raise
     container_name: pyassess-dashboard
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess:5432/test_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess-dashboard:5432/test_db
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=30a301d7257
+      - SPRING_DATASOURCE_PASSWORD=root
     ports:
       - '8091:8080'
-  db-pyassess:
-    image: postgres:14.7
-    container_name: db-pyassess
+
+  db-pyassess-dashboard:
+    image: postgres:16.2
+    container_name: db-pyassess-dashboard
     environment:
       POSTGRES_USER: root
-      POSTGRES_PASSWORD: 30a301d7257
+      POSTGRES_PASSWORD: root
       POSTGRES_DB: test_db
+    volumes:
+      - pyassess_dashboard_postgresql:/var/lib/postgresql
+      - pyassess_dashboard_postgresql_data:/var/lib/postgresql/data
+
   code-inspector-dashboard:
     image: archontisk/codeinspector
     container_name: code-inspector-dashboard
     depends_on:
-      db-code-inspector:
+      db-code-inspector-dashboard:
         condition: service_healthy
     security_opt:
       - seccomp:unconfined
     environment:
-      - DB_URL=mysql+pymysql://root:root@db-code-inspector:3306/code_inspector_db
+      - DB_URL=mysql+pymysql://root:root@db-code-inspector-dashboard:3306/code_inspector_db
     ports:
       - '8092:8000'
-  db-code-inspector:
-    image: mysql:latest
+
+  db-code-inspector-dashboard:
+    image: mysql:8.3
+    container_name: db-code-inspector-dashboard
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: code_inspector_db
       MYSQL_PASSWORD: root
-    ports:
-      - '3366:3306'
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 10s
       retries: 3
+    volumes:
+      - code_inspector_dashboard_mysql:/var/lib/mysql
+
   backend-dashboard:
     build:
       context: ./backend/.
@@ -50,24 +59,76 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/test_db
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=30a301d7257
+      - SPRING_DATASOURCE_PASSWORD=root
+      - EXTERNAL_SERVICES_ACTIVATED=false
       - SERVICES_EXTERNAL_PYASSESS_URL=http://localhost:8091
       - SERVICES_EXTERNAL_CODEINSPECTOR_URL=http://localhost:8092
-      - EXTERNAL_SERVICES_ACTIVATED=false
+      - SONAR_SONARQUBE_URL=http://localhost:9952
+      - GITHUB_TOKEN=11206c8b5d19d77902bf96d9fde3b51f205813dc
+      - FRONTEND_URL=http://localhost:3000
+      - SUPERUSER_PASSWORD=xxx
+      - SUPERUSER_EMAIL=xxx@gmail.com
+      - SPRING_MAIL_USERNAME=xx@gmail.com
+      - SPRING_MAIL_PASSWORD=xx
     ports:
       - '8088:8080'
+
   db-dashboard:
-    image: postgres:14.7
+    image: postgres:16.2
     container_name: db-dashboard
     environment:
       POSTGRES_USER: root
-      POSTGRES_PASSWORD: 30a301d7257
+      POSTGRES_PASSWORD: root
       POSTGRES_DB: test_db
     volumes:
       - dashboard_postgresql:/var/lib/postgresql
       - dashboard_postgresql_data:/var/lib/postgresql/data
     ports:
       - '5458:5432'
+
+  sonarqube-dashboard:
+     image: sonarqube:9.9.1-community
+     container_name: sonarqube-dashboard
+     privileged: true
+     command: -Dsonar.ce.javaOpts=-Xmx6144m
+     depends_on:
+       - db-sonarqube-dashboard
+     environment:
+       SONARQUBE_JDBC_URL: jdbc:postgresql://db-sonarqube-dashboard:5432/sonar
+       SONAR_JDBC_USERNAME: sonar
+       SONAR_JDBC_PASSWORD: sonar
+     volumes:
+       - sonarqube_dashboard_conf:/opt/sonarqube/conf
+       - sonarqube_dashboard_data:/opt/sonarqube/data
+     ports:
+       - '9952:9000'
+
+  db-sonarqube-dashboard:
+    image: postgres:16.2
+    container_name: db-sonarqube-dashboard
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    volumes:
+      - sonarqube_dashboard_postgresql:/var/lib/postgresql
+      - sonarqube_dashboard_postgresql_data:/var/lib/postgresql/data
+
+  frontend-dashboard:
+    build:
+      context: ./frontend/SW-Quality-Dashboard/.
+    container_name: frontend-dashboard
+    environment:
+      VITE_API_BASE_URL: backend-dashboard:8088
+    ports:
+      - '3000:5173'
+    
 volumes:
+  pyassess_dashboard_postgresql:
+  pyassess_dashboard_postgresql_data:
+  code_inspector_dashboard_mysql:
   dashboard_postgresql:
   dashboard_postgresql_data:
+  sonarqube_dashboard_conf:
+  sonarqube_dashboard_data:
+  sonarqube_dashboard_postgresql:
+  sonarqube_dashboard_postgresql_data:

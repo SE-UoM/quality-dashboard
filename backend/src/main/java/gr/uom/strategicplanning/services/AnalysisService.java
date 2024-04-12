@@ -141,6 +141,9 @@ public class AnalysisService {
         Git clonedGit = GithubApiClient.cloneRepository(project);
 
         try {
+            //toDo
+            // check last sha with this sha
+            // and stop if necessary
             project.setStatus(ProjectStatus.ANALYSIS_STARTED);
             projectService.saveProject(project);
 
@@ -148,6 +151,9 @@ public class AnalysisService {
             RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
             project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
 
+            //toDo
+            // No initialization needed to commits
+            
             // Force initialization of the commits collection
             project.getCommits().size();
 

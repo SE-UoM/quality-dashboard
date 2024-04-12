@@ -6,10 +6,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -25,8 +27,8 @@ public class MailSendingService {
         try {
             //System.getProperty("user.dir") + "\\src\\main\\resources\\emailTemplates" + templateName
             Resource resource = new ClassPathResource("emailTemplates/" + templateName);
-            byte[] bytes = Files.readAllBytes(Paths.get(resource.getURI()));
-            return new String(bytes);
+            byte[] bdata = FileCopyUtils.copyToByteArray(resource.getInputStream());
+            return new String(bdata, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             // Handle error loading template
