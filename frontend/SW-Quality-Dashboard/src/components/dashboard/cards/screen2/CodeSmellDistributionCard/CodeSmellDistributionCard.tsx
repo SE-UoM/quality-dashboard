@@ -94,13 +94,13 @@ function CodeSmellDistributionCard() {
                 />
             }
             <div className="dashboard-card" id="codeSmellDistribution">
+                {!loading &&
+                    <h3>
+                        <i className="bi bi-radioactive"> </i>
+                        Code Smell Distribution
+                    </h3>
+                }
                 <div className="code-smell-distribution-container">
-                    {!loading &&
-                        <h3>
-                            <i className="bi bi-radioactive"> </i>
-                            Code Smell Distribution
-                        </h3>
-                    }
                     <div className="code-smells-distribution-chart">
                         {loading ? (
                                 <div className="distribution-skeleton">
