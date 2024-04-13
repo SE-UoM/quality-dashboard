@@ -4,6 +4,10 @@
     grid-area: submittedProjects;
 }
 
+.dashboard-card#submittedProjects h3 {
+    font-size: 4vh;
+}
+
 .submitted-project-content {
     width: 100%;
     height: 100%;
