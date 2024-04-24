@@ -149,47 +149,50 @@ public class AnalysisService {
         projectService.populateProjectStats(project);
     }
 
-    public void startAnalysis(Project project) throws Exception {
+    public Integer startAnalysis(Project project) throws Exception {
         Git clonedGit = GithubApiClient.cloneRepository(project);
 
         try {
             String sha = githubApiClient.getShaOfClonedProject(clonedGit);
 
             if(project.getCommits().stream().anyMatch(x-> Objects.equals(x.getHash(), sha))){
+                project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
                 clonedGit.close();
                 GithubApiClient.deleteRepository(project);
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "The Repo's last version has been analyzed!"
-                );
+
+                return 0;
             }
+            else {
+                project.setStatus(ProjectStatus.ANALYSIS_STARTED);
+                projectService.saveProject(project);
 
-            project.setStatus(ProjectStatus.ANALYSIS_STARTED);
-            projectService.saveProject(project);
+                String defaultBranch = project.getDefaultBranchName();
+                RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
+                project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
 
-            String defaultBranch = project.getDefaultBranchName();
-            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
-            project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
+                analyzeCommits(project);
 
+                extractAnalysisDataForProject(project);
 
-            analyzeCommits(project);
+                // Set the total commits of the project
+                project.setTotalCommits(project.getCommits().size());
 
-            extractAnalysisDataForProject(project);
+                project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
+                // Save the project with updated analysis data
+                projectService.saveProject(project);
 
-            // Set the total commits of the project
-            project.setTotalCommits(project.getCommits().size());
+                clonedGit.close();
+                GithubApiClient.deleteRepository(project);
 
-            project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
-            // Save the project with updated analysis data
-            projectService.saveProject(project);
-
-            clonedGit.close();
-            GithubApiClient.deleteRepository(project);
+                return project.getCommits().size();
+            }
         } catch (Exception e) {
             clonedGit.close();
             GithubApiClient.deleteRepository(project);
 
             project.setStatus(ProjectStatus.ANALYSIS_FAILED);
             projectService.saveProject(project);
+            return -1;
         }
     }
 
