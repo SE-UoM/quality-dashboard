@@ -8,7 +8,8 @@
 }
 
 .word {
-    margin: 5px;
+    margin: 5vw;
+    font-size: 2vw;
 }
 
 #loading {

@@ -6,18 +6,19 @@
 }
 
 .dashboard-card#scrollableRankCard h3 {
-    font-size: 1.7em;
+    font-size: 4vh;
     border-bottom: 1px solid var(--dark-gray);
     width: 100%;
     text-align: center;
-    padding: 0.5em;
+    padding: 1.5vh;
     margin: 0;
+    text-wrap: normal;
 }
 
 .best-projects-list {
     width: 100%;
     height: 100%;
-    max-height: calc(100% - 2.5em); /* Subtract the height of the header */
+    max-height: calc(100% - 4vh); /* Subtract the height of the header */
     overflow-y: auto; /* Add vertical scroll when content exceeds the height */
     display: flex;
     flex-direction: column;
@@ -25,7 +26,7 @@
 
 /* Additional styling for scrollbar if needed */
 .best-projects-list::-webkit-scrollbar {
-    width: 8px;
+    width: 1vh;
 }
 
 .best-projects-list::-webkit-scrollbar-thumb {

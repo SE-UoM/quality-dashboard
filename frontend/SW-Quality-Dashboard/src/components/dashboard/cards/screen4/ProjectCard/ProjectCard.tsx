@@ -29,9 +29,21 @@ function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName,
 
                 <div className="project-card-content-details">
                     <h3>
-                        {projectName}
+                        <a
+                            href={"https://github.com/" + nameSubText + "/" + projectName}
+                            rel={"noreferrer"}
+                            target={"_blank"}
+                        >
+                            {projectName}
+                        </a>
                         <span>
-                            {nameSubText}
+                             <a
+                                 href={"https://github.com/" + nameSubText}
+                                 rel={"noreferrer"}
+                                 target={"_blank"}
+                             >
+                                By: {nameSubText}
+                             </a>
                         </span>
                     </h3>
 

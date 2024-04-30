@@ -12,7 +12,7 @@
 }
 
 .dashboard-card#languageRank h2 {
-    font-size: 2em;
+    font-size: 4vh;
     margin: 0;
     text-align: center;
 }
@@ -32,7 +32,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    gap: 1em;
+    gap: 1vh;
 }
 
 .language-rank-line {
@@ -42,14 +42,16 @@
     justify-content: end;
     align-items: center;
     padding: 1em;
+    width: 90%;
 }
 
 .language-rank-line img {
-    height: 5em;
+    height: 15vh;
+    width: 15vh;
 }
 
 .lang-name-rank {
-    font-size: 1.7em;
+    font-size: 3vh;
     margin: 0;
     font-weight: bold;
     display: flex;
@@ -60,9 +62,8 @@
 }
 
 .lang-name-rank img {
-    height: 3em;
+    height: 10vh;
     margin-top: 0.5em;
-
 }
 
 .language-rank-line#first {

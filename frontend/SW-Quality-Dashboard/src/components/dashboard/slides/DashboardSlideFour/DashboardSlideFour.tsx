@@ -13,6 +13,7 @@ import ItemActivityCard from "../../cards/ItemActivityCard/ItemActivityCard.tsx"
 import {jwtDecode} from "jwt-decode";
 import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
 import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
+import {Image} from "react-bootstrap";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -28,6 +29,7 @@ function DashboardSlideFour() {
     const [mostActiveDevCommits, setMostActiveDevCommits] = useState(0);
 
     const [mostActiveProjImage, setMostActiveProjImage] = useState("");
+    const [mostActiveProjDevName, setMostActiveProjDevName] = useState("");
     const [mostActiveProjName, setMostActiveProjName] = useState("");
     const [mostActiveProjCommits, setMostActiveProjCommits] = useState(0);
 
@@ -92,9 +94,11 @@ function DashboardSlideFour() {
         axios.get(mostActiveProjUrl, {headers: headers})
             .then((response) => {
                 let data = response.data;
+                console.log(data)
 
                 setMostActiveProjImage(githubIcon);
                 setMostActiveProjName(data.name);
+                setMostActiveProjDevName(data.owner)
                 setMostActiveProjCommits(data.totalCommits);
             })
             .catch((error) => {
@@ -222,6 +226,7 @@ function DashboardSlideFour() {
             <div className="dashboard-slide" id="slide4">
                 <ItemActivityCard
                     cardTitle={"Most Active Developer"}
+                    cardTitleUrl={"https://github.com/" + mostActiveDevName}
                     cardTitleIcon={"bi bi-person-workspace"}
                     cardImage={mostActiveDevImage}
                     cardIcon={contributionsIcon}
@@ -233,6 +238,7 @@ function DashboardSlideFour() {
 
                 <ItemActivityCard
                     cardTitle={"Most Active Project"}
+                    cardTitleUrl={"https://github.com/" + mostActiveProjDevName + "/" + mostActiveProjName}
                     cardTitleIcon={"bi bi-fire"}
                     cardImage={mostActiveProjImage}
                     cardIcon={contributionsIcon}
@@ -248,7 +254,7 @@ function DashboardSlideFour() {
                     id={"mostStarredProj"}
                     contentImage={starIcon}
                     projectName={mostStarredProjName}
-                    nameSubText={"By: " + mostStarredProjDevName}
+                    nameSubText={mostStarredProjDevName}
                     totalFiles={mostStarredProjFiles}
                     totalLines={mostStarredProjLines}
                     totalDebt={mostStarredProjDebt}
@@ -261,7 +267,7 @@ function DashboardSlideFour() {
                     id={"mostForked"}
                     contentImage={githubIcon}
                     projectName={mostForkedProjName}
-                    nameSubText={"By: " + mostForkedProjDevName}
+                    nameSubText={mostForkedProjDevName}
                     totalFiles={mostForkedProjFiles}
                     totalLines={mostForkedProjLines}
                     totalDebt={mostForkedProjDebt}
@@ -291,7 +297,7 @@ function DashboardSlideFour() {
                         <i className="bi bi-person-lines-fill"> </i>
                         Developers
                     </h4>
-                    <img src={currentDevImage} alt="Developers" id="devImg" />
+                    <Image src={currentDevImage} alt="Developers" id="devImg" roundedCircle />
                     <h5>{
                         currentDevName ? currentDevName : "Anonymous Dev"
                     }</h5>

@@ -1,6 +1,7 @@
 import './ItemActivityCard.css'
+import {Image} from "react-bootstrap";
 
-function ItemActivityCard({cardTitle, cardTitleIcon, cardImage, cardIcon, countTitle, count, countCaption, gridArea}) {
+function ItemActivityCard({cardTitle, cardTitleUrl, cardTitleIcon, cardImage, cardIcon, countTitle, count, countCaption, gridArea}) {
     return (
         <div className="dashboard-card"
              id={"itemActivity"}
@@ -12,11 +13,17 @@ function ItemActivityCard({cardTitle, cardTitleIcon, cardImage, cardIcon, countT
             </h3>
 
             <div className="card-content">
-                <img src={cardImage} className="card-image" />
+                <Image src={cardImage} className="card-image" roundedCircle/>
 
                 <div className="card-content-details">
                     <h3 className={"name"}>
-                        {countTitle}
+                        <a
+                            href={cardTitleUrl}
+                            rel={"noreferrer"}
+                            target={"_blank"}
+                        >
+                            {countTitle}
+                        </a>
                     </h3>
 
                     <div className="card-content-details-caption">

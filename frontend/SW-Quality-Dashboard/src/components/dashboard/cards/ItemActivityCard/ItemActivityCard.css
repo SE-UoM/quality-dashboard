@@ -12,17 +12,11 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 0.3em;
-    border-bottom: 1px solid var(--dark-gray);
-    padding: 0.5em;
-    font-size: 1.3em;
-}
-
-.name {
-    font-size: 1.5em !important;
-    font-weight: bold;
+    gap: 2vh;
+    border-bottom: 0.2vh solid var(--dark-gray);
+    padding: 1vh;
+    font-size: 3vh;
     margin: 0;
-    padding: 0;
 }
 
 .dashboard-card#itemActivity .card-content {
@@ -33,14 +27,14 @@
     justify-content: space-between;
     width: 100%;
     height: 80%;
-    padding: 0 1em 1em 1em;
+    padding: 0 1vh 1vh 1vh;
 }
 
 .card-image {
     width: 20%;
-    border-radius: 10em;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    margin-right: 2em;
+    margin-right: 2vh;
+    margin-top: 1vh;
 }
 
 .card-content-details {
@@ -50,9 +44,18 @@
     flex-direction: column;
 }
 
-.card-content-details h3 {
+
+.name {
+    margin: 0;
+    padding: 0;
+    height: 100%;
     align-self: flex-start;
-    font-size: 15em;
+}
+
+.name a {
+    color: var(--text-primary);
+    font-size: 3vh !important;
+    font-weight: bold;
 }
 
 .card-content-details-caption {
@@ -60,12 +63,12 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 0.5em;
+    gap: 1vh;
     width: 100%;
 }
 
 .card-content-details-caption img {
-    height: 3em;
+    height: 8vh;
 }
 
 .card-content-details-count {
@@ -78,14 +81,14 @@
 }
 
 .card-content-details-count h4 {
-    font-size: 2em;
+    font-size: 4vh;
     padding: 0;
     margin: 0;
     font-weight: bolder;
 }
 
 .card-content-details-count p {
-    font-size: 1.5em;
+    font-size: 3vh;
     padding: 0;
     margin: 0;
     color: var(--text-secondary);
