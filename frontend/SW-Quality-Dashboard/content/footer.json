@@ -1,0 +1,50 @@
+{
+  "resources": [
+    {
+      "text": "Contribute",
+      "url": "https://github.com/SE-UoM/quality-dashboard"
+    },
+    {
+      "text": "Report a Bug",
+      "url": "https://github.com/SE-UoM/quality-dashboard/discussions/categories/bug-report"
+    },
+    {
+      "text": "Request a Feature",
+      "url": "https://github.com/SE-UoM/quality-dashboard/discussions/categories/ideas"
+    },
+    {
+      "text": "Contact Support",
+      "url": "https://github.com/SE-UoM/quality-dashboard/discussions/categories/q-a"
+    }
+  ],
+
+  "uom": [
+    {
+      "text": "The University",
+      "url": "https://www.uom.gr"
+    },
+    {
+      "text": "Department of Applied Informatics",
+      "url": "https://www.uom.gr/dai"
+    },
+    {
+      "text": "Software Development and Engineering Lab",
+      "url": "https://www.sde.uom.gr"
+    }
+  ],
+
+  "osuom": [
+    {
+      "text": "Linktree",
+      "url": "https://linktr.ee/opensourceuom"
+    },
+    {
+      "text": "myUoM",
+      "url": "https://my.uom.gr"
+    },
+    {
+      "text": "Github",
+      "url": "https://github.com/Open-Source-UoM/"
+    }
+  ]
+}
