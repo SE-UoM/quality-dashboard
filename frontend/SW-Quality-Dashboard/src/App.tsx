@@ -1,7 +1,6 @@
 import './App.css'
 import {BrowserRouter, Outlet, Route, Routes, useLocation} from "react-router-dom"
 import Dashboard from './pages/general/DashboardPage/DashboardPage.tsx'
-import { ChakraProvider } from '@chakra-ui/react'
 import RegisterPage from './pages/auth/RegisterPage/RegisterPage.tsx'
 import AdminPanel from './pages/admin/AdminPanel/AdminPanel.tsx'
 import RegisterOrganisationPage from './pages/admin/RegisterOrganizationPage/RegisterOrganisationPage.tsx'

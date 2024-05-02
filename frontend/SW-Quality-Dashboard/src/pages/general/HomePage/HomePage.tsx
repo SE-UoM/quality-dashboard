@@ -12,7 +12,10 @@ function HomePage() {
     const [isAuthenticated, setIsAuthenticated] = useAuthenticationCheck(accessToken)
 
     return (
+
         <div className="home-page">
+            <button className="btn">Button</button>
+
             <h1>Welcome to UoM Dashboard</h1>
             <p>Here you can find all the information you need about the software quality of University of Macedonia</p>
 

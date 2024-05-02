@@ -3,10 +3,8 @@ import axios from "axios";
 import { Form, Button, Alert } from "react-bootstrap";
 import './LoginForm.css';
 import apiUrls from "../../../assets/data/api_urls.json";
-import { isProduction, acceptedUserMailDomains } from "../../../assets/data/config.json";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
-import {Divider} from "@chakra-ui/react";
 
 interface Organization {
     id: string;
