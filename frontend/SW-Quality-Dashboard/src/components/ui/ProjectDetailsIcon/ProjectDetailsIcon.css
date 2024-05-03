@@ -6,9 +6,8 @@
 }
 
 .project-details-icon img {
-    width: 5em;
-    height: 5em;
-    margin-right: 0.5em;
+    width: 13vh;
+    margin-right: 1vh;
 }
 
 .project-details-icon-details {
@@ -19,14 +18,17 @@
 }
 
 .project-details-icon-details h4 {
-    font-size: 3em;
+    font-size: 8vh;
     font-weight: bold;
+    text-align: center;
 }
 
 .project-details-icon-details p {
-    font-size: 1.5em;
+    font-size: 3.5vh;
+    text-align: center;
 }
 
 .project-details-icon-details h4, .project-details-icon-details p {
     margin: 0;
+    text-align: center;
 }

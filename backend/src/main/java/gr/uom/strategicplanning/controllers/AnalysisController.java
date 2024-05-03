@@ -141,7 +141,12 @@ public class AnalysisController {
                 return ResponseEntity.ok(response);
             }
 
-            analysisService.startAnalysis(project);
+            Integer analyzedCommits= analysisService.startAnalysis(project);
+            if(analyzedCommits==0)
+                return ResponseEntity.ok(ResponseFactory.createResponse(
+                        HttpStatus.OK.value(),
+                        "Analysis Finished! All commits are already analyzed, you can see the results on the dashboard"
+                ));
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
             organizationService.saveOrganization(organization);
@@ -154,7 +159,7 @@ public class AnalysisController {
             // Return response immediately
             ResponseInterface response = ResponseFactory.createResponse(
                     HttpStatus.OK.value(),
-                    "Analysis Finished! You can see the results on the dashboard"
+                    "Analysis Finished for "+analyzedCommits+" commits! You can see the results on the dashboard"
             );
             return ResponseEntity.ok(response);
         } catch (Exception e) {

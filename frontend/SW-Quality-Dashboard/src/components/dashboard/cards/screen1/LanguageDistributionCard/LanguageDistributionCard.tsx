@@ -27,6 +27,14 @@ function formatText(txt) {
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
+const getRelativeSizeOfScreenInPx = (percentage) => {
+    const width = window.innerWidth;
+    return (width * percentage) / 100;
+}
+
+{console.log(getRelativeSizeOfScreenInPx(50))}
+
+
 function LanguageDistributionCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [totalLanguages, setTotalLanguages] = React.useState(0);
@@ -126,7 +134,15 @@ function LanguageDistributionCard() {
                                 </>
                                 :
                                 <>
-                                    <h2>{formatText(totalLanguages)}</h2>
+                                    <h2
+                                        style={{
+                                            color: "#333",
+                                            fontSize: "22vh"
+                                        }}
+                                    >
+                                        {formatText(totalLanguages)}
+                                    </h2>
+                                    <div className="pie-chart-container">
                                     <PieChart
                                         series={[{
                                             data: pieChartData,
@@ -138,6 +154,7 @@ function LanguageDistributionCard() {
                                             highlightScope: { faded: 'global', highlighted: 'item' }
                                         }]}
                                     />
+                                    </div>
                                 </>
                         }
                     </div>

@@ -34,7 +34,7 @@ const WordCloud = ({ words }) => {
 
     // Function to get random floating point number between 1 and 5
     const getRandomFontSize = () => {
-        return (Math.random() * 3) + 1; // Random number between 1 and 5
+        return ((Math.random() * 3) + 1) * 2; // Adjust the scaling factor as needed
     }
 
     // Generate a random subset of words to be bold
@@ -56,7 +56,7 @@ const WordCloud = ({ words }) => {
         const interval = setInterval(() => {
             // Update styles for each word
             const updatedWordStyles = words.map((word) => ({
-                fontSize: `${getRandomFontSize()}em`,
+                fontSize: `${getRandomFontSize()}vh`,
                 color: getRandomColor(),
                 display: 'inline-block',
                 margin: '5px',

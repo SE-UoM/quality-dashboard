@@ -1,13 +1,11 @@
 .best-project-component {
     display: grid;
     width: 100%;
-    height: 15vh;
+    height: min-content;
     align-items: center;
     justify-content: center;
-
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    padding: 0 0.5em;
 
     grid-template-areas:
         "medal projectTitle projectTitle"
@@ -26,17 +24,21 @@
     background-position: center;
     background-size: 85%;
     height: 10vh;
-    margin: 0.5em;
+    width: 10vh;
+    margin: 1vh;
 }
 
 .best-project-medal span {
-    font-size: 2em;
+    font-size: 4vh;
     font-weight: bold;
+    margin-top: -0.5vh;
 }
 
 .best-project-item-title {
     grid-area: projectTitle;
-    font-size: 1.5em;
+    font-size: 3vh;
+    word-break: normal;
+    text-wrap: normal;
     padding: 0;
     margin: 0;
     display: flex;
@@ -45,6 +47,7 @@
 
 .best-project-item-owner {
     grid-area: projectOwner;
+    font-size: 2vh;
 }
 
 .gold,

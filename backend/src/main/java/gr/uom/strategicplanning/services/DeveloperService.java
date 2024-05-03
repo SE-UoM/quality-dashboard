@@ -30,6 +30,8 @@ public class DeveloperService {
     public Developer populateDeveloperData(Project project, Commit commit) throws IOException {
         Long organizationId = project.getOrganization().getId();
 
+        //toDo
+        // if exists and its recent no need to call API
         String developerName = githubApiClient.fetchDeveloperNameFromCommit(project, commit);
 
         String developerURL = githubApiClient.fetchGithubURL(developerName);

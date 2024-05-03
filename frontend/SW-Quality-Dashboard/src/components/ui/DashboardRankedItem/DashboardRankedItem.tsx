@@ -1,7 +1,7 @@
 import './DashboardRankedItem.css'
 import medalIcon from '../../../assets/svg/dashboardIcons/simple_medal_icon.svg'
 
-function DashboardRankedItem({projectName, owner, rank, loading}) {
+function DashboardRankedItem({projectName, headerUrl, rank, loading, children}) {
     let rankColor;
     if (rank === 1) {
         rankColor = 'gold';
@@ -31,10 +31,23 @@ function DashboardRankedItem({projectName, owner, rank, loading}) {
                         {/*<img src={medalIcon} className={rankColor}/>*/}
                         <span>{rank}</span>
                     </div>
-                    <h2 className="best-project-item-title">{projectName}</h2>
+                    <h2 className="best-project-item-title">
+                        <a
+                            href={headerUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                                color: "var(--text-primary)",
+                                fontWeight: "bold",
+                                fontStyle: "italic",
+                            }}
+                        >
+                            {projectName}
+                        </a>
+                    </h2>
                     <p className="best-project-item-owner">
                         <strong>
-                            {owner}
+                            {children}
                         </strong>
                     </p>
                 </>

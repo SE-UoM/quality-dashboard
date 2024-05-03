@@ -2,7 +2,7 @@
     grid-area: codeSmellDistribution;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     text-align: center;
 }
@@ -13,8 +13,10 @@
     display: inline-block; /* Ensures the container doesn't collapse */
 }
 
-.code-smell-distribution-container h3 {
+.codeSmellDistribution h3 {
     margin-bottom: 0;
+    align-self: flex-start;
+    font-size: 4vh !important;
 }
 
 .code-smell-distribution-container h2 {

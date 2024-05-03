@@ -1,8 +1,8 @@
 .dashboard-slide {
     display: grid;
     width: 100%;
-    gap: 0.7em;
-    padding: 1em;
+    gap: 1.5vh;
+    padding: 1.5vh;
     height: 96vh;
 
     grid-template-columns: repeat(5, 1fr);
