@@ -10,6 +10,11 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
     const [userName, setUserName] = useState('')
 
     useEffect(() => {
+        if (!isAuthenticated || !accessToken)
+            return
+
+        console.log(accessToken)
+
         // Get the user name from the token
         let decoded : DecodedToken = jwtDecode(accessToken)
 

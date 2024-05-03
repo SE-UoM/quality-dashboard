@@ -102,6 +102,7 @@ function App() {
                         !isResetPasswordPage &&
                         !isForgotPasswordPage &&
                         !isAdminPage &&
+                        !isAuthPage &&
                         <Footer />
                     }
                 </>
