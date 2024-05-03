@@ -1,8 +1,26 @@
 import logo from '../../../assets/dashboard_logo_transparent.png'
 import './DashboardNavbar.css'
 import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
+import {useEffect, useState} from "react";
+import {jwtDecode} from "jwt-decode";
+import DecodedToken from "../../../interfaces/DecodedToken.ts";
 
 function DashboardNavbar({isAuthenticated, isAdmin}) {
+    const accessToken = localStorage.getItem('accessToken')
+    const [userName, setUserName] = useState('')
+
+    useEffect(() => {
+        // Get the user name from the token
+        let decoded : DecodedToken = jwtDecode(accessToken)
+
+        if (!decoded) {
+            return
+        }
+
+        let name = decoded.name;
+        setUserName(name)
+    }, []);
+
     let handleLogout = () => {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
@@ -44,7 +62,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                             <div tabIndex="0" role="button" className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
                                     <img alt="Tailwind CSS Navbar component"
-                                         src="https://ui-avatars.com/api/?name=John+Doe"/>
+                                         src={"https://ui-avatars.com/api/?name=" + userName}/>
                                 </div>
                             </div>
                             <ul tabindex="0"
