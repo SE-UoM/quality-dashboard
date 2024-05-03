@@ -141,15 +141,6 @@ public class AnalysisController {
                 return ResponseEntity.ok(response);
             }
 
-            if (project.getStatus() == ProjectStatus.ANALYSIS_STARTED) {
-                ResponseInterface response = ResponseFactory.createResponse(
-                        HttpStatus.OK.value(),
-                        "The analysis is already underway. We will notify you when it is done"
-                );
-
-                return ResponseEntity.ok(response);
-            }
-
             analysisService.startAnalysis(project);
 
             organizationAnalysisService.updateOrganizationAnalysis(organization);
