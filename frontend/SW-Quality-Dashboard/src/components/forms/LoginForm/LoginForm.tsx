@@ -15,8 +15,9 @@ const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function LoginForm() {
     const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("This is an error message.");
     const [loginSuccess, setLoginSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -44,6 +45,8 @@ function LoginForm() {
             return;
         }
 
+        setLoading(true)
+
         const data = {
             email: email,
             password: password,
@@ -60,7 +63,6 @@ function LoginForm() {
                 let data = response.data;
 
                 setError(false);
-                setLoginSuccess(true);
                 setErrorMessage("");
                 setAccessToken(data.accessToken);
                 setRefreshToken(data.refreshToken);
@@ -71,6 +73,8 @@ function LoginForm() {
 
                 // Redirect to the dashboard after 2 seconds
                 setTimeout(() => {
+                    setLoading(false)
+                    setLoginSuccess(true);
                     window.location.href = "/";
                 }, 2000);
 
@@ -85,88 +89,114 @@ function LoginForm() {
 
     return (
         <>
-            <div className="sign-up-form">
-                <h1>
-                    <i className="bi bi-door-open-fill"> </i>
-                    Login
+            <div className="card shrink-0 w-full max-w-sm bg-base-100 w-100">
+                <h1
+                    className="text-5xl font-bold m-2"
+                    style={{textAlign: 'center'}}
+                >
+                    <i className="bi bi-door-open-fill"> </i> Login
                 </h1>
-                {error &&
-                    <Alert variant="danger">
-                        <i className="bi bi-exclamation-triangle-fill"> </i>
-                        <strong> {errorMessage} </strong>
-                    </Alert>
-                }
 
-                {loginSuccess &&
-                    <Alert variant="success">
-                        <i className="bi bi-check-circle-fill"> </i>
-                        <strong>
-                            Login successful! Redirecting...
-                        </strong>
-                    </Alert>
-                }
-
-                <Form className="sign-up-form-content">
-                    <Form.Group controlId="formBasicEmail">
-                        <FloatingFormInput
-                            type="email"
-                            id="emailInput"
-                            placeholder="icsXXXX@uom.edu.gr"
-                            isRequired={true}
-                            onChange={(e) => setEmail(e.target.value)}
-                            icon="bi bi-at"
-                            labelText="Email"
-                        />
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <div className="form-pass-container">
-                            <FloatingFormInput
-                                type={showPassword ? "text" : "password"}
-                                id="passInput"
-                                placeholder="something safe"
-                                isRequired={true}
-                                onChange={(e) => setPassword(e.target.value)}
-                                icon="bi bi-shield-lock-fill"
-                                labelText="Password"
-                            />
-
-                            <Button
-                                variant="outline-secondary"
-                                className="show-password-btn"
-                                onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
-                            </Button>
+                <form className="card-body w-100">
+                    {error &&
+                        <div role="alert" className="alert alert-error">                            <i className="bi bi-exclamation-triangle-fill"> </i>
+                            <span> {errorMessage} </span>
                         </div>
-                        <Form.Text className="text-muted">
-                            <a href="/forgot-password" className="forgot-password-link">Forgot password?</a>
-                        </Form.Text>
-                    </Form.Group>
+                    }
 
-                    <Form.Group className="m-3" controlId="formBasicCheckbox">
-                        <Form.Check
-                            type="checkbox"
-                            label="I am not a 🤖 (robot)."
-                            required={true}
-                            onChange={(e) => setIsChecked(e.target.checked)} // Update isChecked state
-                        />
-                    </Form.Group>
-
-                    <Button className="sign-up-form-submit-btn " type="submit" onClick={handleLogin}>
-                        <i className="bi bi-arrow-right-circle-fill"> </i>
-                        Login
-                    </Button>
-
-                    <Divider />
-
-                    <Form.Group className="m-0" controlId="formBasicRegisterUrl">
-                        <Form.Label className="already-registered">
-                            <i className="bi bi-link-45deg"> </i>Don't have an account? <a href="/register" className={"sign-up-link-login-form"}> Sign up here.</a>
-                        </Form.Label>
-                    </Form.Group>
+                    {loginSuccess &&
+                        <div role="alert" className="alert alert-success">
+                            <i className="bi bi-check-circle-fill"> </i>
+                            <span>
+                                Login successful! Redirecting...
+                            </span>
+                        </div>
+                    }
 
 
-                </Form>
+                    <div className="form-control">
+                        <label className="input input-bordered flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" /><path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" /></svg>
+                            <input
+                                type="text"
+                                className="grow"
+                                placeholder="Email"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </label>
+                    </div>
+                    <div className="form-control">
+                        <div className="flex justify-content-evenly">
+                            <label className="input input-bordered flex justify-content-between gap-2"
+                                   style={{width: '100%', margin: 0, padding: 0}}
+                            >
+                                <i
+                                    className={"bi bi-shield-lock-fill"}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        paddingLeft: '0.5rem',
+                                    }}
+                                > </i>
+                                {/*<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clip-rule="evenodd" /></svg>*/}
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="grow"
+                                    placeholder="password"
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+
+                                <div
+                                    className={"btn btn-ghost"}
+                                    onClick={(e) => {
+                                        setShowPassword(!showPassword);
+                                    }}
+
+                                    style={{
+                                        padding: '0.5rem',
+                                    }}
+                                >
+                                    {showPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
+                                </div>
+                            </label>
+
+
+                        </div>
+
+                        <label className="label">
+                            <a href="/reset-password" className="label-text-alt link link-hover">Forgot password?</a>
+                        </label>
+                    </div>
+
+                    <div className="form-control">
+                        <label className="label cursor-pointer">
+                                <span className="label-text">
+                                    I am not a <i className={"bi bi-robot"}> </i> (robot).
+                                </span>
+                            <input
+                                type="checkbox"
+                                className="checkbox checkbox-primary"
+                                onChange={(e) => setIsChecked(e.target.checked)}
+                            />
+                        </label>
+                    </div>
+
+                    <div className="form-control mt-6">
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleLogin}
+                        >
+                            {!loading && <i className="bi bi-door-open-fill"> </i>}
+                            {loading && <span className="loading loading-dots loading-xs"></span>}
+                            Login
+                        </button>
+                    </div>
+
+                    <div className="form-control mt-6">
+                        Don't have an account? <a href="/register" className="link">Sign up here.</a>
+                    </div>
+                </form>
             </div>
         </>
     );
