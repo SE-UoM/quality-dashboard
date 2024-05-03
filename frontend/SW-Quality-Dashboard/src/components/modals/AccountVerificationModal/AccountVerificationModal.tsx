@@ -57,14 +57,14 @@ function AccountVerificationModal({show, setShow, uid}) {
     // Effect to open the modal when showModal becomes true
     useEffect(() => {
         if (show) {
-            const modal = document.getElementById("my_modal_5");
+            const modal = document.getElementById("acc_verification_modal");
             modal.showModal();
         }
     }, [show]);
 
     return (
         <>
-            <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+            <dialog id="acc_verification_modal" className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
                     <form method="dialog">
                         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -94,45 +94,6 @@ function AccountVerificationModal({show, setShow, uid}) {
                     </div>
                 </div>
             </dialog>
-
-            {/*<Modal*/}
-            {/*    show={show}*/}
-            {/*    onHide={handleClose}*/}
-            {/*    backdrop="static"*/}
-            {/*    keyboard={false}*/}
-            {/*>*/}
-            {/*    <Modal.Header closeButton>*/}
-            {/*        <Modal.Title>*/}
-            {/*            <i className="bi bi-person-fill-check"> </i>*/}
-            {/*            Account Verification*/}
-            {/*        </Modal.Title>*/}
-            {/*    </Modal.Header>*/}
-            {/*    <Modal.Body>*/}
-            {/*        <Alert variant="info">*/}
-            {/*            <i className="bi bi-info-circle"> </i>*/}
-            {/*            <strong> Please verify your account </strong>*/}
-            {/*        </Alert>*/}
-
-            {/*        We sent you an email to verify your account. Please check your email and click on the link to verify your account. <br/><br/>*/}
-
-            {/*        You won't be able to use the dashboard and submit projects until you verify your account. <br/><br/>*/}
-
-            {/*        {resendSuccess &&*/}
-            {/*            <Alert variant="success" id="resend-success-alert">*/}
-            {/*                <i className="bi bi-mailbox2-flag"></i>*/}
-            {/*                <strong> New verification Link sent!</strong>*/}
-            {/*            </Alert>*/}
-            {/*        }*/}
-            {/*    </Modal.Body>*/}
-            {/*    <Modal.Footer>*/}
-            {/*        <Button variant="secondary" onClick={handleClose}>*/}
-            {/*            Close*/}
-            {/*        </Button>*/}
-            {/*        <Button variant="primary" onClick={handleResend} disabled={resendBtnDisabled}>*/}
-            {/*            {resendBtnText}*/}
-            {/*        </Button>*/}
-            {/*    </Modal.Footer>*/}
-            {/*</Modal>*/}
         </>
     )
 }

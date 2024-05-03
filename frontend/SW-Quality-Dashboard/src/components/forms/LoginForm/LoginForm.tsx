@@ -165,7 +165,7 @@ function LoginForm() {
                         </div>
 
                         <label className="label">
-                            <a href="/reset-password" className="label-text-alt link link-hover">Forgot password?</a>
+                            <a href="/forgot-password" className="label-text-alt link link-hover">Forgot password?</a>
                         </label>
                     </div>
 
@@ -197,6 +197,7 @@ function LoginForm() {
                         Don't have an account? <a href="/register" className="link">Sign up here.</a>
                     </div>
                 </form>
+
             </div>
         </>
     );
