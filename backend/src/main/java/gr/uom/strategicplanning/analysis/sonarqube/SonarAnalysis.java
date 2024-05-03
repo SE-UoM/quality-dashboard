@@ -74,7 +74,7 @@ public class SonarAnalysis {
     private void makeSonarAnalysis() throws IOException, InterruptedException {
         String projectDir = System.getProperty("user.dir");
         String reposDir = projectDir + File.separator + "repos";
-        String sonnarScannerDir = projectDir + File.separator + "sonar-scanner";
+        String sonnarScannerDir = projectDir + File.separator + "backend" + File.separator + "sonar-scanner";
 
         logger.info("projectDir: " + projectDir);
         logger.info("reposDir: " + reposDir);
