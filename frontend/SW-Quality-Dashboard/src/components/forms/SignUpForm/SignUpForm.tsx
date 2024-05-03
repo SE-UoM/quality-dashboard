@@ -6,7 +6,6 @@ import apiUrls from "../../../assets/data/api_urls.json";
 import {acceptedUserMailDomains} from "../../../assets/data/config.json";
 import AccountVerificationModal from "../../modals/AccountVerificationModal/AccountVerificationModal.tsx";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
-import {Divider} from "@chakra-ui/react";
 import uomLogo from "../../../assets/img/uom_logo.png";
 
 interface Organization {
@@ -227,9 +226,7 @@ function SignUpForm() {
                         <i className="bi bi-arrow-right-circle-fill"> </i>
                         Sign Up
                     </Button>
-
-                    <Divider/>
-
+                    
                     <Form.Group className="m-0" controlId="formBasicRegisterUrl">
                         <Form.Label className="already-registered">
                             <i className="bi bi-link-45deg"> </i>Already have an account? <a href="/login" className={"sign-up-link-login-form"}> Login Instead.</a>

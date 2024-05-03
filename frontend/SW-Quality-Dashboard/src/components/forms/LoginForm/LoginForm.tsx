@@ -6,7 +6,6 @@ import apiUrls from "../../../assets/data/api_urls.json";
 import { isProduction, acceptedUserMailDomains } from "../../../assets/data/config.json";
 import FloatingFormInput from "../FloatingFormInput/FloatingFormInput.tsx";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
-import {Divider} from "@chakra-ui/react";
 
 interface Organization {
     id: string;
@@ -159,7 +158,6 @@ function LoginForm() {
                         Login
                     </Button>
 
-                    <Divider />
 
                     <Form.Group className="m-0" controlId="formBasicRegisterUrl">
                         <Form.Label className="already-registered">
