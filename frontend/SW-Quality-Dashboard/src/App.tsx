@@ -75,15 +75,16 @@ function App() {
                     }
 
                     <Routes>
-                        {/* Public Routes */}
                         <Route path="/">
+                            {/* Public Routes */}
                             <Route index element={<HomePage />} />
-                            <Route path="dashboard" element={<Dashboard isAdmin={isAdmin} isAuthenticated={isAuthenticated} />} />
                             <Route path="verify" element={<VerifyUserPage />} />
-                            <Route path="submit-project" element={<SubmitProjectPage />} />
                             <Route path="forgot-password" element={<ForgotPasswordPage />} />
                             <Route path="reset-password" element={<PasswordResetPage />} />
                             <Route path="admin" element={<AdminPanel />} />
+
+                            <Route path="submit-project" element={<SubmitProjectPage />} />
+                            <Route path="dashboard" element={<Dashboard isAdmin={isAdmin} isAuthenticated={isAuthenticated} />} />
                             <Route path='*' element={<NotFoundPage />} />
 
                             {/* Non Logged in Routes */}
