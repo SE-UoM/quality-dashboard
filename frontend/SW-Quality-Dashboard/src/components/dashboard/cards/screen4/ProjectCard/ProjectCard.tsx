@@ -3,6 +3,7 @@ import filesIcon from '../../../../../assets/svg/dashboardIcons/files_general_ic
 import linesIcon from '../../../../../assets/svg/dashboardIcons/loc_icon.svg'
 import codeSmellsIcon from '../../../../../assets/svg/dashboardIcons/code_smells_icon.svg'
 import debtIcon from '../../../../../assets/svg/dashboardIcons/timer_icon.svg'
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 function formatText(text) {
     let roundedNum;
@@ -16,7 +17,7 @@ function formatText(text) {
 
 function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName, nameSubText, totalFiles, totalLines, totalDebt, totalCodeSmells}) {
     return (
-        <div className="dashboard-card project-card card bg-base-200"
+        <SimpleDashboardCard
              id={id}
         >
             <h3 className="header">
@@ -85,7 +86,7 @@ function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName,
 
             </div>
 
-        </div>
+        </SimpleDashboardCard>
     )
 }
 

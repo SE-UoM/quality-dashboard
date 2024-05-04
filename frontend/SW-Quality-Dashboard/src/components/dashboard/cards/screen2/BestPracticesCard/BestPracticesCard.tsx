@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import apiRoutes from '../../../../../assets/data/api_urls.json';
 import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import axios from "axios";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -58,7 +59,7 @@ function BestPracticesCard() {
     }, [accessToken]);
 
     return (
-        <div className={"dashboard-card  card bg-base-200 " + (loading ? "loading" : "")}
+        <SimpleDashboardCard
              id="bestPractices"
              style={{gridArea: "bestPractices"}}
         >
@@ -89,7 +90,7 @@ function BestPracticesCard() {
                     </div>
                 </>
             )}
-        </div>
+        </SimpleDashboardCard>
     );
 }
 

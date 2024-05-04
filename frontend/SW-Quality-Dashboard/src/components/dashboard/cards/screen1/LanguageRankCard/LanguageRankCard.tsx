@@ -9,6 +9,7 @@ import apiUrls from "../../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -105,7 +106,7 @@ function LanguageRankCard() {
                 />
             }
 
-            <div className={"dashboard-card card bg-base-200"} id="languageRank">
+            <SimpleDashboardCard id="languageRank">
                 <h2>
                     <i className="bi bi-trophy-fill"> </i>
                     Top Languages in UoM
@@ -174,7 +175,7 @@ function LanguageRankCard() {
                     </div>
 
                 </div>
-            </div>
+            </SimpleDashboardCard>
         </>
     )
 }

@@ -14,6 +14,7 @@ import {jwtDecode} from "jwt-decode";
 import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
 import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
 import {Image} from "react-bootstrap";
+import SimpleDashboardCard from "../../cards/SimpleDashboardCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -274,7 +275,7 @@ function DashboardSlideFour() {
                     totalCodeSmells={mostForkedProjSmells}
                 />
 
-                <div className="dashboard-card card bg-base-200"
+                <SimpleDashboardCard
                      style={{gridArea: "commitGraph"}}
                 >
                     {developers.length > 0 &&
@@ -287,9 +288,9 @@ function DashboardSlideFour() {
                             loading={developers.length < 1}
                         />
                     }
-                </div>
+                </SimpleDashboardCard>
 
-                <div className="dashboard-card card bg-base-200"
+                <SimpleDashboardCard
                      id={"developers"}
                      style={{gridArea: "developersSlides"}}
                 >
@@ -301,7 +302,7 @@ function DashboardSlideFour() {
                     <h5>{
                         currentDevName ? currentDevName : "Anonymous Dev"
                     }</h5>
-                </div>
+                </SimpleDashboardCard>
 
                 <FooterCard
                     gridAreaName="footerCard"

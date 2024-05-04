@@ -6,6 +6,7 @@ import apiUrls from "../../../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -58,7 +59,7 @@ const WordCloudCard = () => {
     }, [accessToken]);
 
     return (
-        <div className="dashboard-card card bg-base-200"
+        <SimpleDashboardCard id="wordcloud-card"
              style={{gridArea: "wordcloud"}}
         >
             {error &&
@@ -72,7 +73,7 @@ const WordCloudCard = () => {
                 // Force re-render by changing key prop
                 <WordCloud words={words}/>
             )}
-        </div>
+        </SimpleDashboardCard>
     );
 };
 

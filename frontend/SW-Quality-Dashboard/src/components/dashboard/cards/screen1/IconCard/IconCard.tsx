@@ -1,6 +1,7 @@
 import './IconCard.css';
 import '../../DashboardCardStyle.css';
 import { useState, useEffect } from 'react';
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 function formatHeaderText(headerText) {
     if (!isNaN(headerText) && parseInt(headerText) >= 1000) {
@@ -18,8 +19,7 @@ function IconCard({icon, headerText, caption, gridAreaName, loading}) {
     return (
         <>
             {loading ? (
-                <div
-                    className={"dashboard-card loading " }
+                <SimpleDashboardCard
                     id="iconCard"
                     style={{gridArea: gridAreaName}}
                 >
@@ -28,9 +28,9 @@ function IconCard({icon, headerText, caption, gridAreaName, loading}) {
                         <h2 className="skeleton"></h2>
                         <h3 className="skeleton"></h3>
                     </div>
-                </div>
+                </SimpleDashboardCard>
             ) : (
-                <div
+                <SimpleDashboardCard
                     className={"dashboard-card  card bg-base-200" }
                     id="iconCard"
                     style={{gridArea: gridAreaName}}
@@ -40,7 +40,7 @@ function IconCard({icon, headerText, caption, gridAreaName, loading}) {
                         <h2>{formattedHeaderText}</h2>
                         <h3>{caption}</h3>
                     </div>
-                </div>
+                </SimpleDashboardCard>
             )}
         </>
     )

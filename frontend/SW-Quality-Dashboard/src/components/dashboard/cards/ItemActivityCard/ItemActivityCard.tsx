@@ -1,9 +1,10 @@
 import './ItemActivityCard.css'
 import {Image} from "react-bootstrap";
+import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
 
 function ItemActivityCard({cardTitle, cardTitleUrl, cardTitleIcon, cardImage, cardIcon, countTitle, count, countCaption, gridArea}) {
     return (
-        <div className="dashboard-card card bg-base-200"
+        <SimpleDashboardCard
              id={"itemActivity"}
              style={{gridArea: gridArea}}
         >
@@ -42,7 +43,7 @@ function ItemActivityCard({cardTitle, cardTitleUrl, cardTitleIcon, cardImage, ca
                 </div>
             </div>
 
-        </div>
+        </SimpleDashboardCard>
     )
 }
 

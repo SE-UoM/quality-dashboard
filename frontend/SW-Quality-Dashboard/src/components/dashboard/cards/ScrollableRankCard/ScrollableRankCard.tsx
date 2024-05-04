@@ -1,9 +1,10 @@
 import React from 'react';
 import './ScrollableRankCard.css';
+import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
 
 function ScrollableRankCard({ title, icon, children, cardId, gridArea }) {
     return (
-        <div className="dashboard-card card bg-base-200" id={cardId}
+        <SimpleDashboardCard id={cardId}
             style={{ gridArea: gridArea }}
         >
             <h3>
@@ -14,7 +15,7 @@ function ScrollableRankCard({ title, icon, children, cardId, gridArea }) {
             <div className="best-projects-list">
                 {children}
             </div>
-        </div>
+        </SimpleDashboardCard>
     );
 }
 

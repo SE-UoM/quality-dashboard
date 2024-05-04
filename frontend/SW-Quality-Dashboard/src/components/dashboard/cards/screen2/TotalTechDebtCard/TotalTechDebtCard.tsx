@@ -5,6 +5,7 @@ import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import apiUrls from "../../../../../assets/data/api_urls.json";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 let baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -69,9 +70,7 @@ function TotalTechDebtCard() {
                 />
             }
 
-            <div className={"dashboard-card card bg-base-200 " + (loading ? "loading" : "")}
-                 id="totalTD"
-            >
+            <SimpleDashboardCard id="totalTD">
                 {loading ? (
                         <div className="total-td-skeleton">
                             <div className="skeleton-box"> </div>
@@ -90,7 +89,7 @@ function TotalTechDebtCard() {
                         </h2>
                     </>
                 }
-            </div>
+            </SimpleDashboardCard>
         </>
       );
 }

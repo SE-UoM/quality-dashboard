@@ -8,6 +8,7 @@ import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import { jwtDecode } from "jwt-decode";
 import {styled} from "@mui/material/styles";
 import CustomPieChart from "../../../../charts/CustomPieChart.tsx";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const colors = {
     "MINOR": "#67B279",
@@ -110,7 +111,7 @@ function CodeSmellDistributionCard() {
                     modalAlertMessage={errorMessage}
                 />
             }
-            <div className="dashboard-card card bg-base-200" id="codeSmellDistribution">
+            <SimpleDashboardCard id="codeSmellDistribution">
                 {!loading &&
                     <h3>
                         <i className="bi bi-radioactive"> </i>
@@ -139,7 +140,7 @@ function CodeSmellDistributionCard() {
 
                     </div>
                 </div>
-            </div>
+            </SimpleDashboardCard>
         </>
     )
 }

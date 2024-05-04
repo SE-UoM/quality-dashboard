@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import apiRoutes from '../../../../../assets/data/api_urls.json';
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -65,7 +66,7 @@ function TechDebtStatsCard() {
 
     return (
         <>
-            <div className="dashboard-card card bg-base-200" id="techDebtStats">
+            <SimpleDashboardCard id="techDebtStats">
                 {loading ? (
                     <>
                         <div className="td-stats-skeleton">
@@ -118,7 +119,7 @@ function TechDebtStatsCard() {
                         </section>
                     </>
             }
-            </div>
+            </SimpleDashboardCard>
         </>
     );
 }

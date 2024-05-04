@@ -8,6 +8,7 @@ import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
 import { styled } from '@mui/material/styles';
 import CustomPieChart from "../../../../charts/CustomPieChart.tsx";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const colors = [
     /* Language Distribution */
@@ -148,7 +149,7 @@ function LanguageDistributionCard() {
                     modalAlertMessage={errorMessage}
                 />
             }
-            <div className="dashboard-card  card bg-base-200" id="languageDistribution">
+            <SimpleDashboardCard id="languageDistribution">
                 <div className="language-distribution-container">
                     {!loading &&
                         <h3>
@@ -179,7 +180,7 @@ function LanguageDistributionCard() {
                         }
                     </div>
                 </div>
-            </div>
+            </SimpleDashboardCard>
         </>
     )
 }
