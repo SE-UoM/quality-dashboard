@@ -10,6 +10,7 @@
     "verifyUser": "/api/user/verify?token=${token}&uid=${uid}",
     "resetPasswordRequest": "/api/user/reset-password/request",
     "resetPassword": "/api/user/reset-password",
+    "checkAuth": "/api/user/isAuthenticated",
 
     "examples": {
       "languageDistribution": "/api/examples/language-distribution",
