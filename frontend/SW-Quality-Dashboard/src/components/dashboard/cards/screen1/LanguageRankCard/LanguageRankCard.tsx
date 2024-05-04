@@ -81,7 +81,7 @@ function LanguageRankCard() {
                 // Wait half a second before setting the state to prevent the loading spinner from flashing
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 500);
+                }, 1000);
 
                 setFirstLanguage(first.name);
                 setSecondLanguage(second.name);
@@ -106,76 +106,79 @@ function LanguageRankCard() {
                 />
             }
 
-            <SimpleDashboardCard id="languageRank">
-                <h2>
-                    <i className="bi bi-trophy-fill"> </i>
-                    Top Languages in UoM
-                </h2>
+            {isLoading ?
+                (
+                    <SimpleDashboardCard
+                        className="skeleton"
+                        id={"languageRank"}
+                        style={{height: "100%"}}
+                    />
+                ) :
+                (
+                    <SimpleDashboardCard
+                        id="languageRank"
+                    >
+                        <h2>
+                            <i className="bi bi-trophy-fill"> </i>
+                            Top Languages in UoM
+                        </h2>
 
-                <div className="language-rank-container">
-                    <div className="language-rank">
+                        <div className="language-rank-container">
+                            <div className="language-rank">
                         <span className={"lang-name-rank"}>
-
-                            {
-                                isLoading ?
-                                    <>
-                                        <div className="skeleton-lang-img"> </div>
-                                        <div className="skeleton-lang-name"> </div>
-                                    </>
-                                    :
-                                    <>
-                                        <img src={secondLanguageImage}/>
-                                        {secondLanguage}
-                                    </>
-                            }
+                             <>
+                                 <img src={secondLanguageImage}/>
+                                 {secondLanguage}
+                             </>
                         </span>
-                        <div className="language-rank-line" id={"second"}>
-                            <img src={secondMedal} className="medal-icon"/>
-                        </div>
-                    </div>
+                                <div className="language-rank-line glass" id={"second"}>
+                                    {/*<img src={secondMedal} className="medal-icon"/>*/}
+                                    <h1 className="text-base-200"
+                                        style={{fontSize: "10vh"}}
+                                    >
+                                        <strong>2</strong>
+                                    </h1>
+                                </div>
+                            </div>
 
-                    <div className="language-rank">
+                            <div className="language-rank">
                         <span className={"lang-name-rank"}>
-                            {
-                                isLoading ?
-                                    <>
-                                        <div className="skeleton-lang-img"> </div>
-                                        <div className="skeleton-lang-name"> </div>
-                                    </>
-                                    :
-                                    <>
-                                        <img src={firstLanguageImage}/>
-                                        {firstLanguage}
-                                    </>
-                            }
+                            <>
+                                <img src={firstLanguageImage}/>
+                                {firstLanguage}
+                            </>
                         </span>
-                        <div className="language-rank-line" id={"first"}>
-                            <img src={firstMedal} className="medal-icon"/>
-                        </div>
-                    </div>
+                                <div className="language-rank-line glass" id={"first"}>
+                                    {/*<img src={firstMedal} className="medal-icon"/>*/}
+                                    <h1 className="text-base-200"
+                                        style={{fontSize: "10vh"}}
+                                    >
+                                        <strong>1</strong>
+                                    </h1>
+                                </div>
+                            </div>
 
-                    <div className="language-rank">
+                            <div className="language-rank">
                         <span className={"lang-name-rank"}>
-                            {
-                                isLoading ?
-                                    <>
-                                        <div className="skeleton-lang-img"> </div>
-                                        <div className="skeleton-lang-name"> </div>
-                                    </>
-                                    :
-                                    <>
-                                        <img src={thirdLanguageImage}/>
-                                        {thirdLanguage}
-                                    </>
-                            }
+                            <>
+                                <img src={thirdLanguageImage}/>
+                                {thirdLanguage}
+                            </>
                         </span>
-                        <div className="language-rank-line" id={"third"}>
-                            <img src={thirdMedal} className="medal-icon"/>
-                        </div>
-                    </div>
+                                <div className="language-rank-line glass" id={"third"}>
+                                    {/*<img src={thirdMedal} className="medal-icon"/>*/}
+                                    <h1 className="text-base-200"
+                                        style={{fontSize: "10vh"}}
+                                    >
+                                        <strong>3</strong>
+                                    </h1>
+                                </div>
+                            </div>
 
-                </div>
-            </SimpleDashboardCard>
+                        </div>
+                    </SimpleDashboardCard>
+                )
+            }
         </>
     )
 }

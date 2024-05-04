@@ -93,7 +93,7 @@ function LanguageDistributionCard() {
                 // Wait half a second before setting the state to false
                 setTimeout(() => {
                     setLoading(false);
-                }, 500);
+                }, 1000);
 
                 setTotalLanguages(response.data.totalLanguages);
                 setLanguageDistribution(response.data.languageDistribution);
@@ -149,38 +149,34 @@ function LanguageDistributionCard() {
                     modalAlertMessage={errorMessage}
                 />
             }
-            <SimpleDashboardCard id="languageDistribution">
-                <div className="language-distribution-container">
-                    {!loading &&
+
+            {loading ? (
+                <SimpleDashboardCard
+                    id="languageDistribution"
+                    className="skeleton"
+                    style={{
+                        gridArea: "languageDistribution",
+                        height: "100%",
+                    }}
+                >
+                </SimpleDashboardCard>
+            ) : (
+                <SimpleDashboardCard id="languageDistribution">
+                    <div className="language-distribution-container">
                         <h3>
                             <i className="bi bi-pie-chart-fill"> </i>
                             Language Distribution
                         </h3>
-                    }
-                    <div className="lang-distribution-chart">
-                        {
-                            loading ?
-                                <>
-                                    <div className="distribution-skeleton">
-                                        <div className="distribution-skeleton-graph"> </div>
-                                        <div className="distribution-skeleton-legend-container">
-                                            <div className="distribution-skeleton-legend"> </div>
-                                            <div className="distribution-skeleton-legend"> </div>
-                                            <div className="distribution-skeleton-legend"> </div>
-                                        </div>
-                                    </div>
-                                </>
-                                :
-                                <>
-                                    <CustomPieChart
-                                        data={pieChartData}
-                                        centerText={totalLanguages}
-                                    />
-                                </>
-                        }
+
+                        <div className="lang-distribution-chart">
+                            <CustomPieChart
+                                data={pieChartData}
+                                centerText={totalLanguages}
+                            />
+                        </div>
                     </div>
-                </div>
-            </SimpleDashboardCard>
+                </SimpleDashboardCard>
+            )}
         </>
     )
 }

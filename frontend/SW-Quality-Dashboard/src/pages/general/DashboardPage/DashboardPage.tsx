@@ -44,29 +44,31 @@ function DashboardPage({isAuthenticated, isAdmin}) {
                 </div>
             ) : (
                 <>
-                    <CollabsibleNavbar
-                        isAuthenticated={isAuthenticated}
-                        isAdmin={isAdmin}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                        totalSlides={4}
-                    />
-                    <div className="dashboard-page bg-base-100">
-                        {(!currentSlide || currentSlide === 1) &&
-                            <DashboardSlideOne />
-                        }
+                    <div className="dashboard-page-container">
+                        <CollabsibleNavbar
+                            isAuthenticated={isAuthenticated}
+                            isAdmin={isAdmin}
+                            currentSlide={currentSlide}
+                            setCurrentSlide={setCurrentSlide}
+                            totalSlides={4}
+                        />
+                        <div className="dashboard-page bg-base-100">
+                            {(!currentSlide || currentSlide === 1) &&
+                                <DashboardSlideOne />
+                            }
 
-                        {currentSlide === 2 &&
-                            <DashboardSlideTwo />
-                        }
+                            {currentSlide === 2 &&
+                                <DashboardSlideTwo />
+                            }
 
-                        {currentSlide === 3 &&
-                            <DashboardSlideThree />
-                        }
+                            {currentSlide === 3 &&
+                                <DashboardSlideThree />
+                            }
 
-                        {currentSlide === 4 &&
-                            <DashboardSlideFour />
-                        }
+                            {currentSlide === 4 &&
+                                <DashboardSlideFour />
+                            }
+                        </div>
                     </div>
                 </>
             )}

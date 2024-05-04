@@ -21,13 +21,13 @@ function IconCard({icon, headerText, caption, gridAreaName, loading}) {
             {loading ? (
                 <SimpleDashboardCard
                     id="iconCard"
-                    style={{gridArea: gridAreaName}}
+                    className="skeleton"
+                    style={{
+                        gridArea: gridAreaName,
+                        height: "100%",
+                    }}
                 >
-                    <div className="icon-card-icon skeleton"></div>
-                    <div className="icon-card-header">
-                        <h2 className="skeleton"></h2>
-                        <h3 className="skeleton"></h3>
-                    </div>
+
                 </SimpleDashboardCard>
             ) : (
                 <SimpleDashboardCard

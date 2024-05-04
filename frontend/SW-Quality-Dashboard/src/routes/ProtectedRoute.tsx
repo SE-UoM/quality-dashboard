@@ -39,7 +39,7 @@ export default function ProtectedRoute({loadingAuth, setLoadingAuth}) {
                 // Wait one second before setting the loadingAuth to false
                 setTimeout(() => {
                     setLoadingAuth(false)
-                }, 1000);
+                }, 500);
 
             })
             .catch((error) => {

@@ -64,7 +64,7 @@ function DashboardSlideOne() {
                     // Do nothing
                     console.log("waiting...")
                     setLoading(false); // Set loading to false once data is fetched
-                }, 500);
+                }, 1000);
             })
             .catch((error) => {
                     console.warn("Error fetching general stats: ", error);
