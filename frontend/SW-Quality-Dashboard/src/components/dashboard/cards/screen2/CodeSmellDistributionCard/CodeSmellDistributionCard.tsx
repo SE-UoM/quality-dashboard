@@ -110,7 +110,7 @@ function CodeSmellDistributionCard() {
                     modalAlertMessage={errorMessage}
                 />
             }
-            <div className="dashboard-card" id="codeSmellDistribution">
+            <div className="dashboard-card card bg-base-200" id="codeSmellDistribution">
                 {!loading &&
                     <h3>
                         <i className="bi bi-radioactive"> </i>

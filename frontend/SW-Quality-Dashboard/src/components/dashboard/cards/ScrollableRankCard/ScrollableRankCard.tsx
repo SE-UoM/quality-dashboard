@@ -3,7 +3,7 @@ import './ScrollableRankCard.css';
 
 function ScrollableRankCard({ title, icon, children, cardId, gridArea }) {
     return (
-        <div className="dashboard-card" id={cardId}
+        <div className="dashboard-card card bg-base-200" id={cardId}
             style={{ gridArea: gridArea }}
         >
             <h3>

@@ -77,7 +77,7 @@ function SubmittedProjectsCard() {
 
 
     return (
-        <div className="dashboard-card"
+        <div className="dashboard-card card bg-base-200"
              id={"submittedProjects"}
              style={{gridArea: "submittedProjects"}}
         >

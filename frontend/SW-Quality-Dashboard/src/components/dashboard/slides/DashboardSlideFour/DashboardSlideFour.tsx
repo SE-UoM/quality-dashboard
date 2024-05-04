@@ -274,7 +274,7 @@ function DashboardSlideFour() {
                     totalCodeSmells={mostForkedProjSmells}
                 />
 
-                <div className="dashboard-card"
+                <div className="dashboard-card card bg-base-200"
                      style={{gridArea: "commitGraph"}}
                 >
                     {developers.length > 0 &&
@@ -289,7 +289,7 @@ function DashboardSlideFour() {
                     }
                 </div>
 
-                <div className="dashboard-card"
+                <div className="dashboard-card card bg-base-200"
                      id={"developers"}
                      style={{gridArea: "developersSlides"}}
                 >

@@ -148,7 +148,7 @@ function LanguageDistributionCard() {
                     modalAlertMessage={errorMessage}
                 />
             }
-            <div className="dashboard-card" id="languageDistribution">
+            <div className="dashboard-card  card bg-base-200" id="languageDistribution">
                 <div className="language-distribution-container">
                     {!loading &&
                         <h3>

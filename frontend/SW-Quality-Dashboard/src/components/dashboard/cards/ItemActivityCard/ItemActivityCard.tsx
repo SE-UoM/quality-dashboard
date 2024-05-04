@@ -3,7 +3,7 @@ import {Image} from "react-bootstrap";
 
 function ItemActivityCard({cardTitle, cardTitleUrl, cardTitleIcon, cardImage, cardIcon, countTitle, count, countCaption, gridArea}) {
     return (
-        <div className="dashboard-card"
+        <div className="dashboard-card card bg-base-200"
              id={"itemActivity"}
              style={{gridArea: gridArea}}
         >

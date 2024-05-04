@@ -7,7 +7,7 @@ export default function FooterCard({gridAreaName}) {
     return (
         <>
             <div
-                className={"dashboard-card " }
+                className={"dashboard-card card bg-base-200" }
                 id="footerCard"
                 style={{gridArea: gridAreaName}}
             >

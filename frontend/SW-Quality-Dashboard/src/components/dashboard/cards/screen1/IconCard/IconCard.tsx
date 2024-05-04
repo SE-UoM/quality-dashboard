@@ -31,7 +31,7 @@ function IconCard({icon, headerText, caption, gridAreaName, loading}) {
                 </div>
             ) : (
                 <div
-                    className={"dashboard-card " }
+                    className={"dashboard-card  card bg-base-200" }
                     id="iconCard"
                     style={{gridArea: gridAreaName}}
                 >

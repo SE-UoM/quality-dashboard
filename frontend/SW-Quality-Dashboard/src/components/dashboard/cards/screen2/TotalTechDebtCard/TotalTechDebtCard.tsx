@@ -69,7 +69,7 @@ function TotalTechDebtCard() {
                 />
             }
 
-            <div className={"dashboard-card " + (loading ? "loading" : "")}
+            <div className={"dashboard-card card bg-base-200 " + (loading ? "loading" : "")}
                  id="totalTD"
             >
                 {loading ? (

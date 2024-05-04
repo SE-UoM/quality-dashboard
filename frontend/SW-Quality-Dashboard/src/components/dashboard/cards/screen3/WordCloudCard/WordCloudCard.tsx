@@ -58,7 +58,7 @@ const WordCloudCard = () => {
     }, [accessToken]);
 
     return (
-        <div className="dashboard-card"
+        <div className="dashboard-card card bg-base-200"
              style={{gridArea: "wordcloud"}}
         >
             {error &&

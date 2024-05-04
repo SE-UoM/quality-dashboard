@@ -51,7 +51,7 @@ function DashboardPage({isAuthenticated, isAdmin}) {
                         setCurrentSlide={setCurrentSlide}
                         totalSlides={4}
                     />
-                    <div className="dashboard-page bg-primary">
+                    <div className="dashboard-page bg-base-100">
                         {(!currentSlide || currentSlide === 1) &&
                             <DashboardSlideOne />
                         }

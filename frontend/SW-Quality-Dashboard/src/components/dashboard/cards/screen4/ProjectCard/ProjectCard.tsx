@@ -16,7 +16,7 @@ function formatText(text) {
 
 function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName, nameSubText, totalFiles, totalLines, totalDebt, totalCodeSmells}) {
     return (
-        <div className="dashboard-card project-card"
+        <div className="dashboard-card project-card card bg-base-200"
              id={id}
         >
             <h3 className="header">

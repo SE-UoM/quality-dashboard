@@ -65,7 +65,7 @@ function TechDebtStatsCard() {
 
     return (
         <>
-            <div className="dashboard-card" id="techDebtStats">
+            <div className="dashboard-card card bg-base-200" id="techDebtStats">
                 {loading ? (
                     <>
                         <div className="td-stats-skeleton">

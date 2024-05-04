@@ -105,7 +105,7 @@ function LanguageRankCard() {
                 />
             }
 
-            <div className={"dashboard-card"} id="languageRank">
+            <div className={"dashboard-card card bg-base-200"} id="languageRank">
                 <h2>
                     <i className="bi bi-trophy-fill"> </i>
                     Top Languages in UoM
