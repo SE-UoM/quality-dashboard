@@ -4,19 +4,19 @@ import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "../../../interfaces/DecodedToken.ts";
+import useLocalStorage from "../../../hooks/useLocalStorage.ts";
 
 function DashboardNavbar({isAuthenticated, isAdmin}) {
-    const accessToken = localStorage.getItem('accessToken')
+    const accessToken = useLocalStorage('accessToken', '')
     const [userName, setUserName] = useState('')
 
     useEffect(() => {
-        if (!isAuthenticated || !accessToken)
+        let accessTokenIsEmpty = accessToken[0] === "" || accessToken[0] === null
+        if (!isAuthenticated || accessTokenIsEmpty)
             return
 
-        console.log(accessToken)
-
         // Get the user name from the token
-        let decoded : DecodedToken = jwtDecode(accessToken)
+        let decoded : DecodedToken = jwtDecode(accessToken[0])
 
         if (!decoded) {
             return
@@ -24,7 +24,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
 
         let name = decoded.name;
         setUserName(name)
-    }, []);
+    }, [accessToken]);
 
     let handleLogout = () => {
         localStorage.removeItem('accessToken')
@@ -47,6 +47,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                 </div>
 
                 <div className="flex-none">
+                        {/* Theme Controller */}
                         <div className="dropdown dropdown-end">
                             <label className="swap swap-rotate">
 
@@ -70,8 +71,8 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                                          src={"https://ui-avatars.com/api/?name=" + userName}/>
                                 </div>
                             </div>
-                            <ul tabindex="0"
-                                class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                            <ul tabIndex="0"
+                                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                             >
                                 <li>
                                     <a href="/dashboard">
@@ -85,12 +86,15 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                                         Submit a Project
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="/admin">
-                                        <i className="bi bi-gear-fill"> </i>
-                                        Admin Panel
-                                    </a>
-                                </li>
+
+                                {isAdmin &&
+                                    <li>
+                                        <a href="/admin">
+                                            <i className="bi bi-gear-fill"> </i>
+                                            Admin Panel
+                                        </a>
+                                    </li>
+                                }
 
                                 <li>
                                     <button
