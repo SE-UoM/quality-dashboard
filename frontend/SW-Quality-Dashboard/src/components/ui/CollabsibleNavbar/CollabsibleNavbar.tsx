@@ -61,16 +61,14 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
 
     return (
         <>
-
+        <div
+            className="navbar bg-base-100"
+            style={{
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             {expanded && (
-                <div
-                    className="navbar bg-base-100"
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                    }}
-                >
-                    {/* DASHBOARD MENU */}
                     <div className="menu menu-horizontal bg-base-200 rounded-box"
                         style={{
                             display: "flex",
@@ -113,7 +111,7 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
                                 </a>
                             </li>
 
-                            <li>
+                            <li className="tooltip tooltip-bottom"  data-tip="Change Theme">
                                 <label className="swap swap-rotate">
 
                                     {/* this hidden checkbox controls the state */}
@@ -133,8 +131,8 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
                             </li>
                         </ul>
                     </div>
-                </div>
             )}
+        </div>
         </>
     );
 }
