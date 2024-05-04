@@ -8,6 +8,12 @@ import DecodedToken from "../../../interfaces/DecodedToken.ts";
 import AdminAllProjectsPage from "../AdminAllProjectsPage/AdminAllProjectsPage.tsx";
 import AdminPendingProjectsPage from "../AdminPendingProjectsPage/AdminPendingProjectsPage.tsx";
 import AdminAllUsersPage from "../AdminAllUsersPage/AdminAllUsersPage.tsx";
+import ProtectedRoute from "../../../routes/ProtectedRoute.tsx";
+import CollabsibleNavbar from "../../../components/ui/CollabsibleNavbar/CollabsibleNavbar.tsx";
+import DashboardSlideOne from "../../../components/dashboard/slides/DashboardSlideOne/DashboardSlideOne.tsx";
+import DashboardSlideTwo from "../../../components/dashboard/slides/DashboardSlideTwo/DashboardSlideTwo.tsx";
+import DashboardSlideThree from "../../../components/dashboard/slides/DashboardSlideThree/DashboardSlideThree.tsx";
+import DashboardSlideFour from "../../../components/dashboard/slides/DashboardSlideFour/DashboardSlideFour.tsx";
 
 
 
@@ -17,6 +23,8 @@ function AdminPanel() {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
 
     const [pendingProjectsCount, setPendingProjectsCount] = useState<number>(0)
+
+    const [loadingAuth, setLoadingAuth] = useState<boolean>(true)
 
     useEffect(() => {
         // Call a random API to check if the token is still valid
@@ -42,92 +50,110 @@ function AdminPanel() {
 
     return (
         <>
-            {isAdmin &&
-                <div className="admin-panel-page">
+            <ProtectedRoute loadingAuth={loadingAuth} setLoadingAuth={setLoadingAuth} />
 
-                <Tab.Container id="admin-tabs" defaultActiveKey="first">
-                    <div className="tabs-content">
-                        {/*  ADMIN TAB NAVBAR  */}
-                        <div className="nav-tabs">
-                            <Nav  className="flex-column">
-                                <Nav.Item
-                                    className="admin-navbar-items"
-                                    id="item1"
-                                >
-                                    <Nav.Link className="admin-nav-link"
-                                              eventKey="first"
-                                              style={{
-                                                  borderRadius: "0"
-                                              }}
-                                    >
-                                        <i className="bi bi-journal-code"> </i>
-                                        All Projects
-                                    </Nav.Link>
-                                </Nav.Item>
+            {loadingAuth ? (
+                <div
+                    className="loading-item"
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100vh"
+                    }}
+                >
+                    <span className="loading loading-infinity loading-lg"></span>
+                </div>
+            ) : (
+                <>
+                    {isAdmin &&
+                        <div className="admin-panel-page">
 
-                                <Nav.Item
-                                    className="admin-navbar-items"
-                                    id="item2"
-                                >
-                                    <Nav.Link
-                                        className="admin-nav-link"
-                                        eventKey="second"
-                                        style={{
-                                            borderRadius: "0"
-                                        }}
-                                    >
-                                        <i className="bi bi-exclamation-octagon"> </i>
-                                        Pending Projects &nbsp;
-                                        {
-                                            pendingProjectsCount > 0 && pendingProjectsCount < 100 &&
-                                            <Badge bg="danger">{pendingProjectsCount}</Badge>
-                                        }
+                            <Tab.Container id="admin-tabs" defaultActiveKey="first">
+                                <div className="tabs-content">
+                                    {/*  ADMIN TAB NAVBAR  */}
+                                    <div className="nav-tabs">
+                                        <Nav  className="flex-column">
+                                            <Nav.Item
+                                                className="admin-navbar-items"
+                                                id="item1"
+                                            >
+                                                <Nav.Link className="admin-nav-link"
+                                                          eventKey="first"
+                                                          style={{
+                                                              borderRadius: "0"
+                                                          }}
+                                                >
+                                                    <i className="bi bi-journal-code"> </i>
+                                                    All Projects
+                                                </Nav.Link>
+                                            </Nav.Item>
 
-                                        {
-                                            pendingProjectsCount > 0 && pendingProjectsCount >= 100 &&
-                                            <Badge bg="danger">99+</Badge>
-                                        }
-                                    </Nav.Link>
-                                </Nav.Item>
+                                            <Nav.Item
+                                                className="admin-navbar-items"
+                                                id="item2"
+                                            >
+                                                <Nav.Link
+                                                    className="admin-nav-link"
+                                                    eventKey="second"
+                                                    style={{
+                                                        borderRadius: "0"
+                                                    }}
+                                                >
+                                                    <i className="bi bi-exclamation-octagon"> </i>
+                                                    Pending Projects &nbsp;
+                                                    {
+                                                        pendingProjectsCount > 0 && pendingProjectsCount < 100 &&
+                                                        <Badge bg="danger">{pendingProjectsCount}</Badge>
+                                                    }
 
-                                <Nav.Item
-                                    className="admin-navbar-items"
-                                    id="item3"
-                                >
-                                    <Nav.Link
-                                        className="admin-nav-link"
-                                        eventKey="three"
-                                        style={{
-                                            borderRadius: "0"
-                                        }}
-                                    >
-                                        <i className="bi bi-people"> </i>
-                                        All Users
-                                    </Nav.Link>
-                                </Nav.Item>
-                            </Nav>
-                        </div>
+                                                    {
+                                                        pendingProjectsCount > 0 && pendingProjectsCount >= 100 &&
+                                                        <Badge bg="danger">99+</Badge>
+                                                    }
+                                                </Nav.Link>
+                                            </Nav.Item>
+
+                                            <Nav.Item
+                                                className="admin-navbar-items"
+                                                id="item3"
+                                            >
+                                                <Nav.Link
+                                                    className="admin-nav-link"
+                                                    eventKey="three"
+                                                    style={{
+                                                        borderRadius: "0"
+                                                    }}
+                                                >
+                                                    <i className="bi bi-people"> </i>
+                                                    All Users
+                                                </Nav.Link>
+                                            </Nav.Item>
+                                        </Nav>
+                                    </div>
 
 
-                        <div className="nav-tabs-content">
-                            <Tab.Content>
-                                <Tab.Pane eventKey="first">
-                                    <AdminAllProjectsPage/>
-                                </Tab.Pane>
+                                    <div className="nav-tabs-content">
+                                        <Tab.Content>
+                                            <Tab.Pane eventKey="first">
+                                                <AdminAllProjectsPage/>
+                                            </Tab.Pane>
 
-                                <Tab.Pane eventKey="second">
-                                    <AdminPendingProjectsPage updateCount={setPendingProjectsCount}/>
-                                </Tab.Pane>
+                                            <Tab.Pane eventKey="second">
+                                                <AdminPendingProjectsPage updateCount={setPendingProjectsCount}/>
+                                            </Tab.Pane>
 
-                                <Tab.Pane eventKey="three">
-                                    <AdminAllUsersPage />
-                                </Tab.Pane>
-                            </Tab.Content>
-                        </div>
-                    </div>
-                </Tab.Container>
+                                            <Tab.Pane eventKey="three">
+                                                <AdminAllUsersPage />
+                                            </Tab.Pane>
+                                        </Tab.Content>
+                                    </div>
+                                </div>
+                            </Tab.Container>
 
-            </div>}
+                        </div>}
+                </>
+            )}
         </>
     );
 }
