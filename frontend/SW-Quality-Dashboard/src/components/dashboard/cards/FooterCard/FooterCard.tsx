@@ -3,7 +3,7 @@ import '../DashboardCardStyle.css'
 import logoOpenSourceUoM from '../../../../assets/img/OS_UoM_Logo.png'
 import sdeLogo from '../../../../assets/img/sde-banner.png'
 
-function FooterCard({gridAreaName}) {
+export default function FooterCard({gridAreaName}) {
     return (
         <>
             <div
@@ -18,5 +18,3 @@ function FooterCard({gridAreaName}) {
         </>
     )
 }
-
-export default FooterCard
