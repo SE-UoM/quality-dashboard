@@ -144,4 +144,32 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+
+    // This method should get a token (the token the frontend has)
+    // And based on that token, it should return the user that is logged in
+    @GetMapping("/isAuthenticated")
+    public ResponseEntity<UserResponse> getLoggedInUser(HttpServletRequest request){
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        boolean authHeaderIsNotPresent = authorizationHeader == null || !authorizationHeader.startsWith("Bearer ");
+
+        if(authHeaderIsNotPresent) throw new RuntimeException("Refresh token is missing");
+
+        try {
+            DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(authorizationHeader);
+            String email = decodedJWT.getSubject();
+
+            //get user in order to get roles
+            User user = userService.getUserByEmail(email);
+
+            UserResponse userResponse = new UserResponse(user);
+            return ResponseEntity.ok(userResponse);
+        }
+        catch (Exception e){
+            // If there is an error, return a 403 error
+            return ResponseEntity.status(FORBIDDEN).build();
+        }
+    }
+
+
 }
