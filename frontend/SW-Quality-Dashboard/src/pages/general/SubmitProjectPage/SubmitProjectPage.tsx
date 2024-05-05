@@ -13,7 +13,11 @@ function SubmitProjectPage() {
         <>
             <ProtectedRoute loadingAuth={loadingAuth} setLoadingAuth={setLoadingAuth} />
 
-            <div className="submit-project-page">
+            <div className="submit-project-page bg-base-200"
+                style={{
+                    padding: "10vh 15vw"
+                }}
+            >
                 {loadingAuth ? (
                     <span className="loading loading-infinity loading-lg"></span>
                 ) : (
