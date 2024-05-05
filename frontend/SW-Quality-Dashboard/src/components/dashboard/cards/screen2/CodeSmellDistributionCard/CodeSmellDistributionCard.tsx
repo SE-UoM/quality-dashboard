@@ -82,7 +82,7 @@ function CodeSmellDistributionCard() {
                 // Wait half a second before setting the state to false
                 setTimeout(() => {
                     setLoading(false);
-                }, 500);
+                }, 1000);
 
                 setTotalCodeSmells(totalCodeSmells);
                 setCodeSmellDistribution(codeSmellDistribution);
@@ -111,36 +111,31 @@ function CodeSmellDistributionCard() {
                     modalAlertMessage={errorMessage}
                 />
             }
-            <SimpleDashboardCard id="codeSmellDistribution">
-                {!loading &&
-                    <h3>
-                        <i className="bi bi-radioactive"> </i>
-                        Code Smell Distribution
-                    </h3>
-                }
-                <div className="code-smell-distribution-container">
-                    <div className="code-smells-distribution-chart">
-                        {loading ? (
-                            <div className="distribution-skeleton">
-                                <div className="distribution-skeleton-graph"> </div>
-                                <div className="distribution-skeleton-legend-container">
-                                    <div className="distribution-skeleton-legend"> </div>
-                                    <div className="distribution-skeleton-legend"> </div>
-                                    <div className="distribution-skeleton-legend"> </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <>
+                {!loading ? (
+                    <>
+                    <SimpleDashboardCard id="codeSmellDistribution">
+                        <h3>
+                            <i className="bi bi-radioactive"> </i>
+                            Code Smell Distribution
+                        </h3>
+                        <div className="code-smell-distribution-container">
+                            <div className="code-smells-distribution-chart">
                                 <CustomPieChart
                                     data={pieChartData}
                                     centerText={totalCodeSmells}
                                 />
-                            </>
-                        )}
+                            </div>
+                        </div>
+                    </SimpleDashboardCard>
+                    </>
+                ) : (
+                    <SimpleDashboardCard
+                        className="skeleton"
+                        id={"codeSmellDistribution"}
+                        style={{height: "100%"}}
+                    />
+                )}
 
-                    </div>
-                </div>
-            </SimpleDashboardCard>
         </>
     )
 }

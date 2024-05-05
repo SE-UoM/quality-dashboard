@@ -15,29 +15,36 @@ function formatText(text) {
     return text;
 }
 
-function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName, nameSubText, totalFiles, totalLines, totalDebt, totalCodeSmells}) {
+function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName, nameSubText, totalFiles, totalLines, totalDebt, totalCodeSmells, loading}) {
     return (
-        <SimpleDashboardCard
-             id={id}
-        >
-            <h3 className="header">
-                <i className={cardHeaderIcon}> </i>
-                {cardHeader}
-            </h3>
+        <>
+            {loading ? (
+                <SimpleDashboardCard
+                    id={id}
+                    className={"skeleton"}
+                />
+                ) : (
+                <SimpleDashboardCard
+                    id={id}
+                >
+                    <h3 className="header">
+                        <i className={cardHeaderIcon}> </i>
+                        {cardHeader}
+                    </h3>
 
-            <div className="project-card-content">
-                <img src={contentImage}/>
+                    <div className="project-card-content">
+                        <img src={contentImage}/>
 
-                <div className="project-card-content-details">
-                    <h3>
-                        <a
-                            href={"https://github.com/" + nameSubText + "/" + projectName}
-                            rel={"noreferrer"}
-                            target={"_blank"}
-                        >
-                            {projectName}
-                        </a>
-                        <span>
+                        <div className="project-card-content-details">
+                            <h3>
+                                <a
+                                    href={"https://github.com/" + nameSubText + "/" + projectName}
+                                    rel={"noreferrer"}
+                                    target={"_blank"}
+                                >
+                                    {projectName}
+                                </a>
+                                <span>
                              <a
                                  href={"https://github.com/" + nameSubText}
                                  rel={"noreferrer"}
@@ -46,47 +53,49 @@ function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName,
                                 By: {nameSubText}
                              </a>
                         </span>
-                    </h3>
+                            </h3>
 
-                    <div className="project-card-content-details-icons">
-                        <div className="project-card-content-details-icon">
-                            <img src={filesIcon} />
-                            <p>
-                                <span>{formatText(totalFiles) + " "} </span>
-                                Files
-                            </p>
-                        </div>
+                            <div className="project-card-content-details-icons">
+                                <div className="project-card-content-details-icon">
+                                    <img src={filesIcon} />
+                                    <p>
+                                        <span>{formatText(totalFiles) + " "} </span>
+                                        Files
+                                    </p>
+                                </div>
 
-                        <div className="project-card-content-details-icon">
-                            <img src={linesIcon} />
-                            <p>
-                                <span>{formatText(totalLines) + " "}</span>
-                                Lines
-                            </p>
-                        </div>
+                                <div className="project-card-content-details-icon">
+                                    <img src={linesIcon} />
+                                    <p>
+                                        <span>{formatText(totalLines) + " "}</span>
+                                        Lines
+                                    </p>
+                                </div>
 
-                        <div className="project-card-content-details-icon">
-                            <img src={debtIcon} />
-                            <p>
-                                <span>{formatText(totalDebt) + " \'"} </span>
-                                Debt
-                            </p>
-                        </div>
+                                <div className="project-card-content-details-icon">
+                                    <img src={debtIcon} />
+                                    <p>
+                                        <span>{formatText(totalDebt) + " \'"} </span>
+                                        Debt
+                                    </p>
+                                </div>
 
-                        <div className="project-card-content-details-icon">
-                            <img src={formatText(codeSmellsIcon)} />
-                            <p>
-                                <span>{totalCodeSmells + " "} </span>
-                                Code Smells
-                            </p>
+                                <div className="project-card-content-details-icon">
+                                    <img src={formatText(codeSmellsIcon)} />
+                                    <p>
+                                        <span>{totalCodeSmells + " "} </span>
+                                        Code Smells
+                                    </p>
+                                </div>
+
+                            </div>
                         </div>
 
                     </div>
-                </div>
 
-            </div>
-
-        </SimpleDashboardCard>
+                </SimpleDashboardCard>
+            )}
+        </>
     )
 }
 

@@ -49,7 +49,7 @@ function TechDebtStatsCard() {
                 // Wait half a second before setting the state
                 setTimeout(() => {
                     setLoading(false);
-                }, 500);
+                }, 1000);
 
                 setAverageProjectTechDebt(avgTD);
                 setMinTechDebt(minTD);
@@ -66,19 +66,17 @@ function TechDebtStatsCard() {
 
     return (
         <>
-            <SimpleDashboardCard id="techDebtStats">
                 {loading ? (
                     <>
-                        <div className="td-stats-skeleton">
-                            <div className="td-stats-skeleton-item-top"> </div>
-                            <div className="td-stats-skeleton-item-bottom">
-                                <div className="td-stats-skeleton-item"> </div>
-                                <div className="td-stats-skeleton-item"> </div>
-                            </div>
-                        </div>
+                        <SimpleDashboardCard
+                            className="skeleton"
+                            id={"techDebtStats"}
+                            style={{height: "100%"}}
+                        />
                     </>
                     ):
                     <>
+                        <SimpleDashboardCard id="techDebtStats">
                         <h3>
                             <i className={"bi bi-bar-chart"}> </i>
                             Technical Debt Statistics
@@ -117,9 +115,9 @@ function TechDebtStatsCard() {
                                 {" " + parseFloat(minTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
                             </p>
                         </section>
+                        </SimpleDashboardCard>
                     </>
             }
-            </SimpleDashboardCard>
         </>
     );
 }

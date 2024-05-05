@@ -49,7 +49,7 @@ function TotalTechDebtCard() {
                 // Wait half a second before setting the state
                 setTimeout(() => {
                     setLoading(false);
-                }, 500);
+                }, 1000);
 
                 setTotalTechDebt(response.data.totalTechDebtCost);
             })
@@ -70,26 +70,27 @@ function TotalTechDebtCard() {
                 />
             }
 
-            <SimpleDashboardCard id="totalTD">
                 {loading ? (
-                        <div className="total-td-skeleton">
-                            <div className="skeleton-box"> </div>
-                            <div className="skeleton-box"> </div>
-                        </div>
+                        <SimpleDashboardCard
+                            className="skeleton"
+                            id={"totalTD"}
+                            style={{height: "100%"}}
+                        />
                     ):
                     <>
+                    <SimpleDashboardCard id="totalTD">
                         <section className="total-td-card-header">
-                            <i className="bi bi-cash-coin"> </i>
-                            Total Technical Debt
+                                <i className="bi bi-cash-coin"> </i>
+                                Total Technical Debt
                         </section>
 
                         <h2 className="td-value">
                             <i className={"bi bi-currency-euro"}> </i>
                             {formatText(totalTechDebt)}
                         </h2>
+                    </SimpleDashboardCard>
                     </>
                 }
-            </SimpleDashboardCard>
         </>
       );
 }

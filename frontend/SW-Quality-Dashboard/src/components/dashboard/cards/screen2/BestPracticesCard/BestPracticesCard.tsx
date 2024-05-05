@@ -43,7 +43,7 @@ function BestPracticesCard() {
                     // Wait half a second before setting the loading state to false
                     setTimeout(() => {
                         setLoading(false);
-                    }, 500);
+                    }, 1000);
                 });
         };
 
@@ -59,24 +59,19 @@ function BestPracticesCard() {
     }, [accessToken]);
 
     return (
-        <SimpleDashboardCard
-             id="bestPractices"
-             style={{gridArea: "bestPractices"}}
-        >
+        <>
             {loading ? (
-                <div className="best-practices-skeleton">
-                    <div className="best-practices-skeleton-top"> </div>
-                    <div className="best-practices-skeleton-bottom">
-                        <div className="best-practices-skeleton-item"> </div>
-                        <div className="best-practices-skeleton-item">
-                            <div className="best-practices-skeleton-item-line"> </div>
-                            <div className="best-practices-skeleton-item-line"> </div>
-                            <div className="best-practices-skeleton-item-line"> </div>
-                        </div>
-                    </div>
-                </div>
+                    <SimpleDashboardCard
+                        className="skeleton"
+                        id={"bestPractices"}
+                        style={{height: "100%"}}
+                    />
             ) : (
                 <>
+                <SimpleDashboardCard
+                    id="bestPractices"
+                    style={{gridArea: "bestPractices"}}
+                >
                     <h3>
                         <i className="bi bi-stars"> </i>
                         Best Practices
@@ -88,9 +83,10 @@ function BestPracticesCard() {
                             {bestPracticeDescription}
                         </p>
                     </div>
+                </SimpleDashboardCard>
                 </>
             )}
-        </SimpleDashboardCard>
+        </>
     );
 }
 

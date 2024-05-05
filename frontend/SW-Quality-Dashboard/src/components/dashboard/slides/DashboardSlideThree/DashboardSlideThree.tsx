@@ -13,6 +13,8 @@ import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
 import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
 import ProjectDetailsIcon from "../../../ui/ProjectDetailsIcon/ProjectDetailsIcon.tsx";
 import SubmittedProjectsCard from "../../cards/screen3/SubmittedProjectsCard/SubmittedProjectsCard.tsx";
+import BestProjectsCard from "../../cards/screen3/BestProjectsCard/BestProjectsCard.tsx";
+import TopContibutorsCard from "../../cards/screen3/TopContibutorsCard/TopContibutorsCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -37,44 +39,6 @@ function DashboardSlideThree() {
     const [topContributors, setTopContributors] = useState([]);
 
     useEffect(() => {
-        // Extract the organization id from the access token
-        const organizationId = jwtDecode(accessToken).organizationId;
-
-        let url = baseApiUrl + apiUrls.routes.dashboard.topProjects;
-
-        // Replace the organization id in the URL
-        url = url.replace(":organizationId", organizationId);
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(url, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-
-                // Sort based on techDebtPerLoc
-                data.sort((a, b) => {
-                    return a.techDebtPerLoc - b.techDebtPerLoc;
-                });
-
-                // Wait half a second before setting the state
-                setTimeout(() => {
-                    setLoadingTopProjects(false);
-                }, 500);
-
-                setBestProjects(data);
-                console.log(data)
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-            });
-
-    }, [accessToken]);
-
-    useEffect(() => {
         const organizationId = jwtDecode(accessToken).organizationId;
         let url = baseApiUrl + apiUrls.routes.dashboard.topContributors;
 
@@ -95,7 +59,7 @@ function DashboardSlideThree() {
                 // Wait half a second before setting the state
                 setTimeout(() => {
                     setLoadingTopContributors(false);
-                },  500);
+                },  1000);
 
                 setTopContributors(data);
                 console.info("Top contributors API Response: ", data)
@@ -118,64 +82,18 @@ function DashboardSlideThree() {
                 />
             }
             <div className="dashboard-slide" id="slide3">
-                <ScrollableRankCard
-                    title="Best Projects"
-                    icon="bi bi-bookmark-star"
-                    cardId="scrollableRankCard"
-                    gridArea={"bestProjects"}
-                >
-                    {bestProjects.map((item, index) => {
-                        let name = item.name;
-                        let owner = item.owner;
-                        let rank = index + 1;
-                        return (
-                            <DashboardRankedItem
-                                key={index}
-                                projectName={truncateString(name, 15)}
-                                rank={rank}
-                                loading={loadingTopProjects}
-                                headerUrl={"https://github.com/" + name}
-                            >
-                                By:&nbsp;
-                                <a
-                                    href={"https://github.com/" + owner}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    style={{
-                                        color: "var(--text-secondary)",
-                                    }}
-                                >
-                                    {owner}
-                                </a>
-                            </DashboardRankedItem>
-                        )
-                    })}
-                </ScrollableRankCard>
+                <BestProjectsCard
+                    bestProjects={bestProjects}
+                    truncateString={truncateString}
+                    loadingTopProjects={loadingTopProjects}
+                />
 
                 <WordCloudCard />
 
-                <ScrollableRankCard
-                    title="Top Contributors"
-                    icon="bi bi-person"
-                    cardId="scrollableRankCard"
-                    gridArea={"topCommiters"}
-                >
-                    {topContributors.map((item, index) => {
-                        let name = item.name;
-                        let totalCommits = item.totalCommits;
-                        let rank = index + 1;
-                        return (
-                            <DashboardRankedItem
-                                key={index}
-                                projectName={name}
-                                rank={rank}
-                                loading={loadingTopContributors}
-                            >
-                                {"Contributions: " + totalCommits}
-                            </DashboardRankedItem>
-                        )
-                    })}
-                </ScrollableRankCard>
+                <TopContibutorsCard
+                    topContributors={topContributors}
+                    loadingTopContributors={loadingTopContributors}
+                />
 
                 <SubmittedProjectsCard />
 

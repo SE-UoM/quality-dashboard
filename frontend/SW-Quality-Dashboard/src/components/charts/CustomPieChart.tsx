@@ -27,7 +27,7 @@ const StyledText = styled('text')(({ theme }) => ({
     dominantBaseline: 'central',
     fontWeight: "bold",
     padding: "1em",
-    color: "#404852 !important"
+    fill: "var(--text-primary)"
 }));
 
 function PieCenterLabel({ children }) {

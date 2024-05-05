@@ -5,7 +5,7 @@ import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
 function ScrollableRankCard({ title, icon, children, cardId, gridArea }) {
     return (
         <SimpleDashboardCard id={cardId}
-            style={{ gridArea: gridArea }}
+            style={{ gridArea: gridArea, height: "100%" }}
         >
             <h3>
                 <i className={icon}> </i>

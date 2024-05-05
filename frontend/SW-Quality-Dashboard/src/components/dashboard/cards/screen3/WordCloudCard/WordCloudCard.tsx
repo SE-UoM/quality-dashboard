@@ -59,21 +59,35 @@ const WordCloudCard = () => {
     }, [accessToken]);
 
     return (
-        <SimpleDashboardCard id="wordcloud-card"
-             style={{gridArea: "wordcloud"}}
-        >
-            {error &&
-                <ErrorModal
-                    modalTitle={errorTitle}
-                    modalAlertMessage={errorMessage}
-                />
-            }
+        <>
+            {loading ? (
+                <SimpleDashboardCard
+                    id="wordcloud-card"
+                    className="skeleton"
+                    style={{
+                        gridArea: "wordcloud",
+                        height: "100%",
+                    }}
+                >
+                </SimpleDashboardCard>
+                    ) : (
+                    <SimpleDashboardCard id="wordcloud-card"
+                                         style={{gridArea: "wordcloud"}}
+                    >
+                        {error &&
+                            <ErrorModal
+                                modalTitle={errorTitle}
+                                modalAlertMessage={errorMessage}
+                            />
+                        }
 
-            {words.length > 0 && (
-                // Force re-render by changing key prop
-                <WordCloud words={words}/>
-            )}
-        </SimpleDashboardCard>
+                        {words.length > 0 && (
+                            // Force re-render by changing key prop
+                            <WordCloud words={words}/>
+                        )}
+                    </SimpleDashboardCard>
+                    )}
+        </>
     );
 };
 

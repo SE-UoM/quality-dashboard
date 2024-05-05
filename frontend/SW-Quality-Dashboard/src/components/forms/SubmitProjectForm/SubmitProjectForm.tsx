@@ -14,7 +14,7 @@ function SubmitProjectForm() {
     const [showSimpleAlert, setShowSimpleAlert] = useState(false);
     const [simpleAlertMessage, setSimpleAlertMessage] = useState("");
     const [simpleAlertHeader, setSimpleAlertHeader] = useState("Info");
-    const [simpleAlertVariant, setSimpleAlertVariant] = useState("info");
+    const [simpleAlertVariant, setSimpleAlertVariant] = useState("alert-info");
     const [simpleAlertIcon, setSimpleAlertIcon] = useState("bi bi-info-circle-fill");
 
     const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ function SubmitProjectForm() {
         if (!isValidGithubUrl) {
             setShowSimpleAlert(true);
             setSimpleAlertIcon("bi bi-exclamation-triangle-fill");
-            setSimpleAlertVariant("danger");
+            setSimpleAlertVariant("alert-error");
             setSimpleAlertHeader("Invalid Github URL");
             setSimpleAlertMessage("Please enter a valid Github URL");
             return;
@@ -54,7 +54,7 @@ function SubmitProjectForm() {
         setIsLoading(true);
         setShowSimpleAlert(true);
         setSimpleAlertIcon("bi bi-info-circle-fill");
-        setSimpleAlertVariant("info");
+        setSimpleAlertVariant("alert-info");
 
         let alertMessage = "It will take a while to analyze the project depending on the size and the total commits. You can close this page, grab a coffee sit back and relax! Don't worry, we will send you an email once the analysis is complete.";
         setSimpleAlertHeader("Analyzing Project");
@@ -64,7 +64,7 @@ function SubmitProjectForm() {
             .then((response) => {
                 setShowSimpleAlert(true);
                 setSimpleAlertIcon("bi bi-check-circle-fill");
-                setSimpleAlertVariant("success");
+                setSimpleAlertVariant("alert-success");
 
                 let backendMessage = response.data.message;
                 setSimpleAlertHeader(backendMessage)
@@ -78,7 +78,7 @@ function SubmitProjectForm() {
                 setShowSimpleAlert(true);
                 setIsLoading(false);
                 setSimpleAlertIcon("bi bi-exclamation-triangle-fill");
-                setSimpleAlertVariant("danger");
+                setSimpleAlertVariant("alert-error");
                 setSimpleAlertHeader(error.response.data.message);
                 setSimpleAlertMessage(error.response.data.exceptionMessage);
 
@@ -94,88 +94,39 @@ function SubmitProjectForm() {
 
     return (
         <>
-                <div className="card shrink-0 w-full max-w-sm bg-base-100 w-100">
+                <div className="card shrink-0 w-full max-w-90 bg-base-100 w-100">
                     <h1
-                        className="text-5xl font-bold m-2"
+                        className="text-3xl font-bold m-2"
                         style={{textAlign: 'center'}}
                     >
-                        <i className="bi bi-door-open-fill"> </i> Login
+                        <i className="bi bi-folder-plus"> </i>
+                        Submit a Project
                     </h1>
 
                     <form className="card-body w-100">
-                        {error &&
-                            <div role="alert" className="alert alert-error">
-                                <i className="bi bi-exclamation-triangle-fill"> </i>
-                                <span> {errorMessage} </span>
+
+                        {showSimpleAlert &&
+                            <div role="alert" className={"alert " + simpleAlertVariant}>
+                                <i className={simpleAlertIcon}> </i>
+                                <span>
+                                    <strong> {simpleAlertHeader} </strong> <br/>
+                                    {simpleAlertMessage}
+                                </span>
                             </div>
                         }
 
-                        {/*{loginSuccess &&*/}
-                        {/*    <div role="alert" className="alert alert-success">*/}
-                        {/*        <i className="bi bi-check-circle-fill"> </i>*/}
-                        {/*        <span>*/}
-                        {/*        Login successful! Redirecting...*/}
-                        {/*    </span>*/}
-                        {/*    </div>*/}
-                        {/*}*/}
-
+                        {isLoading &&
+                            <progress className="progress w-100"></progress>
+                        }
 
                         <div className="form-control">
                             <label className="input input-bordered flex items-center gap-2">
-                                <i className="bi bi-envelope-fill"> </i>
-
+                                <i className="bi bi-github"></i>
                                 <input
                                     type="text"
                                     className="grow"
-                                    placeholder="Email"
-                                />
-                            </label>
-                        </div>
-                        <div className="form-control">
-                            <div className="flex justify-content-evenly">
-                                <label className="input input-bordered flex justify-content-between gap-2"
-                                       style={{width: '100%', margin: 0, padding: 0}}
-                                >
-                                    <i
-                                        className={"bi bi-shield-lock-fill"}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            paddingLeft: '0.5rem',
-                                        }}
-                                    > </i>
-                                    <input
-                                        className="grow"
-                                        placeholder="password"
-                                    />
-
-                                    <div
-                                        className={"btn btn-ghost"}
-
-                                        style={{
-                                            padding: '0.5rem',
-                                        }}
-                                    >
-                                    </div>
-                                </label>
-
-
-                            </div>
-
-                            <label className="label">
-                                <a href="/forgot-password" className="label-text-alt link link-hover">Forgot password?</a>
-                            </label>
-                        </div>
-
-                        <div className="form-control">
-                            <label className="label cursor-pointer">
-                                <span className="label-text">
-                                    I am not a <i className={"bi bi-robot"}> </i> (robot).
-                                </span>
-                                <input
-                                    type="checkbox"
-                                    className="checkbox checkbox-primary"
+                                    placeholder="Github Repository URL (e.g. https://www.github.com/username/reponame)"
+                                    onChange={(e) => setGithubUrl(e.target.value)}
                                 />
                             </label>
                         </div>
@@ -183,15 +134,13 @@ function SubmitProjectForm() {
                         <div className="form-control mt-6">
                             <button
                                 className="btn btn-primary"
+                                onClick={handleSubmitProject}
+                                disabled={isLoading}
                             >
-                                {!loading && <i className="bi bi-door-open-fill"> </i>}
-                                {loading && <span className="loading loading-dots loading-xs"></span>}
-                                Login
+                                {!isLoading && <i className="bi bi-arrow-right-circle-fill"> </i>}
+                                {isLoading && <span className="loading loading-dots loading-xs"></span>}
+                                Submit Project
                             </button>
-                        </div>
-
-                        <div className="form-control mt-6">
-                            Don't have an account? <a href="/register" className="link">Sign up here.</a>
                         </div>
                     </form>
                 </div>

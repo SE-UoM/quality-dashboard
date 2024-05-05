@@ -28,11 +28,13 @@ function DashboardSlideFour() {
     const [mostActiveDevImage, setMostActiveDevImage] = useState("");
     const [mostActiveDevName, setMostActiveDevName] = useState("");
     const [mostActiveDevCommits, setMostActiveDevCommits] = useState(0);
+    const [mostActiveDevLoading, setMostActiveDevLoading] = useState(true);
 
     const [mostActiveProjImage, setMostActiveProjImage] = useState("");
     const [mostActiveProjDevName, setMostActiveProjDevName] = useState("");
     const [mostActiveProjName, setMostActiveProjName] = useState("");
     const [mostActiveProjCommits, setMostActiveProjCommits] = useState(0);
+    const [mostActiveProjLoading, setMostActiveProjLoading] = useState(true);
 
     const [mostStarredProjName, setMostStarredProjName] = useState("Test");
     const [mostStarredProjFiles, setMostStarredProjFiles] = useState(0);
@@ -40,6 +42,7 @@ function DashboardSlideFour() {
     const [mostStarredProjSmells, setMostStarredProjSmells] = useState(0);
     const [mostStarredProjDebt, setMostStarredProjDebt] = useState(0);
     const [mostStarredProjDevName, setMostStarredProjDevName] = useState("Test Dev");
+    const [mostStarredProjLoading, setMostStarredProjLoading] = useState(true);
 
 
     const [mostForkedProjName, setMostForkedProjName] = useState("Test");
@@ -48,13 +51,16 @@ function DashboardSlideFour() {
     const [mostForkedProjSmells, setMostForkedProjSmells] = useState(0);
     const [mostForkedProjDebt, setMostForkedProjDebt] = useState(0);
     const [mostForkedProjDevName, setMostForkedProjDevName] = useState("Test Dev");
+    const [mostForkedProjLoading, setMostForkedProjLoading] = useState(true);
 
     const [developers, setDevelopers] = useState([]);
     const [currentDevName, setCurrentDevName] = useState("");
     const [currentDevImage, setCurrentDevImage] = useState("");
+    const [developersLoading, setDevelopersLoading] = useState(true);
 
     // Call the API to get the most active developer
     useEffect(() => {
+        setMostActiveDevLoading(true)
         let mostActiveDevUrl = baseApiUrl + apiUrls.routes.dashboard.mostActiveDeveloper
         // Replace the organization id in the URL
         mostActiveDevUrl = mostActiveDevUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
@@ -71,18 +77,22 @@ function DashboardSlideFour() {
                 setMostActiveDevImage(data.avatarUrl);
                 setMostActiveDevName(data.name);
                 setMostActiveDevCommits(data.totalCommits);
+
+                setTimeout(() => {
+                    setMostActiveDevLoading(false);
+                },  1000);
             })
             .catch((error) => {
                 setError(true);
                 setErrorTitle("Error");
                 setErrorMessage(error.response.data.message);
+                setMostActiveDevLoading(false)
             });
-
-
     }, [accessToken]);
 
     // Call the API to get the most active project
     useEffect(() => {
+        setMostActiveProjLoading(true)
         let mostActiveProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostActiveProject
         // Replace the organization id in the URL
         mostActiveProjUrl = mostActiveProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
@@ -101,16 +111,22 @@ function DashboardSlideFour() {
                 setMostActiveProjName(data.name);
                 setMostActiveProjDevName(data.owner)
                 setMostActiveProjCommits(data.totalCommits);
+
+                setTimeout(() => {
+                    setMostActiveProjLoading(false);
+                },  1000);
             })
             .catch((error) => {
                 setError(true);
                 setErrorTitle("Error");
                 setErrorMessage(error.response.data.message);
+                setMostActiveProjLoading(false);
             });
     }, [accessToken]);
 
     // Call the API to get the most starred project
     useEffect(() => {
+        setMostStarredProjLoading(true)
         let mostStarredProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostStarredProject
 
         // Replace the organization id in the URL
@@ -131,16 +147,23 @@ function DashboardSlideFour() {
                 setMostStarredProjSmells(data.totalCodeSmells);
                 setMostStarredProjDebt(data.techDebt);
                 setMostStarredProjDevName(data.owner);
+
+                setTimeout(() => {
+                    setMostStarredProjLoading(false);
+                },  1000);
             })
             .catch((error) => {
                 setError(true);
                 setErrorTitle("Error");
                 setErrorMessage(error.response.data.message);
+
+                setMostStarredProjLoading(false);
             });
     }, [accessToken]);
 
     // Call the API to get the most forked project
     useEffect(() => {
+        setMostForkedProjLoading(true)
         let mostForkedProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostForkedProject
 
         // Replace the organization id in the URL
@@ -161,16 +184,23 @@ function DashboardSlideFour() {
                 setMostForkedProjSmells(data.totalCodeSmells);
                 setMostForkedProjDebt(data.techDebt);
                 setMostForkedProjDevName(data.owner);
+
+                setTimeout(() => {
+                    setMostForkedProjLoading(false);
+                },  1000);
             })
             .catch((error) => {
                 setError(true);
                 setErrorTitle("Error");
                 setErrorMessage(error.response.data.message);
+
+                setMostForkedProjLoading(false);
             });
     }, [accessToken]);
 
     // Call the API to get the developers
     useEffect(() => {
+        setDevelopersLoading(true)
         // Get the organization id from the access token
         let organizationId = jwtDecode(accessToken).organizationId;
 
@@ -199,6 +229,10 @@ function DashboardSlideFour() {
                 setCurrentDevName(currentDev.name);
                 setCurrentDevImage(currentDev.avatarUrl);
 
+                setTimeout(() => {
+                    setDevelopersLoading(false);
+                },  1000);
+
                 // Every 10 seconds, change the current developer
                 let index = 0;
                 setInterval(() => {
@@ -211,6 +245,8 @@ function DashboardSlideFour() {
                 setError(true);
                 setErrorTitle("Error");
                 setErrorMessage(error.response.data.message);
+
+                setDevelopersLoading(false);
             });
 
     }, [accessToken]);
@@ -235,6 +271,7 @@ function DashboardSlideFour() {
                     count={mostActiveDevCommits}
                     countCaption={"Commits"}
                     gridArea={"mostActiveDev"}
+                    loading={mostActiveDevLoading}
                 />
 
                 <ItemActivityCard
@@ -247,6 +284,7 @@ function DashboardSlideFour() {
                     count={mostActiveProjCommits}
                     countCaption={"Commits"}
                     gridArea={"mostActiveProj"}
+                    loading={mostActiveProjLoading}
                 />
 
                 <ProjectCard
@@ -260,6 +298,7 @@ function DashboardSlideFour() {
                     totalLines={mostStarredProjLines}
                     totalDebt={mostStarredProjDebt}
                     totalCodeSmells={mostStarredProjSmells}
+                    loading={mostStarredProjLoading}
                 />
 
                 <ProjectCard
@@ -273,36 +312,53 @@ function DashboardSlideFour() {
                     totalLines={mostForkedProjLines}
                     totalDebt={mostForkedProjDebt}
                     totalCodeSmells={mostForkedProjSmells}
+                    loading={mostForkedProjLoading}
                 />
 
-                <SimpleDashboardCard
-                     style={{gridArea: "commitGraph"}}
-                >
-                    {developers.length > 0 &&
-                        <WordCloud
-                            words={
-                                // Developers on a list of names
-                                developers.map((dev) => dev.name)
-                            }
+                {developersLoading ? (
+                    <>
+                    <SimpleDashboardCard
+                        style={{gridArea: "commitGraph"}}
+                        className={"skeleton"}
+                    />
 
-                            loading={developers.length < 1}
-                        />
-                    }
-                </SimpleDashboardCard>
+                    <SimpleDashboardCard
+                        style={{gridArea: "developersSlides"}}
+                        className={"skeleton"}
+                    />
+                    </>
+                ) : (
+                    <>
+                    <SimpleDashboardCard
+                    style={{gridArea: "commitGraph"}}
+                    >
+                        {developers.length > 0 &&
+                            <WordCloud
+                                words={
+                                    // Developers on a list of names
+                                    developers.map((dev) => dev.name)
+                                }
 
-                <SimpleDashboardCard
-                     id={"developers"}
-                     style={{gridArea: "developersSlides"}}
-                >
-                    <h4>
-                        <i className="bi bi-person-lines-fill"> </i>
-                        Developers
-                    </h4>
-                    <Image src={currentDevImage} alt="Developers" id="devImg" roundedCircle />
-                    <h5>{
-                        currentDevName ? currentDevName : "Anonymous Dev"
-                    }</h5>
-                </SimpleDashboardCard>
+                                loading={developers.length < 1}
+                            />
+                        }
+                    </SimpleDashboardCard>
+
+                        <SimpleDashboardCard
+                            id={"developers"}
+                            style={{gridArea: "developersSlides"}}
+                        >
+                            <h4>
+                                <i className="bi bi-person-lines-fill"> </i>
+                                Developers
+                            </h4>
+                            <Image src={currentDevImage} alt="Developers" id="devImg" roundedCircle />
+                            <h5>{
+                                currentDevName ? currentDevName : "Anonymous Dev"
+                            }</h5>
+                        </SimpleDashboardCard>
+                    </>
+                )}
 
                 <FooterCard
                     gridAreaName="footerCard"
