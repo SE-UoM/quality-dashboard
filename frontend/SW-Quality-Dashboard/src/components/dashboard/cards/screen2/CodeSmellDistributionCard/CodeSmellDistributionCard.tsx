@@ -1,14 +1,13 @@
 import React from 'react';
-import {PieChart, useDrawingArea} from '@mui/x-charts';
 import './CodeSmellDistributionCard.css';
 import apiRoutes from '../../../../../assets/data/api_urls.json';
 import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import { jwtDecode } from "jwt-decode";
-import {styled} from "@mui/material/styles";
-import CustomPieChart from "../../../../charts/CustomPieChart.tsx";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
+import DashboardDonutChart from "../../../../charts/DashboardDonutChart.tsx";
+import {formatText} from "../../../../../utils/textUtils.ts";
 
 const colors = {
     "MINOR": "#67B279",
@@ -18,39 +17,14 @@ const colors = {
     "INFO": "#58BBFB"
 }
 
-function formatText(text) {
-    let roundedNum;
-    if (!isNaN(text) && parseInt(text) > 1000) {
-        const num = parseInt(text);
-        roundedNum = Math.round(num / 100) / 10;
-        return parseInt(roundedNum) + "k";
-    }
-    return text;
-}
-
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-const StyledText = styled('text')(({ theme }) => ({
-    textAnchor: 'middle',
-    dominantBaseline: 'central',
-    fontWeight: "bold",
-    // fontSize: "15vh !important",
-    padding: "1em",
-    color: "var(--text-primary)"
-}));
-
-function PieCenterLabel({ children }: { children: React.ReactNode }) {
-    const { width, height, left, top } = useDrawingArea();
-    return (
-        <StyledText className="lang-count" x={left + width / 2} y={top + height / 2}>
-            {children}
-        </StyledText>
-    );
-}
 function CodeSmellDistributionCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [totalCodeSmells, setTotalCodeSmells] = React.useState(0);
     const [codeSmellDistribution, setCodeSmellDistribution] = React.useState([]);
+    const [chartData, setChartData] = React.useState([]);
+    const [chartColors, setChartColors] = React.useState([]);
 
     const [error, setError] = React.useState(false);
     const [errorTitle, setErrorTitle] = React.useState("");
@@ -79,6 +53,23 @@ function CodeSmellDistributionCard() {
                 let totalCodeSmells = response.data.totalCodeSmells;
                 let codeSmellDistribution = response.data.codeSmellsDistribution;
 
+                // Map data to format required by the DonutChart component
+                const chartData = codeSmellDistribution.map(
+                    (item) => {
+                        return {
+                            name: item.severity,
+                            value: item.count,
+                            color: colors[item.severity]
+                        }
+
+                    }
+                );
+
+                const colorArray = chartData.map(item => colors[item.name]);
+
+                setChartData(chartData);
+                setChartColors(colorArray);
+
                 // Wait half a second before setting the state to false
                 setTimeout(() => {
                     setLoading(false);
@@ -95,13 +86,7 @@ function CodeSmellDistributionCard() {
             });
     }, [accessToken]);
 
-    // Format data for PieChart
-    const pieChartData = codeSmellDistribution.map((item, index) => ({
-        key: item.severity,
-        value: item.count,
-        label: item.severity + " (" + item.count + ")",
-        color: colors[item.severity]
-    }));
+    console.log(codeSmellDistribution)
 
     return (
         <>
@@ -113,20 +98,22 @@ function CodeSmellDistributionCard() {
             }
                 {!loading ? (
                     <>
-                    <SimpleDashboardCard id="codeSmellDistribution">
-                        <h3>
-                            <i className="bi bi-radioactive"> </i>
-                            Code Smell Distribution
-                        </h3>
-                        <div className="code-smell-distribution-container">
-                            <div className="code-smells-distribution-chart">
-                                <CustomPieChart
-                                    data={pieChartData}
-                                    centerText={totalCodeSmells}
-                                />
+                        <SimpleDashboardCard id="codeSmellDistribution">
+                            <div className="language-distribution-container">
+                                <h3>
+                                    <i className="bi bi-radioactive"> </i>
+                                    Code Smell Distribution
+                                </h3>
+
+                                <div className="lang-distribution-chart">
+                                    <DashboardDonutChart
+                                        data={chartData}
+                                        colors={chartColors}
+                                        centerLabel={formatText(totalCodeSmells, "k")}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    </SimpleDashboardCard>
+                        </SimpleDashboardCard>
                     </>
                 ) : (
                     <SimpleDashboardCard

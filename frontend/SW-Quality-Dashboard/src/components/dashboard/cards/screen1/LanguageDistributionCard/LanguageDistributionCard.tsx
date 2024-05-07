@@ -1,14 +1,13 @@
 import React, {useEffect} from 'react';
-import {PieChart, ResponsiveChartContainer, useDrawingArea} from '@mui/x-charts';
 import './LanguageDistributionCard.css';
 import apiRoutes from '../../../../../assets/data/api_urls.json';
 import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
-import { styled } from '@mui/material/styles';
-import CustomPieChart from "../../../../charts/CustomPieChart.tsx";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
+import DashboardDonutChart from "../../../../charts/DashboardDonutChart.tsx";
+import {formatText} from "../../../../../utils/textUtils.ts";
 
 const colors = [
     /* Language Distribution */
@@ -19,48 +18,9 @@ const colors = [
     "#f7a35cff"
 ];
 
-function formatText(txt) {
-    if (!isNaN(txt) && parseInt(txt) > 1000) {
-        const num = parseInt(txt);
-        const roundedNum = Math.round(num / 100) / 10;
-        return parseInt(roundedNum) + "k";
-    }
-    return txt;
-}
-
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-const getRelativeSizeOfScreenWidthInPx = (percentage) => {
-    const width = window.innerWidth;
-    return (width * percentage) / 100;
-}
-
-const getRelativeSizeOfScreenHeightInPx = (percentage) => {
-    const height = window.innerHeight;
-    return (height * percentage) / 100;
-}
-
-
-const StyledText = styled('text')(({ theme }) => ({
-    textAnchor: 'middle',
-    dominantBaseline: 'central',
-    fontWeight: "bold",
-    // fontSize: "15vh !important",
-    padding: "1em",
-    color: "var(--text-primary)"
-}));
-
-function PieCenterLabel({ children }: { children: React.ReactNode }) {
-    const { width, height, left, top } = useDrawingArea();
-    return (
-        <StyledText className="lang-count" x={left + width / 2} y={top + height / 2}>
-            {children}
-        </StyledText>
-    );
-}
-
-
-function LanguageDistributionCard() {
+export default function LanguageDistributionCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [totalLanguages, setTotalLanguages] = React.useState(0);
     const [languageDistribution, setLanguageDistribution] = React.useState([]);
@@ -70,7 +30,6 @@ function LanguageDistributionCard() {
     const [errorMessage, setErrorMessage] = React.useState("");
     const [loading, setLoading] = React.useState(true);
 
-    const sizingProps = { width: getRelativeSizeOfScreenWidthInPx(35), height: getRelativeSizeOfScreenHeightInPx(45) };
 
     // Call the API to get the language distribution data
     useEffect(() => {
@@ -122,24 +81,14 @@ function LanguageDistributionCard() {
         linesOfCode: otherLanguagesTotalLines
     });
 
-    // Map data to format required by PieChart
-    const pieChartData = topFourLanguages.map(language => ({
-        id: language.id,
-        // If name is CXX (C++), change it to C++ for better readability
-        label: language.name === "CXX" ? "C++" : language.name,
-        value: language.linesOfCode,
-        color: colors[topFourLanguages.indexOf(language)]
-    }));
-
-    const chartSeries = [{
-        data: pieChartData,
-        innerRadius: 104,
-        outerRadius: 144,
-        paddingAngle: 1,
-        cornerRadius: 5,
-        startAngle: -90,
-        highlightScope: { faded: 'global', highlighted: 'item' }
-    }];
+    // Map data to format required by the DonutChart component
+    const data = topFourLanguages.map(language => {
+        return {
+            name: language.name,
+            value: language.linesOfCode,
+            color: colors[topFourLanguages.indexOf(language)]
+        }
+    });
 
     return (
         <>
@@ -161,6 +110,8 @@ function LanguageDistributionCard() {
                 >
                 </SimpleDashboardCard>
             ) : (
+                <>
+
                 <SimpleDashboardCard id="languageDistribution">
                     <div className="language-distribution-container">
                         <h3>
@@ -169,16 +120,16 @@ function LanguageDistributionCard() {
                         </h3>
 
                         <div className="lang-distribution-chart">
-                            <CustomPieChart
-                                data={pieChartData}
-                                centerText={totalLanguages}
+                            <DashboardDonutChart
+                                data={data}
+                                colors={colors}
+                                centerLabel={formatText(totalLanguages, "k")}
                             />
                         </div>
                     </div>
                 </SimpleDashboardCard>
+                </>
             )}
         </>
     )
 }
-
-export default LanguageDistributionCard;
