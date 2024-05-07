@@ -137,6 +137,7 @@ function DashboardSlideTwo() {
                     statTitle="Min Project Debt"
                     statValue={minTechDebt.toFixed(2)}
                     statDesc="Minimum Project TD per Line of Code"
+                    loading={tdStatsLoading && totalTdLoading}
                 />
 
                 <DetailsIconCard
@@ -150,6 +151,7 @@ function DashboardSlideTwo() {
                     statTitle="Max Project Debt"
                     statValue={maxTechDebt.toFixed(2)}
                     statDesc="Maximum Project TD per Line of Code"
+                    loading={tdStatsLoading && totalTdLoading}
                 />
 
                 <DetailsIconCard
@@ -163,6 +165,7 @@ function DashboardSlideTwo() {
                     statTitle="Average Project Debt"
                     statValue={averageProjectTechDebt.toFixed(2)}
                     statDesc="Average Project TD per Line of Code"
+                    loading={tdStatsLoading && totalTdLoading}
                 />
 
                 <BestPracticesCard />
