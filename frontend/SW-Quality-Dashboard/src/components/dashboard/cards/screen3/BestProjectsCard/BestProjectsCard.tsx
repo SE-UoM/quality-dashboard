@@ -82,7 +82,8 @@ export default function BestProjectsCard({truncateString}) {
                                 loading={loadingTopProjects}
                                 headerUrl={"https://github.com/" + name}
                             >
-                                By:&nbsp;
+                                <i className="bi bi-person-fill" />
+                                &nbsp;
                                 <a
                                     href={"https://github.com/" + owner}
                                     target="_blank"

@@ -17,6 +17,7 @@ import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
+import {formatText} from "../../../../utils/textUtils.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -89,48 +90,48 @@ function DashboardSlideOne() {
                 <LanguageRankCard />
 
                 <IconCard
-                    icon={totalProjectsIcon}
-                    headerText={totalProjects}
+                    icon="bi bi-laptop"
+                    headerText={formatText(totalProjects, "k")}
                     caption="Projects"
                     gridAreaName="totalProjects"
                     loading={loading}
                 />
 
                 <IconCard
-                    icon={totalLanguagesIcon}
-                    headerText={totalLanguages}
+                    icon="bi bi-code-slash"
+                    headerText={formatText(totalLanguages, "k")}
                     caption="Languages"
                     gridAreaName="totalLanguages"
                     loading={loading}
                 />
 
                 <IconCard
-                    icon={totalDevelopersIcon}
-                    headerText={totalDevelopers}
+                    icon="bi bi-person"
+                    headerText={formatText(totalDevelopers, "k")}
                     caption="Developers"
                     gridAreaName="totalDevelopers"
                     loading={loading}
                 />
 
                 <IconCard
-                    icon={totalFilesIcon}
-                    headerText={totalFiles}
+                    icon="bi bi-file-earmark-binary"
+                    headerText={formatText(totalFiles, "k")}
                     caption="Files"
                     gridAreaName="totalFiles"
                     loading={loading}
                 />
 
                 <IconCard
-                    icon={totalContributionsIcon}
-                    headerText={totalContributions}
+                    icon="bi bi-bezier2"
+                    headerText={formatText(totalContributions, "k")}
                     caption="Contributions"
                     gridAreaName="totalContributions"
                     loading={loading}
                 />
 
                 <IconCard
-                    icon={totalLocIcon}
-                    headerText={totalLoc}
+                    icon="bi bi-body-text"
+                    headerText={formatText(totalLoc, "k")}
                     caption="Lines of Code"
                     gridAreaName="totalLinesOfCode"
                     loading={loading}
