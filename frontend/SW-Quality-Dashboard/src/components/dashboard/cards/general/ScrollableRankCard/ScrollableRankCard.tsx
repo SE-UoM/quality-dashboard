@@ -1,6 +1,6 @@
 import React from 'react';
 import './ScrollableRankCard.css';
-import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 function ScrollableRankCard({ title, icon, children, cardId, gridArea }) {
     return (

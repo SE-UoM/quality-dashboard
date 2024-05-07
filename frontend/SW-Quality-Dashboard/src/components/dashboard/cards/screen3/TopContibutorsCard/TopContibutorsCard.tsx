@@ -1,5 +1,5 @@
 import DashboardRankedItem from "../../../../ui/DashboardRankedItem/DashboardRankedItem.tsx";
-import ScrollableRankCard from "../../ScrollableRankCard/ScrollableRankCard.tsx";
+import ScrollableRankCard from "../../general/ScrollableRankCard/ScrollableRankCard.tsx";
 import React from "react";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 

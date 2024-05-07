@@ -1,6 +1,6 @@
 import './DashboardSlideTwo.css'
 import '../DashboardSlideStyle.css'
-import FooterCard from "../../cards/FooterCard/FooterCard.tsx";
+import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import {useState} from "react";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";

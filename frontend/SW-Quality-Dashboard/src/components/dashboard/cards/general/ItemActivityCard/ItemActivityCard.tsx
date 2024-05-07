@@ -1,6 +1,6 @@
 import './ItemActivityCard.css'
 import {Image} from "react-bootstrap";
-import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 function ItemActivityCard({cardTitle, cardTitleUrl, cardTitleIcon, cardImage, cardIcon, countTitle, count, countCaption, gridArea, loading}) {
     return (

@@ -1,5 +1,5 @@
 import DashboardRankedItem from "../../../../ui/DashboardRankedItem/DashboardRankedItem.tsx";
-import ScrollableRankCard from "../../ScrollableRankCard/ScrollableRankCard.tsx";
+import ScrollableRankCard from "../../general/ScrollableRankCard/ScrollableRankCard.tsx";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
