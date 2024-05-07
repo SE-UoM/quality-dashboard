@@ -79,3 +79,68 @@ export function getTechnicalDebtStatistics  (accessToken, setLoading, setAverage
             setErrorMessage("An error occurred while fetching the technical debt statistics of the organization. Please try again later.");
         });
 };
+
+export function fetchCodeSmellDistribution(
+    accessToken,
+    setLoading,
+    setChartData,
+    setChartColors,
+    setTotalCodeSmells,
+    setCodeSmellDistribution,
+    setError,
+    setErrorTitle,
+    setErrorMessage,
+    colors
+) {
+    let url = baseApiUrl + apiUrls.routes.dashboard.codeSmellDistribution;
+
+    // Get the User Organization from the JWT Token
+    let userOrganization = jwtDecode(accessToken).organizationId;
+
+    url = url.replace(":organizationId", userOrganization);
+
+    let headers = {
+        'Authorization': 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+    }
+
+    axios.get(url, { headers: headers })
+        .then(response => {
+            let data = response.data;
+
+            console.info("Code Smell Distribution Data: ", data);
+
+            let totalCodeSmells = response.data.totalCodeSmells;
+            let codeSmellDistribution = response.data.codeSmellsDistribution;
+
+            // Map data to format required by the DonutChart component
+            const chartData = codeSmellDistribution.map(
+                (item) => {
+                    return {
+                        name: item.severity,
+                        value: item.count,
+                        color: colors[item.severity]
+                    }
+                }
+            );
+
+            const colorArray = chartData.map(item => colors[item.name]);
+
+            setChartData(chartData);
+            setChartColors(colorArray);
+
+            // Wait half a second before setting the state to false
+            setTimeout(() => {
+                setLoading(false);
+            }, 1000);
+
+            setTotalCodeSmells(totalCodeSmells);
+            setCodeSmellDistribution(codeSmellDistribution);
+        })
+        .catch(error => {
+            console.warn("Error fetching language distribution data: ", error);
+            setError(true);
+            setErrorTitle("Error fetching language distribution data");
+            setErrorMessage("An error occurred while fetching the language distribution data of the organization. Please try again later.");
+        });
+}
