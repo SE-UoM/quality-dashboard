@@ -64,23 +64,45 @@ function BestPracticesCard() {
                     <SimpleDashboardCard
                         className="skeleton"
                         id={"bestPractices"}
-                        style={{height: "100%"}}
+                        style={{height: "100%", gridArea: "bestPractices"}}
                     />
             ) : (
                 <>
                 <SimpleDashboardCard
                     id="bestPractices"
-                    style={{gridArea: "bestPractices"}}
+                    style={{
+                        gridArea: "bestPractices",
+                        display: "grid",
+                        gridTemplateColumns: "1fr 9fr",
+                        gap: "2vw",
+                    }}
                 >
-                    <h3>
-                        <i className="bi bi-stars"> </i>
-                        Best Practices
-                    </h3>
-
-                    <div className="best-practices-content">
-                        <h4>{bestPracticeTitle}</h4>
-                        <p>
-                            {bestPracticeDescription}
+                    <div className={"best-practices-icon"}
+                         style={{
+                             display: "flex",
+                             justifyContent: "center",
+                             alignItems: "center",
+                         }}
+                    >
+                        <i className="bi bi-shield-check" style={{fontSize: "20vh"}}> </i>
+                    </div>
+                    <div className={"best-practices-content"}>
+                        <h4
+                            style={{
+                                fontSize: "5vh",
+                                fontWeight: "bold",
+                                margin: "0",
+                            }}
+                        >
+                            Use of Magic Numbers
+                        </h4>
+                        <p
+                            style={{
+                                fontSize: "3vh",
+                                margin: "0",
+                            }}
+                        >
+                            Magic numbers are hard-coded values that are used in the code without any explanation. They make the code difficult to read and maintain. Make sure to replace magic numbers with named constants.
                         </p>
                     </div>
                 </SimpleDashboardCard>
