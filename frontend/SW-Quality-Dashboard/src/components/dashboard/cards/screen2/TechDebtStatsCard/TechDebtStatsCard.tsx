@@ -8,61 +8,7 @@ import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-function TechDebtStatsCard() {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
-    const [error, setError] = useState(false);
-    const [errorTitle, setErrorTitle] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(true);
-
-    const [averageProjectTechDebt, setAverageProjectTechDebt] = useState(0);
-    const [minTechDebt, setMinTechDebt] = useState(0);
-    const [maxTechDebt, setMaxTechDebt] = useState(0);
-    const [averageTechDebtPerLineOfCode, setAverageTechDebtPerLineOfCode] = useState(0);
-
-    // Call the API to get the technical debt statistics
-    useEffect(() => {
-        let url = baseApiUrl + apiRoutes.routes.dashboard.getTdStats;
-
-        // get the user organization id from the access token
-        let orgId = jwtDecode(accessToken).organizationId;
-
-        // Replace :orgId with the organization ID
-        url = url.replace(":orgId", orgId);
-
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(url, { headers: headers })
-            .then(response => {
-                console.log(response.data);
-                let data = response.data;
-
-                let avgTD = data.avgTechDebt || 0;
-                let minTD = data.minProjectTechDebtPerLOC || 0;
-                let maxTD = data.maxProjectTechDebtPerLOC || 0;
-                let avgTDPerLineOfCode = data.avgTechDebtPerLOC || 0;
-
-                // Wait half a second before setting the state
-                setTimeout(() => {
-                    setLoading(false);
-                }, 1000);
-
-                setAverageProjectTechDebt(avgTD);
-                setMinTechDebt(minTD);
-                setMaxTechDebt(maxTD);
-                setAverageTechDebtPerLineOfCode(avgTDPerLineOfCode);
-            })
-            .catch(error => {
-                console.warn("Error fetching technical debt statistics: ", error);
-                setError(true);
-                setErrorTitle("Error fetching technical debt statistics");
-                setErrorMessage("An error occurred while fetching the technical debt statistics of the organization. Please try again later.");
-            });
-    }, []);
+function TechDebtStatsCard({loading, minTechDebt, maxTechDebt}) {
 
     return (
         <>
@@ -76,46 +22,84 @@ function TechDebtStatsCard() {
                     </>
                     ):
                     <>
-                        <SimpleDashboardCard id="techDebtStats">
-                        <h3>
-                            <i className={"bi bi-bar-chart"}> </i>
-                            Technical Debt Statistics
-                        </h3>
+                        <div className="stats shadow bg-base-200" id={"techDebtStats"}
+                             style={{
+                                 gridArea: "techDebtStats",
+                                 overflow: "hidden",
+                             }}
+                        >
+                            <div className="stat">
+                                <div className="stat-figure text-secondary">
+                                    <div className="avatar online">
+                                        <div className="w-16 rounded-full">
+                                            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="stat-value">86%</div>
+                                <div className="stat-title">Tasks done</div>
+                                <div className="stat-desc text-secondary">31 tasks remaining</div>
+                            </div>
 
-                        <section className="td-stats-container">
-                            <p className={"td-stat-item"}>
-                                <strong>
-                                    <i className="bi bi-stopwatch"> </i>
-                                    Average Debt:
-                                </strong>
-                                {" " + parseFloat(averageProjectTechDebt.toFixed(2))} '
-                            </p>
+                            <div className="stat">
+                                <div className="stat-figure text-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                </div>
+                                <div className="stat-title">Total Likes</div>
+                                <div className="stat-value text-primary">25.6K</div>
+                                <div className="stat-desc">21% more than last month</div>
+                            </div>
 
-                            <p className={"td-stat-item"}>
-                                <strong>
-                                    <i className="bi bi-piggy-bank"> </i>
-                                    Max Debt per Line:
-                                </strong>
-                                {" " +  parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
-                            </p>
+                            <div className="stat">
+                                <div className="stat-figure text-secondary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                </div>
+                                <div className="stat-title">Page Views</div>
+                                <div className="stat-value text-secondary">2.6M</div>
+                                <div className="stat-desc">21% more than last month</div>
+                            </div>
 
-                            <p className={"td-stat-item"}>
-                                <strong>
-                                    <i className="bi bi-stopwatch"> </i>
-                                    Debt per Line:
-                                </strong>
-                                {" " + parseFloat(averageTechDebtPerLineOfCode.toFixed(2))} '
-                            </p>
+                        </div>
+                        {/*<SimpleDashboardCard id="techDebtStats">*/}
+                        {/*<h3>*/}
+                        {/*    <i className={"bi bi-bar-chart"}> </i>*/}
+                        {/*    Technical Debt Statistics*/}
+                        {/*</h3>*/}
 
-                            <p className={"td-stat-item"}>
-                                <strong>
-                                    <i className="bi bi-piggy-bank"> </i>
-                                    Min Debt per Line:
-                                </strong>
-                                {" " + parseFloat(minTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>
-                            </p>
-                        </section>
-                        </SimpleDashboardCard>
+                        {/*<section className="td-stats-container">*/}
+                        {/*    <p className={"td-stat-item"}>*/}
+                        {/*        <strong>*/}
+                        {/*            <i className="bi bi-stopwatch"> </i>*/}
+                        {/*            Average Debt:*/}
+                        {/*        </strong>*/}
+                        {/*        {" " + parseFloat(averageProjectTechDebt.toFixed(2))} '*/}
+                        {/*    </p>*/}
+
+                        {/*    <p className={"td-stat-item"}>*/}
+                        {/*        <strong>*/}
+                        {/*            <i className="bi bi-piggy-bank"> </i>*/}
+                        {/*            Max Debt per Line:*/}
+                        {/*        </strong>*/}
+                        {/*        {" " +  parseFloat(maxTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>*/}
+                        {/*    </p>*/}
+
+                        {/*    <p className={"td-stat-item"}>*/}
+                        {/*        <strong>*/}
+                        {/*            <i className="bi bi-stopwatch"> </i>*/}
+                        {/*            Debt per Line:*/}
+                        {/*        </strong>*/}
+                        {/*        {" " + parseFloat(averageTechDebtPerLineOfCode.toFixed(2))} '*/}
+                        {/*    </p>*/}
+
+                        {/*    <p className={"td-stat-item"}>*/}
+                        {/*        <strong>*/}
+                        {/*            <i className="bi bi-piggy-bank"> </i>*/}
+                        {/*            Min Debt per Line:*/}
+                        {/*        </strong>*/}
+                        {/*        {" " + parseFloat(minTechDebt.toFixed(2))} <i className={"bi bi-currency-euro"}> </i>*/}
+                        {/*    </p>*/}
+                        {/*</section>*/}
+                        {/*</SimpleDashboardCard>*/}
                     </>
             }
         </>

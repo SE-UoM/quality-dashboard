@@ -1,6 +1,6 @@
 .dashboard-slide#slide2 {
     grid-template-areas:
-        "codeSmellDistribution codeSmellDistribution techDebtStats techDebtStats techDebtStats"
+        "codeSmellDistribution codeSmellDistribution minDebt maxDebt techDebtperMonth"
         "codeSmellDistribution codeSmellDistribution bestPractices bestPractices bestPractices"
         "codeSmellDistribution codeSmellDistribution bestPractices bestPractices bestPractices"
         "techDebt techDebt bestPractices bestPractices bestPractices"

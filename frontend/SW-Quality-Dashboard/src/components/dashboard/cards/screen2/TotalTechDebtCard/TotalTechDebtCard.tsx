@@ -1,96 +1,60 @@
 import './TotalTechDebtCard.css'
 import React, {useEffect, useState} from "react";
-import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
-import apiUrls from "../../../../../assets/data/api_urls.json";
-import axios from "axios";
-import {jwtDecode} from "jwt-decode";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
+import {formatText} from "../../../../../utils/textUtils.ts";
 
-let baseApiUrl = import.meta.env.VITE_API_BASE_URL;
-
-function formatText(text) {
-    let roundedNum;
-    if (!isNaN(text) && parseInt(text) > 1000) {
-        const num = parseInt(text);
-        roundedNum = Math.round(num / 100) / 10;
-        return roundedNum.toFixed(2) + "k";
-    }
-    return text.toFixed(2);
-}
-
-function TotalTechDebtCard() {
-    const [totalTechDebt, setTotalTechDebt] = useState(0);
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-    const [error, setError] = React.useState(false);
-    const [errorTitle, setErrorTitle] = React.useState("");
-    const [errorMessage, setErrorMessage] = React.useState("");
-    const [loading, setLoading] = React.useState(true);
-
-    // Call the API to get the total technical debt
-    useEffect(() => {
-        let url = baseApiUrl + apiUrls.routes.dashboard.getTotalTD;
-
-        // Extract the organization ID from the access token
-        let decodedToken = jwtDecode(accessToken);
-        let orgId = decodedToken.organizationId;
-
-        // Replace :orgId with the organization ID
-        url = url.replace(":orgId", orgId);
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(url, { headers: headers })
-            .then(response => {
-                console.info("Total Tech Debt API Data: " + response.data);
-
-                // Wait half a second before setting the state
-                setTimeout(() => {
-                    setLoading(false);
-                }, 1000);
-
-                setTotalTechDebt(response.data.totalTechDebtCost);
-            })
-            .catch(error => {
-                console.warn("Error fetching total technical debt data: ", error);
-                setError(true);
-                setErrorTitle("Error fetching total technical debt data");
-                setErrorMessage("An error occurred while fetching the total technical debt data of the organization. Please try again later.");
-            });
-    }, [accessToken]);
+function TotalTechDebtCard({totalTechDebt, loading, tdPerLine, tdPerProject}) {
 
     return (
         <>
-            {error &&
-                <ErrorModal
-                    modalTitle={errorTitle}
-                    modalAlertMessage={errorMessage}
-                />
+            {loading ? (
+                    <SimpleDashboardCard
+                        className="skeleton"
+                        id={"totalTD"}
+                        style={{height: "100%"}}
+                    />
+                ):
+                <>
+                    <div
+                        className="stats shadow bg-base-200"
+                        id="totalTD"
+                        style={{
+                            gridArea: "techDebt",
+                            overflow: "hidden",
+                        }}
+                    >
+
+                        <div className="stat place-items-center">
+                            <div className="stat-title">
+                                {/*<i className="bi bi-cash-coin"> </i>*/}
+                                Total Tech Debt
+                            </div>
+                            <div className="stat-value">&euro; {formatText(totalTechDebt, "k")}</div>
+                            <div className="stat-desc pt-1">
+                                Since Last Analysis
+                            </div>
+                        </div>
+
+                        <div className="stat place-items-center">
+                            <div className="stat-title">Tech Debt per Line</div>
+                            <div className="stat-value">{tdPerLine.toFixed(2)}'</div>
+                            <div className="stat-desc pt-1">
+                                Average in TD per Line of Code
+                            </div>
+                        </div>
+
+                        <div className="stat place-items-center">
+                            <div className="stat-title">Tech Debt per Project</div>
+                            <div className="stat-value">{tdPerProject.toFixed(2)}'</div>
+                            <div className="stat-desc">
+                                Average in TD per Project
+                            </div>
+                        </div>
+
+                    </div>
+                </>
             }
-
-                {loading ? (
-                        <SimpleDashboardCard
-                            className="skeleton"
-                            id={"totalTD"}
-                            style={{height: "100%"}}
-                        />
-                    ):
-                    <>
-                    <SimpleDashboardCard id="totalTD">
-                        <section className="total-td-card-header">
-                                <i className="bi bi-cash-coin"> </i>
-                                Total Technical Debt
-                        </section>
-
-                        <h2 className="td-value">
-                            <i className={"bi bi-currency-euro"}> </i>
-                            {formatText(totalTechDebt)}
-                        </h2>
-                    </SimpleDashboardCard>
-                    </>
-                }
         </>
       );
 }
