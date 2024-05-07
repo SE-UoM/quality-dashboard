@@ -59,6 +59,19 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
         setAutoCycle(!autoCycle)
     }
 
+    // Add an event listener to the window to listen for the "keydown" event and cycle through the slides
+    useEffect(() => {
+        window.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowRight") {
+                nextBtnClick()
+            }
+
+            if (event.key === "ArrowLeft") {
+                previousBtnClick()
+            }
+        })
+    }, [currentSlide, setCurrentSlide])
+
     return (
         <>
         <div
