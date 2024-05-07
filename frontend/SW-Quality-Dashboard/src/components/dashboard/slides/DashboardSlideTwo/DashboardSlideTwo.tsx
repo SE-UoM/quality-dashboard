@@ -7,7 +7,22 @@ import CodeSmellDistributionCard from "../../cards/screen2/CodeSmellDistribution
 import TotalTechDebtCard from "../../cards/screen2/TotalTechDebtCard/TotalTechDebtCard.tsx";
 import TechDebtStatsCard from "../../cards/screen2/TechDebtStatsCard/TechDebtStatsCard.tsx";
 import BestPracticesCard from "../../cards/screen2/BestPracticesCard/BestPracticesCard.tsx";
-import getTotalTechnicalDebt, {getTechnicalDebtStatistics} from "../../../../utils/backend/backendUtils..ts";
+import getTotalTechnicalDebt, {
+    fetchCodeSmellDistribution,
+    getTechnicalDebtStatistics
+} from "../../../../utils/backend/backendUtils..ts";
+import DetailsIconCard from "../../cards/general/DetailsIconCard/DetailsIconCard.tsx";
+import {Tracker} from "@tremor/react";
+import SimpleDashboardCard from "../../cards/SimpleDashboardCard.tsx";
+import TrackerCard from "../../cards/general/TrackerCard.tsx";
+
+const colorsCodeSmells = {
+    "MINOR": "#67B279",
+    "MAJOR": "#FDD835",
+    "CRITICAL": "#FF7F50",
+    "BLOCKER": "#FF5252",
+    "INFO": "#58BBFB"
+}
 
 function DashboardSlideTwo() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
@@ -30,17 +45,79 @@ function DashboardSlideTwo() {
     const [tdStatsErrorMessage, setTdStatsErrorMessage] = useState("");
     const [tdStatsLoading, setTdStatsLoading] = useState(true);
 
+    // CODE SMELL DISTRIBUTION API CALL
+    const [codeSmellDistribution, setCodeSmellDistribution] = useState([]);
+    const [chartData, setChartData] = useState([]);
+    const [colors, setColors] = useState(colorsCodeSmells);
+    const [totalCodeSmells, setTotalCodeSmells] = useState(0);
+    const [codeSmellError, setCodeSmellError] = useState(false);
+    const [codeSmellErrorTitle, setCodeSmellErrorTitle] = useState("");
+    const [codeSmellErrorMessage, setCodeSmellErrorMessage] = useState("");
+    const [codeSmellLoading, setCodeSmellLoading] = useState(true);
+
+    // TRACKER CARD
+    const [trackerData, setTrackerData] = useState([]);
+    const [codeSmellsPercentage, setCodeSmellsPercentage] = useState([]);
 
     // Call the API to get the total technical debt
     useEffect(() => {
         getTotalTechnicalDebt(accessToken, setTotalTechDebt, setTechDebtPerMonth , setTotalTdLoading, setTotalTdError, setTotalTdErrorTitle, setTotalTdErrorMessage)
         getTechnicalDebtStatistics(accessToken, setTdStatsLoading, setAverageProjectTechDebt, setMinTechDebt, setMaxTechDebt, setAverageTechDebtPerLineOfCode, setTdStatsError, setTdStatsErrorTitle, setTdStatsErrorMessage)
+        fetchCodeSmellDistribution(
+            accessToken,
+            setCodeSmellLoading,
+            setChartData,
+            setColors,
+            setTotalCodeSmells,
+            setCodeSmellDistribution,
+            setCodeSmellError,
+            setCodeSmellErrorTitle,
+            setCodeSmellErrorMessage,
+            colorsCodeSmells
+        )
     }, [accessToken]);
+
+    // Parse the code smell distribution data to be used in the tracker
+    useEffect(() => {
+        if (codeSmellDistribution.length <= 0) return;
+
+        let trackerData = [];
+
+        console.log("codeSmellDistribution", codeSmellDistribution)
+
+        // FInd the percentage of each code smell type and make a new map
+        const list = codeSmellDistribution.map((distribution) => {
+            let percentage = (distribution.count / totalCodeSmells) * 100;
+            return {
+                name: distribution.severity,
+                value: (Math.round(percentage) * 60) / 100
+            };
+        });
+
+        setCodeSmellsPercentage(list);
+        console.log(list)
+
+        let trackerDATA = []
+
+        list.forEach((item) => {
+            for (let i = 0; i < item.value; i++) {
+                trackerDATA.push({color: colorsCodeSmells[item.name]})
+            }
+        })
+
+        setTrackerData(trackerDATA);
+
+    }, [codeSmellDistribution]);
 
     return (
         <>
             <div className="dashboard-slide" id="slide2">
-                <CodeSmellDistributionCard />
+                <CodeSmellDistributionCard
+                    loading={codeSmellLoading}
+                    chartData={chartData}
+                    chartColors={colors}
+                    totalCodeSmells={totalCodeSmells}
+                />
 
                 <TotalTechDebtCard
                     totalTechDebt={totalTechDebt}
@@ -49,69 +126,60 @@ function DashboardSlideTwo() {
                     loading={totalTdLoading && tdStatsLoading}
                 />
 
-                <div className="stats shadow bg-base-200" id={"minDebt"}
-                     style={{
-                         gridArea: "minDebt",
-                         overflow: "hidden",
-                     }}
-                >
-                    <div className="stat">
-                        <div className="stat-figure">
-                            <i className="bi bi-patch-check"
-                                style={{fontSize: "5vh"}}
-                            ></i>
-                        </div>
-                        <div className="stat-title">Min Project Debt</div>
-                        <div className="stat-value">{minTechDebt.toFixed(2)}'</div>
-                        <div className="stat-desc">
-                            Minimum Project TD per Line of Code
-                        </div>
-                    </div>
+                <DetailsIconCard
+                    cardId="minDebt"
+                    style={{
+                        gridArea: "minDebt",
+                        overflow: "hidden",
+                    }}
 
-                </div>
+                    icon="bi bi-patch-check"
+                    statTitle="Min Project Debt"
+                    statValue={minTechDebt.toFixed(2)}
+                    statDesc="Minimum Project TD per Line of Code"
+                />
 
-                <div className="stats shadow bg-base-200" id={"maxDebt"}
-                     style={{
-                         gridArea: "maxDebt",
-                         overflow: "hidden",
-                     }}
-                >
-                    <div className="stat">
-                        <div className="stat-figure">
-                            <i className="bi bi-patch-exclamation" style={{fontSize: "5vh"}}> </i>
-                        </div>
-                        <div className="stat-title">Max Project Debt</div>
-                        <div className="stat-value">{maxTechDebt.toFixed(2)}'</div>
-                        <div className="stat-desc">
-                            Maximum Project TD per Line of Code
-                        </div>
-                    </div>
-                </div>
+                <DetailsIconCard
+                    cardId="maxDebt"
+                    style={{
+                        gridArea: "maxDebt",
+                        overflow: "hidden",
+                    }}
 
+                    icon="bi bi-patch-exclamation"
+                    statTitle="Max Project Debt"
+                    statValue={maxTechDebt.toFixed(2)}
+                    statDesc="Maximum Project TD per Line of Code"
+                />
 
-                <div className="stats shadow bg-base-200"
-                     style={{
-                         gridArea: "techDebtperMonth",
-                         overflow: "hidden",
-                     }}
-                >
-                    <div className="stat">
-                        <div className="stat-figure">
-                            <i className="bi bi-cash-coin" style={{fontSize: "5vh"}}></i>
-                        </div>
-                        <div className="stat-title">Tech Debt per Month</div>
-                        <div className="stat-value">
-                            &euro;{techDebtPerMonth.toFixed(2)}
-                        </div>
-                        <div className="stat-desc">
-                            Organization TD per Month Cost
-                        </div>
-                    </div>
+                <DetailsIconCard
+                    cardId="techDebtperMonth"
+                    style={{
+                        gridArea: "techDebtperMonth",
+                        overflow: "hidden",
+                    }}
 
-                </div>
+                    icon="bi bi-cash-stack"
+                    statTitle="Average Project Debt"
+                    statValue={averageProjectTechDebt.toFixed(2)}
+                    statDesc="Average Project TD per Line of Code"
+                />
 
-                {/*<TechDebtStatsCard />*/}
                 <BestPracticesCard />
+
+                <TrackerCard
+                    cardId={"tracker"}
+                    style={{
+                        gridArea: "tracker",
+                        overflow: "hidden",
+                    }}
+                    headerLeftTxt={"Code Smell Tracker"}
+                    headerRightTxt={totalCodeSmells + " Total Code Smells"}
+                    loading={codeSmellLoading}
+
+                    data={trackerData}
+                />
+
                 <FooterCard gridAreaName="footerCard" />
             </div>
         </>
