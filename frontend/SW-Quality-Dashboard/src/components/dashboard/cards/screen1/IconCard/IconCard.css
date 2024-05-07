@@ -20,7 +20,7 @@
 }
 
 .icon-card-header h2 {
-    color: var(--text-primary);
+    /*color: var(--text-primary);*/
     font-size: 5vh;
     font-weight: bold;
     margin: 0;
@@ -28,7 +28,7 @@
 
 .icon-card-header h3 {
     font-size: 3vh;
-    color: var(--text-secondary);
+    /*color: var(--text-secondary);*/
 }
 
 /* IconCard.css */

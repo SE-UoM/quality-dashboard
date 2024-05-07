@@ -35,10 +35,14 @@ function IconCard({icon, headerText, caption, gridAreaName, loading}) {
                     id="iconCard"
                     style={{gridArea: gridAreaName}}
                 >
-                    <img src={icon} className="icon-card-icon"/>
+                    {/*<img src={icon} className="icon-card-icon"/>*/}
+                    <i className={icon} style={{
+                        fontSize: "9vh",
+                        opacity: 0.5
+                    }}></i>
                     <div className="icon-card-header">
-                        <h2>{formattedHeaderText}</h2>
-                        <h3>{caption}</h3>
+                        <h2 className="text-base-content">{formattedHeaderText}</h2>
+                        <h3 className="text-base-content">{caption}</h3>
                     </div>
                 </SimpleDashboardCard>
             )}
