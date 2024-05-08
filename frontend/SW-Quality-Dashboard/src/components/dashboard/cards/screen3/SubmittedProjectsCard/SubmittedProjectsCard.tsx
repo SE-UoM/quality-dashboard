@@ -129,7 +129,7 @@ function SubmittedProjectsCard() {
                                  style={{fontSize: "5vh"}}
                             >
                                 <a href={"https://github.com/" + selectedProjectOwner + "/" + selectedProjectName} className="link link-hover tooltip tooltip-top" data-tip={selectedProjectName}>
-                                    {truncateString(selectedProjectName, 20)}
+                                    {truncateString(selectedProjectName, 30)}
                                 </a>
                             </div>
                             <div className="stat-desc"
