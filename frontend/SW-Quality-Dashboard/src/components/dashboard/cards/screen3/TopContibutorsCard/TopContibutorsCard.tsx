@@ -54,7 +54,7 @@ export default function TopContibutorsCard({topContributors, loadingTopContribut
                                     >
                                         <a href={"https://github.com/" + contributor.name} className="avatar link shadow-sm indicator">
                                             {index < 3 &&
-                                                <span className="indicator-item indicator-top badge badge-neutral"
+                                                <span className="indicator-item shadow indicator-top badge badge-neutral"
                                                    style={{
                                                        backgroundImage:
                                                            index === 0 ? " linear-gradient(0deg, var(--rank-gold) 3%, var(--rank-gold) 100%)" :
@@ -64,6 +64,7 @@ export default function TopContibutorsCard({topContributors, loadingTopContribut
 
                                                        width: "3.5vh",
                                                        height: "3.5vh",
+                                                       border: "none",
 
                                                        color:
                                                            index === 0 ? "var(--gold-text)" :
