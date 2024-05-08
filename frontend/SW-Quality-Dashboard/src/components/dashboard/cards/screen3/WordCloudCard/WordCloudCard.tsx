@@ -7,9 +7,29 @@ import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
+import ReactWordcloud from "react-wordcloud";
+import {data} from "autoprefixer";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
+const testWords = [
+    {
+        text: 'told',
+        value: 64,
+    },
+    {
+        text: 'mistake',
+        value: 11,
+    },
+    {
+        text: 'thought',
+        value: 16,
+    },
+    {
+        text: 'bad',
+        value: 17,
+    },
+]
 const WordCloudCard = () => {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
 
@@ -46,8 +66,19 @@ const WordCloudCard = () => {
                 setTimeout(() => {
                     setLoading(false);
                 }, 3000);
-                
-                setWords(response.data);
+
+                let respData = response.data;
+
+                let finalData = respData.map((word) => {
+                    if (word.toUpperCase() === "CXX") word = "C++";
+
+                    return {
+                        text: word,
+                        value: Math.floor(Math.random() * 100) + 1
+                    }
+                });
+
+                setWords(finalData);
                 console.info(data)
             })
             .catch((error) => {
@@ -72,7 +103,11 @@ const WordCloudCard = () => {
                 </SimpleDashboardCard>
                     ) : (
                     <SimpleDashboardCard id="wordcloud-card"
-                                         style={{gridArea: "wordcloud"}}
+                                         style={{
+                                             gridArea: "wordcloud",
+                                             paddingTop: "10vh",
+                                             height: "100%",
+                    }}
                     >
                         {error &&
                             <ErrorModal
@@ -83,7 +118,19 @@ const WordCloudCard = () => {
 
                         {words.length > 0 && (
                             // Force re-render by changing key prop
-                            <WordCloud words={words}/>
+                            <ReactWordcloud
+                                words={words}
+                                minSize={[300, 300]}
+                                size={[560, 300]}
+                                options={{
+                                    scale: "sqrt",
+                                    spiral: "archimedean",
+                                    fontSizes: [60, 150],
+                                    rotations: 0,
+                                    enableTooltip: false,
+                                    deterministic: true,
+                                }}
+                            />
                         )}
                     </SimpleDashboardCard>
                     )}
