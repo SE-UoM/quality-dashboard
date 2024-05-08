@@ -37,7 +37,7 @@ export default function TopContibutorsCard({topContributors, loadingTopContribut
                     {/*    )*/}
                     {/*})}*/}
 
-                    <div id="Scrolling">
+                    <div id="Scrolling" className="pt-1">
                         <table className="table table-zebra">
                             {/* head */}
                             <thead></thead>
@@ -52,7 +52,32 @@ export default function TopContibutorsCard({topContributors, loadingTopContribut
                                             justifyContent: "center",
                                         }}
                                     >
-                                        <a href={"https://github.com/" + contributor.name} className="avatar link shadow-sm">
+                                        <a href={"https://github.com/" + contributor.name} className="avatar link shadow-sm indicator">
+                                            {index < 3 &&
+                                                <span className="indicator-item indicator-top badge badge-neutral"
+                                                   style={{
+                                                       backgroundImage:
+                                                           index === 0 ? " linear-gradient(0deg, var(--rank-gold) 3%, var(--rank-gold) 100%)" :
+                                                               index === 1 ? "linear-gradient(0deg, var(--rank-silver) 3%, var(--rank-silver) 100%)" :
+                                                                   index === 2 ? "linear-gradient(0deg, var(--rank-bronze) 3%, var(--rank-bronze) 100%)" :
+                                                                       "linear-gradient(0deg, var(--rank-neutral) 3%, var(--rank-neutral) 100%)",
+
+                                                       width: "3.5vh",
+                                                       height: "3.5vh",
+
+                                                       color:
+                                                           index === 0 ? "var(--gold-text)" :
+                                                               index === 1 ? "var(--silver-text)" :
+                                                                   index === 2 ? "var(--bronze-text)" :
+                                                                       "var(--rank-neutral)",
+                                                   }}
+                                                >
+                                                    {/*<i className="bi bi-award-fill">*/}
+                                                    {/*</i>*/}
+                                                    <strong style={{fontSize: "2.2vh"}}>{index + 1}</strong>
+                                                </span>
+                                            }
+
                                             <div className="mask mask-squircle"
                                                     style={{
                                                         width: "8vh",
