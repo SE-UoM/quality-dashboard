@@ -83,9 +83,7 @@ function DashboardSlideThree() {
             }
             <div className="dashboard-slide" id="slide3">
                 <BestProjectsCard
-                    bestProjects={bestProjects}
                     truncateString={truncateString}
-                    loadingTopProjects={loadingTopProjects}
                 />
 
                 <WordCloudCard />
