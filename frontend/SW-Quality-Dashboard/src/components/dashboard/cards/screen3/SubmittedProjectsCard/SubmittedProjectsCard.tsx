@@ -9,8 +9,11 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
+import {truncateString} from "../../../../../utils/textUtils.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
+const GH_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
+const languageImagesApiUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/"
 
 function SubmittedProjectsCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
@@ -25,6 +28,7 @@ function SubmittedProjectsCard() {
     const [selectedProjectStars, setSelectedProjectStars] = useState(0);
     const [selectedProjectForks, setSelectedProjectForks] = useState(0);
     const [selectedProjectContributions, setSelectedProjectContributions] = useState(0);
+    const [selectedProjectLanguage, setSelectedProjectLanguage] = useState("");
 
     useEffect(() => {
         // Extract the organization id from the access token
@@ -49,6 +53,9 @@ function SubmittedProjectsCard() {
 
                 setSubmittedProjects(data);
                 getRandomProject(data);
+
+                console.log(data);
+
             })
             .catch((error) => {
                 setError(true);
@@ -56,6 +63,15 @@ function SubmittedProjectsCard() {
                 setErrorMessage(error.response.data.message);
             });
     }, [accessToken]);
+
+    // Every 10 seconds, get a new random project
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getRandomProject(submittedProjects);
+        }, 10000);
+
+        return () => clearInterval(interval);
+    }, [submittedProjects]);
 
     function getRandomProject(data) {
         const randomIndex = Math.floor(Math.random() * data.length);
@@ -65,16 +81,29 @@ function SubmittedProjectsCard() {
         setSelectedProjectStars(randomProject.stars);
         setSelectedProjectForks(randomProject.forks);
         setSelectedProjectContributions(randomProject.totalContributions);
+
+        // Use the github API to get the language of the project
+        const headers = {
+            'Authorization': 'Bearer ' + GH_TOKEN
+        }
+
+        axios.get(`https://api.github.com/repos/${randomProject.owner}/${randomProject.name}`, { headers: headers })
+            .then((response) => {
+                let projLang = response.data.language;
+
+                if (projLang === "C++") projLang = "cplusplus";
+                if (projLang === "CSS") projLang = "css3";
+                if (projLang === "HTML") projLang = "html5";
+                if (projLang === "C#") projLang = "csharp";
+                if (projLang === "Shell") projLang = "bash";
+                if(projLang === "Jupyter Notebook") projLang = "jupyter";
+
+                setSelectedProjectLanguage(projLang);
+            })
+            .catch((error) => {
+                console.error("Error fetching project language: ", error);
+            });
     }
-
-    // Every 10 seconds, get a new random project
-    useEffect(() => {
-        const interval = setInterval(() => {
-            getRandomProject(submittedProjects);
-        }, 10000);
-
-        return () => clearInterval(interval);
-    }, []);
 
 
     return (
@@ -90,37 +119,49 @@ function SubmittedProjectsCard() {
                     id={"submittedProjects"}
                     style={{gridArea: "submittedProjects"}}
                 >
-                    <h3>
-                        <i className={"bi bi-journal-text"}> </i>
-                        Submitted Projects
-                    </h3>
-                    <div className="submitted-project-content">
-                        <div className="submitted-project-img">
-                            <i className="bi bi-github"> </i>
-                        </div>
-                        <div className="submitted-project-details">
-                            <h4>{selectedProjectOwner + "/" + selectedProjectName}</h4>
-                            <section className="submitted-project-details-icons">
-                                <ProjectDetailsIcon
-                                    icon={starIcon}
-                                    title={selectedProjectStars}
-                                    caption="Stars"
-                                />
+                        <div className="stat">
+                            <div className="stat-title">
+                                Submitted Projects
+                            </div>
+                            <div className="stat-value"
+                                 style={{fontSize: "5vh"}}
+                            >
+                                <a href={"https://github.com/" + selectedProjectOwner + "/" + selectedProjectName} className="link link-hover tooltip tooltip-top" data-tip={selectedProjectName}>
+                                    {truncateString(selectedProjectName, 17)}
+                                </a>
+                            </div>
+                            <div className="stat-desc"
+                                    style={{
+                                        fontSize: "2.5vh",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "1vh",
+                                        paddingTop: "1vh"
+                            }}
+                            >
+                                {/*<div className="avatar">*/}
+                                {/*    <div className="w-8 rounded-full">*/}
+                                {/*        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
 
-                                <ProjectDetailsIcon
-                                    icon={contributionsIcon}
-                                    title={selectedProjectForks}
-                                    caption="Forks"
-                                />
+                                By: <a className="link link-hover" href={"https://github.com/" + selectedProjectOwner}>@{selectedProjectOwner}</a>
+                            </div>
 
-                                <ProjectDetailsIcon
-                                    icon={contributionsIcon}
-                                    title={selectedProjectContributions}
-                                    caption="Contributions"
-                                />
-                            </section>
+                            <div className="stat-figure">
+                                {/*<i className="bi bi-github" style={{fontSize: "10vh"}}> </i>*/}
+
+                                <div className="avatar">
+                                    <div className="w-24 mask mask-squircle bg-neutral p-5">
+                                        <img
+                                            src={selectedProjectLanguage && languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg"}
+                                            alt={selectedProjectLanguage}
+
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
                 </SimpleDashboardCard>
         )}
         </>
