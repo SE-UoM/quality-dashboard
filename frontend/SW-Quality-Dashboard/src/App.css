@@ -18,6 +18,15 @@
   --gold: #dcb706;
   --silver: #a4a3a3;
   --bronze: #cd7f32;
+
+  --rank-gold: #FFBB33, #FFEDA6, #FFDF80, #F2BA49;
+  --rank-silver: #B6B6BF, #EDF4FA, #DADCE6, #B6B6BF;
+  --rank-bronze: #B37E59, #FFD2B3, #F2C7AA, #B5815C;
+  --rank-none: #E0E0E0, #F5F5F5, #D8D8D8, #B0B0B0;
+
+  --gold-text: saddlebrown;
+  --silver-text: #35363a;
+  --bronze-text: #35363a;
 }
 
 .logo {
