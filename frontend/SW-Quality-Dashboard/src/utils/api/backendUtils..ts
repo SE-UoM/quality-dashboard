@@ -144,3 +144,43 @@ export function fetchCodeSmellDistribution(
             setErrorMessage("An error occurred while fetching the language distribution data of the organization. Please try again later.");
         });
 }
+
+export function getTopProjects(accessToken, setLoadingTopProjects, setBestProjects, setError, setErrorTitle, setErrorMessage, loading) {
+    // Extract the organization id from the access token
+    const organizationId = jwtDecode(accessToken).organizationId;
+
+    let url = baseApiUrl + apiUrls.routes.dashboard.topProjects;
+
+    // Replace the organization id in the URL
+    url = url.replace(":organizationId", organizationId);
+    let headers = {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+    }
+
+    console.log(url)
+
+    axios.get(url, {headers: headers})
+        .then((response) => {
+            let data = response.data;
+
+            // Sort based on techDebtPerLoc
+            data.sort((a, b) => {
+                return a.techDebtPerLoc - b.techDebtPerLoc;
+            });
+
+            // Wait half a second before setting the state
+            setTimeout(() => {
+                setLoadingTopProjects(false);
+            }, 1000);
+
+            setBestProjects(data);
+            console.log("Top Projects", data)
+            console.log(loading)
+        })
+        .catch((error) => {
+            setError(true);
+            setErrorTitle("Error");
+            setErrorMessage(error.response.data.message);
+        });
+}
