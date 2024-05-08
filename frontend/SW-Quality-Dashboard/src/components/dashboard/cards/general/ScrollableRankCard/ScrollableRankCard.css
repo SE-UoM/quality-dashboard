@@ -1,20 +1,3 @@
-.dashboard-card#scrollableRankCard {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    overflow-y: hidden; /* Change overflow-y to hidden */
-}
-
-.dashboard-card#scrollableRankCard h3 {
-    font-size: 4vh;
-    border-bottom: 1px solid var(--dark-gray);
-    width: 100%;
-    text-align: center;
-    padding: 1.5vh;
-    margin: 0;
-    text-wrap: normal;
-}
-
 .best-projects-list {
     width: 100%;
     height: 100%;
