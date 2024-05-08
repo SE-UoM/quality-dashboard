@@ -152,7 +152,7 @@ function SubmittedProjectsCard() {
                                 {/*<i className="bi bi-github" style={{fontSize: "10vh"}}> </i>*/}
 
                                 <div className="avatar">
-                                    <div className="w-24 mask mask-squircle bg-neutral p-5">
+                                    <div className="w-24 mask mask-squircle p-5 bg-base-300">
                                         <img
                                             src={selectedProjectLanguage && languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg"}
                                             alt={selectedProjectLanguage}

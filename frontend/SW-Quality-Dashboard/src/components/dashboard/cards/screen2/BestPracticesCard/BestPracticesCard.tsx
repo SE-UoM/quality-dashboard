@@ -94,7 +94,7 @@ function BestPracticesCard() {
                                 margin: "0",
                             }}
                         >
-                            Use of Magic Numbers
+                            {bestPracticeTitle}
                         </h4>
                         <p
                             style={{
@@ -102,7 +102,7 @@ function BestPracticesCard() {
                                 margin: "0",
                             }}
                         >
-                            Magic numbers are hard-coded values that are used in the code without any explanation. They make the code difficult to read and maintain. Make sure to replace magic numbers with named constants.
+                            {bestPracticeDescription}
                         </p>
                     </div>
                 </SimpleDashboardCard>
