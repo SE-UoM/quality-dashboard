@@ -14,6 +14,8 @@ import {truncateString} from "../../../../../utils/textUtils.ts";
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 const GH_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 const languageImagesApiUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/"
+const noneImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/640px-Blue_question_mark_icon.svg.png"
+
 
 function SubmittedProjectsCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
@@ -154,7 +156,7 @@ function SubmittedProjectsCard() {
                                 <div className="avatar">
                                     <div className="w-24 mask mask-squircle p-5 bg-base-300">
                                         <img
-                                            src={selectedProjectLanguage && languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg"}
+                                            src={selectedProjectLanguage ? (languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg") : noneImageUrl}
                                             alt={selectedProjectLanguage}
 
                                         />
