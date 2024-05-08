@@ -121,7 +121,6 @@ const WordCloudCard = () => {
                             <ReactWordcloud
                                 words={words}
                                 minSize={[300, 300]}
-                                size={[560, 300]}
                                 options={{
                                     scale: "sqrt",
                                     spiral: "archimedean",

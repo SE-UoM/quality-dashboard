@@ -2,7 +2,7 @@ import React from 'react';
 import './ScrollableRankCard.css';
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
-function ScrollableRankCard({ title, icon, children, cardId, gridArea, setAutoScroll, autoscroll }) {
+export default function ScrollableRankCard({ title, icon, children, cardId, gridArea, setAutoScroll, autoscroll }) {
 
     return (
         <SimpleDashboardCard id={cardId}
@@ -49,5 +49,3 @@ function ScrollableRankCard({ title, icon, children, cardId, gridArea, setAutoSc
         </SimpleDashboardCard>
     );
 }
-
-export default ScrollableRankCard;

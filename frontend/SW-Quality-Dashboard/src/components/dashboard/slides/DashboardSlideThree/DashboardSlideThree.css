@@ -3,12 +3,12 @@
     grid-template-rows: repeat(6, 1fr);
     width: 100%;
     grid-template-areas:
-        "bestProjects bestProjects bestProjects submittedProjects submittedProjects submittedProjects submittedProjects topCommiters topCommiters topCommiters"
-        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
-        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
-        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects submittedProjects submittedProjects submittedProjects submittedProjects submittedProjects topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
 
-        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
 
         "footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard";
 }
