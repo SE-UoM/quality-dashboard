@@ -1,10 +1,13 @@
 .dashboard-slide#slide3 {
     grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     width: 100%;
     grid-template-areas:
         "bestProjects bestProjects bestProjects submittedProjects submittedProjects submittedProjects submittedProjects topCommiters topCommiters topCommiters"
-        "bestProjects bestProjects bestProjects submittedProjects submittedProjects submittedProjects submittedProjects topCommiters topCommiters topCommiters"
-        "bestProjects bestProjects bestProjects submittedProjects submittedProjects submittedProjects submittedProjects topCommiters topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
+
         "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters topCommiters"
 
         "footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard";

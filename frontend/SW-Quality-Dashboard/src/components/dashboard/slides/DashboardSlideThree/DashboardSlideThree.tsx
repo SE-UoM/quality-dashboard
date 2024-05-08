@@ -7,24 +7,13 @@ import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
-import DashboardRankedItem from "../../../ui/DashboardRankedItem/DashboardRankedItem.tsx";
-import ScrollableRankCard from "../../cards/general/ScrollableRankCard/ScrollableRankCard.tsx";
 import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
-import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
-import ProjectDetailsIcon from "../../../ui/ProjectDetailsIcon/ProjectDetailsIcon.tsx";
 import SubmittedProjectsCard from "../../cards/screen3/SubmittedProjectsCard/SubmittedProjectsCard.tsx";
 import BestProjectsCard from "../../cards/screen3/BestProjectsCard/BestProjectsCard.tsx";
 import TopContibutorsCard from "../../cards/screen3/TopContibutorsCard/TopContibutorsCard.tsx";
+import {truncateString} from "../../../../utils/textUtils.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
-
-function truncateString(str, maxLength) {
-    if (str.length > maxLength) {
-        return str.slice(0, maxLength) + '...';
-    } else {
-        return str;
-    }
-}
 
 function DashboardSlideThree() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
