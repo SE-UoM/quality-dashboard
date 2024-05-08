@@ -10,7 +10,7 @@ import BestPracticesCard from "../../cards/screen2/BestPracticesCard/BestPractic
 import getTotalTechnicalDebt, {
     fetchCodeSmellDistribution,
     getTechnicalDebtStatistics
-} from "../../../../utils/backend/backendUtils..ts";
+} from "../../../../utils/api/backendUtils..ts";
 import DetailsIconCard from "../../cards/general/DetailsIconCard/DetailsIconCard.tsx";
 import {Tracker} from "@tremor/react";
 import SimpleDashboardCard from "../../cards/SimpleDashboardCard.tsx";
