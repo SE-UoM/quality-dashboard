@@ -105,7 +105,6 @@ const WordCloudCard = () => {
                     <SimpleDashboardCard id="wordcloud-card"
                                          style={{
                                              gridArea: "wordcloud",
-                                             paddingTop: "10vh",
                                              height: "100%",
                     }}
                     >
@@ -120,14 +119,16 @@ const WordCloudCard = () => {
                             // Force re-render by changing key prop
                             <ReactWordcloud
                                 words={words}
-                                minSize={[300, 300]}
+
                                 options={{
-                                    scale: "sqrt",
-                                    spiral: "archimedean",
+                                    scale: "linear",
+                                    spiral: "rectangular",
                                     fontSizes: [60, 150],
+                                    fontFamily: "Anton",
                                     rotations: 0,
                                     enableTooltip: false,
                                     deterministic: true,
+                                    padding: 2
                                 }}
                             />
                         )}
