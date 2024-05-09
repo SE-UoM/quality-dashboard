@@ -114,7 +114,7 @@ function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issu
                             </h3>
                             <p style={{fontSize: "2.3vh"}}>
                                 <i className="bi bi-geo-alt-fill"> </i>
-                                {userLocation}
+                                {userLocation ? userLocation : "Unknown Location"}
                             </p>
 
                             <div
