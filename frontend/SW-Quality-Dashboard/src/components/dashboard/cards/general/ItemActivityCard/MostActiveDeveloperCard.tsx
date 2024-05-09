@@ -3,7 +3,6 @@ import {Image} from "react-bootstrap";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 import {formatText} from "../../../../../utils/textUtils.ts";
 import {useEffect, useState} from "react";
-import getCountryData from "../../../../../utils/api/countries.ts";
 import axios from "axios";
 
 const GH_TOKEN =  import.meta.env.VITE_GITHUB_TOKEN;
