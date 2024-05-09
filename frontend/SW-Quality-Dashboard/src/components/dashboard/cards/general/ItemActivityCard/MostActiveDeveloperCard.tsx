@@ -60,10 +60,6 @@ function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issu
         }).catch((error) => {
             console.log(error);
         })
-
-        getCountryData(userLocation, "name,flags").then((data) => {
-            console.log(data);
-        });
     }, [loading]);
 
 
