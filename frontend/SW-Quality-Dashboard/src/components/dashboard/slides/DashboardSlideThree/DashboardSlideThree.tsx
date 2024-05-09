@@ -27,6 +27,9 @@ function DashboardSlideThree() {
     const [bestProjects, setBestProjects] = useState([]);
     const [topContributors, setTopContributors] = useState([]);
 
+    const [words, setWords] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const organizationId = jwtDecode(accessToken).organizationId;
         let url = baseApiUrl + apiUrls.routes.dashboard.topContributors;
@@ -62,6 +65,53 @@ function DashboardSlideThree() {
             })
     }, [accessToken]);
 
+    // Call the API to get the word cloud data
+    useEffect(() => {
+        // Extract the organization id from the access token
+        const organizationId = jwtDecode(accessToken).organizationId;
+
+        let url = baseApiUrl + apiUrls.routes.dashboard.languageNames
+
+        // Replace the organization id in the URL
+        url = url.replace(":organizationId", organizationId);
+        let headers = {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+
+        console.log(url)
+
+        axios.get(url, {headers: headers})
+            .then((response) => {
+                let data = response.data;
+
+                // Wait half a second before setting the state
+                setTimeout(() => {
+                    setLoading(false);
+                }, 3000);
+
+                let respData = response.data;
+
+                let finalData = respData.map((word) => {
+                    if (word.toUpperCase() === "CXX") word = "C++";
+
+                    return {
+                        text: word,
+                        value: Math.floor(Math.random() * 100) + 1
+                    }
+                });
+
+                setWords(finalData);
+                console.info(data)
+            })
+            .catch((error) => {
+                setError(true);
+                setErrorTitle("Error");
+                setErrorMessage(error.response.data.message);
+            });
+
+    }, [accessToken]);
+
     return (
         <>
             {error &&
@@ -75,7 +125,13 @@ function DashboardSlideThree() {
                     truncateString={truncateString}
                 />
 
-                <WordCloudCard />
+                <WordCloudCard style={{
+                        gridArea: "wordcloud",
+                        height: "100%",
+                    }}
+                    words={words}
+                    loading={loading}
+                />
 
                 <TopContibutorsCard
                     topContributors={topContributors}

@@ -30,64 +30,11 @@ const testWords = [
         value: 17,
     },
 ]
-const WordCloudCard = () => {
+const WordCloudCard = ({style, words, loading}) => {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
-    const [error, setError] = useState(false);
-    const [errorTitle, setErrorTitle] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(true);
-
-    const [words, setWords] = useState([]);
-
     const [size, setSize] = useState(0);
 
-    // Call the API to get the word cloud data
-    useEffect(() => {
-        // Extract the organization id from the access token
-        const organizationId = jwtDecode(accessToken).organizationId;
-
-        let url = baseApiUrl + apiUrls.routes.dashboard.languageNames
-
-        // Replace the organization id in the URL
-        url = url.replace(":organizationId", organizationId);
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        console.log(url)
-
-        axios.get(url, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-
-                // Wait half a second before setting the state
-                setTimeout(() => {
-                    setLoading(false);
-                }, 3000);
-
-                let respData = response.data;
-
-                let finalData = respData.map((word) => {
-                    if (word.toUpperCase() === "CXX") word = "C++";
-
-                    return {
-                        text: word,
-                        value: Math.floor(Math.random() * 100) + 1
-                    }
-                });
-
-                setWords(finalData);
-                console.info(data)
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-            });
-
-    }, [accessToken]);
+    console.log(words)
 
     return (
         <>
@@ -103,18 +50,8 @@ const WordCloudCard = () => {
                 </SimpleDashboardCard>
                     ) : (
                     <SimpleDashboardCard id="wordcloud-card"
-                                         style={{
-                                             gridArea: "wordcloud",
-                                             height: "100%",
-                    }}
+                                         style={style}
                     >
-                        {error &&
-                            <ErrorModal
-                                modalTitle={errorTitle}
-                                modalAlertMessage={errorMessage}
-                            />
-                        }
-
                         {words.length > 0 && (
                             // Force re-render by changing key prop
                             <ReactWordcloud

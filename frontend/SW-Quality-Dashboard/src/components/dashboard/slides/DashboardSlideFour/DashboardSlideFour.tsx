@@ -15,6 +15,7 @@ import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
 import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
 import {Image} from "react-bootstrap";
 import SimpleDashboardCard from "../../cards/SimpleDashboardCard.tsx";
+import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -210,8 +211,6 @@ function DashboardSlideFour() {
         axios.get(developersUrl, {headers: headers})
             .then((response) => {
                 let data = response.data;
-                setDevelopers(data);
-
                 // Set the current developer name and image
                 if (data.length < 1) {
                     setCurrentDevName("No Developers");
@@ -221,6 +220,20 @@ function DashboardSlideFour() {
                 let currentDev = data[0];
                 setCurrentDevName(currentDev.name);
                 setCurrentDevImage(currentDev.avatarUrl);
+
+                let names = []
+                data.forEach((item) => {
+                    if (item.name != null) {
+                        let devItem = {
+                            text: item.name,
+                            value: Math.floor(Math.random() * 100) + 1
+                        }
+                        names.push(devItem)
+                    }
+                })
+
+                setDevelopers(names)
+                console.log(developers)
 
                 setTimeout(() => {
                     setDevelopersLoading(false);
@@ -311,7 +324,7 @@ function DashboardSlideFour() {
                     loading={mostForkedProjLoading}
                 />
 
-                {developersLoading ? (
+                {developersLoading && developers.length <=0 ? (
                     <>
                     <SimpleDashboardCard
                         style={{gridArea: "commitGraph"}}
@@ -325,20 +338,11 @@ function DashboardSlideFour() {
                     </>
                 ) : (
                     <>
-                    <SimpleDashboardCard
-                    style={{gridArea: "commitGraph"}}
-                    >
-                        {developers.length > 0 &&
-                            <WordCloud
-                                words={
-                                    // Developers on a list of names
-                                    developers.map((dev) => dev.name)
-                                }
-
-                                loading={developers.length < 1}
-                            />
-                        }
-                    </SimpleDashboardCard>
+                        <WordCloudCard
+                            style={{gridArea: "commitGraph"}}
+                            words={developers}
+                            loading={false}
+                        />
 
                         <SimpleDashboardCard
                             id={"developers"}
