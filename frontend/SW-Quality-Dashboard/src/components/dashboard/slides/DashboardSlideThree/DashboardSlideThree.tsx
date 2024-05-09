@@ -131,6 +131,7 @@ function DashboardSlideThree() {
                     }}
                     words={words}
                     loading={loading}
+                    fontSizes={[60, 150]}
                 />
 
                 <TopContibutorsCard

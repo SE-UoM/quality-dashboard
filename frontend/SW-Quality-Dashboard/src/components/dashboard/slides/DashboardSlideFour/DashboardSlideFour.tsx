@@ -342,6 +342,7 @@ function DashboardSlideFour() {
                             style={{gridArea: "commitGraph"}}
                             words={developers}
                             loading={false}
+                            fontSizes={[20, 110]}
                         />
 
                         <SimpleDashboardCard

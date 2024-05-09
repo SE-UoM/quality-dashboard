@@ -30,7 +30,7 @@ const testWords = [
         value: 17,
     },
 ]
-const WordCloudCard = ({style, words, loading}) => {
+const WordCloudCard = ({style, words, loading, fontSizes}) => {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [size, setSize] = useState(0);
 
@@ -60,7 +60,7 @@ const WordCloudCard = ({style, words, loading}) => {
                                 options={{
                                     scale: "linear",
                                     spiral: "rectangular",
-                                    fontSizes: [60, 150],
+                                    fontSizes: fontSizes,
                                     fontFamily: "Anton",
                                     rotations: 0,
                                     enableTooltip: false,
