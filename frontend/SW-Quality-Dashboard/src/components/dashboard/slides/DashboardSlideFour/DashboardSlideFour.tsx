@@ -9,7 +9,7 @@ import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import contributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 import githubIcon from "../../../../assets/svg/dashboardIcons/github_icon.svg";
 import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
-import ItemActivityCard from "../../cards/general/ItemActivityCard/ItemActivityCard.tsx";
+import MostActiveDeveloperCard from "../../cards/general/ItemActivityCard/MostActiveDeveloperCard.tsx";
 import {jwtDecode} from "jwt-decode";
 import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
 import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
@@ -25,9 +25,7 @@ function DashboardSlideFour() {
     const [errorTitle, setErrorTitle] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-    const [mostActiveDevImage, setMostActiveDevImage] = useState("");
-    const [mostActiveDevName, setMostActiveDevName] = useState("");
-    const [mostActiveDevCommits, setMostActiveDevCommits] = useState(0);
+    const [mostActiveDevData, setMostActiveDevData] = useState({});
     const [mostActiveDevLoading, setMostActiveDevLoading] = useState(true);
 
     const [mostActiveProjImage, setMostActiveProjImage] = useState("");
@@ -74,10 +72,7 @@ function DashboardSlideFour() {
             .then((response) => {
                 let data = response.data;
 
-                setMostActiveDevImage(data.avatarUrl);
-                setMostActiveDevName(data.name);
-                setMostActiveDevCommits(data.totalCommits);
-
+                setMostActiveDevData(data);
                 setTimeout(() => {
                     setMostActiveDevLoading(false);
                 },  1000);
@@ -105,8 +100,6 @@ function DashboardSlideFour() {
         axios.get(mostActiveProjUrl, {headers: headers})
             .then((response) => {
                 let data = response.data;
-                console.log(data)
-
                 setMostActiveProjImage(githubIcon);
                 setMostActiveProjName(data.name);
                 setMostActiveProjDevName(data.owner)
@@ -261,30 +254,33 @@ function DashboardSlideFour() {
                 />
             }
             <div className="dashboard-slide" id="slide4">
-                <ItemActivityCard
-                    cardTitle={"Most Active Developer"}
-                    cardTitleUrl={"https://github.com/" + mostActiveDevName}
-                    cardTitleIcon={"bi bi-person-workspace"}
-                    cardImage={mostActiveDevImage}
-                    cardIcon={contributionsIcon}
-                    countTitle={mostActiveDevName}
-                    count={mostActiveDevCommits}
-                    countCaption={"Commits"}
+                <MostActiveDeveloperCard
+                    userUrl={"https://github.com/" + mostActiveDevData.name}
+                    username={mostActiveDevData.name}
+                    userImg={mostActiveDevData.avatarUrl}
+                    commitsCount={mostActiveDevData.totalCommits}
+                    issuesCount={mostActiveDevData.totalIssues}
+                    issuesPerContibution={mostActiveDevData.issuesPerContribution}
+
                     gridArea={"mostActiveDev"}
                     loading={mostActiveDevLoading}
                 />
 
-                <ItemActivityCard
-                    cardTitle={"Most Active Project"}
-                    cardTitleUrl={"https://github.com/" + mostActiveProjDevName + "/" + mostActiveProjName}
-                    cardTitleIcon={"bi bi-fire"}
-                    cardImage={mostActiveProjImage}
-                    cardIcon={contributionsIcon}
-                    countTitle={mostActiveProjName}
-                    count={mostActiveProjCommits}
-                    countCaption={"Commits"}
-                    gridArea={"mostActiveProj"}
-                    loading={mostActiveProjLoading}
+                {/*<ItemActivityCard*/}
+                {/*    cardTitle={"Most Active Project"}*/}
+                {/*    cardTitleUrl={"https://github.com/" + mostActiveProjDevName + "/" + mostActiveProjName}*/}
+                {/*    cardTitleIcon={"bi bi-fire"}*/}
+                {/*    cardImage={mostActiveProjImage}*/}
+                {/*    cardIcon={contributionsIcon}*/}
+                {/*    countTitle={mostActiveProjName}*/}
+                {/*    count={mostActiveProjCommits}*/}
+                {/*    countCaption={"Commits"}*/}
+                {/*    gridArea={"mostActiveProj"}*/}
+                {/*    loading={mostActiveProjLoading}*/}
+                {/*/>*/}
+                <SimpleDashboardCard
+                    id={"mostActiveProj"}
+                    style={{gridArea: "mostActiveProj"}}
                 />
 
                 <ProjectCard

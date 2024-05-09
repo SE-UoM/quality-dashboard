@@ -8,14 +8,10 @@
 
 .header {
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
     gap: 2vh;
-    border-bottom: 0.2vh solid var(--dark-gray);
-    padding: 1vh;
-    font-size: 3vh;
+    padding: 1.5vh 2vh;
+    font-size: 2.5vh;
+    font-weight: bold;
     margin: 0;
 }
 
@@ -44,19 +40,6 @@
     flex-direction: column;
 }
 
-
-.name {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    align-self: flex-start;
-}
-
-.name a {
-    color: var(--text-primary);
-    font-size: 3vh !important;
-    font-weight: bold;
-}
 
 .card-content-details-caption {
     display: flex;
