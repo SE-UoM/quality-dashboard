@@ -85,7 +85,7 @@ function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issu
                     <div className="card-content">
 
                         <a className="avatar indicator">
-                            <span className="indicator-item indicator-top badge badge-base-400"
+                            <span className="indicator-item indicator-top badge badge-base-400 glass"
                                  style={{
                                      width: "4vh",
                                      height: "4vh",
