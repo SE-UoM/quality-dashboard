@@ -16,8 +16,11 @@ import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
 import {Image} from "react-bootstrap";
 import SimpleDashboardCard from "../../cards/SimpleDashboardCard.tsx";
 import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
+import {formatText, truncateString} from "../../../../utils/textUtils.ts";
+import DeveloperInfoCard from "../../cards/general/DeveloperInfoCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
+const githubToken = import.meta.env.VITE_GITHUB_TOKEN
 
 function DashboardSlideFour() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
@@ -53,6 +56,8 @@ function DashboardSlideFour() {
     const [mostForkedProjLoading, setMostForkedProjLoading] = useState(true);
 
     const [developers, setDevelopers] = useState([]);
+    const [currentDeveloper, setCurrentDeveloper] = useState({});
+
     const [currentDevName, setCurrentDevName] = useState("");
     const [currentDevImage, setCurrentDevImage] = useState("");
     const [developersLoading, setDevelopersLoading] = useState(true);
@@ -213,6 +218,17 @@ function DashboardSlideFour() {
                 let data = response.data;
                 // Set the current developer name and image
                 if (data.length < 1) {
+
+                    let defaultDev = {
+                        name: "No Developers",
+                        avatarUrl: "https://via.placeholder.com/80",
+                        contributions: 0,
+                        repos: 0,
+                        followers: 0,
+                        location: "Unknown Location",
+                    }
+
+                    setCurrentDeveloper(defaultDev)
                     setCurrentDevName("No Developers");
                     setCurrentDevImage("https://via.placeholder.com/80");
                 }
@@ -220,6 +236,17 @@ function DashboardSlideFour() {
                 let currentDev = data[0];
                 setCurrentDevName(currentDev.name);
                 setCurrentDevImage(currentDev.avatarUrl);
+
+                let currentDevObj = {
+                    name: currentDev.name,
+                    avatarUrl: currentDev.avatarUrl,
+                    contributions: 10,
+                    repos: 15,
+                    followers: 20,
+                    location: "Greece",
+                }
+
+                setCurrentDeveloper(currentDevObj)
 
                 let names = []
                 data.forEach((item) => {
@@ -233,7 +260,6 @@ function DashboardSlideFour() {
                 })
 
                 setDevelopers(names)
-                console.log(developers)
 
                 setTimeout(() => {
                     setDevelopersLoading(false);
@@ -245,6 +271,17 @@ function DashboardSlideFour() {
                     index = (index + 1) % data.length;
                     setCurrentDevName(data[index].name);
                     setCurrentDevImage(data[index].avatarUrl);
+
+                    let devObj = {
+                        name: data[index].name,
+                        avatarUrl: data[index].avatarUrl,
+                        contributions: 10,
+                        repos: 15,
+                        followers: 20,
+                        location: "Greece",
+                    }
+
+                    setCurrentDeveloper(devObj)
                 }, 10000);
             })
             .catch((error) => {
@@ -345,19 +382,9 @@ function DashboardSlideFour() {
                             fontSizes={[20, 110]}
                         />
 
-                        <SimpleDashboardCard
-                            id={"developers"}
-                            style={{gridArea: "developersSlides"}}
-                        >
-                            <h4>
-                                <i className="bi bi-person-lines-fill"> </i>
-                                Developers
-                            </h4>
-                            <Image src={currentDevImage} alt="Developers" id="devImg" roundedCircle />
-                            <h5>{
-                                currentDevName ? currentDevName : "Anonymous Dev"
-                            }</h5>
-                        </SimpleDashboardCard>
+                        <DeveloperInfoCard
+                            developer={currentDeveloper}
+                        />
                     </>
                 )}
 

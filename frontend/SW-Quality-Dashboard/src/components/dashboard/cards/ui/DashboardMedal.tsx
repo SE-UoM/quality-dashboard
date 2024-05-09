@@ -30,6 +30,7 @@ export default function DashboardMedal({rank, medalClass}) {
                         alignItems: "center",
                         opacity: "0.7",
                         fontSize: "4vh",
+                        fontWeight: "bolder",
                     }}
                 >
                     {rank}

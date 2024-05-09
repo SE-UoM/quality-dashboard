@@ -7,7 +7,7 @@ export function formatText(txt, suffix = "") {
 
     if (parsedInt < 1000) return txt;
 
-    if (parsedInt > 1000) {
+    if (parsedInt >= 1000) {
         const num = parseInt(txt);
         const roundedNum = Math.round(num / 100) / 10;
         return parseInt(roundedNum) + suffix;
