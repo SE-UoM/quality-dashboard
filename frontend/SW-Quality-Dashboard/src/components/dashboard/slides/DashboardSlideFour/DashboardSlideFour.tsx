@@ -18,6 +18,7 @@ import SimpleDashboardCard from "../../cards/SimpleDashboardCard.tsx";
 import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
 import {formatText, truncateString} from "../../../../utils/textUtils.ts";
 import DeveloperInfoCard from "../../cards/general/DeveloperInfoCard.tsx";
+import MostActiveProjectCard from "../../cards/general/MostActiveProjectCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 const githubToken = import.meta.env.VITE_GITHUB_TOKEN
@@ -328,10 +329,11 @@ function DashboardSlideFour() {
                 {/*    gridArea={"mostActiveProj"}*/}
                 {/*    loading={mostActiveProjLoading}*/}
                 {/*/>*/}
-                <SimpleDashboardCard
-                    id={"mostActiveProj"}
-                    style={{gridArea: "mostActiveProj"}}
+
+                <MostActiveProjectCard
+
                 />
+
 
                 <ProjectCard
                     cardHeader={"Most Starred Project"}

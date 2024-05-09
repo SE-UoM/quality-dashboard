@@ -1,39 +1,10 @@
-import './ItemActivityCard.css'
-import {Image} from "react-bootstrap";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 import {formatText} from "../../../../../utils/textUtils.ts";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import CountIcon from "../../ui/CountIcon.tsx";
 
 const GH_TOKEN =  import.meta.env.VITE_GITHUB_TOKEN;
-
-function CountIcon({icon, title, count}) {
-    return (
-        <div
-            style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <i className={icon} style={{fontSize: "5vh"}}> </i>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginLeft: "1vh",
-                }}>
-                <div style={{fontSize: "2vh", textWrap: "nowrap"}}>
-                    {title}
-                </div>
-
-                <div style={{fontSize: "4.5vh", fontWeight: "bold", lineHeight: "1"}}>
-                    {formatText(count, "k")}
-                </div>
-            </div>
-        </div>
-    )
-}
 
 function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issuesCount, issuesPerContibution, gridArea, loading}) {
     const [userLocation, setUserLocation] = useState("");
@@ -74,15 +45,42 @@ function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issu
             ) : (
                 <SimpleDashboardCard
                     id={"itemActivity"}
-                    style={{gridArea: gridArea, width: "4fr"}}
+                    style={{
+                        gridArea: gridArea,
+                        width: "100%",
+                        height: "100%",
+                        padding: "0",
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
                     className={"card"}
                 >
-                    <h3 className="header">
+                    <h3 className="header"
+                        style={{
+                            width: "100%",
+                            gap: "2vh",
+                            padding: "1vh 2vh",
+                            fontSize: "2vh",
+                            fontWeight: "bold",
+                            margin: "0"
+                        }}
+                    >
                         <i className="bi bi-person-workspace"> </i>
                         Most Active Developer
                     </h3>
 
-                    <div className="card-content">
+                    <div className="card-content"
+                         style={{
+                             display: "flex",
+                             flexDirection: "row",
+                             gap: "1em",
+                             alignItems: "center",
+                             justifyContent: "space-between",
+                             width: "100%",
+                             height: "80%",
+                             padding: "0 1vh 1vh 1vh"
+                         }}
+                    >
 
                         <a className="avatar indicator">
                             <span className="indicator-item indicator-top badge badge-base-400 glass"
