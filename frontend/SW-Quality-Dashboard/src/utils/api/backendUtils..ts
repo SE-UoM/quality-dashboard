@@ -54,7 +54,6 @@ export function getTechnicalDebtStatistics  (accessToken, setLoading, setAverage
 
     axios.get(url, { headers: headers })
         .then(response => {
-            console.log(response.data);
             let data = response.data;
 
             let avgTD = data.avgTechDebt || 0;
@@ -158,8 +157,6 @@ export function getTopProjects(accessToken, setLoadingTopProjects, setBestProjec
         'Content-Type': 'application/json'
     }
 
-    console.log(url)
-
     axios.get(url, {headers: headers})
         .then((response) => {
             let data = response.data;
@@ -175,8 +172,6 @@ export function getTopProjects(accessToken, setLoadingTopProjects, setBestProjec
             }, 1000);
 
             setBestProjects(data);
-            console.log("Top Projects", data)
-            console.log(loading)
         })
         .catch((error) => {
             setError(true);

@@ -17,8 +17,6 @@ function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issu
                 'Authorization': `Bearer ${GH_TOKEN}`,
             }
 
-            console.log(GH_TOKEN)
-
             let res = await axios.get(apiUrl, {headers: headers});
 
             return await res.data;
@@ -26,10 +24,7 @@ function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issu
 
         getUserData(username).then((data) => {
             setUserLocation(data.location)
-
-            console.log(userLocation)
         }).catch((error) => {
-            console.log(error);
         })
     }, [loading]);
 

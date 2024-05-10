@@ -1,18 +1,12 @@
+// This method takes any number and returns a string with the number formatted to a shorter version.
 export function formatText(txt, suffix = "") {
-    if (isNaN(txt) || txt === null || txt === undefined || txt === "") {
-        return "N/A";
+    if (txt >= 1000000) {
+        return (txt / 1000000).toFixed(1) + "M";
+    } else if (txt >= 1000) {
+        return (txt / 1000).toFixed(1) + "k";
+    } else {
+        return txt;
     }
-
-    const parsedInt = parseInt(txt);
-
-    if (parsedInt < 1000) return txt;
-
-    if (parsedInt >= 1000) {
-        const num = parseInt(txt);
-        const roundedNum = Math.round(num / 100) / 10;
-        return parseInt(roundedNum) + suffix;
-    }
-    return txt;
 }
 
 export function truncateString(str, maxLength) {

@@ -57,11 +57,8 @@ function AdminPendingProjectsPage({updateCount}) {
             'Content-Type': 'application/json'
         }
 
-        console.log(url)
-
         axios.put(url, {}, { headers: headers })
             .then(response => {
-                console.log(response)
                 setAlert(true)
                 setAlertVariant('success')
                 setAlertMessage('Project approved successfully. Starting analysis...')
@@ -80,7 +77,6 @@ function AdminPendingProjectsPage({updateCount}) {
 
                 axios.post(analysisUrl, {}, { headers: analysisHeaders })
                     .then(response => {
-                        console.log(response)
                         setAlert(true)
                         setAlertVariant('success')
                         setAlertMessage('Analysis completed successfully')

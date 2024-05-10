@@ -43,7 +43,6 @@ function ForgotPasswordPage() {
         // Call the API to send the password reset link
         let url = baseApiUrl + apiUrls.routes.resetPasswordRequest + "?userEmail=" + email;
 
-        console.log(url)
         axios.post(url)
             .then((response) => {
                 setShowModal(true)

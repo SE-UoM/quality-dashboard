@@ -82,9 +82,6 @@ function DashboardSlideTwo() {
         if (codeSmellDistribution.length <= 0) return;
 
         let trackerData = [];
-
-        console.log("codeSmellDistribution", codeSmellDistribution)
-
         // FInd the percentage of each code smell type and make a new map
         const list = codeSmellDistribution.map((distribution) => {
             let percentage = (distribution.count / totalCodeSmells) * 100;
@@ -95,7 +92,6 @@ function DashboardSlideTwo() {
         });
 
         setCodeSmellsPercentage(list);
-        console.log(list)
 
         let trackerDATA = []
 

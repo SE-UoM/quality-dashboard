@@ -63,7 +63,6 @@ function DashboardSlideOne() {
 
                 setTimeout(() => {
                     // Do nothing
-                    console.log("waiting...")
                     setLoading(false); // Set loading to false once data is fetched
                 }, 1000);
             })

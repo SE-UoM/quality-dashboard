@@ -79,8 +79,6 @@ function DashboardSlideThree() {
             'Content-Type': 'application/json'
         }
 
-        console.log(url)
-
         axios.get(url, {headers: headers})
             .then((response) => {
                 let data = response.data;

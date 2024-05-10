@@ -78,7 +78,6 @@ function PasswordResetPage() {
 
         axios.put(url, data, { headers: headers })
             .then((response) => {
-                console.log(response)
                 setLoading(false)
                 setShowModal(true)
             })

@@ -55,9 +55,6 @@ function SubmittedProjectsCard() {
 
                 setSubmittedProjects(data);
                 getRandomProject(data);
-
-                console.log(data);
-
             })
             .catch((error) => {
                 setError(true);

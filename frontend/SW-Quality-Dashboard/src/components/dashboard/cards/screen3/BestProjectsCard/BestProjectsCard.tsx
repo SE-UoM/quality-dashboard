@@ -54,7 +54,6 @@ export default function BestProjectsCard({truncateString}) {
                 }, 1000);
 
                 setBestProjects(data);
-                console.log(data)
             })
             .catch((error) => {
                 setError(true);
@@ -90,9 +89,6 @@ export default function BestProjectsCard({truncateString}) {
     // Make the component auto scroll
     useEffect(() => {
         const scrollableRankCard = document.getElementById("Scrolling");
-
-        console.log(autoScrollBestProjects)
-
         const interval = setInterval(() => {
             if (scrollableRankCard && autoScrollBestProjects) {
                 scrollableRankCard.scrollTop += 1;

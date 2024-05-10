@@ -4,6 +4,7 @@ import linesIcon from '../../../../../assets/svg/dashboardIcons/loc_icon.svg'
 import codeSmellsIcon from '../../../../../assets/svg/dashboardIcons/code_smells_icon.svg'
 import debtIcon from '../../../../../assets/svg/dashboardIcons/timer_icon.svg'
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
+import {truncateString} from "../../../../../utils/textUtils.ts";
 
 function formatText(text) {
     let roundedNum;
@@ -15,7 +16,7 @@ function formatText(text) {
     return text;
 }
 
-function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName, nameSubText, totalFiles, totalLines, totalDebt, totalCodeSmells, loading}) {
+function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName, nameSubText, totalFiles, totalLines, totalDebt, totalCodeSmells, totalStars, loading}) {
     return (
         <>
             {loading ? (
@@ -26,38 +27,99 @@ function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName,
                 ) : (
                 <SimpleDashboardCard
                     id={id}
+                    style={{
+                        paddingBottom: "2vh",
+                    }}
                 >
-                    <h3 className="header">
+                    <h3 className="header"
+                        style={{
+                            width: "100%",
+                            gap: "2vh",
+                            padding: "1vh 2vh",
+                            fontSize: "2vh",
+                            fontWeight: "bold",
+                            margin: "0"
+                        }}
+                    >
                         <i className={cardHeaderIcon}> </i>
                         {cardHeader}
                     </h3>
 
-                    <div className="project-card-content">
-                        <img src={contentImage}/>
+                    <div className="project-card-content"
+                         style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: "1vh",
+                                alignItems: "center",
+                                justifyContent: "space-around",
+                                width: "100%",
+                                height: "80%",
+                         }}
+                    >
+                        <div style={{
+                            backgroundImage: `url(${contentImage})`,
+                            backgroundSize: "17vh 17vh",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                            width: "17vh",
+                            height: "17vh",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontSize: "9vh",
+                        }}>
+                            <span className="text text-neutral" style={{paddingTop: "1vh", paddingRight: "0.5vh", fontWeight: "bold", opacity: "0.9"}}>
+                                {totalStars}
+                            </span>
+                        </div>
 
-                        <div className="project-card-content-details">
+                        <div className="project-card-content-details" style={{width: "70%"}}>
                             <h3>
-                                <a
-                                    href={"https://github.com/" + nameSubText + "/" + projectName}
-                                    rel={"noreferrer"}
-                                    target={"_blank"}
+                                <div className="project-info"
+                                     style={{
+                                         display: "flex",
+                                         flexDirection: "row",
+                                         gap: "1vh",
+                                         alignItems: "center",
+                                     }}
                                 >
-                                    {projectName}
-                                </a>
-                                <span>
-                             <a
-                                 href={"https://github.com/" + nameSubText}
-                                 rel={"noreferrer"}
-                                 target={"_blank"}
-                             >
-                                By: {nameSubText}
-                             </a>
-                        </span>
+                                    <div className="project-details">
+                                        <h4
+                                            style={{
+                                                fontSize: "2.5vh",
+                                                fontWeight: "bold",
+                                                margin: "0"
+                                            }}
+                                        >
+                                            {
+                                                truncateString(`${nameSubText}/${projectName}`, 30)
+                                            }
+                                            <div className="badge badge-neutral"
+                                                 style={{
+                                                     fontSize: "1.5vh",
+                                                     padding: "0.5vh 1vh",
+                                                     marginLeft: "1.5vh",
+                                                 }}
+                                            >
+                                                <i className="bi bi-unlock" style={{marginRight: "0.5vh"}}></i>
+                                                Public
+                                            </div>
+                                        </h4>
+                                        <p
+                                            style={{fontSize: "2vh"}}
+                                        >
+                                            {true ?
+                                                truncateString("@" + nameSubText, 130) :
+                                                "N/A"
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
                             </h3>
 
                             <div className="project-card-content-details-icons">
                                 <div className="project-card-content-details-icon">
-                                    <img src={filesIcon} />
+                                    <i className="bi bi-file-earmark-binary" style={{fontSize: "5vh"}}> </i>
                                     <p>
                                         <span>{formatText(totalFiles) + " "} </span>
                                         Files
@@ -65,7 +127,7 @@ function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName,
                                 </div>
 
                                 <div className="project-card-content-details-icon">
-                                    <img src={linesIcon} />
+                                    <i className="bi bi-text-left" style={{fontSize: "5vh"}}> </i>
                                     <p>
                                         <span>{formatText(totalLines) + " "}</span>
                                         Lines
@@ -73,17 +135,17 @@ function ProjectCard({cardHeader, cardHeaderIcon, contentImage, id, projectName,
                                 </div>
 
                                 <div className="project-card-content-details-icon">
-                                    <img src={debtIcon} />
+                                    <i className="bi bi-stopwatch" style={{fontSize: "5vh"}}> </i>
                                     <p>
-                                        <span>{formatText(totalDebt) + " \'"} </span>
+                                        <span>{formatText(totalDebt)} </span>
                                         Debt
                                     </p>
                                 </div>
 
                                 <div className="project-card-content-details-icon">
-                                    <img src={formatText(codeSmellsIcon)} />
+                                    <i className="bi bi-bug" style={{fontSize: "5vh"}}> </i>
                                     <p>
-                                        <span>{totalCodeSmells + " "} </span>
+                                        <span>{formatText(totalCodeSmells, "k")} </span>
                                         Code Smells
                                     </p>
                                 </div>

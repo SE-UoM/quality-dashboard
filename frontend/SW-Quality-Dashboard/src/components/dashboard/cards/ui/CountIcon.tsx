@@ -9,7 +9,7 @@ export default function CountIcon({icon, title, count}) {
                 justifyContent: "center",
             }}
         >
-            <i className={icon} style={{fontSize: "5vh"}}> </i>
+            <i className={icon} style={{fontSize: "5.5vh"}}> </i>
             <div
                 style={{
                     display: "flex",
@@ -21,7 +21,7 @@ export default function CountIcon({icon, title, count}) {
                     {title}
                 </div>
 
-                <div style={{fontSize: "4.5vh", fontWeight: "bold", lineHeight: "1"}}>
+                <div style={{fontSize: "4vh", fontWeight: "bold", lineHeight: "1"}}>
                     {formatText(count, "k")}
                 </div>
             </div>

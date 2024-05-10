@@ -4,21 +4,15 @@ import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
-import axios from "axios";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
-import contributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
-import githubIcon from "../../../../assets/svg/dashboardIcons/github_icon.svg";
+import githubIcon from "../../../../assets/svg/dashboardIcons/forks_icon.svg";
 import starIcon from "../../../../assets/svg/dashboardIcons/github_stars_icon.svg";
 import MostActiveDeveloperCard from "../../cards/general/ItemActivityCard/MostActiveDeveloperCard.tsx";
 import {jwtDecode} from "jwt-decode";
 import ProjectCard from "../../cards/screen4/ProjectCard/ProjectCard.tsx";
-import WordCloud from "../../../ui/WordCloud/WordCloud.tsx";
-import {Image} from "react-bootstrap";
-import SimpleDashboardCard from "../../cards/SimpleDashboardCard.tsx";
 import WordCloudCard from "../../cards/screen3/WordCloudCard/WordCloudCard.tsx";
-import {formatText, truncateString} from "../../../../utils/textUtils.ts";
 import DeveloperInfoCard from "../../cards/general/DeveloperInfoCard.tsx";
 import MostActiveProjectCard from "../../cards/general/MostActiveProjectCard.tsx";
+import useAxiosGet from "../../../../hooks/useAxios.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 const githubToken = import.meta.env.VITE_GITHUB_TOKEN
@@ -26,369 +20,180 @@ const githubToken = import.meta.env.VITE_GITHUB_TOKEN
 function DashboardSlideFour() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
 
-    const [error, setError] = useState(false);
-    const [errorTitle, setErrorTitle] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const {data: mostActiveDevData, loading: mostActiveDevLoading, error: mostActiveDevError, errorMessage: mostActiveDevErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostActiveDeveloper.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
-    const [mostActiveDevData, setMostActiveDevData] = useState({});
-    const [mostActiveDevLoading, setMostActiveDevLoading] = useState(true);
+    const {data: developersData, loading: developersLoading, error: developersError, errorMessage: developersErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.developers.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
-    const [mostActiveProjImage, setMostActiveProjImage] = useState("");
-    const [mostActiveProjDevName, setMostActiveProjDevName] = useState("");
-    const [mostActiveProjName, setMostActiveProjName] = useState("");
-    const [mostActiveProjCommits, setMostActiveProjCommits] = useState(0);
-    const [mostActiveProjLoading, setMostActiveProjLoading] = useState(true);
+    const {data: mostActiveProjData, loading: mostActiveProjLoading, error: mostActiveProjError, errorMessage: mostActiveProjErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostActiveProject.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
-    const [mostStarredProjName, setMostStarredProjName] = useState("Test");
-    const [mostStarredProjFiles, setMostStarredProjFiles] = useState(0);
-    const [mostStarredProjLines, setMostStarredProjLines] = useState(0);
-    const [mostStarredProjSmells, setMostStarredProjSmells] = useState(0);
-    const [mostStarredProjDebt, setMostStarredProjDebt] = useState(0);
-    const [mostStarredProjDevName, setMostStarredProjDevName] = useState("Test Dev");
-    const [mostStarredProjLoading, setMostStarredProjLoading] = useState(true);
+    const {data: mostStarredProjData, loading: mostStarredProjLoading, error: mostStarredProjError, errorMessage: mostStarredProjErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostStarredProject.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
+    const {data: mostForkedProjData, loading: mostForkedProjLoading, error: mostForkedProjError, errorMessage: mostForkedProjErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostForkedProject.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
-    const [mostForkedProjName, setMostForkedProjName] = useState("Test");
-    const [mostForkedProjFiles, setMostForkedProjFiles] = useState(0);
-    const [mostForkedProjLines, setMostForkedProjLines] = useState(0);
-    const [mostForkedProjSmells, setMostForkedProjSmells] = useState(0);
-    const [mostForkedProjDebt, setMostForkedProjDebt] = useState(0);
-    const [mostForkedProjDevName, setMostForkedProjDevName] = useState("Test Dev");
-    const [mostForkedProjLoading, setMostForkedProjLoading] = useState(true);
-
-    const [developers, setDevelopers] = useState([]);
     const [currentDeveloper, setCurrentDeveloper] = useState({});
-
-    const [currentDevName, setCurrentDevName] = useState("");
-    const [currentDevImage, setCurrentDevImage] = useState("");
-    const [developersLoading, setDevelopersLoading] = useState(true);
-
-    // Call the API to get the most active developer
-    useEffect(() => {
-        setMostActiveDevLoading(true)
-        let mostActiveDevUrl = baseApiUrl + apiUrls.routes.dashboard.mostActiveDeveloper
-        // Replace the organization id in the URL
-        mostActiveDevUrl = mostActiveDevUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
-
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(mostActiveDevUrl, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-
-                setMostActiveDevData(data);
-                setTimeout(() => {
-                    setMostActiveDevLoading(false);
-                },  1000);
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-                setMostActiveDevLoading(false)
-            });
-    }, [accessToken]);
-
-    // Call the API to get the most active project
-    useEffect(() => {
-        setMostActiveProjLoading(true)
-        let mostActiveProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostActiveProject
-        // Replace the organization id in the URL
-        mostActiveProjUrl = mostActiveProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
-
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(mostActiveProjUrl, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-                setMostActiveProjImage(githubIcon);
-                setMostActiveProjName(data.name);
-                setMostActiveProjDevName(data.owner)
-                setMostActiveProjCommits(data.totalCommits);
-
-                setTimeout(() => {
-                    setMostActiveProjLoading(false);
-                },  1000);
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-                setMostActiveProjLoading(false);
-            });
-    }, [accessToken]);
-
-    // Call the API to get the most starred project
-    useEffect(() => {
-        setMostStarredProjLoading(true)
-        let mostStarredProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostStarredProject
-
-        // Replace the organization id in the URL
-        mostStarredProjUrl = mostStarredProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
-
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(mostStarredProjUrl, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-
-                setMostStarredProjName(data.name);
-                setMostStarredProjFiles(data.files);
-                setMostStarredProjLines(data.loc);
-                setMostStarredProjSmells(data.totalCodeSmells);
-                setMostStarredProjDebt(data.techDebt);
-                setMostStarredProjDevName(data.owner);
-
-                setTimeout(() => {
-                    setMostStarredProjLoading(false);
-                },  1000);
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-
-                setMostStarredProjLoading(false);
-            });
-    }, [accessToken]);
+    const [developerWords, setDeveloperWords] = useState([]);
 
     // Call the API to get the most forked project
+    // useEffect(() => {
+    //     setMostForkedProjLoading(true)
+    //     let mostForkedProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostForkedProject
+    //
+    //     // Replace the organization id in the URL
+    //     mostForkedProjUrl = mostForkedProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
+    //
+    //     let headers = {
+    //         'Authorization': `Bearer ${accessToken}`,
+    //         'Content-Type': 'application/json'
+    //     }
+    //
+    //     axios.get(mostForkedProjUrl, {headers: headers})
+    //         .then((response) => {
+    //             let data = response.data;
+    //
+    //             setMostForkedProjName(data.name);
+    //             setMostForkedProjFiles(data.files);
+    //             setMostForkedProjLines(data.loc);
+    //             setMostForkedProjSmells(data.totalCodeSmells);
+    //             setMostForkedProjDebt(data.techDebt);
+    //             setMostForkedProjDevName(data.owner);
+    //
+    //             setTimeout(() => {
+    //                 setMostForkedProjLoading(false);
+    //             },  1000);
+    //         })
+    //         .catch((error) => {
+    //             setError(true);
+    //             setErrorTitle("Error");
+    //             setErrorMessage(error.response.data.message);
+    //
+    //             setMostForkedProjLoading(false);
+    //         });
+    // }, [accessToken]);
+
+    // ----------- DEVELOPER SLIDES LOGIC ------------
     useEffect(() => {
-        setMostForkedProjLoading(true)
-        let mostForkedProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostForkedProject
+        let developersResponseIsReadyAndNotEmpty = developersData && developersData.length > 0 && !developersLoading && !developersError && !developersErrorMessage;
+        if (!developersResponseIsReadyAndNotEmpty) return;
 
-        // Replace the organization id in the URL
-        mostForkedProjUrl = mostForkedProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
+        // Every 10 seconds, change the current developer
+        let interval = setInterval(() => {
+            updateDeveloperSlide();
+        }, 10000);
 
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
+        return () => clearInterval(interval);
+    }, [developersData, developersLoading, developersError, developersErrorMessage, currentDeveloper]);
+
+    // ----------- DEVELOPERS WORD CLOUD LOGIC ------------
+    useEffect(() => {
+        let developersResponseIsReadyAndNotEmpty = developersData && developersData.length > 0 && !developersLoading && !developersError && !developersErrorMessage;
+        if (!developersResponseIsReadyAndNotEmpty) return;
+
+        let names = []
+        developersData.forEach((item) => {
+            if (item.name != null) {
+                let devItem = {
+                    text: item.name,
+                    value: Math.floor(Math.random() * 100) + 1
+                }
+                names.push(devItem)
+            }
+        })
+
+        setDeveloperWords(names)
+    }, [developersData, developersLoading, developersError, developersErrorMessage]);
+
+    function updateDeveloperSlide() {
+        let devObj = getRandomDeveloper()
+        setCurrentDeveloper(devObj)
+    }
+
+    function getRandomDeveloper(defaultDev = false) {
+        if (defaultDev) {
+            let defaultDev = {
+                name: "No Developers",
+                avatarUrl: "https://via.placeholder.com/80",
+            }
+            return defaultDev;
         }
 
-        axios.get(mostForkedProjUrl, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-
-                setMostForkedProjName(data.name);
-                setMostForkedProjFiles(data.files);
-                setMostForkedProjLines(data.loc);
-                setMostForkedProjSmells(data.totalCodeSmells);
-                setMostForkedProjDebt(data.techDebt);
-                setMostForkedProjDevName(data.owner);
-
-                setTimeout(() => {
-                    setMostForkedProjLoading(false);
-                },  1000);
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-
-                setMostForkedProjLoading(false);
-            });
-    }, [accessToken]);
-
-    // Call the API to get the developers
-    useEffect(() => {
-        setDevelopersLoading(true)
-        // Get the organization id from the access token
-        let organizationId = jwtDecode(accessToken).organizationId;
-
-        let developersUrl = baseApiUrl + apiUrls.routes.dashboard.developers;
-
-        // Replace the organization id in the URL
-        developersUrl = developersUrl.replace(":organizationId", organizationId);
-
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(developersUrl, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-                // Set the current developer name and image
-                if (data.length < 1) {
-
-                    let defaultDev = {
-                        name: "No Developers",
-                        avatarUrl: "https://via.placeholder.com/80",
-                        contributions: 0,
-                        repos: 0,
-                        followers: 0,
-                        location: "Unknown Location",
-                    }
-
-                    setCurrentDeveloper(defaultDev)
-                    setCurrentDevName("No Developers");
-                    setCurrentDevImage("https://via.placeholder.com/80");
-                }
-
-                let currentDev = data[0];
-                setCurrentDevName(currentDev.name);
-                setCurrentDevImage(currentDev.avatarUrl);
-
-                let currentDevObj = {
-                    name: currentDev.name,
-                    avatarUrl: currentDev.avatarUrl,
-                    contributions: 10,
-                    repos: 15,
-                    followers: 20,
-                    location: "Greece",
-                }
-
-                setCurrentDeveloper(currentDevObj)
-
-                let names = []
-                data.forEach((item) => {
-                    if (item.name != null) {
-                        let devItem = {
-                            text: item.name,
-                            value: Math.floor(Math.random() * 100) + 1
-                        }
-                        names.push(devItem)
-                    }
-                })
-
-                setDevelopers(names)
-
-                setTimeout(() => {
-                    setDevelopersLoading(false);
-                },  1000);
-
-                // Every 10 seconds, change the current developer
-                let index = 0;
-                setInterval(() => {
-                    index = (index + 1) % data.length;
-                    setCurrentDevName(data[index].name);
-                    setCurrentDevImage(data[index].avatarUrl);
-
-                    let devObj = {
-                        name: data[index].name,
-                        avatarUrl: data[index].avatarUrl,
-                        contributions: 10,
-                        repos: 15,
-                        followers: 20,
-                        location: "Greece",
-                    }
-
-                    setCurrentDeveloper(devObj)
-                }, 10000);
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-
-                setDevelopersLoading(false);
-            });
-
-    }, [accessToken]);
+        let randomIndex = Math.floor(Math.random() * developersData.length);
+        let randomDev = developersData[randomIndex];
+        return randomDev;
+    }
 
 
     return (
         <>
-            {error &&
-                <ErrorModal
-                    modalTitle={errorTitle}
-                    modalAlertMessage={errorMessage}
-                />
-            }
             <div className="dashboard-slide" id="slide4">
-                <MostActiveDeveloperCard
-                    userUrl={"https://github.com/" + mostActiveDevData.name}
-                    username={mostActiveDevData.name}
-                    userImg={mostActiveDevData.avatarUrl}
-                    commitsCount={mostActiveDevData.totalCommits}
-                    issuesCount={mostActiveDevData.totalIssues}
-                    issuesPerContibution={mostActiveDevData.issuesPerContribution}
+                {mostActiveDevData &&
+                    <MostActiveDeveloperCard
+                        userUrl={"https://github.com/" + mostActiveDevData.name}
+                        username={mostActiveDevData.name}
+                        userImg={mostActiveDevData.avatarUrl}
+                        commitsCount={mostActiveDevData.totalCommits}
+                        issuesCount={mostActiveDevData.totalIssues}
+                        issuesPerContibution={mostActiveDevData.issuesPerContribution}
 
-                    gridArea={"mostActiveDev"}
-                    loading={mostActiveDevLoading}
-                />
-
-                {/*<ItemActivityCard*/}
-                {/*    cardTitle={"Most Active Project"}*/}
-                {/*    cardTitleUrl={"https://github.com/" + mostActiveProjDevName + "/" + mostActiveProjName}*/}
-                {/*    cardTitleIcon={"bi bi-fire"}*/}
-                {/*    cardImage={mostActiveProjImage}*/}
-                {/*    cardIcon={contributionsIcon}*/}
-                {/*    countTitle={mostActiveProjName}*/}
-                {/*    count={mostActiveProjCommits}*/}
-                {/*    countCaption={"Commits"}*/}
-                {/*    gridArea={"mostActiveProj"}*/}
-                {/*    loading={mostActiveProjLoading}*/}
-                {/*/>*/}
+                        gridArea={"mostActiveDev"}
+                        loading={mostActiveDevLoading}
+                    />
+                }
 
                 <MostActiveProjectCard
-
+                    mostActiveProject={mostActiveProjData}
+                    loading={mostActiveProjLoading}
                 />
 
-
-                <ProjectCard
-                    cardHeader={"Most Starred Project"}
-                    cardHeaderIcon={"bi bi-star-fill"}
-                    id={"mostStarredProj"}
-                    contentImage={starIcon}
-                    projectName={mostStarredProjName}
-                    nameSubText={mostStarredProjDevName}
-                    totalFiles={mostStarredProjFiles}
-                    totalLines={mostStarredProjLines}
-                    totalDebt={mostStarredProjDebt}
-                    totalCodeSmells={mostStarredProjSmells}
-                    loading={mostStarredProjLoading}
-                />
-
-                <ProjectCard
-                    cardHeader={"Most Forked Project"}
-                    cardHeaderIcon={"bi bi-git"}
-                    id={"mostForked"}
-                    contentImage={githubIcon}
-                    projectName={mostForkedProjName}
-                    nameSubText={mostForkedProjDevName}
-                    totalFiles={mostForkedProjFiles}
-                    totalLines={mostForkedProjLines}
-                    totalDebt={mostForkedProjDebt}
-                    totalCodeSmells={mostForkedProjSmells}
-                    loading={mostForkedProjLoading}
-                />
-
-                {developersLoading && developers.length <=0 ? (
-                    <>
-                    <SimpleDashboardCard
-                        style={{gridArea: "commitGraph"}}
-                        className={"skeleton"}
+                {mostStarredProjData &&
+                    <ProjectCard
+                        cardHeader={"Most Starred Project"}
+                        cardHeaderIcon={"bi bi-bookmark-star"}
+                        id={"mostStarredProj"}
+                        contentImage={starIcon}
+                        projectName={mostStarredProjData.name}
+                        nameSubText={mostStarredProjData.owner}
+                        totalFiles={mostStarredProjData.files}
+                        totalLines={mostStarredProjData.loc}
+                        totalDebt={mostStarredProjData.techDebt}
+                        totalCodeSmells={mostStarredProjData.totalCodeSmells}
+                        totalStars={mostStarredProjData.stars}
+                        loading={mostStarredProjLoading}
                     />
+                }
 
-                    <SimpleDashboardCard
-                        style={{gridArea: "developersSlides"}}
-                        className={"skeleton"}
+                {mostForkedProjData &&
+                    <ProjectCard
+                        cardHeader={"Most Forked Project"}
+                        cardHeaderIcon={"bi bi-git"}
+                        id={"mostForked"}
+                        contentImage={githubIcon}
+                        projectName={mostForkedProjData.name}
+                        nameSubText={mostForkedProjData.owner}
+                        totalFiles={mostForkedProjData.files}
+                        totalLines={mostForkedProjData.loc}
+                        totalDebt={mostForkedProjData.techDebt}
+                        totalCodeSmells={mostForkedProjData.totalCodeSmells}
+                        totalStars={mostForkedProjData.totalForks}
+                        loading={mostForkedProjLoading}
                     />
-                    </>
-                ) : (
-                    <>
-                        <WordCloudCard
-                            style={{gridArea: "commitGraph"}}
-                            words={developers}
-                            loading={false}
-                            fontSizes={[20, 110]}
-                        />
+                }
 
-                        <DeveloperInfoCard
-                            developer={currentDeveloper}
-                        />
-                    </>
-                )}
+                <DeveloperInfoCard
+                    developer={currentDeveloper ? currentDeveloper : {}}
+                    developerLoading={developersLoading}
+                />
+
+                <WordCloudCard
+                    style={{gridArea: "commitGraph"}}
+                    words={developerWords}
+                    loading={developersLoading}
+                    fontSizes={[20, 110]}
+                />
 
                 <FooterCard
                     gridAreaName="footerCard"

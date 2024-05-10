@@ -31,24 +31,18 @@ const testWords = [
     },
 ]
 const WordCloudCard = ({style, words, loading, fontSizes}) => {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-    const [size, setSize] = useState(0);
-
-    console.log(words)
-
     return (
         <>
             {loading ? (
                 <SimpleDashboardCard
-                    id="wordcloud-card"
                     className="skeleton"
                     style={{
-                        gridArea: "wordcloud",
-                        height: "100%",
+                        gridArea: "commitGraph",
+                        width: "100%",
                     }}
                 >
                 </SimpleDashboardCard>
-                    ) : (
+            ) : (
                     <SimpleDashboardCard id="wordcloud-card"
                                          style={style}
                     >
@@ -70,7 +64,7 @@ const WordCloudCard = ({style, words, loading, fontSizes}) => {
                             />
                         )}
                     </SimpleDashboardCard>
-                    )}
+            )}
         </>
     );
 };

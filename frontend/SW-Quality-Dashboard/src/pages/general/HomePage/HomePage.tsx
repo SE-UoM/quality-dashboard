@@ -24,8 +24,6 @@ function HomePage() {
 
         const url = `${baseUrl}${backendRoutes.routes.checkAuth}`
 
-        console.log(accessToken)
-
         const headers = {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${accessToken}`
@@ -51,8 +49,6 @@ function HomePage() {
                 setIsAuthenticated(false)
                 setLoadingAuth(false)
                 setUserRole('')
-
-                console.log(error)
             })
     }, []);
 
