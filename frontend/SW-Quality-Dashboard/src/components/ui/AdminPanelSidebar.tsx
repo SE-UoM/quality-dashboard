@@ -31,7 +31,7 @@ export default function AdminPanelSidebar({totalPendingProjectsCount}) {
                 <li>
                     <details>
                         <summary>
-                            <i className="bi bi-folder2-open"></i>
+                            <i className="bi bi-journal-code"></i>
                             Projects
                         </summary>
                         <ul>

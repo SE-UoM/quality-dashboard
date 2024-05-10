@@ -6,6 +6,10 @@ import DecodedToken from "../../../interfaces/DecodedToken.ts";
 import ProtectedRoute from "../../../routes/ProtectedRoute.tsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import AdminPanelSidebar from "../../../components/ui/AdminPanelSidebar.tsx";
+import AdminHomePage from "../AdminHomePage.tsx";
+import AdminAllUsersPage from "../AdminAllUsersPage/AdminAllUsersPage.tsx";
+import AdminAllProjectsPage from "../AdminAllProjectsPage/AdminAllProjectsPage.tsx";
+import AdminPendingProjectsPage from "../AdminPendingProjectsPage/AdminPendingProjectsPage.tsx";
 
 function AdminPanel() {
     const [accessToken] = useLocalStorage<string>('accessToken', '');
@@ -77,7 +81,7 @@ function AdminPanel() {
                                 style={{
                                     display: "flex",
                                     flexDirection: "row",
-                                    height: "100vh",
+                                    minHeight: "100vh",
                                     width: "100vw",
                                 }}
                         >
@@ -92,10 +96,10 @@ function AdminPanel() {
                                 }}
                                 className="bg-base-300"
                             >
-                                {currentPage === "home" && <h1>Home</h1>}
-                                {currentPage === "dashboardUsers" && <h1>DashboardUsers</h1>}
-                                {currentPage === "submittedProjects" && <h1>Submitted Projects</h1>}
-                                {currentPage === "pendingProjects" && <h1>Pending Projects</h1>}
+                                {currentPage === "home" && <AdminHomePage />}
+                                {currentPage === "dashboardUsers" && <AdminAllUsersPage />}
+                                {currentPage === "submittedProjects" && <AdminAllProjectsPage />}
+                                {currentPage === "pendingProjects" && <AdminPendingProjectsPage />}
                             </div>
                         </div>
                     }

@@ -2,13 +2,14 @@ import './AdminTabContent.css'
 
 function AdminTabContent({icon, title, children}) {
     return (
-        <div className="admin-page">
-            <h2>
+        <div>
+            <h2 style={{fontSize: "4vh"}}>
                 <i className={icon}> </i>
                 {title}
             </h2>
+            <span className="divider"></span>
 
-            <div className="admin-page-content">
+            <div>
                 {children}
             </div>
         </div>

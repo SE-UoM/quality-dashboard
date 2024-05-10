@@ -56,66 +56,9 @@ function AdminAllProjectsPage() {
             icon="bi bi-journal-code"
             title="All Projects"
         >
-            {error && (
-                <Alert variant="danger">
-                    <Alert.Heading>
-                        Error fetching projects
-                    </Alert.Heading>
-                </Alert>
-            )}
-
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>PID</th>
-                    <th>Name</th>
-                    <th>Repository URL</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {projects.map(project => (
-                    <tr key={project.id}>
-                        <td>{projects.indexOf(project) + 1}</td>
-                        <td>{project.id}</td>
-                        <td>{project.name}</td>
-                        <td>
-                            <a href={project.repoUrl}>{project.repoUrl}</a>
-                        </td>
-                        <td className={"status " + project.status.toLowerCase()}>
-                            <div
-                                className="dashboard-pill"
-                                style={{backgroundColor: statusColors[project.status]}}
-                            >
-                                {project.status.replace(/_/g, ' ')}
-                            </div>
-                        </td>
-                        <td>
-                            <div className="project-actions">
-                                <OverlayTrigger placement="bottom" overlay={<Tooltip>Delete This User</Tooltip>}>
-                                    <Button
-                                        variant="danger"
-                                    >
-                                        <i className={"bi bi-trash"}> </i>
-                                    </Button>
-                                </OverlayTrigger>
-
-                                <OverlayTrigger placement="bottom" overlay={<Tooltip>Start a New Analysis</Tooltip>}>
-                                    <Button
-                                        variant="primary"
-                                    >
-                                        <i className="bi bi-layer-forward"></i>
-                                    </Button>
-                                </OverlayTrigger>
-                            </div>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </Table>
-
+            <p>
+                Here you can view all the projects in the organization.
+            </p>
         </AdminTabContent>
     )
 }

@@ -101,42 +101,10 @@ function AdminPendingProjectsPage({updateCount}) {
             icon="bi bi-exclamation-octagon-fill"
             title="Pending Projects"
         >
-            {alert && (
-                <Alert variant={alertVariant}>
-                    {alertMessage}
-                </Alert>
-            )}
-
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>PID</th>
-                    <th>Name</th>
-                    <th>Repository URL</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {projects.map(project => (
-                    <tr key={project.id}>
-                        <td>{projects.indexOf(project) + 1}</td>
-                        <td>{project.id}</td>
-                        <td>{project.name}</td>
-                        <td>
-                            <a href={project.repoUrl}>{project.repoUrl}</a>
-                        </td>
-                        <td>
-                            <Button variant={"success"} onClick={() => approveProject(project.id, project.repoUrl)}>
-                                <i className="bi bi-check-circle-fill" > </i>
-                                Approve
-                            </Button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </Table>
-
+            <p>
+                Here you can view all the projects that are pending approval. <br/>
+                These projects have more than 50 commits so you need to approve them before they can be analyzed.
+            </p>
         </AdminTabContent>
     )
 }
