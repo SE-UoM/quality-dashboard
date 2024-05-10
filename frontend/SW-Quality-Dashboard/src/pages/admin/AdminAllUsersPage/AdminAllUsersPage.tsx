@@ -47,7 +47,7 @@ function TableItem({userImg, userName, userOrg, userEmail, userRoles, userVerifi
                                 return <span className="badge badge-warning badge-sm mr-2">{role}</span>
                             }
 
-                            return <span className="badge badge-primary badge-sm">{role}</span>
+                            return <span className="badge badge-info  badge-sm">{role}</span>
                         })}
                     </div>
                 </td>
@@ -102,12 +102,6 @@ function AdminAllUsersPage() {
             icon="bi bi-people-fill"
             title="All Organization Users"
         >
-            <div role="alert" className="alert">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>
-                    The user with <strong>bold</strong> is you.
-                </span>
-            </div>
 
             <div className="card bg-base-content/10"
                  style={{
