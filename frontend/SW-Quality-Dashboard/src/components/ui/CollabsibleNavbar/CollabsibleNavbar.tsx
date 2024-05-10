@@ -112,6 +112,13 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
                                     <i className="bi bi-house"></i>
                                 </a>
                             </li>
+                            {isAdmin && (
+                                <li>
+                                    <a href="/admin" className="tooltip tooltip-bottom" data-tip="Admin Panel">
+                                        <i className="bi bi-person-gear"></i>
+                                    </a>
+                                </li>
+                            )}
                             <li>
                                 <a href="/submit-project" className="tooltip tooltip-bottom" data-tip="Submit a Project">
                                     <i className="bi bi-plus-circle"></i>
