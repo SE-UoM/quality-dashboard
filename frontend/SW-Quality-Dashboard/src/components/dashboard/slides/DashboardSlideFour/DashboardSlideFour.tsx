@@ -38,43 +38,6 @@ function DashboardSlideFour() {
     const [currentDeveloper, setCurrentDeveloper] = useState({});
     const [developerWords, setDeveloperWords] = useState([]);
 
-    // Call the API to get the most forked project
-    // useEffect(() => {
-    //     setMostForkedProjLoading(true)
-    //     let mostForkedProjUrl = baseApiUrl + apiUrls.routes.dashboard.mostForkedProject
-    //
-    //     // Replace the organization id in the URL
-    //     mostForkedProjUrl = mostForkedProjUrl.replace(":organizationId", jwtDecode(accessToken).organizationId);
-    //
-    //     let headers = {
-    //         'Authorization': `Bearer ${accessToken}`,
-    //         'Content-Type': 'application/json'
-    //     }
-    //
-    //     axios.get(mostForkedProjUrl, {headers: headers})
-    //         .then((response) => {
-    //             let data = response.data;
-    //
-    //             setMostForkedProjName(data.name);
-    //             setMostForkedProjFiles(data.files);
-    //             setMostForkedProjLines(data.loc);
-    //             setMostForkedProjSmells(data.totalCodeSmells);
-    //             setMostForkedProjDebt(data.techDebt);
-    //             setMostForkedProjDevName(data.owner);
-    //
-    //             setTimeout(() => {
-    //                 setMostForkedProjLoading(false);
-    //             },  1000);
-    //         })
-    //         .catch((error) => {
-    //             setError(true);
-    //             setErrorTitle("Error");
-    //             setErrorMessage(error.response.data.message);
-    //
-    //             setMostForkedProjLoading(false);
-    //         });
-    // }, [accessToken]);
-
     // ----------- DEVELOPER SLIDES LOGIC ------------
     useEffect(() => {
         let developersResponseIsReadyAndNotEmpty = developersData && developersData.length > 0 && !developersLoading && !developersError && !developersErrorMessage;
