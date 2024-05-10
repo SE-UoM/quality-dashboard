@@ -15,7 +15,6 @@ import MostActiveProjectCard from "../../cards/general/MostActiveProjectCard.tsx
 import useAxiosGet from "../../../../hooks/useAxios.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
-const githubToken = import.meta.env.VITE_GITHUB_TOKEN
 
 function DashboardSlideFour() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
@@ -40,8 +39,7 @@ function DashboardSlideFour() {
 
     // ----------- DEVELOPER SLIDES LOGIC ------------
     useEffect(() => {
-        let developersResponseIsReadyAndNotEmpty = developersData && developersData.length > 0 && !developersLoading && !developersError && !developersErrorMessage;
-        if (!developersResponseIsReadyAndNotEmpty) return;
+        if (!developersData) return;
 
         // Every 10 seconds, change the current developer
         let interval = setInterval(() => {
@@ -53,8 +51,7 @@ function DashboardSlideFour() {
 
     // ----------- DEVELOPERS WORD CLOUD LOGIC ------------
     useEffect(() => {
-        let developersResponseIsReadyAndNotEmpty = developersData && developersData.length > 0 && !developersLoading && !developersError && !developersErrorMessage;
-        if (!developersResponseIsReadyAndNotEmpty) return;
+        if (!developersData) return;
 
         let names = []
         developersData.forEach((item) => {

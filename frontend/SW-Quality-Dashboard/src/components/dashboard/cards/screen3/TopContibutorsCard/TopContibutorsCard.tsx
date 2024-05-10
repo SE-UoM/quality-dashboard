@@ -1,11 +1,23 @@
 import DashboardRankedItem from "../../../../ui/DashboardRankedItem/DashboardRankedItem.tsx";
 import ScrollableRankCard from "../../general/ScrollableRankCard/ScrollableRankCard.tsx";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 import DashboardMedal from "../../ui/DashboardMedal.tsx";
 import {truncateString} from "../../../../../utils/textUtils.ts";
 
-export default function TopContibutorsCard({topContributors, loadingTopContributors}) {
+export default function TopContibutorsCard({topContributorsData, loadingTopContributors}) {
+    const [topContributors, setTopContributors] = useState([]);
+
+    useEffect(() => {
+        if (!topContributorsData) return;
+
+        let sortedData = topContributorsData.sort((a, b) => {
+            return b.totalCommits - a.totalCommits;
+        });
+
+        setTopContributors(sortedData);
+    }, [topContributorsData]);
+
     return (
         <>
         {loadingTopContributors ? (

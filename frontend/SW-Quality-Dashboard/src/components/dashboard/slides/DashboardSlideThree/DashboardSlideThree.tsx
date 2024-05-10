@@ -12,129 +12,52 @@ import SubmittedProjectsCard from "../../cards/screen3/SubmittedProjectsCard/Sub
 import BestProjectsCard from "../../cards/screen3/BestProjectsCard/BestProjectsCard.tsx";
 import TopContibutorsCard from "../../cards/screen3/TopContibutorsCard/TopContibutorsCard.tsx";
 import {truncateString} from "../../../../utils/textUtils.ts";
+import useAxiosGet from "../../../../hooks/useAxios.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideThree() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
-    const [error, setError] = useState(false);
-    const [errorTitle, setErrorTitle] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loadingTopProjects, setLoadingTopProjects] = useState(true);
-    const [loadingTopContributors, setLoadingTopContributors] = useState(true);
-
-    const [bestProjects, setBestProjects] = useState([]);
-    const [topContributors, setTopContributors] = useState([]);
-
     const [words, setWords] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+    const {data: topContributorsData, error: topContributorsError, loading: topContributorsLoading, errorMessage: topContributorsErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topContributors.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+
+    const {data: langNamesData, error: langNamesError, loading: langNamesLoading, errorMessage: langNamesErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.languageNames.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+
+    const {data: bestProjectsData, error: bestProjectsError, loading: bestProjectsLoading, errorMessage: bestProjectsErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topProjects.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
     useEffect(() => {
-        const organizationId = jwtDecode(accessToken).organizationId;
-        let url = baseApiUrl + apiUrls.routes.dashboard.topContributors;
+        if (!langNamesData) return;
 
-        url = url.replace(":organizationId", organizationId);
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
+        let wordcloudData = langNamesData.map((word) => {
+            if (word.toUpperCase() === "CXX") word = "C++";
 
-        axios.get(url, {headers: headers})
-            .then((response) => {
-                let data = response.data;
+            return {
+                text: word,
+                value: Math.floor(Math.random() * 100) + 1
+            }
+        });
 
-                data.sort((a, b) => {
-                    return b.totalCommits - a.totalCommits;
-                });
-
-                // Wait half a second before setting the state
-                setTimeout(() => {
-                    setLoadingTopContributors(false);
-                },  1000);
-
-                setTopContributors(data);
-                console.info("Top contributors API Response: ", data)
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-
-                console.warn("Error fetching top contributors: ", error)
-            })
-    }, [accessToken]);
-
-    // Call the API to get the word cloud data
-    useEffect(() => {
-        // Extract the organization id from the access token
-        const organizationId = jwtDecode(accessToken).organizationId;
-
-        let url = baseApiUrl + apiUrls.routes.dashboard.languageNames
-
-        // Replace the organization id in the URL
-        url = url.replace(":organizationId", organizationId);
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(url, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-
-                // Wait half a second before setting the state
-                setTimeout(() => {
-                    setLoading(false);
-                }, 3000);
-
-                let respData = response.data;
-
-                let finalData = respData.map((word) => {
-                    if (word.toUpperCase() === "CXX") word = "C++";
-
-                    return {
-                        text: word,
-                        value: Math.floor(Math.random() * 100) + 1
-                    }
-                });
-
-                setWords(finalData);
-                console.info(data)
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-            });
-
-    }, [accessToken]);
+        setWords(wordcloudData);
+    }, [langNamesData]);
 
     return (
         <>
-            {error &&
-                <ErrorModal
-                    modalTitle={errorTitle}
-                    modalAlertMessage={errorMessage}
-                />
-            }
             <div className="dashboard-slide" id="slide3">
-                <BestProjectsCard
-                    truncateString={truncateString}
-                />
+                <BestProjectsCard bestProjectsData={bestProjectsData} loading={bestProjectsLoading}/>
 
-                <WordCloudCard style={{
-                        gridArea: "wordcloud",
-                        height: "100%",
-                    }}
+                <WordCloudCard style={{gridArea: "wordcloud"}}
                     words={words}
-                    loading={loading}
+                    loading={langNamesLoading}
                     fontSizes={[60, 150]}
                 />
 
                 <TopContibutorsCard
-                    topContributors={topContributors}
-                    loadingTopContributors={loadingTopContributors}
+                    topContributorsData={topContributorsData}
+                    loadingTopContributors={topContributorsLoading}
                 />
 
                 <SubmittedProjectsCard />

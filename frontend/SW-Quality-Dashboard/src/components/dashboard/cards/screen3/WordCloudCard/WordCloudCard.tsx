@@ -31,15 +31,13 @@ const testWords = [
     },
 ]
 const WordCloudCard = ({style, words, loading, fontSizes}) => {
+
     return (
         <>
             {loading ? (
                 <SimpleDashboardCard
                     className="skeleton"
-                    style={{
-                        gridArea: "commitGraph",
-                        width: "100%",
-                    }}
+                    style={style}
                 >
                 </SimpleDashboardCard>
             ) : (

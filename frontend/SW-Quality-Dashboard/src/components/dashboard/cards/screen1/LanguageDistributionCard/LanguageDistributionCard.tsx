@@ -8,6 +8,7 @@ import {jwtDecode} from "jwt-decode";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 import DashboardDonutChart from "../../../../charts/DashboardDonutChart.tsx";
 import {formatText} from "../../../../../utils/textUtils.ts";
+import useAxiosGet from "../../../../../hooks/useAxios.ts";
 
 const colors = [
     /* Language Distribution */
@@ -20,50 +21,18 @@ const colors = [
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-export default function LanguageDistributionCard() {
+export default function LanguageDistributionCard({languageDistributionData, languageDistributionLoading, languageDistributionError, languageDistributionErrorMessage}) {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [totalLanguages, setTotalLanguages] = React.useState(0);
     const [languageDistribution, setLanguageDistribution] = React.useState([]);
 
-    const [error, setError] = React.useState(false);
-    const [errorTitle, setErrorTitle] = React.useState("");
-    const [errorMessage, setErrorMessage] = React.useState("");
-    const [loading, setLoading] = React.useState(true);
-
-
     // Call the API to get the language distribution data
     useEffect(() => {
-        let url = baseApiUrl + apiRoutes.routes.dashboard.languageDistribution;
+        if (!languageDistributionData) return
 
-        // Decode the access token to get the organization ID
-        let organizationId = jwtDecode(accessToken).organizationId;
-
-        // Replace ":organizationId" with the actual organization ID
-        url = url.replace(":organizationId", organizationId);
-
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-        }
-        axios.get(url, { headers: headers })
-            .then(response => {
-                console.info("Language distribution data: ", response.data)
-
-                // Wait half a second before setting the state to false
-                setTimeout(() => {
-                    setLoading(false);
-                }, 1000);
-
-                setTotalLanguages(response.data.totalLanguages);
-                setLanguageDistribution(response.data.languageDistribution);
-            })
-            .catch(error => {
-                console.warn("Error fetching language distribution data: ", error);
-                setError(true);
-                setErrorTitle("Error fetching language distribution data");
-                setErrorMessage("An error occurred while fetching the language distribution data of the organization. Please try again later.");
-            });
-    }, [accessToken]);
+        setTotalLanguages(languageDistributionData.totalLanguages);
+        setLanguageDistribution(languageDistributionData.languageDistribution);
+    }, [languageDistributionData]);
 
 
     // Sort the language distribution by linesOfCode in descending order
@@ -84,7 +53,7 @@ export default function LanguageDistributionCard() {
     // Map data to format required by the DonutChart component
     const data = topFourLanguages.map(language => {
         return {
-            name: language.name,
+            name: language.name === 'CXX' ? 'C++' : language.name,
             value: language.linesOfCode,
             color: colors[topFourLanguages.indexOf(language)]
         }
@@ -92,14 +61,7 @@ export default function LanguageDistributionCard() {
 
     return (
         <>
-            {error &&
-                <ErrorModal
-                    modalTitle={errorTitle}
-                    modalAlertMessage={errorMessage}
-                />
-            }
-
-            {loading ? (
+            {languageDistributionLoading ? (
                 <SimpleDashboardCard
                     id="languageDistribution"
                     className="skeleton"

@@ -15,7 +15,6 @@ function formatHeaderText(headerText) {
 function IconCard({icon, headerText, caption, gridAreaName, loading}) {
     const formattedHeaderText = formatHeaderText(headerText);
 
-
     return (
         <>
             {loading ? (

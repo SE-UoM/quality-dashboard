@@ -18,7 +18,7 @@ export default function DetailsIconCard({cardId, style, icon, statTitle, statVal
                             ></i>
                         </div>
                         <div className="stat-title">{statTitle}</div>
-                        <div className="stat-value">{statValue}'</div>
+                        <div className="stat-value">{statValue}</div>
                         <div className="stat-desc">{statDesc}</div>
                     </div>
                 </div>

@@ -9,59 +9,22 @@ import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import medalIcon from "../../../../../assets/svg/dashboardIcons/simple_medal_icon.svg";
 import DashboardMedal from "../../ui/DashboardMedal.tsx";
 import getRepoFromGithubAPI from "../../../../../utils/api/github.ts";
+import {truncateString} from "../../../../../utils/textUtils.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-export default function BestProjectsCard({truncateString}) {
-    const [accessToken] = useLocalStorage("accessToken", "");
-    const [error, setError] = useState(false);
-    const [errorTitle, setErrorTitle] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loadingTopProjects, setLoadingTopProjects] = useState(true);
+export default function BestProjectsCard({bestProjectsData, loading}) {
     const [bestProjects, setBestProjects] = useState([]);
-    const [autoScrollBestProjects, setAutoScrollBestProjects] = useState(false);
-
-    const [githubResponse, setGithubResponse] = useState(null);
-    const [githubError, setGithubError] = useState(false);
-    const [githubErrorMessage, setGithubErrorMessage] = useState("");
-    const [loadingGithub, setLoadingGithub] = useState(true);
+    const [autoScrollBestProjects, setAutoScrollBestProjects] = useState(true);
 
     useEffect(() => {
-        // Extract the organization id from the access token
-        const organizationId = jwtDecode(accessToken).organizationId;
+        if (!bestProjectsData) return;
+        bestProjectsData.sort((a, b) => {
+            return a.techDebtPerLoc - b.techDebtPerLoc;
+        });
 
-        let url = baseApiUrl + apiUrls.routes.dashboard.topProjects;
-
-        // Replace the organization id in the URL
-        url = url.replace(":organizationId", organizationId);
-        let headers = {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(url, {headers: headers})
-            .then((response) => {
-                let data = response.data;
-
-                // Sort based on techDebtPerLoc
-                data.sort((a, b) => {
-                    return a.techDebtPerLoc - b.techDebtPerLoc;
-                });
-
-                // Wait half a second before setting the state
-                setTimeout(() => {
-                    setLoadingTopProjects(false);
-                }, 1000);
-
-                setBestProjects(data);
-            })
-            .catch((error) => {
-                setError(true);
-                setErrorTitle("Error");
-                setErrorMessage(error.response.data.message);
-            });
-
-    }, [accessToken]);
+        setBestProjects(bestProjectsData);
+    }, [bestProjectsData]);
 
     useEffect(() => {
         // Function to fetch additional data from GitHub API for each project
@@ -86,26 +49,9 @@ export default function BestProjectsCard({truncateString}) {
         }
     }, [bestProjects]);
 
-    // Make the component auto scroll
-    useEffect(() => {
-        const scrollableRankCard = document.getElementById("Scrolling");
-        const interval = setInterval(() => {
-            if (scrollableRankCard && autoScrollBestProjects) {
-                scrollableRankCard.scrollTop += 1;
-            }
-
-            // // If we scrolled to the bottom, reset the scroll
-            // if (scrollableRankCard && scrollableRankCard.scrollHeight - scrollableRankCard.scrollTop === scrollableRankCard.clientHeight) {
-            //     scrollableRankCard.scrollTop = 0;
-            // }
-        }, 50);
-
-        return () => clearInterval(interval);
-    }, [loadingGithub, autoScrollBestProjects]);
-
     return (
         <>
-        {loadingTopProjects ? (
+        {loading ? (
                 <SimpleDashboardCard
                     className="skeleton"
                     id={"scrollableRankCard"}
