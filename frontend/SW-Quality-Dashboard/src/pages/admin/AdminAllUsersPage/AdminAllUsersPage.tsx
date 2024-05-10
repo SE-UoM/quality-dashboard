@@ -1,7 +1,7 @@
 import './AdminAllUsersPage.css'
 import AdminTabContent from "../AdminTabContent/AdminTabContent.tsx";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import apiUrls from "../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
@@ -13,10 +13,10 @@ import useAxios from "../../../hooks/useAxios.ts";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-function TableItem({userImg, userName, userOrg, userEmail, userRoles, userVerified}) {
+function TableItem({userImg, userName, userOrg, userEmail, userRoles, userVerified, key}) {
     return (
         <>
-            <tr>
+            <tr key={key}>
                 <td>
                     <div className="flex items-center gap-3">
                         <div className="avatar">
@@ -78,73 +78,24 @@ function TableItem({userImg, userName, userOrg, userEmail, userRoles, userVerifi
 
 function AdminAllUsersPage() {
     const [accessToken, setAccessToken] = useLocalStorage('accessToken', '')
-    const [users, setUsers] = React.useState([])
-    const [error, setError] = React.useState(false)
-    const [myEmail, setMyEmail] = React.useState('')
-
-    const [showEditUserModal, setShowEditUserModal] = React.useState(false)
-    const [editUser, setEditUser] = React.useState({})
-    const [editedEmail, setEditedEmail] = React.useState('')
-    const [editedName, setEditedName] = React.useState('')
-    const [editAlert, setEditAlert] = React.useState(false)
-    const [editAlertMessage, setEditAlertMessage] = React.useState('')
-    const [editAlertVariant, setEditAlertVariant] = React.useState('')
-
-    const [showDeleteUserModal, setShowDeleteUserModal] = React.useState(false)
-    const [deleteUser, setDeleteUser] = React.useState({})
-    const [deleteUserButtonDisabled, setDeleteUserButtonDisabled] = React.useState(false)
-    const [deleteAlert, setDeleteAlert] = React.useState(false)
-    const [deleteAlertMessage, setDeleteAlertMessage] = React.useState('')
-    const [deleteAlertVariant, setDeleteAlertVariant] = React.useState('')
-    const [deleteAlertIcon, setDeleteAlertIcon] = React.useState('')
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [currentItems, setCurrentItems] = useState([]);
 
     const {data: allUsersData, error: allUsersError, loading: allUsersLoading, errorMessage: allUsersErrorMessage} =
         useAxios(baseUrl + apiUrls.routes.admin.getAllUsersByOrgId.replace(':organizationId', jwtDecode(accessToken).organizationId), accessToken)
 
     useEffect(() => {
         if (!allUsersData) return;
-    }, [allUsersData]);
 
-    function handleUserDelete(user) {
-        // Call the api to delete the user
-        let url = baseUrl + apiUrls.routes.admin.deleteUser;
+        // Logic to get current items based on pagination
+        const indexOfLastItem = currentPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        const currentItems = allUsersData.slice(indexOfFirstItem, indexOfLastItem);
 
-        // Replace the placeholder with the actual user id
-        url = url.replace(':userId', user.id);
+        setCurrentItems(currentItems);
 
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-        }
-
-        // Say that the user is being deleted
-        setDeleteAlert(true)
-        setDeleteAlertMessage('Deleting user...')
-        setDeleteAlertVariant('info')
-        setDeleteAlertIcon('bi bi-hourglass-split')
-        setDeleteUserButtonDisabled(true)
-
-        // Wait one second before calling the api
-        setTimeout(() => {
-            axios.delete(url, { headers: headers })
-                .then(response => {
-                    setDeleteAlertMessage('User deleted successfully')
-                    setDeleteAlertVariant('success')
-                    setDeleteAlertIcon('bi bi-check-circle')
-
-                    // Remove the user from the list
-                    let newUsers = users.filter(u => u.id !== user.id)
-                    setUsers(newUsers)
-                })
-                .catch(error => {
-                    console.error(error)
-                    setDeleteAlertMessage('Error deleting user')
-                    setDeleteAlertVariant('danger')
-                    setDeleteAlertIcon('bi bi-x-circle')
-                    setDeleteUserButtonDisabled(false)
-                })
-        }, 1000)
-    }
+    }, [allUsersData, currentPage, itemsPerPage]);
 
     return (
         <AdminTabContent
@@ -156,6 +107,32 @@ function AdminAllUsersPage() {
                 <span>
                     The user with <strong>bold</strong> is you.
                 </span>
+            </div>
+
+            <div className="card bg-base-content/10"
+                 style={{
+                     padding: "2vh",
+                     marginTop: "2vh"
+                 }}
+            >
+                <div>
+                    <div className="tooltip tooltip-top" data-tip={"Page Size"}>
+                        <i className="bi bi-list-ol mr-2" ></i>
+                        <select className="select select-bordered select-xs max-w-xs" style={{width: "5vw"}} onChange={(e) => setItemsPerPage(parseInt(e.target.value))}>
+                            <option disabled>Page Size</option>
+                            <option value={5}>5</option>
+                            <option value={10}>10</option>
+                            <option value={15}>15</option>
+                            <option value={20}>20</option>
+                            <option value={25}>25</option>
+                            <option value={30}>30</option>
+                            <option value={35}>35</option>
+                            <option value={40}>40</option>
+                            <option value={45}>45</option>
+                            <option value={50}>50</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
             <div className="overflow-x-auto">
@@ -171,9 +148,10 @@ function AdminAllUsersPage() {
                     </tr>
                     </thead>
                     <tbody>
-                    {allUsersData && allUsersData.map(
+                    {allUsersData && currentItems.map(
                         user => (
                             <TableItem
+                                key={user.id}
                                 userImg={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
                                 userName={user.name}
                                 userOrg={user.organizationName}
@@ -196,60 +174,34 @@ function AdminAllUsersPage() {
                         <th>Actions</th>
                     </tr>
                     </tfoot>
-
                 </table>
+
+                {/* Pagination controls */}
+                {allUsersData && allUsersData.length > itemsPerPage && (
+                    <div
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <div className="join">
+                            {Array.from({ length: Math.ceil(allUsersData.length / itemsPerPage) }).map((_, index) => (
+                                <button className={
+                                    index === currentPage - 1
+                                        ? "join-item btn btn-primary"
+                                        : "join-item btn"
+                                }
+                                        onClick={() => setCurrentPage(index + 1)}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
-
-            {/*<EditUserModal*/}
-            {/*    show={showEditUserModal}*/}
-            {/*    setShow={setShowEditUserModal}*/}
-            {/*    handleClose={() => setShowEditUserModal(false)}*/}
-            {/*    editUser={editUser}*/}
-            {/*/>*/}
-
-            {/*/!* Delete User Modal *!/*/}
-            {/*<Modal*/}
-            {/*    show={showDeleteUserModal}*/}
-            {/*    onHide={() => setShowDeleteUserModal(false)}*/}
-            {/*    backdrop="static"*/}
-            {/*    keyboard={false}*/}
-            {/*>*/}
-            {/*    <Modal.Header closeButton>*/}
-            {/*        <Modal.Title>*/}
-            {/*            <i className="bi bi-trash-fill"> </i>*/}
-            {/*            Delete User*/}
-            {/*        </Modal.Title>*/}
-            {/*    </Modal.Header>*/}
-            {/*    <Modal.Body>*/}
-            {/*        Are you sure you want to delete the user with the email <i>{deleteUser.email}</i>? <br />*/}
-            {/*        <strong>This action cannot be undone.</strong>*/}
-
-            {/*        {deleteAlert && (*/}
-            {/*            <Alert variant={deleteAlertVariant}>*/}
-            {/*                <i className={deleteAlertIcon}> </i>*/}
-            {/*                {deleteAlertMessage}*/}
-            {/*            </Alert>*/}
-            {/*        )}*/}
-            {/*    </Modal.Body>*/}
-            {/*    <Modal.Footer>*/}
-            {/*        <Button variant="secondary" onClick={() => setShowDeleteUserModal(false)}>*/}
-            {/*            Cancel*/}
-            {/*        </Button>*/}
-            {/*        <Button variant="danger" onClick={() => handleUserDelete(deleteUser)}>*/}
-            {/*            Delete*/}
-            {/*        </Button>*/}
-            {/*    </Modal.Footer>*/}
-            {/*</Modal>*/}
-
-            {/*<AllUsersTable*/}
-            {/*    users={users}*/}
-            {/*    myEmail={myEmail}*/}
-            {/*    setEditUser={setEditUser}*/}
-            {/*    setShowEditUserModal={setShowEditUserModal}*/}
-            {/*    setDeleteUser={setDeleteUser}*/}
-            {/*    setShowDeleteUserModal={setShowDeleteUserModal}*/}
-            {/*    deleteBtnDisabled={deleteUserButtonDisabled}*/}
-            {/*/>*/}
 
         </AdminTabContent>
     )
