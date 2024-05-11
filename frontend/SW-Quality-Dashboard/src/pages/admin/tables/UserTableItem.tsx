@@ -56,14 +56,11 @@ export default function UserTableItem({userImg, userName, userOrg, userEmail, us
                     setTimeout(() => {
                         setDeleteSuccess(true)
                         setDeleteLoading(false)
-                        setUpdated(true)
                     }, 500)
                 })
         } catch (error) {
-            console.error(error)
             setDeleteError(true)
             setDeleteErrorMsg(error.response.data.message)
-            console.log(deleteErrorMsg)
             setDeleteLoading(false)
         }
     }
@@ -118,8 +115,8 @@ export default function UserTableItem({userImg, userName, userOrg, userEmail, us
                         Delete
                     </button>
                 </div>
-
             </DeleteUserModal>
+
             <tr key={userID} className={authenticatedUserEmail === userEmail ? "bg-base-200" : ""}>
                 <td>
                     <div className="flex items-center gap-3">
