@@ -24,6 +24,8 @@ function AdminAllUsersPage() {
     const {data: allUsersData, error: allUsersError, loading: allUsersLoading, errorMessage: allUsersErrorMessage} =
         useAxios(baseUrl + apiUrls.routes.admin.getAllUsersByOrgId.replace(':organizationId', jwtDecode(accessToken).organizationId), accessToken)
 
+    const [updated, setUpdated] = useState(false)
+
     useEffect(() => {
         if (!allUsersData) return;
 
@@ -43,7 +45,6 @@ function AdminAllUsersPage() {
             setCurrentItems(filteredItems);
             return;
         }
-
         setCurrentItems(currentItems);
 
     }, [allUsersData, currentPage, itemsPerPage, searchTerm]);
@@ -61,10 +62,11 @@ function AdminAllUsersPage() {
                      display: "flex",
                      flexDirection: "row",
                      gap: "2vh",
-                     justifyContent: "space-between"
+                     justifyContent: "space-between",
+                     alignItems: "center"
                  }}
             >
-                <label className="form-control" style={{width: "88%"}}>
+                <label className="form-control" style={{width: "85%"}}>
                     <div className="label">
                         <span className="label-text"><strong>
                             <i className="bi bi-search"> </i>
@@ -94,6 +96,12 @@ function AdminAllUsersPage() {
                             <option value={50}>50</option>
                         </select>
                 </label>
+
+                <label className="form-control tooltip tooltip-bottom" style={{width: "2%"}} data-tip={"Refresh table"}>
+                    <button className="btn btn-primary btn-xs" onClick={() => window.location.reload()}>
+                        <i className="bi bi-arrow-clockwise"> </i>
+                    </button>
+                </label>
             </div>
 
             <div className="overflow-x-auto">
@@ -112,7 +120,7 @@ function AdminAllUsersPage() {
                     {allUsersData && currentItems.map(
                         user => (
                             <UserTableItem
-                                key={user.id}
+                                userID={user.id}
                                 userImg={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
                                 userName={user.name}
                                 userOrg={user.organizationName}
