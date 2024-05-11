@@ -11,6 +11,7 @@ import TableControls from "../tables/TableControls.tsx";
 import useAxios from "../../../hooks/useAxios.ts";
 import UserTableItem from "../tables/UserTableItem.tsx";
 import {truncateString} from "../../../utils/textUtils.ts";
+import ProjectTableItem from "../tables/ProjectTableItem.tsx";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -93,86 +94,38 @@ function AdminAllProjectsPage() {
                     <tbody>
                     {projects && currentItems.map(
                         project => (
-                            <>
-                                <tr>
-                                    <td>
-                                        <div className="flex items-center gap-3">
-                                            <div className="avatar">
-                                                <div className="mask mask-squircle w-12 h-12">
-                                                    <img src={`https://ui-avatars.com/api/?name=${project.name}&background=random`} alt="Avatar Tailwind CSS Component" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="font-bold">{project.name}</div>
-                                                <div className="text-sm opacity-50">{project.organizationName}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a className="link link-info" href={project.repoUrl}>
-                                            {truncateString(project.repoUrl, 50)}
-                                        </a>
-                                    </td>
-                                    <td>
-                            <span className={project.status === 'ANALYSIS_TO_BE_REVIEWED' ? 'badge badge-error' : 'badge badge-info'}>
-                                <i className={project.status === 'ANALYSIS_TO_BE_REVIEWED' ? 'bi bi-exclamation-circle' : 'bi bi-check2-circle'}> </i> &nbsp;
-                                {project.status === 'ANALYSIS_TO_BE_REVIEWED' ? 'TO BE REVIEWED' : 'REVIEWED'}
-                            </span>
-
-                                    </td>
-                                    <td>
-                            <span className="badge badge-success" style={{fontWeight: "normal"}}>
-                                <i className={"bi bi-exclamation-circle"}> </i> &nbsp;
-                                COMPLETED
-                            </span>
-                                    </td>
-
-                                    <td>
-                                        <div className="flex items-center gap-3">
-                                            <button className="btn btn-sm btn-outline btn-success">
-                                                <i className="bi bi-check2-circle"> </i>
-                                                Approve
-                                            </button>
-
-                                            <button className="btn btn-sm btn-outline btn-error">
-                                                <i className="bi bi-x-circle"> </i>
-                                                Reject
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </>
+                            <ProjectTableItem project={project} />
                         )
                     )}
                     </tbody>
                 </table>
 
                 {/* Pagination controls */}
-                {projects && projects.length > itemsPerPage && (
+                {allProjectsData && allProjectsData.length > itemsPerPage &&
                     <div
                         style={{
                             width: "100%",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
+                            marginTop: "1vh"
                         }}
                     >
                         <div className="join">
-                            {Array.from({ length: Math.ceil(projects.length / itemsPerPage) }).map((_, index) => (
+                            {Array.from({ length: Math.ceil(allProjectsData.length / itemsPerPage) }).map((_, index) => (
                                 <button className={
                                     index === currentPage - 1
                                         ? "join-item btn btn-primary"
                                         : "join-item btn"
                                 }
-                                    key={index}
-                                    onClick={() => setCurrentPage(index + 1)}
+                                        onClick={() => setCurrentPage(index + 1)}
                                 >
                                     {index + 1}
                                 </button>
                             ))}
                         </div>
                     </div>
-                )}
+                }
 
             </div>
 
