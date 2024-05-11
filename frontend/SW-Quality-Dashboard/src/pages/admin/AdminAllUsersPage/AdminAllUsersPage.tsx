@@ -123,9 +123,19 @@ function AdminAllUsersPage() {
                      display: "flex",
                      flexDirection: "row",
                      gap: "2vh",
+                     justifyContent: "space-between"
                  }}
             >
-                <label className="form-control" style={{width: "9vw"}}>
+                <label className="form-control" style={{width: "88%"}}>
+                    <div className="label">
+                        <span className="label-text"><strong>
+                            <i className="bi bi-search"> </i>
+                            Search
+                        </strong></span>
+                    </div>
+                    <input style={{width: "100%"}} type="text" placeholder="Type here" className="input input-bordered input-xs" onChange={(e) => setSearchTerm(e.target.value)} />
+                </label>
+                <label className="form-control" style={{width: "auto"}}>
                     <div className="label">
                         <span className="label-text"><strong>
                             <i className="bi bi-filter"> </i>
@@ -145,16 +155,6 @@ function AdminAllUsersPage() {
                             <option value={45}>45</option>
                             <option value={50}>50</option>
                         </select>
-                </label>
-
-                <label className="form-control w-full max-w-xs">
-                    <div className="label">
-                        <span className="label-text"><strong>
-                            <i className="bi bi-search"> </i>
-                            Search
-                        </strong></span>
-                    </div>
-                    <input type="text" placeholder="Type here" className="input input-bordered input-xs w-full max-w-xs" onChange={(e) => setSearchTerm(e.target.value)} />
                 </label>
             </div>
 
