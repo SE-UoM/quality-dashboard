@@ -120,7 +120,7 @@ export default function UserTableItem({userImg, userName, userOrg, userEmail, us
                 </div>
 
             </DeleteUserModal>
-            <tr key={userID}>
+            <tr key={userID} className={authenticatedUserEmail === userEmail ? "bg-base-200" : ""}>
                 <td>
                     <div className="flex items-center gap-3">
                         <div className="avatar">
