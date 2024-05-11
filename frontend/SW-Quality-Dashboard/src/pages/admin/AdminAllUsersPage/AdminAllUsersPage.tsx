@@ -81,6 +81,7 @@ function AdminAllUsersPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [currentItems, setCurrentItems] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const {data: allUsersData, error: allUsersError, loading: allUsersLoading, errorMessage: allUsersErrorMessage} =
         useAxios(baseUrl + apiUrls.routes.admin.getAllUsersByOrgId.replace(':organizationId', jwtDecode(accessToken).organizationId), accessToken)
@@ -93,9 +94,21 @@ function AdminAllUsersPage() {
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         const currentItems = allUsersData.slice(indexOfFirstItem, indexOfLastItem);
 
+        // Logic to search for items
+        if (searchTerm) {
+            const filteredItems = allUsersData.filter(item => {
+                return item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.roles.toLowerCase().includes(searchTerm.toLowerCase())
+            })
+
+            setCurrentItems(filteredItems);
+            return;
+        }
+
         setCurrentItems(currentItems);
 
-    }, [allUsersData, currentPage, itemsPerPage]);
+    }, [allUsersData, currentPage, itemsPerPage, searchTerm]);
 
     return (
         <AdminTabContent
@@ -106,13 +119,20 @@ function AdminAllUsersPage() {
             <div className="card bg-base-content/10"
                  style={{
                      padding: "2vh",
-                     marginTop: "2vh"
+                     marginTop: "2vh",
+                     display: "flex",
+                     flexDirection: "row",
+                     gap: "2vh",
                  }}
             >
-                <div>
-                    <div className="tooltip tooltip-top" data-tip={"Page Size"}>
-                        <i className="bi bi-list-ol mr-2" ></i>
-                        <select className="select select-bordered select-xs max-w-xs" style={{width: "5vw"}} onChange={(e) => setItemsPerPage(parseInt(e.target.value))}>
+                <label className="form-control" style={{width: "9vw"}}>
+                    <div className="label">
+                        <span className="label-text"><strong>
+                            <i className="bi bi-filter"> </i>
+                            Items per Page
+                        </strong></span>
+                    </div>
+                        <select className="select select-bordered select-xs"  onChange={(e) => setItemsPerPage(parseInt(e.target.value))}>
                             <option disabled>Page Size</option>
                             <option value={5}>5</option>
                             <option value={10}>10</option>
@@ -125,8 +145,17 @@ function AdminAllUsersPage() {
                             <option value={45}>45</option>
                             <option value={50}>50</option>
                         </select>
+                </label>
+
+                <label className="form-control w-full max-w-xs">
+                    <div className="label">
+                        <span className="label-text"><strong>
+                            <i className="bi bi-search"> </i>
+                            Search
+                        </strong></span>
                     </div>
-                </div>
+                    <input type="text" placeholder="Type here" className="input input-bordered input-xs w-full max-w-xs" onChange={(e) => setSearchTerm(e.target.value)} />
+                </label>
             </div>
 
             <div className="overflow-x-auto">
