@@ -10,71 +10,9 @@ import React from "react";
 import AllUsersTable from "../tables/AllUsersTable/AllUsersTable.tsx";
 import EditUserModal from "../../../components/modals/EditUserModal/EditUserModal.tsx";
 import useAxios from "../../../hooks/useAxios.ts";
+import UserTableItem from "../tables/UserTableItem.tsx";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-
-function TableItem({userImg, userName, userOrg, userEmail, userRoles, userVerified, key}) {
-    return (
-        <>
-            <tr key={key}>
-                <td>
-                    <div className="flex items-center gap-3">
-                        <div className="avatar">
-                            <div className="mask mask-squircle w-12 h-12">
-                                <img src={userImg} alt="Avatar Tailwind CSS Component" />
-                            </div>
-                        </div>
-                        <div>
-                            <div className="font-bold">{userName}</div>
-                            <div className="text-sm opacity-50">{userOrg}</div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <a className="link link-info" href={`mailto:${userEmail}`}>
-                        {userEmail}
-                    </a>
-                </td>
-                <td>
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "1vh"
-                        }}
-                    >
-                        {userRoles.map(role => {
-                            if (role === 'PRIVILEGED' || role === 'ADMIN') {
-                                return <span className="badge badge-warning badge-sm mr-2">{role}</span>
-                            }
-
-                            return <span className="badge badge-info  badge-sm">{role}</span>
-                        })}
-                    </div>
-                </td>
-                <th>
-                    {userVerified ? (
-                        <i className="bi bi-patch-check text-success" style={{fontSize: "4vh"}}></i>
-                    ) :(
-                        <i className="bi bi-x-circle text-error"  style={{fontSize: "4vh"}}> </i>
-                    )}
-                </th>
-
-                <td>
-                    <div className="flex items-center gap-3">
-                        <button className="btn btn-sm btn-primary">
-                            <i className="bi bi-pencil-fill"> </i>
-                            Edit
-                        </button>
-                        <button className="btn btn-sm btn-error">
-                            <i className="bi bi-trash-fill"> </i>
-                            Delete
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        </>
-    )
-}
 
 function AdminAllUsersPage() {
     const [accessToken, setAccessToken] = useLocalStorage('accessToken', '')
@@ -173,7 +111,7 @@ function AdminAllUsersPage() {
                     <tbody>
                     {allUsersData && currentItems.map(
                         user => (
-                            <TableItem
+                            <UserTableItem
                                 key={user.id}
                                 userImg={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
                                 userName={user.name}
