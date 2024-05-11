@@ -273,14 +273,14 @@ export default function ProjectTableItem({project}) {
 
                 <td>
                     <div className="flex items-center gap-3">
-                        <button className="btn btn-sm btn-outline btn-success" onClick={handleApprove}
+                        <button className="btn btn-sm btn-success" onClick={handleApprove}
                             disabled={project.status !== 'ANALYSIS_TO_BE_REVIEWED'}
                         >
                             <i className="bi bi-check2-circle"> </i>
                             Approve
                         </button>
 
-                        <button className="btn btn-sm btn-outline btn-error" onClick={handleReject}
+                        <button className="btn btn-sm btn-error" onClick={handleReject}
                                 disabled={project.status !== 'ANALYSIS_TO_BE_REVIEWED'}
                         >
                             <i className="bi bi-x-circle"> </i>

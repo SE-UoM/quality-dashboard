@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import apiRoutes from '../assets/data/api_urls.json';
+import {jwtDecode} from "jwt-decode";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -11,6 +12,13 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
         const fetchData = async () => {
             try {
                 if (!accessToken) {
+                    setIsAuthenticated(false);
+                    return;
+                }
+
+                // If the token is malformed, the API will return a 403
+                let decoded = jwtDecode(accessToken);
+                if (!decoded) {
                     setIsAuthenticated(false);
                     return;
                 }

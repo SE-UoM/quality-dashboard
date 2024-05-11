@@ -3,7 +3,7 @@ import AdminTabContent from "./AdminTabContent/AdminTabContent.tsx";
 export default function AdminHomePage() {
     return (
         <>
-            <AdminTabContent icon="bi bi-house" title="Home">
+            <AdminTabContent icon="bi bi-house-fill" title="Home">
                 <p>
                     Welcome to the UoM Software Quality Dashboard Admin Panel. <br/>
                     Here you can manage all the users and projects.

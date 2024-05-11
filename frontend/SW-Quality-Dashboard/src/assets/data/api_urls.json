@@ -27,7 +27,8 @@
 
     "projects": {
       "allByOrgId": "/api/projects/organization/:organizationId",
-      "allByOrgIdAndStatus": "/api/projects/organization/:organizationId/status/:status"
+      "allByOrgIdAndStatus": "/api/projects/organization/:organizationId/status/:status",
+      "getTotalPending": "/api/projects/pending/total/org/:organizationId"
     },
 
     "admin": {

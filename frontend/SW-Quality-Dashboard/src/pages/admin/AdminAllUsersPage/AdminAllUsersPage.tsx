@@ -18,7 +18,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 function AdminAllUsersPage() {
     const [accessToken, setAccessToken] = useLocalStorage('accessToken', '')
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [currentItems, setCurrentItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
