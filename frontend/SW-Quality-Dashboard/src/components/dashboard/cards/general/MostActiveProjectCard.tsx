@@ -63,6 +63,7 @@ export default function MostActiveProjectCard({mostActiveProject, loading}) {
                                  flexDirection: "row",
                                  gap: "1vh",
                                  alignItems: "center",
+                                 width: "100%",
                              }}
                         >
                             <a className="avatar indicator">
@@ -71,7 +72,7 @@ export default function MostActiveProjectCard({mostActiveProject, loading}) {
                                 </div>
                             </a>
 
-                            <div className="project-details">
+                            <div className="project-details" >
                                 <h4
                                     style={{
                                         fontSize: "2.5vh",
