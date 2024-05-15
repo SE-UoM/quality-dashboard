@@ -38,6 +38,9 @@ export default function ProjectTableItem({project}) {
     const [rejectErrorMsg, setRejectErrorMsg] = React.useState('')
     const [rejectSuccess, setRejectSuccess] = React.useState(false)
 
+    const [modalText, setModalText] = React.useState('')
+    const [modalSubtext, setModalSubtext] = React.useState('')
+
     async function callApproveProjectAPI(projectId) {
         let url = baseUrl + apiUrls.routes.admin.authorizeProject.replace(':projectId', projectId)
 
@@ -107,7 +110,7 @@ export default function ProjectTableItem({project}) {
             >
                 <p>
                     <br/>
-                    Are you sure you want to approve this project? The analysis will be started immediately. <br/> <br/>
+                    Are you sure you want to approve this project for Analysis? <br/> <br/>
                     <strong>This action cannot be undone.</strong>
                 </p>
 
@@ -294,6 +297,15 @@ export default function ProjectTableItem({project}) {
                                 <i className="bi bi-three-dots-vertical"> </i>
                             </summary>
                             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                                <li>
+                                    <button style={{justifyContent: "flex-start"}}
+                                            onClick={() => document.getElementById('notImplementedFeatureModal').showModal()}
+                                    >
+                                        <i className="bi bi-play-circle"> </i>
+                                        Analyze Project
+                                    </button>
+                                </li>
+
                                 <li>
                                     <button style={{justifyContent: "flex-start"}}
                                         onClick={() => document.getElementById('notImplementedFeatureModal').showModal()}

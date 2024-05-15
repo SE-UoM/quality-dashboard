@@ -43,6 +43,7 @@ function AuthPage() {
             .then(response => {
                 if (response.ok) {
                     setIsAuthenticated(true)
+                    window.location.href = '/'
                 } else {
                     setIsAuthenticated(false)
                 }
@@ -50,7 +51,7 @@ function AuthPage() {
             .catch(error => {
                 setIsAuthenticated(false)
             })
-    }, [accessToken])
+    }, [accessToken, isAuthenticated])
 
     useEffect(() => {
         if (isAuthenticated) {

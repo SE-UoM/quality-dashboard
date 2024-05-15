@@ -12,7 +12,7 @@ import ProjectTableItem from "../tables/ProjectTableItem.tsx";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-function AdminPendingProjectsPage({updateCount}) {
+function AdminPendingProjectsPage() {
     const [accessToken, setAccessToken] = useLocalStorage('accessToken', '')
     const [currentPage, setCurrentPage] = React.useState(1);
     const [itemsPerPage, setItemsPerPage] = React.useState(10);
