@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.models.domain.Project;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -24,7 +25,7 @@ public class ProjectStats {
     private double techDebtPerLoC;
 
     @OneToMany(mappedBy = "projectStats", cascade = CascadeType.PERSIST)
-    private Collection<ProjectCodeSmellDistribution> codeSmellDistributions;
+    private Collection<ProjectCodeSmellDistribution> codeSmellDistributions =new ArrayList<>();
 
     @OneToOne
     @ToString.Exclude

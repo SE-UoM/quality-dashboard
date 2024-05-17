@@ -227,7 +227,6 @@ function SignUpForm() {
                         Sign Up
                     </Button>
 
-
                     <Form.Group className="m-0" controlId="formBasicRegisterUrl">
                         <Form.Label className="already-registered">
                             <i className="bi bi-link-45deg"> </i>Already have an account? <a href="/login" className={"sign-up-link-login-form"}> Login Instead.</a>

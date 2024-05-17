@@ -11,6 +11,7 @@ import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import org.json.JSONException;
@@ -36,11 +37,11 @@ public class GithubApiClient extends HttpClient {
     }
 
     /**
-             * Fetches project data from the GitHub API and populates the provided Project object with the retrieved information.
-             *
-             * @param project the Project object to populate with project data
-             * @throws Exception if an I/O error occurs during the API request
-             */
+     * Fetches project data from the GitHub API and populates the provided Project object with the retrieved information.
+     *
+     * @param project the Project object to populate with project data
+     * @throws Exception if an I/O error occurs during the API request
+     */
 
     public void fetchProjectData(Project project) throws Exception {
 
@@ -355,6 +356,11 @@ public class GithubApiClient extends HttpClient {
         if (avatarUrl == null) return DEFAULT_AVATAR_URL;
 
         return avatarUrl;
+    }
+
+    public String getShaOfClonedProject(Git clonedGit){
+        Ref head = clonedGit.getRepository().getAllRefs().get("HEAD");
+        return head.getObjectId().getName();
     }
 
 }
