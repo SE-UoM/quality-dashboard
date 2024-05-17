@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react';
-import { PieChart } from '@mui/x-charts';
+import React from 'react';
+import {PieChart, useDrawingArea} from '@mui/x-charts';
 import './CodeSmellDistributionCard.css';
 import apiRoutes from '../../../../../assets/data/api_urls.json';
 import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
-import * as url from "url";
 import axios from "axios";
 import ErrorModal from "../../../../modals/ErrorModal/ErrorModal.tsx";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import {styled} from "@mui/material/styles";
+import CustomPieChart from "../../../../charts/CustomPieChart.tsx";
 
 const colors = {
     "MINOR": "#67B279",
@@ -28,6 +29,23 @@ function formatText(text) {
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
+const StyledText = styled('text')(({ theme }) => ({
+    textAnchor: 'middle',
+    dominantBaseline: 'central',
+    fontWeight: "bold",
+    // fontSize: "15vh !important",
+    padding: "1em",
+    color: "var(--text-primary)"
+}));
+
+function PieCenterLabel({ children }: { children: React.ReactNode }) {
+    const { width, height, left, top } = useDrawingArea();
+    return (
+        <StyledText className="lang-count" x={left + width / 2} y={top + height / 2}>
+            {children}
+        </StyledText>
+    );
+}
 function CodeSmellDistributionCard() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [totalCodeSmells, setTotalCodeSmells] = React.useState(0);
@@ -39,7 +57,7 @@ function CodeSmellDistributionCard() {
     const [loading, setLoading] = React.useState(true);
 
     // Call the API to get the language distribution data
-    useEffect(() => {
+    React.useEffect(() => {
         let url = baseApiUrl + apiRoutes.routes.dashboard.codeSmellDistribution;
 
         // Get the User Organization from the JWT Token
@@ -76,7 +94,6 @@ function CodeSmellDistributionCard() {
             });
     }, [accessToken]);
 
-
     // Format data for PieChart
     const pieChartData = codeSmellDistribution.map((item, index) => ({
         key: item.severity,
@@ -103,32 +120,22 @@ function CodeSmellDistributionCard() {
                 <div className="code-smell-distribution-container">
                     <div className="code-smells-distribution-chart">
                         {loading ? (
-                                <div className="distribution-skeleton">
-                                    <div className="distribution-skeleton-graph"> </div>
-                                    <div className="distribution-skeleton-legend-container">
-                                        <div className="distribution-skeleton-legend"> </div>
-                                        <div className="distribution-skeleton-legend"> </div>
-                                        <div className="distribution-skeleton-legend"> </div>
-                                    </div>
+                            <div className="distribution-skeleton">
+                                <div className="distribution-skeleton-graph"> </div>
+                                <div className="distribution-skeleton-legend-container">
+                                    <div className="distribution-skeleton-legend"> </div>
+                                    <div className="distribution-skeleton-legend"> </div>
+                                    <div className="distribution-skeleton-legend"> </div>
                                 </div>
-                            )
-                            :
-                                <>
-                                <h2>{formatText(totalCodeSmells)}</h2>
-
-                                <PieChart
-                                    series={[{
-                                        data: pieChartData,
-                                        innerRadius: 104,
-                                        outerRadius: 144,
-                                        paddingAngle: 1,
-                                        cornerRadius: 5,
-                                        startAngle: -90,
-                                        highlightScope: {faded: 'global', highlighted: 'item'}
-                                    }]}
+                            </div>
+                        ) : (
+                            <>
+                                <CustomPieChart
+                                    data={pieChartData}
+                                    centerText={totalCodeSmells}
                                 />
-                                </>
-                        }
+                            </>
+                        )}
 
                     </div>
                 </div>
