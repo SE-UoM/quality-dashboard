@@ -198,7 +198,6 @@ function LoginForm() {
                         Don't have an account? <a href="/register" className="link">Sign up here.</a>
                     </div>
                 </form>
-
             </div>
         </>
     );

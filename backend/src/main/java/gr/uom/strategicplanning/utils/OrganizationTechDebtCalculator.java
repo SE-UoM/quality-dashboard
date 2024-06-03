@@ -48,7 +48,7 @@ public class OrganizationTechDebtCalculator {
 
     public static Collection<Project> findBestTechDebtProjects(Collection<Project> projects, int numberOfProjects) {
         Collection<Project> sortedProjects = projects.stream()
-                .sorted(Comparator.comparing(project -> project.getProjectStats().getTechDebt()))
+                .sorted(Comparator.comparing(project -> project.getProjectStats().getTechDebtPerLoC()))
                 .collect(Collectors.toList());
 
         return sortedProjects.stream().limit(numberOfProjects).collect(Collectors.toList());
