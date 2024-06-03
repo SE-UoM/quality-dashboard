@@ -47,13 +47,34 @@ public class GithubApiClient extends HttpClient {
         String username = extractUsername(project.getRepoUrl());
         String repoName = extractRepoName(project.getRepoUrl());
         String defaultBranch = getDefaultBranchName(project);
+        String projectDescription = getProjectDescFromGithub(project.getRepoUrl());
 
         project.setName(repoName);
+        project.setProjectDescription(projectDescription);
         project.setOwnerName(username);
         project.setTotalCommits(captureTotalCommits(username, repoName));
         project.setForks(getTotalForks(username, repoName));
         project.setStars(this.getTotalStars(username, repoName));
         project.setDefaultBranchName(defaultBranch);
+    }
+
+    private String getProjectDescFromGithub(String repoUrl) {
+        String username = extractUsername(repoUrl);
+        String repoName = extractRepoName(repoUrl);
+        String url = String.format("https://api.github.com/repos/%s/%s", username, repoName);
+        try {
+            Response response = sendGithubRequest(url);
+
+            if (response.isSuccessful()) {
+                Map<String, Object> jsonMap = gson.fromJson(response.body().string(), Map.class);
+                return (String) jsonMap.get("description");
+            } else {
+                throw new IOException("Failed to fetch repository from GitHub API");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private Response sendGithubRequest(String url) throws IOException {

@@ -46,7 +46,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         String servletPath = request.getServletPath();
         System.out.println("servletPath: "+servletPath);
         System.out.println("request: "+request);
-        System.out.println(isAllowedPath(servletPath));
 
         if(isAllowedPath(servletPath)){ filterChain.doFilter(request,response); }
 
