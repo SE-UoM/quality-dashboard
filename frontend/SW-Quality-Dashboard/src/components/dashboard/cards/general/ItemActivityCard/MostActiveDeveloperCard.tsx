@@ -10,23 +10,23 @@ function MostActiveDeveloperCard({userUrl, userImg, username, commitsCount, issu
     const [userLocation, setUserLocation] = useState("");
 
 
-    useEffect(() => {
-        async function getUserData(username: string) {
-            const apiUrl = `https://api.github.com/users/${username}`;
-            let headers = {
-                'Authorization': `Bearer ${GH_TOKEN}`,
-            }
-
-            let res = await axios.get(apiUrl, {headers: headers});
-
-            return await res.data;
-        }
-
-        getUserData(username).then((data) => {
-            setUserLocation(data.location)
-        }).catch((error) => {
-        })
-    }, [loading]);
+    // useEffect(() => {
+    //     async function getUserData(username: string) {
+    //         const apiUrl = `https://api.github.com/users/${username}`;
+    //         let headers = {
+    //             'Authorization': `Bearer ${GH_TOKEN}`,
+    //         }
+    //
+    //         let res = await axios.get(apiUrl, {headers: headers});
+    //
+    //         return await res.data;
+    //     }
+    //
+    //     getUserData(username).then((data) => {
+    //         setUserLocation(data.location)
+    //     }).catch((error) => {
+    //     })
+    // }, [loading]);
 
 
     return (

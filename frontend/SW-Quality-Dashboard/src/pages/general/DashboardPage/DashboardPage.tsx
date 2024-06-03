@@ -7,7 +7,6 @@ import DashboardSlideTwo from "../../../components/dashboard/slides/DashboardSli
 import DashboardSlideThree from "../../../components/dashboard/slides/DashboardSlideThree/DashboardSlideThree.tsx";
 import DashboardSlideFour from "../../../components/dashboard/slides/DashboardSlideFour/DashboardSlideFour.tsx";
 import ProtectedRoute from "../../../routes/ProtectedRoute.tsx";
-import SubmitProjectForm from "../../../components/forms/SubmitProjectForm/SubmitProjectForm.tsx";
 
 function DashboardPage({isAuthenticated, isAdmin}) {
     const location = useLocation()

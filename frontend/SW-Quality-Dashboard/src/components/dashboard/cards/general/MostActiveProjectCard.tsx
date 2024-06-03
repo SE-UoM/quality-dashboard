@@ -6,12 +6,12 @@ import useAxiosGet from "../../../../hooks/useAxios.ts";
 const token = import.meta.env.VITE_GITHUB_TOKEN;
 
 export default function MostActiveProjectCard({mostActiveProject, loading}) {
-    const {data: githubData, loading: githubLoading, error: githubError, errorMessage: githubErrorMsg} =
-        !loading ? useAxiosGet(`https://api.github.com/repos/${mostActiveProject.owner}/${mostActiveProject.name}`, token) : {};
+    // const {data: githubData, loading: githubLoading, error: githubError, errorMessage: githubErrorMsg} =
+    //     !loading ? useAxiosGet(`https://api.github.com/repos/${mostActiveProject.owner}/${mostActiveProject.name}`, token) : {};
 
     return (
         <>
-            {loading || githubLoading ? (
+            {loading ? (
                 <SimpleDashboardCard
                     id={"mostActiveProj"}
                     className={"skeleton"}
@@ -75,9 +75,11 @@ export default function MostActiveProjectCard({mostActiveProject, loading}) {
                             <div className="project-details" >
                                 <h4
                                     style={{
-                                        fontSize: "2.5vh",
+                                        fontSize: "4vh",
                                         fontWeight: "bold",
-                                        margin: "0"
+                                        margin: "0",
+                                        display: "flex",
+                                        alignItems: "center",
                                     }}
                                 >
                                     {
@@ -91,16 +93,17 @@ export default function MostActiveProjectCard({mostActiveProject, loading}) {
                                          }}
                                     >
                                         <i className="bi bi-github"> </i> &nbsp;
-                                        {githubData ? githubData.default_branch : "N/A"}
+                                        public
+                                        {/*{githubData ? githubData.default_branch : "N/A"}*/}
                                     </div>
                                 </h4>
                                 <p
                                     style={{fontSize: "2vh"}}
                                 >
-                                    {githubData ?
-                                        truncateString(githubData.description, 130) :
-                                        "N/A"
-                                    }
+                                    {/*{githubData ?*/}
+                                    {/*    truncateString(githubData.description, 130) :*/}
+                                    {/*    "N/A"*/}
+                                    {/*}*/}
                                 </p>
                             </div>
                         </div>

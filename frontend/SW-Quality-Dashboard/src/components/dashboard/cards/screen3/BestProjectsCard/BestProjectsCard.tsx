@@ -26,28 +26,28 @@ export default function BestProjectsCard({bestProjectsData, loading}) {
         setBestProjects(bestProjectsData);
     }, [bestProjectsData]);
 
-    useEffect(() => {
-        // Function to fetch additional data from GitHub API for each project
-        const fetchGithubData = async () => {
-            const projectsWithGithubData = await Promise.all(
-                bestProjects.map(async (project) => {
-                    try {
-                        const githubResponse = await getRepoFromGithubAPI(project.owner, project.name);
-                        return { ...project, githubData: githubResponse.data };
-                    } catch (error) {
-                        console.error("Error fetching GitHub data:", error);
-                        return project;
-                    }
-                })
-            );
-            setBestProjects(projectsWithGithubData);
-        };
-
-        // Fetch GitHub data only when bestProjects array changes
-        if (bestProjects.length > 0) {
-            fetchGithubData();
-        }
-    }, [bestProjects]);
+    // useEffect(() => {
+    //     // Function to fetch additional data from GitHub API for each project
+    //     const fetchGithubData = async () => {
+    //         const projectsWithGithubData = await Promise.all(
+    //             bestProjects.map(async (project) => {
+    //                 try {
+    //                     const githubResponse = await getRepoFromGithubAPI(project.owner, project.name);
+    //                     return { ...project, githubData: githubResponse.data };
+    //                 } catch (error) {
+    //                     console.error("Error fetching GitHub data:", error);
+    //                     return project;
+    //                 }
+    //             })
+    //         );
+    //         setBestProjects(projectsWithGithubData);
+    //     };
+    //
+    //     // Fetch GitHub data only when bestProjects array changes
+    //     if (bestProjects.length > 0) {
+    //         fetchGithubData();
+    //     }
+    // }, [bestProjects]);
 
     return (
         <>
@@ -92,12 +92,12 @@ export default function BestProjectsCard({bestProjectsData, loading}) {
                                     </td>
                                     <td>
                                         <div>
-                                            <a style={{fontSize: "2.5vh", fontWeight: "bold"}} href={`https://github.com/${project.owner}/${project.name}`} className="tooltip tooltip-top" data-tip={project.owner + "/" + project.name}>
+                                            <a style={{fontSize: "3vh", fontWeight: "bold"}} href={`https://github.com/${project.owner}/${project.name}`} className="tooltip tooltip-top" data-tip={project.owner + "/" + project.name}>
                                                 {truncateString(project.name, 10)}
                                             </a>
-                                            <div className="badge badge-accent" style={{margin: "1vh 1vh", fontSize: "1.5vh"}} >{project.githubData ? project.githubData.language : "No language"}</div>
+                                            {/*<div className="badge badge-accent" style={{margin: "1vh 1vh", fontSize: "1.5vh"}} >{project.githubData ? project.githubData.language : "No language"}</div>*/}
 
-                                            <p>{project.githubData && project.githubData.description  ? truncateString(project.githubData.description, 50) : "No description"}</p>
+                                            {/*<p>{project.githubData && project.githubData.description  ? truncateString(project.githubData.description, 50) : "No description"}</p>*/}
                                         </div>
                                     </td>
                                     <td style={{

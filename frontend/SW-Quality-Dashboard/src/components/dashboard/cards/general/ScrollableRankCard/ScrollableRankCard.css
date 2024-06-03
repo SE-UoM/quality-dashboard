@@ -5,6 +5,7 @@
     overflow-y: auto; /* Add vertical scroll when content exceeds the height */
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 /* Additional styling for scrollbar if needed */
