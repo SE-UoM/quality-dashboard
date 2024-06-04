@@ -61,10 +61,7 @@ function AuthPage() {
 
 
     return (
-        <div className={'login-page'}>
-            {/*{!isAuthenticated &&*/}
-            {/*    <LoginForm/>*/}
-            {/*}*/}
+        <div className="login-page">
             <div className="auth-page-aside">
                 <div className="auth-page-logo">
                     <img src={logo} alt="Dashboard Logo"/>
