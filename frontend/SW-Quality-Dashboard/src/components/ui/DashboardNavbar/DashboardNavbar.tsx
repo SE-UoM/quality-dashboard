@@ -1,6 +1,5 @@
 import logo from '../../../assets/dashboard_logo_transparent.png'
 import './DashboardNavbar.css'
-import {Container, Nav, Navbar, NavDropdown} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "../../../interfaces/DecodedToken.ts";
@@ -29,7 +28,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
     let handleLogout = () => {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
-        window.location.href = '/'
+        window.location.reload();
     }
 
     return (
