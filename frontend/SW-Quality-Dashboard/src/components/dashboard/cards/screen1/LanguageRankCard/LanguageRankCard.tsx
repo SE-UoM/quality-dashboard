@@ -51,9 +51,9 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
             return
         }
 
-        let firstLanguageName = topLanguages ? topLanguages[1].name : "";
-        let secondLanguageName = topLanguages ? topLanguages[2].name : "";
-        let thirdLanguageName = topLanguages ? topLanguages[3].name : "";
+        let firstLanguageName = topLanguages[1] ? topLanguages[1].name : "";
+        let secondLanguageName = topLanguages[2] ? topLanguages[2].name : "";
+        let thirdLanguageName = topLanguages[3] ? topLanguages[3].name : "";
 
         let firstLangImg = "";
         let secondLangImg = "";
