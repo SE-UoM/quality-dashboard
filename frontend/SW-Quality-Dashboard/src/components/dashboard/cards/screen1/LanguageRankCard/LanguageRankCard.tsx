@@ -26,9 +26,9 @@ function extractLangImageName(langName) {
 }
 
 function resetLangImageName(langName, resetTo) {
-    if (langName === "css3") langName = resetTo;
-    if (langName === "html5") langName = resetTo;
-    if (langName === "cplusplus") langName = resetTo;
+    if (langName === "css3") langName = "CSS";
+    if (langName === "html5") langName = "HTML";
+    if (langName === "cplusplus") langName = "C++";
 
     return langName;
 }
@@ -105,7 +105,7 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
                         <span className={"lang-name-rank"}>
                              <>
                                  <img src={secondLanguage.image}/>
-                                 {secondLanguage.name}
+                                 {secondLanguage.name.toUpperCase()}
                              </>
                         </span>
                                 <div className="language-rank-line glass" id={"second"}>
@@ -122,7 +122,7 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
                         <span className={"lang-name-rank"}>
                             <>
                                 <img src={firstLanguage.image}/>
-                                {firstLanguage.name}
+                                {firstLanguage.name.toUpperCase()}
                             </>
                         </span>
                                 <div className="language-rank-line glass" id={"first"}>
@@ -139,7 +139,7 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
                         <span className={"lang-name-rank"}>
                             <>
                                 <img src={thirdLanguage.image}/>
-                                {thirdLanguage.name}
+                                {thirdLanguage.name.toUpperCase()}
                             </>
                         </span>
                                 <div className="language-rank-line glass" id={"third"}>
