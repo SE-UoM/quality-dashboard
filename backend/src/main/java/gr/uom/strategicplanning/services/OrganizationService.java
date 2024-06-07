@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,13 @@ public class OrganizationService {
 
     public boolean organizationExistsById(Long id) {
         return organizationRepository.existsById(id);
+    }
+
+    public void addProjectToOrganization(Long organizationId, Project project) {
+        Organization organization = getOrganizationById(organizationId);
+
+        organization.addProject(project);
+
+        saveOrganization(organization);
     }
 }
