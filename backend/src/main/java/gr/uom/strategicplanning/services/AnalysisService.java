@@ -58,6 +58,7 @@ public class AnalysisService {
 
     public void fetchGithubData(Project project) throws Exception {
         githubApiClient.fetchProjectData(project);
+        projectService.saveProject(project);
     }
 
     public boolean validateUrlWithGithub(String url) {
