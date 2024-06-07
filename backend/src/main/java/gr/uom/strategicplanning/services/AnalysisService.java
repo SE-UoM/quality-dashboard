@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.analysis.github.GitClient;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalysis;
 import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
@@ -63,12 +64,9 @@ public class AnalysisService {
         return githubApiClient.repoFoundByGithubAPI(url);
     }
 
-    public boolean repoHasLessThatThresholdCommits(Project project) {
-        return githubApiClient.repoHasLessThatThresholdCommits(project, OrganizationAnalysis.COMMITS_THRESHOLD);
-    }
-
     private void analyzeCommits(Project project) throws Exception {
-        List<String> commitList = githubApiClient.fetchCommitSHA(project);
+        List<String> commitList = GitClient.fetchCommitSHAsList(project);
+
         List<String> commitListFinal = new ArrayList<>();
         for (String sha: commitList){
             if(project.getCommits().stream().anyMatch(x-> Objects.equals(x.getHash(), sha)))
@@ -79,7 +77,7 @@ public class AnalysisService {
 
         for (String commitSHA : commitListFinal) {
             System.out.println("Analyzing " + commitListFinal.indexOf(commitSHA)+1 + " out of " + commitListFinal.size() + " commits");
-            githubApiClient.checkoutCommit(project, commitSHA);
+            GitClient.checkoutCommit(project, commitSHA);
 
             Commit commit = new Commit();
             commit.setHash(commitSHA);
@@ -92,7 +90,7 @@ public class AnalysisService {
     }
 
     private void analyzeMaster(Project project) throws Exception {
-        githubApiClient.checkoutMaster(project);
+        GitClient.checkoutMaster(project);
 
         sonarAnalysis = new SonarAnalysis(project, project.getDefaultBranchName(), SONARQUBE_URL);
     }
@@ -150,15 +148,15 @@ public class AnalysisService {
     }
 
     public Integer startAnalysis(Project project) throws Exception {
-        Git clonedGit = GithubApiClient.cloneRepository(project);
+        Git clonedGit = GitClient.cloneRepository(project);
 
         try {
-            String sha = githubApiClient.getShaOfClonedProject(clonedGit);
+            String sha = GitClient.getShaOfClonedProject(clonedGit);
 
             if(project.getCommits().stream().anyMatch(x-> Objects.equals(x.getHash(), sha))){
                 project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
                 clonedGit.close();
-                GithubApiClient.deleteRepository(project);
+                GitClient.deleteRepository(project);
 
                 return 0;
             }
@@ -182,17 +180,21 @@ public class AnalysisService {
                 projectService.saveProject(project);
 
                 clonedGit.close();
-                GithubApiClient.deleteRepository(project);
+                GitClient.deleteRepository(project);
 
                 return project.getCommits().size();
             }
         } catch (Exception e) {
+            System.out.println("Analysis failed for project " + project.getName());
+            e.printStackTrace();
+
             clonedGit.close();
-            GithubApiClient.deleteRepository(project);
+            GitClient.deleteRepository(project);
 
             project.setStatus(ProjectStatus.ANALYSIS_FAILED);
             projectService.saveProject(project);
-            return -1;
+
+            throw e;
         }
     }
 

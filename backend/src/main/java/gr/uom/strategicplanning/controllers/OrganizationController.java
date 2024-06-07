@@ -250,11 +250,13 @@ public class OrganizationController {
 
                 String projectName = project.getName();
                 String projectOwner = project.getOwnerName();
+                String projectDescription = project.getProjectDescription();
                 double techDebt = project.getProjectStats().getTechDebtPerLoC();
 
                 projectResponse.put("name", projectName);
                 projectResponse.put("owner", projectOwner);
                 projectResponse.put("techDebtPerLoc", techDebt);
+                projectResponse.put("description", projectDescription);
 
                 topProjectsResponse.add(projectResponse);
             }
@@ -634,6 +636,8 @@ public class OrganizationController {
         simpleProjectResponse.put("totalCodeSmells", codeSmells);
         simpleProjectResponse.put("totalCommits", totalCommits);
         simpleProjectResponse.put("totalForks", project.getForks());
+        simpleProjectResponse.put("defaultBranch", project.getDefaultBranchName());
+        simpleProjectResponse.put("description", project.getProjectDescription());
 
         return simpleProjectResponse;
     }

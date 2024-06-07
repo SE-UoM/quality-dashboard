@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.analysis.github.GitClient;
 import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.domain.CodeSmell;
@@ -43,7 +44,7 @@ public class CommitService {
     }
 
     public void populateCommit(Commit commit, Project project) throws IOException, InterruptedException {
-        Date commitDate = githubApiClient.fetchCommitDate(project, commit);
+        Date commitDate = GitClient.fetchCommitDate(project, commit);
         commit.setCommitDate(commitDate);
 
         Developer developer = developerService.populateDeveloperData(project, commit);

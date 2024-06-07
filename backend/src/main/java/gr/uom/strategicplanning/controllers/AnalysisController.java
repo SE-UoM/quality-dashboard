@@ -3,6 +3,7 @@ package gr.uom.strategicplanning.controllers;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
 import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
+import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.services.*;
 import gr.uom.strategicplanning.models.domain.Project;
@@ -117,16 +118,11 @@ public class AnalysisController {
 
             // Get the github data to make sure the repo actually exists
             analysisService.fetchGithubData(project);
+
             // Save the project
             projectRepository.save(project);
 
-            // Check if the project has less than the required number of commits
-            //toDo
-            // boolean projectNeedsReview = project.getCommits().size() > OrganizationAnalysis.COMMITS_THRESHOLD;
-            boolean repoHasLessCommitsThanThreshold = analysisService.repoHasLessThatThresholdCommits(project);
-            boolean projectNeedsReview = !repoHasLessCommitsThanThreshold && project.getStatus() != ProjectStatus.ANALYSIS_READY;
-
-            if (projectNeedsReview) {
+            if (!project.hasLessCommitsThanThreshold()) {
                 project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
 
                 // Save the project, organization and update the organization analysis
@@ -142,6 +138,7 @@ public class AnalysisController {
             }
 
             Integer analyzedCommits= analysisService.startAnalysis(project);
+
             if(analyzedCommits==0)
                 return ResponseEntity.ok(ResponseFactory.createResponse(
                         HttpStatus.OK.value(),

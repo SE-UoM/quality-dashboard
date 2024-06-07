@@ -54,6 +54,8 @@ public class Project {
 
     private String defaultBranchName;
 
+    private String mainLang;
+
     public void addCommit(Commit commit) {
         this.commits.add(commit);
         commit.setProject(this);
@@ -79,5 +81,9 @@ public class Project {
 
     private boolean developerExists(Developer developer) {
         return this.developers.contains(developer);
+    }
+
+    public boolean hasLessCommitsThanThreshold() {
+        return totalCommits < OrganizationAnalysis.COMMITS_THRESHOLD;
     }
 }
