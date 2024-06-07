@@ -90,8 +90,8 @@ function App() {
                             {/* Non Logged in Routes */}
                             {!isAuthenticated && (
                                 <>
-                                    <Route path="/login" element={<AuthPage />} />
-                                    <Route path="/register" element={<AuthPage />} />
+                                    <Route path="/login" element={<AuthPage isAuth={isAuthenticated} />} />
+                                    <Route path="/register" element={<AuthPage isAuth={isAuthenticated} />} />
                                 </>
                             )}
                         </Route>

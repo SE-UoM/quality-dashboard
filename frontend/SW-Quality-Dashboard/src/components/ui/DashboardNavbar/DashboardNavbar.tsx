@@ -28,6 +28,10 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
     let handleLogout = () => {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
+
+        // Reset the isAuthenticated state
+        isAuthenticated = false
+
         window.location.reload();
     }
 

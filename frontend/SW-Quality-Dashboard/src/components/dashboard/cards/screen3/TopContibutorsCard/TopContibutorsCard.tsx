@@ -33,23 +33,6 @@ export default function TopContibutorsCard({topContributorsData, loadingTopContr
                     cardId="scrollableRankCard"
                     gridArea={"topCommiters"}
                 >
-                    {/*{topContributors.map((item, index) => {*/}
-                    {/*    let name = item.name;*/}
-                    {/*    let totalCommits = item.totalCommits;*/}
-                    {/*    let rank = index + 1;*/}
-                    {/*    return (*/}
-                    {/*        <DashboardRankedItem*/}
-                    {/*            key={index}*/}
-                    {/*            projectName={name}*/}
-                    {/*            rank={rank}*/}
-                    {/*            loading={loadingTopContributors}*/}
-                    {/*        >*/}
-                    {/*            {"Contributions: " + totalCommits}*/}
-                    {/*        </DashboardRankedItem>*/}
-                    {/*    )*/}
-                    {/*})}*/}
-
-                    <div id="Scrolling" className="pt-1">
                         <table className="table table-zebra">
                             {/* head */}
                             <thead></thead>
@@ -133,7 +116,6 @@ export default function TopContibutorsCard({topContributorsData, loadingTopContr
                             ))}
                             </tbody>
                         </table>
-                    </div>
                 </ScrollableRankCard>
             )}
     </>

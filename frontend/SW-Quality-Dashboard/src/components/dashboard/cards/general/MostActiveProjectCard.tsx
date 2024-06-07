@@ -2,12 +2,14 @@ import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
 import {formatText, truncateString} from "../../../../utils/textUtils.ts";
 import CountIcon from "../ui/CountIcon.tsx";
 import useAxiosGet from "../../../../hooks/useAxios.ts";
+import {useEffect} from "react";
 
 const token = import.meta.env.VITE_GITHUB_TOKEN;
 
 export default function MostActiveProjectCard({mostActiveProject, loading}) {
-    // const {data: githubData, loading: githubLoading, error: githubError, errorMessage: githubErrorMsg} =
-    //     !loading ? useAxiosGet(`https://api.github.com/repos/${mostActiveProject.owner}/${mostActiveProject.name}`, token) : {};
+    useEffect(() => {
+        console.log(mostActiveProject)
+    }, [mostActiveProject]);
 
     return (
         <>
@@ -75,7 +77,7 @@ export default function MostActiveProjectCard({mostActiveProject, loading}) {
                             <div className="project-details" >
                                 <h4
                                     style={{
-                                        fontSize: "4vh",
+                                        fontSize: "3vh",
                                         fontWeight: "bold",
                                         margin: "0",
                                         display: "flex",
@@ -93,17 +95,16 @@ export default function MostActiveProjectCard({mostActiveProject, loading}) {
                                          }}
                                     >
                                         <i className="bi bi-github"> </i> &nbsp;
-                                        public
-                                        {/*{githubData ? githubData.default_branch : "N/A"}*/}
+                                        {mostActiveProject ? mostActiveProject.defaultBranch : "public"}
                                     </div>
                                 </h4>
                                 <p
-                                    style={{fontSize: "2vh"}}
+                                    style={{fontSize: "2.1vh"}}
                                 >
-                                    {/*{githubData ?*/}
-                                    {/*    truncateString(githubData.description, 130) :*/}
-                                    {/*    "N/A"*/}
-                                    {/*}*/}
+                                    {mostActiveProject ?
+                                        truncateString(mostActiveProject.description, 130) :
+                                        "This project has no description"
+                                    }
                                 </p>
                             </div>
                         </div>

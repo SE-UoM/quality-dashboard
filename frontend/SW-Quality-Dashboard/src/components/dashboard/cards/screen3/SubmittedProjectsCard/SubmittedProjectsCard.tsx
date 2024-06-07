@@ -138,26 +138,19 @@ function SubmittedProjectsCard() {
                                         paddingTop: "1vh"
                             }}
                             >
-                                {/*<div className="avatar">*/}
-                                {/*    <div className="w-8 rounded-full">*/}
-                                {/*        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-
                                 By: <a className="link link-hover" href={"https://github.com/" + selectedProjectOwner}>@{selectedProjectOwner}</a>
                             </div>
 
                             <div className="stat-figure">
                                 {/*<i className="bi bi-github" style={{fontSize: "10vh"}}> </i>*/}
 
-                                <div className="avatar">
-                                    <div className="w-24 mask mask-squircle p-5 bg-base-300">
+                                <div className="mask mask-squircle" >
                                         <img
-                                            src={selectedProjectLanguage ? (languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg") : noneImageUrl}
+                                            // src={selectedProjectLanguage ? (languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg") : noneImageUrl}
+                                            src={"https://avatars.githubusercontent.com/" + selectedProjectOwner}
                                             alt={selectedProjectLanguage}
-
+                                            style={{height: "15vh"}}
                                         />
-                                    </div>
                                 </div>
                             </div>
                         </div>

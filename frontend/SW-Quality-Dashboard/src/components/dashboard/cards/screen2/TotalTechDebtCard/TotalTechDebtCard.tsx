@@ -30,7 +30,7 @@ function TotalTechDebtCard({totalTechDebt, loading, tdPerLine, tdPerProject}) {
                                 {/*<i className="bi bi-cash-coin"> </i>*/}
                                 Total Tech Debt
                             </div>
-                            <div className="stat-value">&euro; {formatText(totalTechDebt, "k")}</div>
+                            <div className="stat-value">&euro; {totalTechDebt >= 0 ? formatText(totalTechDebt, "k") : "0"}</div>
                             <div className="stat-desc pt-1">
                                 Since Last Analysis
                             </div>
@@ -38,7 +38,7 @@ function TotalTechDebtCard({totalTechDebt, loading, tdPerLine, tdPerProject}) {
 
                         <div className="stat place-items-center">
                             <div className="stat-title">Tech Debt per Line</div>
-                            <div className="stat-value">{tdPerLine.toFixed(2)}'</div>
+                            <div className="stat-value">{tdPerLine >= 0 ? tdPerLine.toFixed(2) : "0.00"}'</div>
                             <div className="stat-desc pt-1">
                                 Average in TD per Line of Code
                             </div>
@@ -46,7 +46,7 @@ function TotalTechDebtCard({totalTechDebt, loading, tdPerLine, tdPerProject}) {
 
                         <div className="stat place-items-center">
                             <div className="stat-title">Tech Debt per Project</div>
-                            <div className="stat-value">{tdPerProject.toFixed(2)}'</div>
+                            <div className="stat-value">{tdPerProject >= 0 ? tdPerProject.toFixed(2) : "0.00"}'</div>
                             <div className="stat-desc">
                                 Average in TD per Project
                             </div>

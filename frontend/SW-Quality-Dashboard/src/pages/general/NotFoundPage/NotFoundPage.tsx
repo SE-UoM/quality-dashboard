@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import "./NotFoundPage.css"
-import {Button} from "react-bootstrap";
 import logo from "../../../assets/dashboard_logo_transparent.png";
 
 function NotFoundPage() {
@@ -9,14 +8,17 @@ function NotFoundPage() {
     return (
         <>
             <div className="not-found-page">
-                <img src={logo} alt="Quality Dashboard Logo" className="not-found-logo" height="40%"/>
-                <h2>
+                <i className="bi bi-exclamation-triangle text-error"></i>
+                <h2 className="text-error">
                     <strong>404</strong>
                 </h2>
-                <h3>Page not found</h3>
-                <p>
-                    Sorry, the page you are looking for does not exist or has been moved.
+                <p className="opacity-75">
+                    Oops! The page you are looking for does not exist.
                 </p>
+
+                <a href="/" className="btn btn-primary">
+                    Go back to the home page
+                </a>
             </div>
         </>
     )

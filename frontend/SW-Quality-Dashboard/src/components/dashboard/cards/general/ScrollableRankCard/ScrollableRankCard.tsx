@@ -38,7 +38,7 @@ export default function ScrollableRankCard({ title, icon, children, cardId, grid
                     }}
                     className="tooltip tooltip-left btn"
                     data-tip={"Auto Scroll (" + (autoscroll ? "On" : "Off") + ")"}
-                    disabled
+                    disabled={true}
                 >
                     <i className={autoscroll ? "bi bi-pause-circle-fill" : "bi bi-play-circle-fill"}> </i>
                 </button>
