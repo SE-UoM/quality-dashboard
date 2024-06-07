@@ -6,6 +6,7 @@ import gr.uom.strategicplanning.controllers.dtos.OrganizationCodeSmellDistributi
 import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
 import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
 import gr.uom.strategicplanning.controllers.responses.implementations.*;
+import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ActivityStats;
@@ -246,17 +247,22 @@ public class OrganizationController {
             Collection<Map> topProjectsResponse = new ArrayList<>();
 
             for (Project project : topProjects) {
+                // If the analysis is not complete, skip the project
+                if (project.getStatus() != ProjectStatus.ANALYSIS_COMPLETED) continue;
+
                 Map<String, Object> projectResponse = new HashMap<>();
 
                 String projectName = project.getName();
                 String projectOwner = project.getOwnerName();
                 String projectDescription = project.getProjectDescription();
+                String defaultBranch = project.getDefaultBranchName();
                 double techDebt = project.getProjectStats().getTechDebtPerLoC();
 
                 projectResponse.put("name", projectName);
                 projectResponse.put("owner", projectOwner);
                 projectResponse.put("techDebtPerLoc", techDebt);
                 projectResponse.put("description", projectDescription);
+                projectResponse.put("defaultBranch", defaultBranch);
 
                 topProjectsResponse.add(projectResponse);
             }

@@ -28,6 +28,7 @@ import java.util.concurrent.CompletableFuture;
 public class AnalysisController {
     private final AnalysisService analysisService;
     private final ProjectRepository projectRepository;
+    private final ProjectService projectService;
     private final OrganizationService organizationService;
     private final UserService userService;
     private final OrganizationAnalysisService organizationAnalysisService;
@@ -49,7 +50,8 @@ public class AnalysisController {
             ProjectRepository projectRepository,
             OrganizationAnalysisService organizationAnalysisService,
             ExternalAnalysisService externalAnalysisService,
-            MailSendingService mailSendingService
+            MailSendingService mailSendingService,
+            ProjectService projectService
     ) {
         this.analysisService = analysisService;
         this.userService = userService;
@@ -58,6 +60,7 @@ public class AnalysisController {
         this.projectRepository = projectRepository;
         this.externalAnalysisService = externalAnalysisService;
         this.mailSendingService = mailSendingService;
+        this.projectService = projectService;
     }
 
     private boolean urlIsValid(String url) {
@@ -67,77 +70,35 @@ public class AnalysisController {
     @PostMapping("/start")
     public ResponseEntity<ResponseInterface> startAnalysis(@RequestParam("github_url") String githubUrl, HttpServletRequest request) {
         try {
+            boolean urlIsInvalid = githubUrl==null || githubUrl.isEmpty() || !githubUrl.matches(GITHUB_URL_PATTERN);
+            if (urlIsInvalid || !analysisService.validateUrlWithGithub(githubUrl)) {
+                return ResponseEntity.badRequest().body(ResponseFactory.createErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Invalid github url",
+                        "The url you provided is not a valid github url or the repository was not found. Make sure you provide a valid public github url."
+                ));
+            }
+
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(request.getHeader("AUTHORIZATION"));
             String email = decodedJWT.getSubject();
             User user = userService.getUserByEmail(email);
+
             Organization organization = user.getOrganization();
-
-            boolean urlIsInvalid = !urlIsValid(githubUrl);
-            if (urlIsInvalid) {
-                ResponseInterface response = ResponseFactory.createErrorResponse(
-                        HttpStatus.BAD_REQUEST.value(),
-                        "Invalid github url",
-                        "The url you provided is not a valid github url"
-                );
-
-                return ResponseEntity.badRequest().body(response);
-            }
-
-            // Check if the project already exists
-            Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(githubUrl);
-            Project project;
-
-            if (!projectOptional.isPresent()) {
-                // If the project doesn't exist, create and save it
-                project = new Project();
-                project.setRepoUrl(githubUrl);
-                project.setOrganization(organization);
-                project.setStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
-                projectRepository.save(project);
-                organization.addProject(project);
-            } else {
-                // If the project exists, retrieve it from the database
-                project = projectOptional.get();
-                //toDo
-                // check status
-                // and stop if analysis running
-            }
-
-            // Make sure github can find the repo
-            boolean repoFound = analysisService.validateUrlWithGithub(githubUrl);
-
-            if (!repoFound) {
-                ResponseInterface response = ResponseFactory.createErrorResponse(
-                        HttpStatus.BAD_REQUEST.value(),
-                        "Repository not found",
-                        "The repository you provided was not found on github"
-                );
-
-                return ResponseEntity.badRequest().body(response);
-            }
+            Project project = projectService.getOrCreateProject(githubUrl, organization);
 
             // Get the github data to make sure the repo actually exists
             analysisService.fetchGithubData(project);
 
-            // Save the project
-            projectRepository.save(project);
-
             if (!project.hasLessCommitsThanThreshold()) {
-                project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+                projectService.updateProjectStatus(project.getId(), ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
 
-                // Save the project, organization and update the organization analysis
-                projectRepository.save(project);
-                organizationService.saveOrganization(organization);
-
-                ResponseInterface response = ResponseFactory.createResponse(
+                return ResponseEntity.ok(ResponseFactory.createResponse(
                         HttpStatus.OK.value(),
                         "The Repo has a lot of commits, so we will review it first. We will notify you when the analysis is done"
-                );
-
-                return ResponseEntity.ok(response);
+                ));
             }
 
-            Integer analyzedCommits= analysisService.startAnalysis(project);
+            Integer analyzedCommits = analysisService.startAnalysis(project);
 
             if(analyzedCommits==0)
                 return ResponseEntity.ok(ResponseFactory.createResponse(
@@ -158,6 +119,7 @@ public class AnalysisController {
                     HttpStatus.OK.value(),
                     "Analysis Finished for "+analyzedCommits+" commits! You can see the results on the dashboard"
             );
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             ResponseInterface response = ResponseFactory.createErrorResponse(

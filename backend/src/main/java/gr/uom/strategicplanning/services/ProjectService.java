@@ -66,4 +66,34 @@ public class ProjectService {
         return projectRepository.findAllByOrganizationIdAndStatus(orgId, status);
     }
 
+    public Project getProjectById(Long id) {
+        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Project with id " + id + " not found"));
+    }
+
+    public Project getOrCreateProject(String repoUrl, Organization organization) {
+        Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(repoUrl);
+
+        if (projectOptional.isPresent()) {
+            return projectOptional.get();
+        }
+
+        Project project = new Project();
+        project.setRepoUrl(repoUrl);
+        project.setOrganization(organization);
+        project.setStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
+
+        projectRepository.save(project);
+        organizationService.addProjectToOrganization(organization.getId(), project);
+
+        return project;
+    }
+
+    public void updateProjectStatus(Long projectId, ProjectStatus status) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Project with id " + projectId + " not found"));
+        project.setStatus(status);
+        saveProject(project);
+
+        // Also update the organization to reflect the change
+        organizationService.saveOrganization(project.getOrganization());
+    }
 }
