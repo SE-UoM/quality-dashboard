@@ -49,7 +49,9 @@ public class SecurityConfig {
             "/api/organizations",
             "/api/best-practices",
             "/api/best-practices/random",
-            "/api/user/reset-password"
+            "/api/user/reset-password",
+
+            "/api/projects/pending/total/org"
     };
 
     @Bean

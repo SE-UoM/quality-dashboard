@@ -19,6 +19,7 @@ function PasswordResetPage() {
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
@@ -54,6 +55,8 @@ function PasswordResetPage() {
             return;
         }
 
+        setLoading(true);
+
         // Call the API to reset the password
         let params = new URLSearchParams(location.search)
         let token = encodeURIComponent(params.get('token'))
@@ -75,115 +78,172 @@ function PasswordResetPage() {
 
         axios.put(url, data, { headers: headers })
             .then((response) => {
-                console.log(response)
+                setLoading(false)
                 setShowModal(true)
             })
             .catch((error) => {
                 console.error(error.response)
                 setError(true)
+                setLoading(false)
                 setErrorMessage(error.response.data.message)
             })
     }
 
-    const handleClose = () => {
-        setShowModal(false)
-    }
+    // Effect to open the modal when showModal becomes true
+    useEffect(() => {
+        if (showModal) {
+            const modal = document.getElementById("pass_reset_modal");
+            modal.showModal();
+        }
+    }, [showModal]);
 
     return (
         <div className="password-reset-page">
-            <h1>
+            <h1 className="text-lg-center">
                 <img src={dashboardLogo} alt="Dashboard Logo" className="dashboard-logo"/>
-                <i className="bi bi-shield-lock-fill"> Password Reset</i>
+                <i className="bi bi-shield-lock text-white text-lg-center"
+                    style={{fontSize: "1.5em", fontWeight: "bold"}}
+                > Reset Password</i>
+
+                <p className="forgot-pass-page-text">
+                    Enter your new password below.
+                </p>
             </h1>
 
-            {error &&
-                <Alert variant="danger">
-                    <i className="bi bi-exclamation-triangle-fill"> </i>
-                    <strong> {errorMessage} </strong>
-                </Alert>
-            }
+            <div className="card glass w-96 bg-primary text-primary-content shrink-0 max-w-sm">
+                {error &&
+                    <div role="alert" className="alert alert-error w-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>{errorMessage}</span>
+                    </div>
+                }
 
-            <Form className="sign-up-form-content">
-                <Form.Group controlId="formBasicPassword">
-                    <div className="form-pass-container">
-                        <FloatingFormInput
-                            type={showPassword ? "text" : "password"}
-                            id="passInput"
-                            placeholder="something safe"
-                            isRequired={true}
-                            onChange={(e) => setPassword(e.target.value)}
-                            icon="bi bi-shield-lock-fill"
-                            labelText="Password"
-                        />
+                <form className="card-body w-100">
+                    <div className="form-control">
+                        <div className="flex justify-content-evenly text-neutral-content">
+                            <label className="input input-bordered flex justify-content-between gap-2"
+                                   style={{width: '100%', margin: 0, padding: 0}}
+                            >
+                                <i
+                                    className={"bi bi-shield-lock-fill"}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        paddingLeft: '0.5rem',
+                                    }}
+                                > </i>
+                                {/*<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z" clip-rule="evenodd" /></svg>*/}
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="grow"
+                                    placeholder="password"
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
 
-                        <Button
-                            variant="outline-secondary"
-                            className="show-password-btn"
-                            onClick={() => setShowPassword(!showPassword)}>
-                            {showPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
-                        </Button>
+                                <div
+                                    className={"btn btn-ghost"}
+                                    onClick={(e) => {
+                                        setShowPassword(!showPassword);
+                                    }}
+
+                                    style={{
+                                        padding: '0.5rem',
+                                    }}
+                                >
+                                    {showPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
+                                </div>
+                            </label>
+                        </div>
                     </div>
 
-                </Form.Group>
+                    <div className="form-control">
+                        <div className="flex justify-content-evenly text-neutral-content">
+                            <label className="input input-bordered flex justify-content-between gap-2"
+                                   style={{width: '100%', margin: 0, padding: 0}}
+                            >
+                                <i
+                                    className={"bi bi-shield-lock-fill"}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        paddingLeft: '0.5rem',
+                                    }}
+                                > </i>
 
-                <Form.Group controlId="formBasicRepeatPassword">
-                    <div className="form-pass-container">
-                        <FloatingFormInput
-                            type={showRepeatPassword ? "text" : "password"}
-                            id="repeatPassInput"
-                            placeholder="repeat your password"
-                            isRequired={true}
-                            onChange={(e) => setRepeatPassword(e.target.value)}
-                            icon="bi bi-shield-lock-fill"
-                            labelText="Repeat Password"
-                        />
+                                <input
+                                    type={showRepeatPassword ? "text" : "password"}
+                                    className="grow"
+                                    placeholder="repeat password"
+                                    onChange={(e) => setRepeatPassword(e.target.value)}
+                                />
 
-                        <Button
-                            variant="outline-secondary"
-                            className="show-password-btn"
-                            onClick={() => setShowRepeatPassword(!showRepeatPassword)}>
-                            {showRepeatPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
-                        </Button>
+                                <div
+                                    className={"btn btn-ghost"}
+                                    onClick={(e) => {
+                                        setShowRepeatPassword(!showRepeatPassword);
+                                    }}
+
+                                    style={{
+                                        padding: '0.5rem',
+                                    }}
+                                >
+                                    {showRepeatPassword ? <i className="bi bi-eye-slash-fill"> </i> : <i className="bi bi-eye-fill"> </i>}
+                                </div>
+                            </label>
+                        </div>
                     </div>
-                </Form.Group>
 
-                <Form.Group className="m-3 robot-check" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="I am not a 🤖 (robot). " required={true} onChange={() => setIsChecked(!isChecked)} />
-                </Form.Group>
+                    <div className="form-control">
+                        <label className="label bg-base-100 cursor-pointer rounded">
+                            <span style={{color: "#949ba8"}} className="label-text">
+                                I am not a <i style={{fontSize: "1em", color: "#949ba8"}} className={"bi bi-robot"}> </i> (robot).
+                            </span>
+                            <input
+                                type="checkbox"
+                                className="checkbox "
+                                onChange={() => setIsChecked(!isChecked)}
+                            />
+                        </label>
+                    </div>
 
-                <Button className="reset-pass-form-submit-btn" variant="light" type="submit" onClick={handlePasswordReset}>
-                    <i className="bi bi-arrow-right-circle-fill"> </i>
-                    Change Password
-                </Button>
-            </Form>
+                    <button className="btn btn-dark w-full" onClick={handlePasswordReset}>
+                        {!loading && <i style={{fontSize: "1em"}} className="bi bi-arrow-right-circle-fill"> </i>}
+                        {loading && <span className="loading loading-dots loading-xs"></span>}
+                        Reset Password
+                    </button>
+                </form>
+            </div>
 
-            <Modal
-                show={showModal}
-                onHide={handleClose}
-                backdrop="static"
-                keyboard={false}
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        <i className="bi bi-person-fill-check"> </i>
-                        Password Reset Complete!
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Alert variant="info">
-                        <i className="bi bi-info-circle"> </i>
-                        <strong> Password Reset Completed! </strong>
-                    </Alert>
+            <dialog id="pass_reset_modal" className="modal modal-bottom sm:modal-middle">
+                <div className="modal-box">
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
 
-                    Your password has been successfully reset. You can now login with your new password.
+                    <h3 className="font-bold text-lg">
+                        <i className="bi bi-shield-lock-fill"> </i>
+                        Password Reset Success
+                    </h3>
 
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+                    <p className="py-4">
+                        <div role="alert" className="alert alert-success">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>
+                                    Password reset successful!
+                            </span>
+                        </div>
+                        <br/>
+
+                        You password has been reset successfully. You can now login with your new password. <br/><br/>
+
+                        <a href={"/"} className="link">
+                            Back to Home Page
+                        </a>
+                    </p>
+                </div>
+            </dialog>
         </div>
     );
 }

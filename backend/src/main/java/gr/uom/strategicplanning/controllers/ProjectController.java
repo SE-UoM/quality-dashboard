@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -139,4 +140,14 @@ public class ProjectController {
         return ResponseEntity.ok(projectResponses);
     }
 
+    @GetMapping("/pending/total/org/{organization_id}")
+    public ResponseEntity<Map> getPendingProjectsTotalByOrganization(@PathVariable Long organization_id) {
+        Collection<Project> projects = projectService.getOrganizationProjectsByStatus(organization_id, "ANALYSIS_TO_BE_REVIEWED");
+
+        int totalPendingProjects = projects.size();
+
+        Map<String, Integer> response = Map.of("totalPending", totalPendingProjects);
+
+        return ResponseEntity.ok(response);
+    }
 }

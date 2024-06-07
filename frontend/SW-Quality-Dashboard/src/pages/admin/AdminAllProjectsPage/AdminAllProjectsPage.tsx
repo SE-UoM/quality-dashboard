@@ -1,12 +1,17 @@
 import './AdminAllProjectsPage.css'
 import AdminTabContent from "../AdminTabContent/AdminTabContent.tsx";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import apiUrls from "../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import {Alert, Badge, Button, OverlayTrigger, Table, Tooltip} from "react-bootstrap";
 import React from "react";
+import TableControls from "../tables/TableControls.tsx";
+import useAxios from "../../../hooks/useAxios.ts";
+import UserTableItem from "../tables/UserTableItem.tsx";
+import {truncateString} from "../../../utils/textUtils.ts";
+import ProjectTableItem from "../tables/ProjectTableItem.tsx";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -25,96 +30,104 @@ function AdminAllProjectsPage() {
     const [accessToken, setAccessToken] = useLocalStorage('accessToken', '')
     const [projects, setProjects] = React.useState([])
     const [error, setError] = React.useState(false)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
+    const [currentItems, setCurrentItems] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const {data: allProjectsData, error: allProjectsError, loading: allProjectsLoading, errorMessage: allProjectsErrorMessage} =
+        useAxios(baseUrl + apiUrls.routes.projects.allByOrgId.replace(':organizationId', jwtDecode(accessToken).organizationId), accessToken)
 
     useEffect(() => {
-        // Call the api to get all projects
-        let url = baseUrl + apiUrls.routes.projects.allByOrgId;
+        if (!allProjectsData) return;
 
-        // get the organization id from the access token
-        let userOrganization = jwtDecode(accessToken).organizationId;
+        // Logic to get current items based on pagination
+        // Logic to get current items based on pagination
+        const indexOfLastItem = currentPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        const currentItems = allProjectsData.slice(indexOfFirstItem, indexOfLastItem);
 
-        // Replace the placeholder with the actual organization id
-        url = url.replace(':organizationId', userOrganization);
+        // Logic to search for items
+        if (searchTerm) {
+            const filteredItems = allProjectsData.filter(item => {
+                return item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.organizationName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.repoUrl.toLowerCase().includes(searchTerm.toLowerCase())
+            })
 
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
+            setCurrentItems(filteredItems);
+            return;
         }
+        setCurrentItems(currentItems);
 
-        axios.get(url, { headers: headers })
-            .then(response => {
-                setProjects(response.data)
-            })
-            .catch(error => {
-                console.error(error)
-                setError(true)
-            })
-    }, [accessToken]);
+    }, [allProjectsData, currentPage, itemsPerPage, searchTerm]);
 
     return (
         <AdminTabContent
-            icon="bi bi-journal-code"
-            title="All Projects"
+            icon="bi bi-layer-forward"
+            title="Submitted Projects"
         >
-            {error && (
-                <Alert variant="danger">
-                    <Alert.Heading>
-                        Error fetching projects
-                    </Alert.Heading>
-                </Alert>
-            )}
+            <div role="alert" className="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>
+                    Here you can see all the projects that have been submitted for analysis.
+                </span>
+            </div>
 
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>PID</th>
-                    <th>Name</th>
-                    <th>Repository URL</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {projects.map(project => (
-                    <tr key={project.id}>
-                        <td>{projects.indexOf(project) + 1}</td>
-                        <td>{project.id}</td>
-                        <td>{project.name}</td>
-                        <td>
-                            <a href={project.repoUrl}>{project.repoUrl}</a>
-                        </td>
-                        <td className={"status " + project.status.toLowerCase()}>
-                            <div
-                                className="dashboard-pill"
-                                style={{backgroundColor: statusColors[project.status]}}
-                            >
-                                {project.status.replace(/_/g, ' ')}
-                            </div>
-                        </td>
-                        <td>
-                            <div className="project-actions">
-                                <OverlayTrigger placement="bottom" overlay={<Tooltip>Delete This User</Tooltip>}>
-                                    <Button
-                                        variant="danger"
-                                    >
-                                        <i className={"bi bi-trash"}> </i>
-                                    </Button>
-                                </OverlayTrigger>
+            <TableControls
+                setSearchTerm={setSearchTerm}
+                setItemsPerPage={setItemsPerPage}
+            />
 
-                                <OverlayTrigger placement="bottom" overlay={<Tooltip>Start a New Analysis</Tooltip>}>
-                                    <Button
-                                        variant="primary"
-                                    >
-                                        <i className="bi bi-layer-forward"></i>
-                                    </Button>
-                                </OverlayTrigger>
-                            </div>
-                        </td>
+            <div className="overflow-x-auto">
+                <table className="table">
+                    {/* head */}
+                    <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Github URL</th>
+                        <th>Review</th>
+                        <th>Analysis Status</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                    {projects && currentItems.map(
+                        project => (
+                            <ProjectTableItem project={project} />
+                        )
+                    )}
+                    </tbody>
+                </table>
+
+                {/* Pagination controls */}
+                {allProjectsData && allProjectsData.length > itemsPerPage &&
+                    <div
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginTop: "1vh"
+                        }}
+                    >
+                        <div className="join">
+                            {Array.from({ length: Math.ceil(allProjectsData.length / itemsPerPage) }).map((_, index) => (
+                                <button className={
+                                    index === currentPage - 1
+                                        ? "join-item btn btn-primary"
+                                        : "join-item btn"
+                                }
+                                        onClick={() => setCurrentPage(index + 1)}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                }
+
+            </div>
 
         </AdminTabContent>
     )

@@ -1,0 +1,30 @@
+{
+    "brandTop": "University of Macedonia",
+    "brandBottom": "Quality Dashboard",
+
+    "brand": "UoM Quality Dashboard",
+
+    "orgs": {
+        "uom": {
+            "name": "University of Macedonia",
+            "logo": "uom.png",
+            "url": "http://www.uom.gr",
+            "dai": "http://www.uom.gr/dai"
+        },
+
+        "openSourceUoM": {
+            "name": "Open Source UoM",
+            "logo": "osuom.png",
+            "url": "http://opensource.uom.gr",
+            "linktree": "https://linktr.ee/opensourceuom",
+            "github": "https://github.com/Open-Source-UoM/",
+            "myUoM": "https://my.uom.gr"
+        },
+
+        "sde": {
+            "name": "Software Development and Engineering Lab UoM (SDE)",
+            "logo": "sde.png",
+            "url": "http://sde.uom.gr"
+        }
+    }
+}

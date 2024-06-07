@@ -15,8 +15,6 @@ function AnimatedCount({ count }: { count: number }) {
         config: { mass: 5, tension: 500, friction: 100 }
     })
 
-    console.log("Prev Value: ", prevValueRef.current)
-    console.log("Current Value: ", count)
     return <animated.div>{number.to((num) => num.toFixed(0))}</animated.div>
 
 }

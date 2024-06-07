@@ -1,22 +1,40 @@
-import {Badge, Col, Nav, Row, Tab} from 'react-bootstrap';
 import './AdminPanel.css';
 import {useEffect, useState} from "react";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
-import useAuthenticationCheck from "../../../hooks/useAuthenticationCheck.ts";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "../../../interfaces/DecodedToken.ts";
+import ProtectedRoute from "../../../routes/ProtectedRoute.tsx";
+import {useLocation, useNavigate} from "react-router-dom";
+import AdminPanelSidebar from "../../../components/ui/AdminPanelSidebar.tsx";
+import AdminHomePage from "../AdminHomePage.tsx";
+import AdminAllUsersPage from "../AdminAllUsersPage/AdminAllUsersPage.tsx";
 import AdminAllProjectsPage from "../AdminAllProjectsPage/AdminAllProjectsPage.tsx";
 import AdminPendingProjectsPage from "../AdminPendingProjectsPage/AdminPendingProjectsPage.tsx";
-import AdminAllUsersPage from "../AdminAllUsersPage/AdminAllUsersPage.tsx";
-
-
 
 function AdminPanel() {
     const [accessToken] = useLocalStorage<string>('accessToken', '');
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search)
+    const page = queryParams.get('page')
+    const [currentPage, setCurrentPage] = useState<string>(page ? page : 'home')
+    const history = useNavigate()
 
     const [pendingProjectsCount, setPendingProjectsCount] = useState<number>(0)
+    const [loadingAuth, setLoadingAuth] = useState<boolean>(true)
+
+    // Update currentPage when the URL changes
+    useEffect(() => {
+        setCurrentPage(page);
+    }, [page]);
+
+    // Redirect to home page if no current page is specified
+    useEffect(() => {
+        if (!currentPage) {
+            history('/admin?page=home')
+        }
+    }, [currentPage, history]);
 
     useEffect(() => {
         // Call a random API to check if the token is still valid
@@ -42,92 +60,51 @@ function AdminPanel() {
 
     return (
         <>
-            {isAdmin &&
-                <div className="admin-panel-page">
+            <ProtectedRoute loadingAuth={loadingAuth} setLoadingAuth={setLoadingAuth} />
 
-                <Tab.Container id="admin-tabs" defaultActiveKey="first">
-                    <div className="tabs-content">
-                        {/*  ADMIN TAB NAVBAR  */}
-                        <div className="nav-tabs">
-                            <Nav  className="flex-column">
-                                <Nav.Item
-                                    className="admin-navbar-items"
-                                    id="item1"
-                                >
-                                    <Nav.Link className="admin-nav-link"
-                                              eventKey="first"
-                                              style={{
-                                                  borderRadius: "0"
-                                              }}
-                                    >
-                                        <i className="bi bi-journal-code"> </i>
-                                        All Projects
-                                    </Nav.Link>
-                                </Nav.Item>
+            {loadingAuth ? (
+                <div
+                    className="loading-item"
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100vh"
+                    }}
+                >
+                    <span className="loading loading-infinity loading-lg"></span>
+                </div>
+            ) : (
+                <>
+                    {isAdmin &&
+                        <div className="admin-panel-page"
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    minHeight: "100vh",
+                                    width: "100vw",
+                                }}
+                        >
+                            <AdminPanelSidebar totalPendingProjectsCount={666} />
 
-                                <Nav.Item
-                                    className="admin-navbar-items"
-                                    id="item2"
-                                >
-                                    <Nav.Link
-                                        className="admin-nav-link"
-                                        eventKey="second"
-                                        style={{
-                                            borderRadius: "0"
-                                        }}
-                                    >
-                                        <i className="bi bi-exclamation-octagon"> </i>
-                                        Pending Projects &nbsp;
-                                        {
-                                            pendingProjectsCount > 0 && pendingProjectsCount < 100 &&
-                                            <Badge bg="danger">{pendingProjectsCount}</Badge>
-                                        }
-
-                                        {
-                                            pendingProjectsCount > 0 && pendingProjectsCount >= 100 &&
-                                            <Badge bg="danger">99+</Badge>
-                                        }
-                                    </Nav.Link>
-                                </Nav.Item>
-
-                                <Nav.Item
-                                    className="admin-navbar-items"
-                                    id="item3"
-                                >
-                                    <Nav.Link
-                                        className="admin-nav-link"
-                                        eventKey="three"
-                                        style={{
-                                            borderRadius: "0"
-                                        }}
-                                    >
-                                        <i className="bi bi-people"> </i>
-                                        All Users
-                                    </Nav.Link>
-                                </Nav.Item>
-                            </Nav>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    width: "85vw",
+                                    padding: "5vh"
+                                }}
+                                className="bg-base-300"
+                            >
+                                {currentPage === "home" && <AdminHomePage />}
+                                {currentPage === "dashboardUsers" && <AdminAllUsersPage />}
+                                {currentPage === "submittedProjects" && <AdminAllProjectsPage />}
+                                {currentPage === "pendingProjects" && <AdminPendingProjectsPage />}
+                            </div>
                         </div>
-
-
-                        <div className="nav-tabs-content">
-                            <Tab.Content>
-                                <Tab.Pane eventKey="first">
-                                    <AdminAllProjectsPage/>
-                                </Tab.Pane>
-
-                                <Tab.Pane eventKey="second">
-                                    <AdminPendingProjectsPage updateCount={setPendingProjectsCount}/>
-                                </Tab.Pane>
-
-                                <Tab.Pane eventKey="three">
-                                    <AdminAllUsersPage />
-                                </Tab.Pane>
-                            </Tab.Content>
-                        </div>
-                    </div>
-                </Tab.Container>
-
-            </div>}
+                    }
+                </>
+            )}
         </>
     );
 }

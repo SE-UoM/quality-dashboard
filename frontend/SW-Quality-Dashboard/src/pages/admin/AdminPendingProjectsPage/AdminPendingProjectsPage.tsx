@@ -6,141 +6,82 @@ import {Alert, Button, Table} from "react-bootstrap";
 import apiUrl from "../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 import axios from "axios";
+import useAxios from "../../../hooks/useAxios.ts";
+import TableControls from "../tables/TableControls.tsx";
+import ProjectTableItem from "../tables/ProjectTableItem.tsx";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-function AdminPendingProjectsPage({updateCount}) {
+function AdminPendingProjectsPage() {
     const [accessToken, setAccessToken] = useLocalStorage('accessToken', '')
-    const [projects, setProjects] = React.useState([])
-    const [alert, setAlert] = React.useState(false)
-    const [alertVariant, setAlertVariant] = React.useState('danger')
-    const [alertMessage, setAlertMessage] = React.useState('Error fetching projects')
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const [itemsPerPage, setItemsPerPage] = React.useState(10);
+    const [currentItems, setCurrentItems] = React.useState([]);
+    const [searchTerm, setSearchTerm] = React.useState('');
+
+    const {data: pendingProjectsData, error: pendingProjectsError, loading: pendingProjectsLoading, errorMessage: pendingProjectsErrorMessage} =
+        useAxios(baseUrl + apiUrl.routes.projects.allByOrgIdAndStatus.replace(':organizationId', jwtDecode(accessToken).organizationId).replace(':status', 'ANALYSIS_TO_BE_REVIEWED'), accessToken)
 
     useEffect(() => {
-        let url = baseUrl + apiUrl.routes.projects.allByOrgIdAndStatus;
+        if (!pendingProjectsData) return;
 
-        let userOrganization = jwtDecode(accessToken).organizationId;
+        // Logic to get current items based on pagination
+        const indexOfLastItem = currentPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        const currentItems = pendingProjectsData.slice(indexOfFirstItem, indexOfLastItem);
 
-        url = url.replace(':organizationId', userOrganization);
-        url = url.replace(':status', 'ANALYSIS_TO_BE_REVIEWED');
+        // Logic to search for items
+        if (searchTerm) {
+            const filteredItems = pendingProjectsData.filter(item => {
+                return item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.repoUrl.toLowerCase().includes(searchTerm.toLowerCase())
+            })
 
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
+            setCurrentItems(filteredItems);
+            return;
         }
 
-        axios.get(url, { headers: headers })
-            .then(response => {
-                setProjects(response.data)
-                updateCount(projects.length);
-            })
-            .catch(error => {
-                console.error(error)
-                setAlert(true)
-                setAlertVariant('danger')
-                setAlertMessage('Error fetching projects')
-            })
-    }, []);
+        setCurrentItems(currentItems);
+    }, [pendingProjectsData]);
 
-    const approveProject = (projectId, projectUrl) => {
-        // Show the alert to let the user know something is happening
-        setAlert(true)
-        setAlertVariant('info')
-        setAlertMessage('Approving project...')
-
-        // First Authorize the project for analysis
-        let url = baseUrl + apiUrl.routes.admin.authorizeProject;
-        url = url.replace(':projectId', projectId);
-
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-        }
-
-        console.log(url)
-
-        axios.put(url, {}, { headers: headers })
-            .then(response => {
-                console.log(response)
-                setAlert(true)
-                setAlertVariant('success')
-                setAlertMessage('Project approved successfully. Starting analysis...')
-
-                //Now remove the project from the pending list
-                let newProjects = projects.filter(project => project.id !== projectId)
-                setProjects(newProjects)
-
-                let analysisUrl = baseUrl + apiUrl.routes.startAnalysis;
-                analysisUrl = analysisUrl.replace('${githubUrl}', projectUrl);
-
-                let analysisHeaders = {
-                    'Authorization': 'Bearer ' + accessToken,
-                    'Content-Type': 'application/json'
-                }
-
-                axios.post(analysisUrl, {}, { headers: analysisHeaders })
-                    .then(response => {
-                        console.log(response)
-                        setAlert(true)
-                        setAlertVariant('success')
-                        setAlertMessage('Analysis completed successfully')
-                    })
-                    .catch(error => {
-                        console.error(error)
-                        setAlert(true)
-                        setAlertVariant('danger')
-                        setAlertMessage('Error starting analysis')
-                    })
-            })
-            .catch(error => {
-                console.error(error)
-                setAlert(true)
-                setAlertVariant('danger')
-                setAlertMessage('Error approving project')
-            })
-    }
 
     return (
         <AdminTabContent
-            icon="bi bi-exclamation-octagon-fill"
+            icon="bi bi-exclamation-circle-fill"
             title="Pending Projects"
         >
-            {alert && (
-                <Alert variant={alertVariant}>
-                    {alertMessage}
-                </Alert>
-            )}
-
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>PID</th>
-                    <th>Name</th>
-                    <th>Repository URL</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {projects.map(project => (
-                    <tr key={project.id}>
-                        <td>{projects.indexOf(project) + 1}</td>
-                        <td>{project.id}</td>
-                        <td>{project.name}</td>
-                        <td>
-                            <a href={project.repoUrl}>{project.repoUrl}</a>
-                        </td>
-                        <td>
-                            <Button variant={"success"} onClick={() => approveProject(project.id, project.repoUrl)}>
-                                <i className="bi bi-check-circle-fill" > </i>
-                                Approve
-                            </Button>
-                        </td>
+            <div role="alert" className="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>
+                    Here you can view all the projects that are pending approval. <br/>
+                    These projects have more than 50 commits so you need to approve them before they can be analyzed.
+                </span>
+            </div>
+            <TableControls
+                setSearchTerm={setSearchTerm}
+                setItemsPerPage={setItemsPerPage}
+            />
+            <div className="overflow-x-auto">
+                <table className="table">
+                    {/* head */}
+                    <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Github URL</th>
+                        <th>Review</th>
+                        <th>Analysis Status</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-                </tbody>
-            </Table>
-
+                    </thead>
+                    <tbody>
+                    {pendingProjectsData && currentItems.map(
+                        project => (
+                            <ProjectTableItem project={project} />
+                        )
+                    )}
+                    </tbody>
+                </table>
+            </div>
         </AdminTabContent>
     )
 }

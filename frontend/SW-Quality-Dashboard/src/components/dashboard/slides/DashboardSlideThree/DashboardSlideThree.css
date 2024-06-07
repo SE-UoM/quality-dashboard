@@ -1,11 +1,15 @@
 .dashboard-slide#slide3 {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     width: 100%;
     grid-template-areas:
-        "bestProjects wordcloud wordcloud wordcloud topCommiters"
-        "bestProjects wordcloud wordcloud wordcloud topCommiters"
-        "bestProjects wordcloud wordcloud wordcloud topCommiters"
-        "bestProjects submittedProjects submittedProjects submittedProjects topCommiters"
-        "footerCard footerCard footerCard footerCard footerCard";
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects wordcloud wordcloud wordcloud wordcloud wordcloud topCommiters topCommiters"
+        "bestProjects bestProjects bestProjects submittedProjects submittedProjects submittedProjects submittedProjects submittedProjects topCommiters topCommiters"
+
+        "footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard footerCard";
 }
 
 @media (max-width: 768px) {

@@ -10,6 +10,7 @@
     "verifyUser": "/api/user/verify?token=${token}&uid=${uid}",
     "resetPasswordRequest": "/api/user/reset-password/request",
     "resetPassword": "/api/user/reset-password",
+    "checkAuth": "/api/user/isAuthenticated",
 
     "examples": {
       "languageDistribution": "/api/examples/language-distribution",
@@ -26,7 +27,8 @@
 
     "projects": {
       "allByOrgId": "/api/projects/organization/:organizationId",
-      "allByOrgIdAndStatus": "/api/projects/organization/:organizationId/status/:status"
+      "allByOrgIdAndStatus": "/api/projects/organization/:organizationId/status/:status",
+      "getTotalPending": "/api/projects/pending/total/org/:organizationId"
     },
 
     "admin": {
@@ -41,9 +43,10 @@
       "languageDistribution": "/api/organizations/:organizationId/language-distribution",
       "topLanguages": "/api/organizations/:organizationId/top-languages",
       "codeSmellDistribution": "/api/organizations/:organizationId/code-smells-distribution",
-      "getTotalTD": "/api/organizations/:orgId/total-tech-debt",
-      "getTdStats": "/api/organizations/:orgId/tech-debt-statistics",
+      "getTotalTD": "/api/organizations/:organizationId/total-tech-debt",
+      "getTdStats": "/api/organizations/:organizationId/tech-debt-statistics",
       "randomBestPractice": "/api/best-practices/random",
+      "bestPractices": "/api/best-practices",
       "topProjects": "/api/organizations/:organizationId/top-projects",
       "languageNames": "/api/organizations/:organizationId/language-names",
       "topContributors": "/api/organizations/:organizationId/top-developers",

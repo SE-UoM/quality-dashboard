@@ -3,93 +3,91 @@ import { useEffect, useState } from "react";
 import apiRoutes from '../../../../../assets/data/api_urls.json';
 import useLocalStorage from "../../../../../hooks/useLocalStorage.ts";
 import axios from "axios";
+import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
-function BestPracticesCard() {
+function BestPracticesCard({bestPracticesData, loading}) {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-    const [error, setError] = useState(false);
-    const [errorTitle, setErrorTitle] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(false); // Change here
 
     const [bestPracticeTitle, setBestPracticeTitle] = useState("Eliminate Magic Numbers");
     const [bestPracticeDescription, setBestPracticeDescription] = useState("Magic numbers are hard-coded values that are used in the code without any explanation. They make the code difficult to read and maintain. Make sure to replace magic numbers with named constants.");
 
     useEffect(() => {
-        const fetchData = () => {
-            setLoading(true); // Set loading to true before making the API call
+        if (!bestPracticesData) return;
 
-            let url = baseApiUrl + apiRoutes.routes.dashboard.randomBestPractice;
-            let headers = {
-                'Authorization': 'Bearer ' + accessToken,
-                'Content-Type': 'application/json'
-            }
+        // Now and every ten seconds, get a random best practice
+        let bestPractice = getRandomBestPractice();
 
-            axios.get(url, {headers: headers})
-                .then((response) => {
-                    let data = response.data;
-                    setBestPracticeTitle(data.title);
-                    setBestPracticeDescription(data.explanation);
-                })
-                .catch((error) => {
-                    console.warn("Error Calling Best Practices API: " + error);
-                    setError(true);
-                    setErrorTitle("Error");
-                    setErrorMessage("An error occurred while trying to get the best practices.");
-                })
-                .finally(() => {
-                    // Wait half a second before setting the loading state to false
-                    setTimeout(() => {
-                        setLoading(false);
-                    }, 500);
-                });
-        };
+        setBestPracticeTitle(bestPractice.title);
+        setBestPracticeDescription(bestPractice.explanation);
 
-        // Initial fetch
-        fetchData();
+        const interval = setInterval(() => {
+            bestPractice = getRandomBestPractice();
+            setBestPracticeTitle(bestPractice.title);
+            setBestPracticeDescription(bestPractice.explanation);
+        }, 10000);
 
-        // Fetch data every 20 seconds
-        const intervalId = setInterval(fetchData, 20000);
+        return () => clearInterval(interval);
 
-        // Clear the interval on component unmount to avoid memory leaks
-        return () => clearInterval(intervalId);
+    }, [bestPracticesData]);
 
-    }, [accessToken]);
+    function getRandomBestPractice() {
+        let index = Math.floor(Math.random() * bestPracticesData.length);
+        return bestPracticesData[index];
+    }
 
     return (
-        <div className={"dashboard-card " + (loading ? "loading" : "")}
-             id="bestPractices"
-             style={{gridArea: "bestPractices"}}
-        >
+        <>
             {loading ? (
-                <div className="best-practices-skeleton">
-                    <div className="best-practices-skeleton-top"> </div>
-                    <div className="best-practices-skeleton-bottom">
-                        <div className="best-practices-skeleton-item"> </div>
-                        <div className="best-practices-skeleton-item">
-                            <div className="best-practices-skeleton-item-line"> </div>
-                            <div className="best-practices-skeleton-item-line"> </div>
-                            <div className="best-practices-skeleton-item-line"> </div>
-                        </div>
-                    </div>
-                </div>
+                    <SimpleDashboardCard
+                        className="skeleton"
+                        id={"bestPractices"}
+                        style={{height: "100%", gridArea: "bestPractices"}}
+                    />
             ) : (
                 <>
-                    <h3>
-                        <i className="bi bi-stars"> </i>
-                        Best Practices
-                    </h3>
-
-                    <div className="best-practices-content">
-                        <h4>{bestPracticeTitle}</h4>
-                        <p>
+                <SimpleDashboardCard
+                    id="bestPractices"
+                    style={{
+                        gridArea: "bestPractices",
+                        display: "grid",
+                        gridTemplateColumns: "1fr 9fr",
+                        gap: "2vw",
+                    }}
+                >
+                    <div className={"best-practices-icon"}
+                         style={{
+                             display: "flex",
+                             justifyContent: "center",
+                             alignItems: "center",
+                         }}
+                    >
+                        <i className="bi bi-shield-check" style={{fontSize: "20vh"}}> </i>
+                    </div>
+                    <div className={"best-practices-content"}>
+                        <h4
+                            style={{
+                                fontSize: "5vh",
+                                fontWeight: "bold",
+                                margin: "0",
+                            }}
+                        >
+                            {bestPracticeTitle}
+                        </h4>
+                        <p
+                            style={{
+                                fontSize: "3vh",
+                                margin: "0",
+                            }}
+                        >
                             {bestPracticeDescription}
                         </p>
                     </div>
+                </SimpleDashboardCard>
                 </>
             )}
-        </div>
+        </>
     );
 }
 

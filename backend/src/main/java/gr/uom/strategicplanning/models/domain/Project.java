@@ -22,7 +22,7 @@ public class Project {
     private Long id;
     private String name;
     private String ownerName;
-
+    private String projectDescription;
     @ManyToOne
     @ToString.Exclude
     private Organization organization;

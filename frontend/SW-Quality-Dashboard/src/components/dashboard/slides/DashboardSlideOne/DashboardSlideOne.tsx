@@ -9,7 +9,7 @@ import totalLocIcon from "../../../../assets/svg/dashboardIcons/loc_icon.svg";
 import totalContributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 
 import IconCard from "../../cards/screen1/IconCard/IconCard.tsx";
-import FooterCard from "../../cards/FooterCard/FooterCard.tsx";
+import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
 import LanguageDistributionCard from "../../cards/screen1/LanguageDistributionCard/LanguageDistributionCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import {useEffect, useState} from "react";
@@ -17,126 +17,96 @@ import apiUrls from "../../../../assets/data/api_urls.json";
 import axios from "axios";
 import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
 import {jwtDecode} from "jwt-decode";
+import {formatText} from "../../../../utils/textUtils.ts";
+import useAxiosGet from "../../../../hooks/useAxios.ts";
+import apiRoutes from "../../../../assets/data/api_urls.json";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 function DashboardSlideOne() {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-    const [totalProjects, setTotalProjects] = useState();
-    const [totalLanguages, setTotalLanguages] = useState();
-    const [totalDevelopers, setTotalDevelopers] = useState();
-    const [totalFiles, setTotalFiles] = useState();
-    const [totalContributions, setTotalContributions] = useState();
-    const [totalLoc, setTotalLoc] = useState();
 
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-    const [errorTitle, setErrorTitle] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const {data: generalStats, loading: generalStatsLoading, error: generalStatsError, errorMessage: generalStatsErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.generalStats.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
-    // Call the API to get the general statistics
-    useEffect(() => {
-        let url = baseApiUrl + apiUrls.routes.dashboard.generalStats;
+    const {data: topLanguages, loading: topLanguagesLoading, error: topLanguagesError, errorMessage: topLanguagesErrorMessage} =
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topLanguages.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
-        // Decode the access token to get the organization ID
-        let organizationId = jwtDecode(accessToken).organizationId;
-
-        // Replace ":organizationId" with the actual organization ID
-        url = url.replace(":organizationId", organizationId);
-
-        let headers = {
-            'Authorization': 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
-        }
-
-        axios.get(url, { headers: headers })
-            .then((response) => {
-                let data = response.data;
-
-                setTotalProjects(data.totalProjects);
-                setTotalLanguages(data.totalLanguages);
-                setTotalDevelopers(data.totalDevs);
-                setTotalFiles(data.totalFiles);
-                setTotalContributions(data.totalCommits);
-                setTotalLoc(data.totalLinesOfCode);
-
-                setTimeout(() => {
-                    // Do nothing
-                    console.log("waiting...")
-                    setLoading(false); // Set loading to false once data is fetched
-                }, 500);
-            })
-            .catch((error) => {
-                    console.warn("Error fetching general stats: ", error);
-                    setError(true);
-                    setErrorTitle("Error fetching general statistics");
-                    setErrorMessage("An error occurred while fetching the general statistics of the organization. Please try again later.");
-                    setLoading(false); // Set loading to false on error
-                }
-            );
-    }, [accessToken]);
-
+    const {data: languageDistributionData, loading: languageDistributionLoading, error: languageDistributionError, errorMessage: languageDistributionErrorMessage} =
+        useAxiosGet(baseApiUrl + apiRoutes.routes.dashboard.languageDistribution.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
 
     return (
         <>
-            {error &&
-                <ErrorModal
-                    modalTitle={errorTitle}
-                    modalAlertMessage={errorMessage}
-                />
-            }
             <div className="dashboard-slide" id="slide1">
-                <LanguageRankCard />
+                {topLanguages &&
+                    <LanguageRankCard
+                        topLanguages={topLanguages}
+                        topLanguagesLoading={topLanguagesLoading}
+                        topLanguagesError={topLanguagesError}
+                        topLanguagesErrorMessage={topLanguagesErrorMessage}
+                    />
+                }
 
-                <IconCard
-                    icon={totalProjectsIcon}
-                    headerText={totalProjects}
-                    caption="Projects"
-                    gridAreaName="totalProjects"
-                    loading={loading}
-                />
+                {generalStats &&
+                    <>
+                        <IconCard
+                            icon="bi bi-laptop"
+                            headerText={formatText(generalStats.totalProjects, "k")}
+                            caption="Projects"
+                            gridAreaName="totalProjects"
+                            loading={generalStatsLoading}
+                        />
 
-                <IconCard
-                    icon={totalLanguagesIcon}
-                    headerText={totalLanguages}
-                    caption="Languages"
-                    gridAreaName="totalLanguages"
-                    loading={loading}
-                />
+                        <IconCard
+                            icon="bi bi-code-slash"
+                            headerText={formatText(generalStats.totalLanguages, "k")}
+                            caption="Languages"
+                            gridAreaName="totalLanguages"
+                            loading={generalStatsLoading}
+                        />
 
-                <IconCard
-                    icon={totalDevelopersIcon}
-                    headerText={totalDevelopers}
-                    caption="Developers"
-                    gridAreaName="totalDevelopers"
-                    loading={loading}
-                />
+                        <IconCard
+                            icon="bi bi-person"
+                            headerText={formatText(generalStats.totalDevs, "k")}
+                            caption="Developers"
+                            gridAreaName="totalDevelopers"
+                            loading={generalStatsLoading}
+                        />
 
-                <IconCard
-                    icon={totalFilesIcon}
-                    headerText={totalFiles}
-                    caption="Files"
-                    gridAreaName="totalFiles"
-                    loading={loading}
-                />
+                        <IconCard
+                            icon="bi bi-file-earmark-binary"
+                            headerText={formatText(generalStats.totalFiles, "k")}
+                            caption="Files"
+                            gridAreaName="totalFiles"
+                            loading={generalStatsLoading}
+                        />
 
-                <IconCard
-                    icon={totalContributionsIcon}
-                    headerText={totalContributions}
-                    caption="Contributions"
-                    gridAreaName="totalContributions"
-                    loading={loading}
-                />
+                        <IconCard
+                            icon="bi bi-bezier2"
+                            headerText={formatText(generalStats.totalCommits, "k")}
+                            caption="Contributions"
+                            gridAreaName="totalContributions"
+                            loading={generalStatsLoading}
+                        />
 
-                <IconCard
-                    icon={totalLocIcon}
-                    headerText={totalLoc}
-                    caption="Lines of Code"
-                    gridAreaName="totalLinesOfCode"
-                    loading={loading}
-                />
+                        <IconCard
+                            icon="bi bi-body-text"
+                            headerText={formatText(generalStats.totalLinesOfCode, "k")}
+                            caption="Lines of Code"
+                            gridAreaName="totalLinesOfCode"
+                            loading={generalStatsLoading}
+                        />
+                    </>
+                }
 
-                <LanguageDistributionCard />
+                {languageDistributionData &&
+                    <LanguageDistributionCard
+                        languageDistributionData={languageDistributionData}
+                        languageDistributionLoading={languageDistributionLoading}
+                        languageDistributionError={languageDistributionError}
+                        languageDistributionErrorMessage={languageDistributionErrorMessage}
+                    />
+                }
 
                 <FooterCard
                     gridAreaName="footerCard"

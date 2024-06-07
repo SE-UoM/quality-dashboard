@@ -19,7 +19,6 @@ function EditUserModal({ show, setShow, handleClose, editUser }) {
     const [selectedNewRole, setSelectedNewRole] = React.useState('')
 
     const handleEditSubmit = () => {
-        console.log('Edit User')
         // Check if there are any changes
         let noChanges = editedName === editUser.name && editedEmail === editUser.email;
         let emptyInput = editedName === '' && editedEmail === '';

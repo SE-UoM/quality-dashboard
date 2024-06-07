@@ -14,33 +14,58 @@ function DashboardRankedItem({projectName, headerUrl, rank, loading, children}) 
     }
 
     return (
-        <div className={"best-project-component" + (loading ? " loading" : "")}>
-            {loading ? (
+        <div className={"best-project-component" + (loading ? " loading" : "")}
+             style={{
+                 display: "grid",
+                 width: "100%",
+                 height: "min-content",
+                 gridTemplateColumns: "repeat(3, 1fr)",
+                 gridTemplateRows: "repeat(2, 1fr)",
+
+                 gridTemplateAreas: `
+                    "medal projectTitle projectTitle"
+                    "medal projectOwner projectOwner"
+                 `,
+
+                 borderBottom: "1px solid var(--border-primary)",
+             }}
+        >
                 <>
-                    <div className="ranked-item-skeleton">
-                        <div className="ranked-item-skeleton-medal"></div>
-                        <div className="ranked-item-skeleton-content">
-                            <div className="ranked-item-skeleton-title"></div>
-                            <div className="ranked-item-skeleton-owner"></div>
-                        </div>
-                    </div>
-                </>
-                ):
-                <>
-                    <div className={"best-project-medal " + rankColor}>
-                        {/*<img src={medalIcon} className={rankColor}/>*/}
-                        <span>{rank}</span>
+                    <div className={"best-project-medal " + rankColor}
+                        style={{
+                            gridArea: "medal",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "8vh",
+                            width: "8vh",
+                            margin: "1vh",
+                            justifySelf: "center",
+                        }}
+                    >
+                        <span
+                            style={{
+                                backgroundImage: `url(${medalIcon}), `,
+                                backgroundSize: "85%",
+                                backgroundRepeat: "no-repeat",
+                                backgroundPositionY: "calc(55% + 0.5vh)", // Center the image
+                                backgroundPositionX: "calc(17% + 0.5vh)", // Center the image
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            {rank}
+                        </span>
                     </div>
                     <h2 className="best-project-item-title">
                         <a
+                            className={"link link-hover"}
                             href={headerUrl}
                             target="_blank"
                             rel="noreferrer"
-                            style={{
-                                color: "var(--text-primary)",
-                                fontWeight: "bold",
-                                fontStyle: "italic",
-                            }}
                         >
                             {projectName}
                         </a>
@@ -51,7 +76,6 @@ function DashboardRankedItem({projectName, headerUrl, rank, loading, children}) 
                         </strong>
                     </p>
                 </>
-            }
         </div>
     )
 }

@@ -4,6 +4,10 @@
     width: 30vw;
 }
 
+.navbar-brand:hover {
+    cursor: pointer;
+}
+
 .navbar-brand img {
     width: 3em;
 }

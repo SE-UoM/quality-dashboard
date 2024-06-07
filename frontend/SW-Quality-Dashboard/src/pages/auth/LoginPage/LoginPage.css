@@ -1,8 +1,33 @@
 .login-page {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+}
+
+.auth-page-aside {
+    background-image: url("../../../assets/img/screen-mockup.png");
+    background-size: cover;
+    filter: brightness(0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--org-color-primary);
+}
+
+.auth-page-logo {
+    width: 50vh;
+    height: 50vh;
+    margin-bottom: 20px;
+}
+
+.auth-page-logo img {
+    width: 100%;
+    height: 100%;
+    filter: brightness(1);
+}
+
+.auth-page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

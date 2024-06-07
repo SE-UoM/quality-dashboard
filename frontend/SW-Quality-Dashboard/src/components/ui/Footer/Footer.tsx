@@ -1,58 +1,82 @@
 import React, { useState } from 'react'
 import "./Footer.css"
-import {Button} from "react-bootstrap";
+import brandData from '../../../../content/settings.json'
 import logo from '../../../assets/svg/dashboard_logo_black.svg'
+import footerData from '../../../../content/footer.json'
+
 
 function Footer() {
 
 
     return (
         <>
-            <footer className="dashboard-footer">
-                <section className={"footer-top"}>
-                    <div className="footer-top-brand">
-                        <img className="footer-logo" src={logo} alt="UoM Quality Dashboard Logo"/>
-                        <p>
-                            UoM Quality Dashboard <br/>
-                            By University of Macedonia, OpenSource Uom and SE Lab Uom
-                        </p>
+            <footer className="footer p-10 bg-base-200 text-base-content">
+                <nav>
+                    <h6 className="footer-title">Resources</h6>
+                    {footerData.resources.map((resource, index) => {
+                        return (
+                            <a
+                                key={index}
+                                href={resource.url}
+                                className="link link-hover"
+                            >
+                                {resource.text}
+                            </a>
+                        )
+                    })}
+                </nav>
+                <nav>
+                    <h6 className="footer-title">University of Macedonia</h6>
+                    {footerData.uom.map((uom, index) => {
+                        return (
+                            <a
+                                key={index}
+                                href={uom.url}
+                                className="link link-hover"
+                            >
+                                {uom.text}
+                            </a>
+                        )
+                    })}
+                </nav>
+
+                <nav>
+                    <h6 className="footer-title">OpenSource UoM</h6>
+                    {footerData.osuom.map((openSourceUoM, index) => {
+                        return (
+                            <a
+                                key={index}
+                                href={openSourceUoM.url}
+                                className="link link-hover"
+                            >
+                                {openSourceUoM.text}
+                            </a>
+                        )
+                    })}
+                </nav>
+            </footer>
+            <footer className="footer px-10 py-4 border-t bg-base-200 text-base-content border-base-300">
+                <aside className="items-center grid-flow-col">
+                    <img className="footer-logo" src={logo} alt="UoM Quality Dashboard Logo"/>
+                    <p>
+                        &copy; {new Date().getFullYear() + " " + brandData.brand} <br/>
+                        by &nbsp;
+                        <a href={brandData.orgs.uom.url} className="link">{brandData.orgs.uom.name}</a>, &nbsp;
+                        <a href={brandData.orgs.openSourceUoM.url} className="link">{brandData.orgs.openSourceUoM.name}</a>, and &nbsp;
+                        <a href={brandData.orgs.sde.url} className="link">{brandData.orgs.sde.name}</a>.
+                    </p>
+                </aside>
+                <nav className="md:place-self-center md:justify-self-end">
+                    <div className="grid grid-flow-col gap-4">
+                        <a
+                            href="https://github.com/SE-UoM/quality-dashboard"
+                            className="btn btn-ghost"
+                            style={{fontSize: "5vh"}}
+                        >
+                            <i className={"bi bi-github"}> </i>
+                        </a>
                     </div>
-
-                    <div className="footer-top-content">
-                        <div className="footer-top-content-item">
-                            <h3>Quick Links</h3>
-                            <ul>
-                                <li><a href="https://www.uom.gr/dai">Department of Applied Informatics</a></li>
-                                <li><a href="https://sde.uom.gr/">Software and Data Engineering Lab</a></li>
-                                <li><a href="https://opensource.uom.gr/">OpenSource UoM Team</a></li>
-                            </ul>
-                        </div>
-                        <div className="footer-top-content-item">
-                            <h3>Resources</h3>
-                            <ul>
-                                <li><a href="https://github.com/SE-UoM/quality-dashboard">Github Repository</a></li>
-                                <li><a href="https://github.com/SE-UoM/quality-dashboard/discussions/categories/bug-report">Report a Bug</a></li>
-                                <li><a href="">Contact</a></li>
-                            </ul>
-                        </div>
-
-                        <div className="footer-top-content-item">
-                            <h3>More Links</h3>
-                            <ul>
-                                <li><a href="https://my.uom.gr/">myUoM</a></li>
-                                <li><a href="https://opensource.uom.gr/index.php/blog/">OpenSource UoM Blog</a></li>
-                                <li><a href="https://sde.uom.gr/index.php/research-groups/software-engineering-group/">SDE UoM Software Engineering Group</a></li>
-                            </ul>
-                        </div>
-
-
-                    </div>
-
-                </section>
-
-                <section className={"footer-bottom"}>
-                    <p>{new Date().getFullYear()} UoM Quality Dashboard</p>
-                </section>
+                </nav>
             </footer>
         </>
     )

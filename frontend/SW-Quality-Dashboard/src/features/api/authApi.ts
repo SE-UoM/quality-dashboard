@@ -7,7 +7,7 @@ const baseQuery = fetchBaseQuery({
     prepareHeaders: (headers, { getState }: any) => {
         const { accessToken } = getState().auth;
         if (accessToken) {
-            // backend should be looking for both A-a
+            // api should be looking for both A-a
             headers.set('authorization', `Bearer ${accessToken}`);
         }
         return headers;
@@ -22,7 +22,7 @@ const baseQueryWithReAuth = async (args: any, api: any, extraOptions: any) => {
         console.info(refreshResult)
         if (refreshResult?.data) {
             const user = api.getState().auth.user;
-            //some of these are backend specific
+            //some of these are api specific
             api.dispatch(setCredentials({ ...refreshResult.data, user }));
             // retry the initial request
             result = await baseQuery(args, api, extraOptions);

@@ -2,7 +2,7 @@
     display: grid;
     width: 100%;
     gap: 1.5vh;
-    padding: 1.5vh;
+    padding: 0 1.5vh 1.5vh 1.5vh;
     height: 96vh;
 
     grid-template-columns: repeat(5, 1fr);

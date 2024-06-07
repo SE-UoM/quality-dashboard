@@ -6,12 +6,15 @@ import {useEffect, useState} from "react";
 import DashboardSlideTwo from "../../../components/dashboard/slides/DashboardSlideTwo/DashboardSlideTwo.tsx";
 import DashboardSlideThree from "../../../components/dashboard/slides/DashboardSlideThree/DashboardSlideThree.tsx";
 import DashboardSlideFour from "../../../components/dashboard/slides/DashboardSlideFour/DashboardSlideFour.tsx";
+import ProtectedRoute from "../../../routes/ProtectedRoute.tsx";
 
 function DashboardPage({isAuthenticated, isAdmin}) {
     const location = useLocation()
     const navigate = useNavigate()
     const urlParams = new URLSearchParams(location.search)
     const slideNumber = urlParams.get('p')
+
+    const [loadingAuth, setLoadingAuth] = useState<boolean>(true)
 
     const [currentSlide, setCurrentSlide] = useState<number>(
         slideNumber ? parseInt(slideNumber) : 1
@@ -24,30 +27,50 @@ function DashboardPage({isAuthenticated, isAdmin}) {
 
     return (
         <>
-            <CollabsibleNavbar
-                isAuthenticated={isAuthenticated}
-                isAdmin={isAdmin}
-                currentSlide={currentSlide}
-                setCurrentSlide={setCurrentSlide}
-                totalSlides={4}
-            />
-            <div className="dashboard-page">
-                {(!currentSlide || currentSlide === 1) &&
-                    <DashboardSlideOne />
-                }
+            <ProtectedRoute loadingAuth={loadingAuth} setLoadingAuth={setLoadingAuth} />
 
-                {currentSlide === 2 &&
-                    <DashboardSlideTwo />
-                }
+            {loadingAuth ? (
+                <div
+                    className="loading-item"
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100vh"
+                    }}
+                >
+                    <span className="loading loading-infinity loading-lg"></span>
+                </div>
+            ) : (
+                <>
+                    <div className="dashboard-page-container">
+                        <CollabsibleNavbar
+                            isAuthenticated={isAuthenticated}
+                            isAdmin={isAdmin}
+                            currentSlide={currentSlide}
+                            setCurrentSlide={setCurrentSlide}
+                            totalSlides={4}
+                        />
+                        <div className="dashboard-page bg-base-100">
+                            {(!currentSlide || currentSlide === 1) &&
+                                <DashboardSlideOne />
+                            }
 
-                {currentSlide === 3 &&
-                    <DashboardSlideThree />
-                }
+                            {currentSlide === 2 &&
+                                <DashboardSlideTwo />
+                            }
 
-                {currentSlide === 4 &&
-                    <DashboardSlideFour />
-                }
-            </div>
+                            {currentSlide === 3 &&
+                                <DashboardSlideThree />
+                            }
+
+                            {currentSlide === 4 &&
+                                <DashboardSlideFour />
+                            }
+                        </div>
+                    </div>
+                </>
+            )}
         </>
     )
 }

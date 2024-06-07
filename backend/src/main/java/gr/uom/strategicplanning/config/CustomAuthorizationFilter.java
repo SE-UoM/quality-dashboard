@@ -34,6 +34,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         ALLOWED_PATHS.add("/api/organizations/names");
         ALLOWED_PATHS.add("/api/user/reset-password/request");
         ALLOWED_PATHS.add("/api/user/reset-password");
+        ALLOWED_PATHS.add("/api/best-practices");
+        ALLOWED_PATHS.add("/api/best-practices/random");
+        ALLOWED_PATHS.add("/api/organizations");
+        ALLOWED_PATHS.add("/api/projects/pending/total/org");
     }
 
 
@@ -42,7 +46,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         String servletPath = request.getServletPath();
         System.out.println("servletPath: "+servletPath);
         System.out.println("request: "+request);
-        System.out.println(isAllowedPath(servletPath));
 
         if(isAllowedPath(servletPath)){ filterChain.doFilter(request,response); }
 
