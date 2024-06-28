@@ -7,6 +7,7 @@ import gr.uom.strategicplanning.analysis.HttpClient;
 import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
 
+import io.swagger.models.auth.In;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -43,7 +44,7 @@ public class GithubApiClient extends HttpClient {
      * @throws Exception if an I/O error occurs during the API request
      */
 
-    public void fetchProjectData(Project project) throws Exception {
+    public Map<String, Object> fetchProjectData(Project project) throws Exception {
 
         String username = extractUsername(project.getRepoUrl());
         String repoName = extractRepoName(project.getRepoUrl());
@@ -51,18 +52,24 @@ public class GithubApiClient extends HttpClient {
 
         String description = (String) repoData.get("description");
         String defaultBranch = (String) repoData.get("default_branch");
-        Double totalForks = (Double) repoData.get("forks_count");
-        Double totalStars = (Double) repoData.get("stargazers_count");
+
+        Double forksD = (Double) repoData.get("forks_count");
+        Integer totalForks = forksD.intValue();
+
+        Double starsD = (Double) repoData.get("stargazers_count");
+        Integer totalStars = starsD.intValue();
 
         int totalCommits = getTotalCommits(project);
 
-        project.setName(repoName);
-        project.setProjectDescription(description);
-        project.setOwnerName(username);
-        project.setTotalCommits(totalCommits);
-        project.setForks(totalForks.intValue());
-        project.setStars(totalStars.intValue());
-        project.setDefaultBranchName(defaultBranch);
+        Map<String, Object> data = Map.of(
+            "description", description,
+            "defaultBranch", defaultBranch,
+            "totalForks", totalForks,
+            "totalStars", totalStars,
+                "totalCommits", totalCommits
+        );
+
+        return data;
     }
 
     private Map<String, Object> callReposAPI(String username, String repoName) {
