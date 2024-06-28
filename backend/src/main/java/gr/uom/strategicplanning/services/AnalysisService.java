@@ -7,10 +7,14 @@ import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalys
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
 import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
+import gr.uom.strategicplanning.controllers.responses.implementations.ErrorResponse;
 import gr.uom.strategicplanning.enums.ProjectStatus;
+import gr.uom.strategicplanning.exceptions.AnalysisException;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
+import gr.uom.strategicplanning.models.users.User;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,15 +29,20 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
 public class AnalysisService {
     private final SonarApiClient sonarApiClient;
     private final GithubApiClient githubApiClient;
     private final CommitService commitService;
     private final ProjectService projectService;
+    private final UserService userService;
     private SonarAnalysis sonarAnalysis;
 
     @Value("${sonar.sonarqube.url}")
     private String SONARQUBE_URL;
+
+    @Value("${services.external.activated}")
+    private boolean EXTERNAL_ANALYSIS_IS_ACTIVATED;
 
     @Autowired
     private LanguageService languageService;
@@ -45,19 +54,38 @@ public class AnalysisService {
     private CodeSmellDistributionService codeSmellDistributionService;
 
     @Autowired
+    private OrganizationAnalysisService organizationAnalysisService;
+
+    @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
+    private ExternalAnalysisService externalAnalysisService;
+
+    @Autowired
     public AnalysisService(
             CommitService commitService,
             @Value("${github.token}") String githubToken,
             @Value("${sonar.sonarqube.url}") String sonarApiUrl,
-            ProjectService projectService) {
+            ProjectService projectService,
+            UserService userService
+    ) {
         this.commitService = commitService;
         this.projectService = projectService;
         this.githubApiClient = new GithubApiClient(githubToken);
         this.sonarApiClient = new SonarApiClient(sonarApiUrl);
+        this.userService = userService;
     }
 
     public void fetchGithubData(Project project) throws Exception {
-        githubApiClient.fetchProjectData(project);
+        Map<String, Object> githubData = githubApiClient.fetchProjectData(project);
+
+        project.setProjectDescription((String) githubData.get("description"));
+        project.setDefaultBranchName((String) githubData.get("defaultBranch"));
+        project.setForks((int) githubData.get("totalForks"));
+        project.setStars((int) githubData.get("totalStars"));
+        project.setTotalCommits((int) githubData.get("totalCommits"));
+
         projectService.saveProject(project);
     }
 
@@ -94,6 +122,61 @@ public class AnalysisService {
         GitClient.checkoutMaster(project);
 
         sonarAnalysis = new SonarAnalysis(project, project.getDefaultBranchName(), SONARQUBE_URL);
+    }
+
+    public Project analyzeProject(String url, User user) throws Exception {
+       log.info("AnalysisService - analyzeProject - url: " + url + " - user: " + user.getEmail());
+
+        boolean urlIsInvalid = url==null || url.isEmpty() || !url.matches("https://github.com/[^/]+/[^/]+" );
+
+        if (urlIsInvalid || !validateUrlWithGithub(url)) {
+            log.error("AnalysisService - analyzeProject - Invalid github url");
+            throw new AnalysisException(HttpStatus.BAD_REQUEST, "Invalid github url");
+        }
+
+        Organization organization = user.getOrganization();
+        Project project = projectService.getOrCreateProject(url, organization);
+
+        if (project.getStatus() == ProjectStatus.ANALYSIS_STARTED || project.getStatus() == ProjectStatus.ANALYSIS_IN_PROGRESS) {
+            log.error("AnalysisService - analyzeProject - The project is already being analyzed");
+            throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project is already being analyzed");
+        }
+
+        if (project.getStatus() == ProjectStatus.ANALYSIS_TO_BE_REVIEWED) {
+            log.error("AnalysisService - analyzeProject - The project has more commits than the threshold and needs to be reviewed");
+            throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project needs to be reviewed by an Admin first.");
+        }
+
+        this.fetchGithubData(project);
+
+        if (!project.hasLessCommitsThanThreshold()) {
+            log.error("AnalysisService - analyzeProject - The project has more commits than the threshold and needs to be reviewed");
+            throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project has a lot of Commits.");
+        }
+
+        Integer analyzedCommits = startAnalysis(project);
+
+        if (analyzedCommits == 0) {
+            log.info("AnalysisService - analyzeProject - All commits are already analyzed, you can see the results on the dashboard");
+            throw new AnalysisException(HttpStatus.OK, "All commits are already analyzed, you can see the results on the dashboard.");
+        }
+
+        log.info("AnalysisService - analyzeProject - Analysis Finished! " + analyzedCommits + " commits analyzed");
+
+        organizationAnalysisService.updateOrganizationAnalysis(organization);
+        organizationService.saveOrganization(organization);
+
+        log.info("AnalysisService - analyzeProject - Organization Analysis Updated");
+        log.info("AnalysisService - analyzeProject - External Analysis Activated: " + EXTERNAL_ANALYSIS_IS_ACTIVATED);
+
+        if (EXTERNAL_ANALYSIS_IS_ACTIVATED) {
+            log.info("AnalysisService - analyzeProject - External Analysis Started");
+             externalAnalysisService.analyzeWithExternalServices(project);
+        }
+
+        log.info("AnalysisService - analyzeProject - External Analysis Finished");
+
+        return project;
     }
 
     private void extractAnalysisDataForProject(Project project) throws Exception {
@@ -154,7 +237,7 @@ public class AnalysisService {
         try {
             String sha = GitClient.getShaOfClonedProject(clonedGit);
 
-            if(project.getCommits().stream().anyMatch(x-> Objects.equals(x.getHash(), sha))){
+            if (project.commitsAlreadyAnalyzed(sha)){
                 project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
                 clonedGit.close();
                 GitClient.deleteRepository(project);
@@ -195,7 +278,8 @@ public class AnalysisService {
             project.setStatus(ProjectStatus.ANALYSIS_FAILED);
             projectService.saveProject(project);
 
-            throw e;
+            // The AnalysisExceptionHandler will catch this exception and return an appropriate response
+            throw new AnalysisException(HttpStatus.INTERNAL_SERVER_ERROR, "Analysis failed. Please try again later or contact support.");
         }
     }
 
