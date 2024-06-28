@@ -62,6 +62,11 @@ public class OrganizationAnalysisService {
         saveOrganizationAnalysis(organizationAnalysis);
     }
 
+    public void updatedAnalysisAndSaveOrganization(Organization organization) {
+        updateOrganizationAnalysis(organization);
+        organizationAnalysisRepository.save(organization.getOrganizationAnalysis());
+    }
+
     public void saveOrganizationAnalysis(OrganizationAnalysis organizationAnalysis) {
         organizationAnalysisRepository.save(organizationAnalysis);
     }
