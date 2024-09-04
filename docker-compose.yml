@@ -2,7 +2,7 @@ version: "2.2"
 services:
 
   pyassess-dashboard:
-    image: geoapos/pyassess_raise
+    image: nikosnikolaidis/python-code-quality-assessment
     container_name: pyassess-dashboard
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess-dashboard:5432/test_db
