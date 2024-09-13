@@ -99,10 +99,10 @@ services:
       - SUPERUSER_PASSWORD=123456
       # SPRING MAIL CONFIGURATION
       # TODO: Change these credentials on build to match your needs
-      - SPRING_MAIL_USERNAME=
-      - SPRING_MAIL_PASSWORD=
+      - SPRING_MAIL_USERNAME=mail.archontis.gr
+      - SPRING_MAIL_PASSWORD=jWncD#1T!h(l
       - SPRING_MAIL_HOST=smtp.gmail.com
-      - SPRING_MAIL_PORT=25
+      - SPRING_MAIL_PORT=27
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
     ports:

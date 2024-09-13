@@ -3,9 +3,7 @@ package gr.uom.strategicplanning.models.analyses;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.Project;
-import gr.uom.strategicplanning.models.stats.ActivityStats;
-import gr.uom.strategicplanning.models.stats.GeneralStats;
-import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import gr.uom.strategicplanning.models.stats.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,6 +43,11 @@ public class OrganizationAnalysis {
 
     @ManyToMany
     private Map<Integer, OrganizationLanguage> topLanguages = new HashMap<>();
+
+    @OneToOne
+    private CodeInspectorStats codeInspectorStats = new CodeInspectorStats(this);
+    @OneToOne
+    private PyAssessStats pyAssessStats = new PyAssessStats(this);
 
     @OneToOne
     private Organization organization;
