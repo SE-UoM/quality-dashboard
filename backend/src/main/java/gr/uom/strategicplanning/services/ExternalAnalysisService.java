@@ -8,6 +8,7 @@ import gr.uom.strategicplanning.models.exceptions.ExternalAnalysisException;
 import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,11 @@ public class ExternalAnalysisService {
     Logger logger = LoggerFactory.getLogger(ExternalAnalysisService.class);
     private final PyAssessServiceStrategy pyAssessServiceStrategy;
     private final CodeInspectorServiceStrategy codeInspectorServiceStrategy;
+
+    @Autowired
+    private PyAssessService pyAssessService;
+    @Autowired
+    private CodeInspectorService codeInspectorService;
 
     @Value("${services.external.pyassess.url}")
     private String PYASSESS_URL;
@@ -57,7 +63,10 @@ public class ExternalAnalysisService {
         params.put("method", HttpMethod.GET);
 
         logger.info("Sending Analysis Request to CodeInspector");
-        codeInspectorServiceStrategy.sendRequest(params);
+        ResponseEntity codeInspectorResponse = codeInspectorServiceStrategy.sendRequest(params);
+
+        codeInspectorService.populateCodeInspectorModel(codeInspectorResponse);
+
         project.setCodeInspectorStatus(ProjectStatus.ANALYSIS_COMPLETED);
         logger.info("CodeInspector analysis completed");
 
@@ -84,7 +93,10 @@ public class ExternalAnalysisService {
         params.put("ciToken", null);
 
         logger.info("Sending request to PyAssess");
-        pyAssessServiceStrategy.sendRequest(params);
+        ResponseEntity pyAssessResponse = pyAssessServiceStrategy.sendRequest(params);
+
+        pyAssessService.populatePyAssessModel(pyAssessResponse);
+
         project.setPyAssessStatus(ProjectStatus.ANALYSIS_COMPLETED);
         logger.info("PyAssess analysis completed");
 

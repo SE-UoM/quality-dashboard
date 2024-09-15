@@ -27,6 +27,17 @@ public class PyAssessProjectStats {
     private Integer totalMiss;
     private Integer totalStmts;
 
+    private Integer nom;
+    private Integer wac;
+    private Integer nocc;
+    private Integer dit;
+    private Integer wmpc1;
+    private Integer wmpc2;
+    private Integer rfc;
+    private Integer cbo;
+    private Integer mpc;
+    private Integer lcom;
+
     @OneToOne
     private Project project;
 

@@ -57,7 +57,17 @@ public class Project {
     @OneToOne
     private CodeInspectorProjectStats codeInspectorProjectStats = new CodeInspectorProjectStats(this);
     @OneToOne
-    private PyAssessProjectStats pyAssessProjectStats = new PyAssessProjectStats(this);
+    private PyAssessProjectStats pyAssessProjectStats = checkForPythonGitRepo();
+
+    private PyAssessProjectStats checkForPythonGitRepo() {
+        for (ProjectLanguage projectLanguage : this.languages) {
+            if (projectLanguage.getName().equalsIgnoreCase("Python")) {
+                return new PyAssessProjectStats(this);
+            }
+        }
+
+        return null;
+    }
 
     private String defaultBranchName;
 

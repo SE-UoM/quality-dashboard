@@ -27,6 +27,17 @@ public class PyAssessStats {
     private Long averageMiss;
     private Long averageStmts;
 
+    private Long averageNom;
+    private Long averageWac;
+    private Long averageNocc;
+    private Long averageDit;
+    private Long averageWmpc1;
+    private Long averageWmpc2;
+    private Long averageRfc;
+    private Long averageCbo;
+    private Long averageMpc;
+    private Long averageLcom;
+
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;
 
