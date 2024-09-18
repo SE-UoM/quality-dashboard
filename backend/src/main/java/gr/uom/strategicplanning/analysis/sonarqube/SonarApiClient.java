@@ -190,7 +190,9 @@ public class SonarApiClient extends HttpClient {
         String componentKey = findComponentKey(projectComponent);
 
         try {
-            Response response = this.sendGetRequest(LANGUAGES_URL + componentKey);
+            String requestURL = LANGUAGES_URL + componentKey;
+            System.out.println("Request URL: " + requestURL);
+            Response response = this.sendGetRequest(requestURL);
 
             JSONObject jsonObject = this.convertResponseToJson(response);
             JSONObject component = jsonObject.getJSONObject("component");
