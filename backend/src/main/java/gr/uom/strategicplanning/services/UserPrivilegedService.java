@@ -21,6 +21,8 @@ public class UserPrivilegedService {
                 HttpStatus.NOT_FOUND, "User with email "+ email +" doesn't exist!"
         ));
         user.setVerified(true);
+
+        userRepository.save(user);
         return user;
     }
 
@@ -34,6 +36,8 @@ public class UserPrivilegedService {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "This user is Privileged");
         }
         user.setRoles(roles+",PRIVILEGED");
+
+        userRepository.save(user);
         return user;
     }
 }
