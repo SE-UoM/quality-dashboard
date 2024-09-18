@@ -244,30 +244,29 @@ public class AnalysisService {
 
                 return 0;
             }
-            else {
-                project.setStatus(ProjectStatus.ANALYSIS_STARTED);
-                projectService.saveProject(project);
 
-                String defaultBranch = project.getDefaultBranchName();
-                RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
-                project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
+            project.setStatus(ProjectStatus.ANALYSIS_STARTED);
+            projectService.saveProject(project);
 
-                analyzeCommits(project);
+            String defaultBranch = project.getDefaultBranchName();
+            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
+            project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
 
-                extractAnalysisDataForProject(project);
+            analyzeCommits(project);
 
-                // Set the total commits of the project
-                project.setTotalCommits(project.getCommits().size());
+            extractAnalysisDataForProject(project);
 
-                project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
-                // Save the project with updated analysis data
-                projectService.saveProject(project);
+            // Set the total commits of the project
+            project.setTotalCommits(project.getCommits().size());
 
-                clonedGit.close();
-                GitClient.deleteRepository(project);
+            project.setStatus(ProjectStatus.ANALYSIS_COMPLETED);
+            // Save the project with updated analysis data
+            projectService.saveProject(project);
 
-                return project.getCommits().size();
-            }
+            clonedGit.close();
+            GitClient.deleteRepository(project);
+
+            return project.getCommits().size();
         } catch (Exception e) {
             System.out.println("Analysis failed for project " + project.getName());
             e.printStackTrace();
