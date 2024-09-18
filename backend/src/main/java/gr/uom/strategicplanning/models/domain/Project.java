@@ -54,10 +54,10 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
 
-    @OneToOne
-    private CodeInspectorProjectStats codeInspectorProjectStats = new CodeInspectorProjectStats(this);
-    @OneToOne
-    private PyAssessProjectStats pyAssessProjectStats = checkForPythonGitRepo();
+    @OneToOne(cascade = CascadeType.PERSIST)
+            private CodeInspectorProjectStats codeInspectorProjectStats = new CodeInspectorProjectStats(this);
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private PyAssessProjectStats pyAssessProjectStats = new PyAssessProjectStats(this);
 
     private PyAssessProjectStats checkForPythonGitRepo() {
         for (ProjectLanguage projectLanguage : this.languages) {
