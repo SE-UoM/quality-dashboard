@@ -1,6 +1,5 @@
 package gr.uom.strategicplanning.services;
 
-import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
@@ -78,12 +77,7 @@ public class ProjectService {
             return projectOptional.get();
         }
 
-        String username = GithubApiClient.extractUsername(repoUrl);
-        String repoName = GithubApiClient.extractRepoName(repoUrl);
-
         Project project = new Project();
-        project.setName(repoName);
-        project.setOwnerName(username);
         project.setRepoUrl(repoUrl);
         project.setOrganization(organization);
         project.setStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
@@ -102,6 +96,4 @@ public class ProjectService {
         // Also update the organization to reflect the change
         organizationService.saveOrganization(project.getOrganization());
     }
-
-
 }

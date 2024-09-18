@@ -44,9 +44,9 @@ public class OrganizationAnalysis {
     @ManyToMany
     private Map<Integer, OrganizationLanguage> topLanguages = new HashMap<>();
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     private CodeInspectorStats codeInspectorStats = new CodeInspectorStats(this);
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     private PyAssessStats pyAssessStats = new PyAssessStats(this);
 
     @OneToOne

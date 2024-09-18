@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 public class AnalysisService {
     private final SonarApiClient sonarApiClient;
     private final GithubApiClient githubApiClient;
-    private final GithubService githubService;
     private final CommitService commitService;
     private final ProjectService projectService;
     private final UserService userService;
@@ -69,15 +68,13 @@ public class AnalysisService {
             @Value("${github.token}") String githubToken,
             @Value("${sonar.sonarqube.url}") String sonarApiUrl,
             ProjectService projectService,
-            UserService userService,
-            GithubService githubService
+            UserService userService
     ) {
         this.commitService = commitService;
         this.projectService = projectService;
         this.githubApiClient = new GithubApiClient(githubToken);
         this.sonarApiClient = new SonarApiClient(sonarApiUrl);
         this.userService = userService;
-        this.githubService = githubService;
     }
 
     public void fetchGithubData(Project project) throws Exception {
@@ -150,15 +147,7 @@ public class AnalysisService {
             throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project needs to be reviewed by an Admin first.");
         }
 
-        Map<String, Object> githubData = githubApiClient.fetchProjectData(project);
-
-        project.setProjectDescription((String) githubData.get("description"));
-        project.setDefaultBranchName((String) githubData.get("defaultBranch"));
-        project.setForks((int) githubData.get("totalForks"));
-        project.setStars((int) githubData.get("totalStars"));
-        project.setTotalCommits((int) githubData.get("totalCommits"));
-
-        projectService.saveProject(project);
+        this.fetchGithubData(project);
 
         if (!project.hasLessCommitsThanThreshold()) {
             log.error("AnalysisService - analyzeProject - The project has more commits than the threshold and needs to be reviewed");
