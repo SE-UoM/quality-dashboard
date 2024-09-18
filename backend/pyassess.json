@@ -1,0 +1,1435 @@
+{
+  "id": 7,
+  "gitUrl": "https://github.com/ArchontisKostis/CodeInspectorFLASK",
+  "owner": "ArchontisKostis",
+  "name": "CodeInspectorFLASK",
+  "directory": "//repos/CodeInspectorFLASK",
+  "projectAnalysis": [],
+  "singleAnalyzedProjectList": [
+    {
+      "id": 4,
+      "gitUrl": "https://github.com/ArchontisKostis/CodeInspectorFLASK",
+      "owner": "ArchontisKostis",
+      "name": "CodeInspectorFLASK",
+      "directory": "//repos/CodeInspectorFLASK",
+      "dependencies": [
+        "Flask==3.0.3",
+        "GitPython==3.1.43",
+        "plotly==5.24.1",
+        "pydriller==2.6"
+      ],
+      "dependenciesCounter": 4,
+      "files": [
+        {
+          "id": 2670,
+          "filePath": "/repos/CodeInspectorFLASK/app.py",
+          "name": "app.py",
+          "stmts": 3,
+          "miss": 3,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [
+            {
+              "id": 4971,
+              "content": "/repos/CodeInspectorFLASK/app.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 4972,
+              "content": "/repos/CodeInspectorFLASK/app.py:1:0: W0406: Module import itself (import-self)"
+            }
+          ],
+          "rating": 3.33,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 2.48,
+            "Analysis.py": 0.28,
+            "RepoDriller.py": 0.95,
+            "PriorityType.py": 0.16,
+            "RepoFile.py": 0.51,
+            "ProjectAnalyzer.py": 1.39,
+            "analysis.py": 1.68,
+            "results.py": 1.91,
+            "ProcessMetricsCalculator.py": 3.56,
+            "HotspotPrioritizer.py": 0.95,
+            "Project.py": 0.94,
+            "ScatterPlotCreator.py": 1.01,
+            "__init__.py": 0.53
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2671,
+          "filePath": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py",
+          "name": "ScatterPlotCreator.py",
+          "stmts": 20,
+          "miss": 20,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 516,
+            "loc": 28,
+            "nom": 4,
+            "size2": 8,
+            "wac": 4,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 2.25,
+            "wmpc2": 11,
+            "rfc": 7,
+            "cbo": 1,
+            "mpc": 4,
+            "lcom": 0
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 301,
+              "filePath": "//repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py",
+              "className": "ScatterPlotCreator",
+              "qualityMetrics": {
+                "id": 507,
+                "loc": 28,
+                "nom": 4,
+                "size2": 8,
+                "wac": 4,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 2.25,
+                "wmpc2": 11,
+                "rfc": 7,
+                "cbo": 1,
+                "mpc": 4,
+                "lcom": 0
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 4973,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:37:0: C0304: Final newline missing (missing-final-newline)"
+            },
+            {
+              "id": 4974,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 4975,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:1:0: C0103: Module name \"ScatterPlotCreator\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 4976,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:2:0: E0401: Unable to import \\'plotly.express\\' (import-error)"
+            },
+            {
+              "id": 4977,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:7:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 4978,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:14:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 4979,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:23:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 4980,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:34:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 4981,
+              "content": "/repos/CodeInspectorFLASK/app/plot/ScatterPlotCreator.py:4:0: C0412: Imports from package app are not grouped (ungrouped-imports)"
+            }
+          ],
+          "rating": 3.5,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 5.26,
+            "Analysis.py": 12.47,
+            "RepoDriller.py": 8.04,
+            "PriorityType.py": 0.97,
+            "RepoFile.py": 7.29,
+            "ProjectAnalyzer.py": 10.29,
+            "app.py": 1.01,
+            "analysis.py": 6.84,
+            "results.py": 3.93,
+            "ProcessMetricsCalculator.py": 2.02,
+            "HotspotPrioritizer.py": 6.47,
+            "Project.py": 8.3,
+            "__init__.py": 3.37
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2672,
+          "filePath": "/repos/CodeInspectorFLASK/app/plot/__init__.py",
+          "name": "__init__.py",
+          "stmts": 5,
+          "miss": 5,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [],
+          "rating": null,
+          "previousRating": null,
+          "similarity": {},
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2673,
+          "filePath": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py",
+          "name": "ProcessMetricsCalculator.py",
+          "stmts": 11,
+          "miss": 11,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 517,
+            "loc": 10,
+            "nom": 1,
+            "size2": 1,
+            "wac": 0,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 4.0,
+            "wmpc2": 5,
+            "rfc": 1,
+            "cbo": 0,
+            "mpc": 0,
+            "lcom": 0
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 302,
+              "filePath": "//repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py",
+              "className": "ProcessMetricsCalculator",
+              "qualityMetrics": {
+                "id": 508,
+                "loc": 10,
+                "nom": 1,
+                "size2": 1,
+                "wac": 0,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 4.0,
+                "wmpc2": 5,
+                "rfc": 1,
+                "cbo": 0,
+                "mpc": 0,
+                "lcom": 0
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 4982,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:14:0: C0304: Final newline missing (missing-final-newline)"
+            },
+            {
+              "id": 4983,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 4984,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:1:0: C0103: Module name \"ProcessMetricsCalculator\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 4985,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:1:0: E0401: Unable to import \\'pydriller.metrics.process.code_churn\\' (import-error)"
+            },
+            {
+              "id": 4986,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:4:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 4987,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:6:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 4988,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:6:58: W0622: Redefining built-in \\'type\\' (redefined-builtin)"
+            },
+            {
+              "id": 4989,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:6:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)"
+            },
+            {
+              "id": 4990,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProcessMetricsCalculator.py:4:0: R0903: Too few public methods (1/2) (too-few-public-methods)"
+            }
+          ],
+          "rating": 0.0,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 3.16,
+            "Analysis.py": 0.99,
+            "RepoDriller.py": 6.85,
+            "PriorityType.py": 0.35,
+            "RepoFile.py": 9.1,
+            "ProjectAnalyzer.py": 6.37,
+            "app.py": 3.56,
+            "analysis.py": 3.24,
+            "results.py": 2.63,
+            "HotspotPrioritizer.py": 2.31,
+            "Project.py": 2.88,
+            "ScatterPlotCreator.py": 2.02,
+            "__init__.py": 0.82
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2674,
+          "filePath": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py",
+          "name": "HotspotPrioritizer.py",
+          "stmts": 40,
+          "miss": 40,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 518,
+            "loc": 40,
+            "nom": 4,
+            "size2": 6,
+            "wac": 2,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 3.25,
+            "wmpc2": 12,
+            "rfc": 6,
+            "cbo": 1,
+            "mpc": 4,
+            "lcom": 0
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 303,
+              "filePath": "//repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py",
+              "className": "HotspotPrioritizer",
+              "qualityMetrics": {
+                "id": 509,
+                "loc": 40,
+                "nom": 4,
+                "size2": 6,
+                "wac": 2,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 3.25,
+                "wmpc2": 12,
+                "rfc": 6,
+                "cbo": 1,
+                "mpc": 4,
+                "lcom": 0
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 4991,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 4992,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:1:0: C0103: Module name \"HotspotPrioritizer\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 4993,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:1:0: E0401: Unable to import \\'flask\\' (import-error)"
+            },
+            {
+              "id": 4994,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:4:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 4995,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:9:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 4996,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:22:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 4997,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:22:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)"
+            },
+            {
+              "id": 4998,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/HotspotPrioritizer.py:41:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            }
+          ],
+          "rating": 7.0,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 3.01,
+            "Analysis.py": 2.83,
+            "RepoDriller.py": 8.5,
+            "PriorityType.py": 2.02,
+            "RepoFile.py": 13.23,
+            "ProjectAnalyzer.py": 11.81,
+            "app.py": 0.95,
+            "analysis.py": 6.23,
+            "results.py": 5.72,
+            "ProcessMetricsCalculator.py": 2.31,
+            "Project.py": 6.81,
+            "ScatterPlotCreator.py": 6.47,
+            "__init__.py": 1.37
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2675,
+          "filePath": "/repos/CodeInspectorFLASK/app/analysis/__init__.py",
+          "name": "__init__.py",
+          "stmts": 5,
+          "miss": 5,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [],
+          "rating": null,
+          "previousRating": null,
+          "similarity": {},
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2676,
+          "filePath": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py",
+          "name": "RepoDriller.py",
+          "stmts": 39,
+          "miss": 39,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 519,
+            "loc": 41,
+            "nom": 8,
+            "size2": 10,
+            "wac": 2,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 1.75,
+            "wmpc2": 23,
+            "rfc": 9,
+            "cbo": 1,
+            "mpc": 2,
+            "lcom": 22
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 304,
+              "filePath": "//repos/CodeInspectorFLASK/app/analysis/RepoDriller.py",
+              "className": "RepoDriller",
+              "qualityMetrics": {
+                "id": 510,
+                "loc": 41,
+                "nom": 8,
+                "size2": 10,
+                "wac": 2,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 1.75,
+                "wmpc2": 23,
+                "rfc": 9,
+                "cbo": 1,
+                "mpc": 2,
+                "lcom": 22
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 4999,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:31:0: C0325: Unnecessary parens after \\'if\\' keyword (superfluous-parens)"
+            },
+            {
+              "id": 5000,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:41:0: C0301: Line too long (113/100) (line-too-long)"
+            },
+            {
+              "id": 5001,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:57:0: C0304: Final newline missing (missing-final-newline)"
+            },
+            {
+              "id": 5002,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5003,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:1:0: C0103: Module name \"RepoDriller\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5004,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:1:0: E0401: Unable to import \\'flask\\' (import-error)"
+            },
+            {
+              "id": 5005,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:2:0: E0401: Unable to import \\'pydriller\\' (import-error)"
+            },
+            {
+              "id": 5006,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:7:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 5007,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:12:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5008,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:17:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5009,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:23:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5010,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:30:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5011,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:31:8: R1705: Unnecessary \"else\" after \"return\", remove the \"else\" and de-indent the code inside it (no-else-return)"
+            },
+            {
+              "id": 5012,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:30:4: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)"
+            },
+            {
+              "id": 5013,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:39:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5014,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:45:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5015,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/RepoDriller.py:54:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            }
+          ],
+          "rating": 3.59,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 6.2,
+            "Analysis.py": 5.6,
+            "PriorityType.py": 4.0,
+            "RepoFile.py": 11.13,
+            "ProjectAnalyzer.py": 19.8,
+            "app.py": 0.95,
+            "analysis.py": 10.54,
+            "results.py": 4.85,
+            "ProcessMetricsCalculator.py": 6.85,
+            "HotspotPrioritizer.py": 8.5,
+            "Project.py": 34.89,
+            "ScatterPlotCreator.py": 8.04,
+            "__init__.py": 2.15
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2677,
+          "filePath": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py",
+          "name": "ProjectAnalyzer.py",
+          "stmts": 56,
+          "miss": 56,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 520,
+            "loc": 54,
+            "nom": 7,
+            "size2": 11,
+            "wac": 4,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 2.29,
+            "wmpc2": 17,
+            "rfc": 9,
+            "cbo": 2,
+            "mpc": 5,
+            "lcom": 11
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 305,
+              "filePath": "//repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py",
+              "className": "ProjectAnalyzer",
+              "qualityMetrics": {
+                "id": 511,
+                "loc": 54,
+                "nom": 7,
+                "size2": 11,
+                "wac": 4,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 2.29,
+                "wmpc2": 17,
+                "rfc": 9,
+                "cbo": 2,
+                "mpc": 5,
+                "lcom": 11
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 5016,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:31:0: C0301: Line too long (103/100) (line-too-long)"
+            },
+            {
+              "id": 5017,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5018,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:1:0: C0103: Module name \"ProjectAnalyzer\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5019,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:1:0: E0401: Unable to import \\'flask\\' (import-error)"
+            },
+            {
+              "id": 5020,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:10:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 5021,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:17:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5022,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:33:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5023,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:43:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5024,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:49:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5025,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:66:12: C0206: Consider iterating with .items() (consider-using-dict-items)"
+            },
+            {
+              "id": 5026,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:70:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5027,
+              "content": "/repos/CodeInspectorFLASK/app/analysis/ProjectAnalyzer.py:75:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            }
+          ],
+          "rating": 7.14,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 8.47,
+            "Analysis.py": 9.5,
+            "RepoDriller.py": 19.8,
+            "PriorityType.py": 3.11,
+            "RepoFile.py": 8.82,
+            "app.py": 1.39,
+            "analysis.py": 15.36,
+            "results.py": 9.88,
+            "ProcessMetricsCalculator.py": 6.37,
+            "HotspotPrioritizer.py": 11.81,
+            "Project.py": 13.79,
+            "ScatterPlotCreator.py": 10.29,
+            "__init__.py": 2.85
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2678,
+          "filePath": "/repos/CodeInspectorFLASK/app/__init__.py",
+          "name": "__init__.py",
+          "stmts": 5,
+          "miss": 5,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [],
+          "rating": null,
+          "previousRating": null,
+          "similarity": {},
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2679,
+          "filePath": "/repos/CodeInspectorFLASK/app/model/__init__.py",
+          "name": "__init__.py",
+          "stmts": 5,
+          "miss": 5,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [],
+          "rating": null,
+          "previousRating": null,
+          "similarity": {},
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2680,
+          "filePath": "/repos/CodeInspectorFLASK/app/model/Project.py",
+          "name": "Project.py",
+          "stmts": 38,
+          "miss": 38,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 521,
+            "loc": 35,
+            "nom": 13,
+            "size2": 18,
+            "wac": 5,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 1.15,
+            "wmpc2": 33,
+            "rfc": 13,
+            "cbo": 0,
+            "mpc": 0,
+            "lcom": 34
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 306,
+              "filePath": "//repos/CodeInspectorFLASK/app/model/Project.py",
+              "className": "Project",
+              "qualityMetrics": {
+                "id": 512,
+                "loc": 35,
+                "nom": 13,
+                "size2": 18,
+                "wac": 5,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 1.15,
+                "wmpc2": 33,
+                "rfc": 13,
+                "cbo": 0,
+                "mpc": 0,
+                "lcom": 34
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 5028,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5029,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:1:0: C0103: Module name \"Project\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5030,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:1:0: E0401: Unable to import \\'pydriller\\' (import-error)"
+            },
+            {
+              "id": 5031,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:7:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 5032,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:15:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5033,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:18:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5034,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:21:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5035,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:24:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5036,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:28:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5037,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:31:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5038,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:34:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5039,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:37:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5040,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:43:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5041,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:46:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5042,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:49:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5043,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:52:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5044,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:1:0: W0611: Unused Commit imported from pydriller (unused-import)"
+            },
+            {
+              "id": 5045,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:3:0: W0611: Unused is_not_already_added imported from app.model (unused-import)"
+            },
+            {
+              "id": 5046,
+              "content": "/repos/CodeInspectorFLASK/app/model/Project.py:4:0: W0611: Unused RepoFile imported from app.model.RepoFile (unused-import)"
+            }
+          ],
+          "rating": 3.95,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 2.67,
+            "Analysis.py": 13.45,
+            "RepoDriller.py": 34.89,
+            "PriorityType.py": 0.79,
+            "RepoFile.py": 14.0,
+            "ProjectAnalyzer.py": 13.79,
+            "app.py": 0.94,
+            "analysis.py": 4.69,
+            "results.py": 2.5,
+            "ProcessMetricsCalculator.py": 2.88,
+            "HotspotPrioritizer.py": 6.81,
+            "ScatterPlotCreator.py": 8.3,
+            "__init__.py": 0.83
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2681,
+          "filePath": "/repos/CodeInspectorFLASK/app/model/Analysis.py",
+          "name": "Analysis.py",
+          "stmts": 7,
+          "miss": 7,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 522,
+            "loc": 6,
+            "nom": 2,
+            "size2": 4,
+            "wac": 2,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 1.0,
+            "wmpc2": 6,
+            "rfc": 2,
+            "cbo": 0,
+            "mpc": 0,
+            "lcom": 0
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 307,
+              "filePath": "//repos/CodeInspectorFLASK/app/model/Analysis.py",
+              "className": "Analysis",
+              "qualityMetrics": {
+                "id": 513,
+                "loc": 6,
+                "nom": 2,
+                "size2": 4,
+                "wac": 2,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 1.0,
+                "wmpc2": 6,
+                "rfc": 2,
+                "cbo": 0,
+                "mpc": 0,
+                "lcom": 0
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 5047,
+              "content": "/repos/CodeInspectorFLASK/app/model/Analysis.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5048,
+              "content": "/repos/CodeInspectorFLASK/app/model/Analysis.py:1:0: C0103: Module name \"Analysis\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5049,
+              "content": "/repos/CodeInspectorFLASK/app/model/Analysis.py:4:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 5050,
+              "content": "/repos/CodeInspectorFLASK/app/model/Analysis.py:9:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5051,
+              "content": "/repos/CodeInspectorFLASK/app/model/Analysis.py:4:0: R0903: Too few public methods (1/2) (too-few-public-methods)"
+            }
+          ],
+          "rating": 2.86,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 3.66,
+            "RepoDriller.py": 5.6,
+            "PriorityType.py": 0.49,
+            "RepoFile.py": 10.12,
+            "ProjectAnalyzer.py": 9.5,
+            "app.py": 0.28,
+            "analysis.py": 9.09,
+            "results.py": 1.77,
+            "ProcessMetricsCalculator.py": 0.99,
+            "HotspotPrioritizer.py": 2.83,
+            "Project.py": 13.45,
+            "ScatterPlotCreator.py": 12.47,
+            "__init__.py": 0.48
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2682,
+          "filePath": "/repos/CodeInspectorFLASK/app/model/RepoFile.py",
+          "name": "RepoFile.py",
+          "stmts": 20,
+          "miss": 20,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 523,
+            "loc": 19,
+            "nom": 7,
+            "size2": 10,
+            "wac": 3,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 1.0,
+            "wmpc2": 19,
+            "rfc": 7,
+            "cbo": 0,
+            "mpc": 0,
+            "lcom": 1
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 308,
+              "filePath": "//repos/CodeInspectorFLASK/app/model/RepoFile.py",
+              "className": "RepoFile",
+              "qualityMetrics": {
+                "id": 514,
+                "loc": 19,
+                "nom": 7,
+                "size2": 10,
+                "wac": 3,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 1.0,
+                "wmpc2": 19,
+                "rfc": 7,
+                "cbo": 0,
+                "mpc": 0,
+                "lcom": 1
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 5052,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:28:0: C0304: Final newline missing (missing-final-newline)"
+            },
+            {
+              "id": 5053,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5054,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:1:0: C0103: Module name \"RepoFile\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5055,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:4:0: C0115: Missing class docstring (missing-class-docstring)"
+            },
+            {
+              "id": 5056,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:10:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5057,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:14:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5058,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:17:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5059,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:21:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5060,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:24:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5061,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:24:27: W0622: Redefining built-in \\'type\\' (redefined-builtin)"
+            },
+            {
+              "id": 5062,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:27:4: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5063,
+              "content": "/repos/CodeInspectorFLASK/app/model/RepoFile.py:1:0: W0611: Unused PriorityType imported from app.model.PriorityType (unused-import)"
+            }
+          ],
+          "rating": 4.0,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 2.14,
+            "Analysis.py": 10.12,
+            "RepoDriller.py": 11.13,
+            "PriorityType.py": 1.14,
+            "ProjectAnalyzer.py": 8.82,
+            "app.py": 0.51,
+            "analysis.py": 2.44,
+            "results.py": 2.25,
+            "ProcessMetricsCalculator.py": 9.1,
+            "HotspotPrioritizer.py": 13.23,
+            "Project.py": 14.0,
+            "ScatterPlotCreator.py": 7.29,
+            "__init__.py": 1.19
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2683,
+          "filePath": "/repos/CodeInspectorFLASK/app/model/PriorityType.py",
+          "name": "PriorityType.py",
+          "stmts": 7,
+          "miss": 7,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": {
+            "id": 524,
+            "loc": 6,
+            "nom": 0,
+            "size2": 5,
+            "wac": 5,
+            "nocc": 0,
+            "dit": 0,
+            "wmpc1": 0.0,
+            "wmpc2": 0,
+            "rfc": 0,
+            "cbo": 1,
+            "mpc": 0,
+            "lcom": 0
+          },
+          "pythonClassMetrics": [
+            {
+              "id": 309,
+              "filePath": "//repos/CodeInspectorFLASK/app/model/PriorityType.py",
+              "className": "PriorityType",
+              "qualityMetrics": {
+                "id": 515,
+                "loc": 6,
+                "nom": 0,
+                "size2": 5,
+                "wac": 5,
+                "nocc": 0,
+                "dit": 0,
+                "wmpc1": 0.0,
+                "wmpc2": 0,
+                "rfc": 0,
+                "cbo": 1,
+                "mpc": 0,
+                "lcom": 0
+              }
+            }
+          ],
+          "comments": [
+            {
+              "id": 5064,
+              "content": "/repos/CodeInspectorFLASK/app/model/PriorityType.py:3:0: C0301: Line too long (105/100) (line-too-long)"
+            },
+            {
+              "id": 5065,
+              "content": "/repos/CodeInspectorFLASK/app/model/PriorityType.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5066,
+              "content": "/repos/CodeInspectorFLASK/app/model/PriorityType.py:1:0: C0103: Module name \"PriorityType\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5067,
+              "content": "/repos/CodeInspectorFLASK/app/model/PriorityType.py:5:0: C0115: Missing class docstring (missing-class-docstring)"
+            }
+          ],
+          "rating": 4.29,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 4.79,
+            "Analysis.py": 0.49,
+            "RepoDriller.py": 4.0,
+            "RepoFile.py": 1.14,
+            "ProjectAnalyzer.py": 3.11,
+            "app.py": 0.16,
+            "analysis.py": 7.6,
+            "results.py": 3.48,
+            "ProcessMetricsCalculator.py": 0.35,
+            "HotspotPrioritizer.py": 2.02,
+            "Project.py": 0.79,
+            "ScatterPlotCreator.py": 0.97,
+            "__init__.py": 1.57
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2684,
+          "filePath": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py",
+          "name": "analysis.py",
+          "stmts": 36,
+          "miss": 36,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [
+            {
+              "id": 5068,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:40:0: C0301: Line too long (107/100) (line-too-long)"
+            },
+            {
+              "id": 5069,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:44:0: C0301: Line too long (104/100) (line-too-long)"
+            },
+            {
+              "id": 5070,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:69:0: C0304: Final newline missing (missing-final-newline)"
+            },
+            {
+              "id": 5071,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5072,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:3:0: E0401: Unable to import \\'flask\\' (import-error)"
+            },
+            {
+              "id": 5073,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:4:0: E0401: Unable to import \\'git\\' (import-error)"
+            },
+            {
+              "id": 5074,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:5:0: E0401: Unable to import \\'pydriller\\' (import-error)"
+            },
+            {
+              "id": 5075,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:6:0: E0401: Unable to import \\'pydriller.repository\\' (import-error)"
+            },
+            {
+              "id": 5076,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:18:0: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5077,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:31:12: C0103: Variable name \"to\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5078,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:66:4: C0103: Variable name \"e\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5079,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:68:4: C0103: Variable name \"e\" doesn\\'t conform to snake_case naming style (invalid-name)"
+            },
+            {
+              "id": 5080,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:18:0: R1710: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)"
+            },
+            {
+              "id": 5081,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:62:8: W0612: Unused variable \\'results_url\\' (unused-variable)"
+            },
+            {
+              "id": 5082,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:66:4: W0612: Unused variable \\'e\\' (unused-variable)"
+            },
+            {
+              "id": 5083,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/analysis.py:3:0: W0611: Unused redirect imported from flask (unused-import)"
+            }
+          ],
+          "rating": 0.59,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 35.75,
+            "Analysis.py": 9.09,
+            "RepoDriller.py": 10.54,
+            "PriorityType.py": 7.6,
+            "RepoFile.py": 2.44,
+            "ProjectAnalyzer.py": 15.36,
+            "app.py": 1.68,
+            "results.py": 37.39,
+            "ProcessMetricsCalculator.py": 3.24,
+            "HotspotPrioritizer.py": 6.23,
+            "Project.py": 4.69,
+            "ScatterPlotCreator.py": 6.84,
+            "__init__.py": 6.12
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2685,
+          "filePath": "/repos/CodeInspectorFLASK/app/blueprints/__init__.py",
+          "name": "__init__.py",
+          "stmts": 5,
+          "miss": 5,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [],
+          "rating": null,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 5.79,
+            "Analysis.py": 0.48,
+            "RepoDriller.py": 2.15,
+            "PriorityType.py": 1.57,
+            "RepoFile.py": 1.19,
+            "ProjectAnalyzer.py": 2.85,
+            "app.py": 0.53,
+            "analysis.py": 6.12,
+            "results.py": 6.05,
+            "ProcessMetricsCalculator.py": 0.82,
+            "HotspotPrioritizer.py": 1.37,
+            "Project.py": 0.83,
+            "ScatterPlotCreator.py": 3.37,
+            "__init__.py": 0.1
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2686,
+          "filePath": "/repos/CodeInspectorFLASK/app/blueprints/application.py",
+          "name": "application.py",
+          "stmts": 22,
+          "miss": 22,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [
+            {
+              "id": 5084,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:34:0: C0301: Line too long (106/100) (line-too-long)"
+            },
+            {
+              "id": 5085,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:43:0: C0305: Trailing newlines (trailing-newlines)"
+            },
+            {
+              "id": 5086,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5087,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:4:0: E0401: Unable to import \\'flask\\' (import-error)"
+            },
+            {
+              "id": 5088,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:5:0: E0401: Unable to import \\'git\\' (import-error)"
+            },
+            {
+              "id": 5089,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:6:0: E0401: Unable to import \\'pydriller\\' (import-error)"
+            },
+            {
+              "id": 5090,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:7:0: E0401: Unable to import \\'pydriller.repository\\' (import-error)"
+            },
+            {
+              "id": 5091,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:22:0: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5092,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:2:0: W0611: Unused import time (unused-import)"
+            },
+            {
+              "id": 5093,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:4:0: W0611: Unused flash imported from flask (unused-import)"
+            },
+            {
+              "id": 5094,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:4:0: W0611: Unused Request imported from flask (unused-import)"
+            },
+            {
+              "id": 5095,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:5:0: W0611: Unused GitCommandError imported from git (unused-import)"
+            },
+            {
+              "id": 5096,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:6:0: W0611: Unused Repository imported from pydriller (unused-import)"
+            },
+            {
+              "id": 5097,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:7:0: W0611: Unused MalformedUrl imported from pydriller.repository (unused-import)"
+            },
+            {
+              "id": 5098,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:10:0: W0611: Unused convert_string_to_date imported from app.blueprints (unused-import)"
+            },
+            {
+              "id": 5099,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:10:0: W0611: Unused handle_exception imported from app.blueprints (unused-import)"
+            },
+            {
+              "id": 5100,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:10:0: W0611: Unused calculate_time imported from app.blueprints (unused-import)"
+            },
+            {
+              "id": 5101,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:11:0: W0611: Unused Project imported from app.model.Project (unused-import)"
+            },
+            {
+              "id": 5102,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:12:0: W0611: Unused ProjectAnalyzer imported from app.analysis.ProjectAnalyzer (unused-import)"
+            },
+            {
+              "id": 5103,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/application.py:13:0: W0611: Unused ScatterPlotCreator imported from app.plot.ScatterPlotCreator (unused-import)"
+            }
+          ],
+          "rating": 0.0,
+          "previousRating": null,
+          "similarity": {
+            "Analysis.py": 3.66,
+            "RepoDriller.py": 6.2,
+            "PriorityType.py": 4.79,
+            "RepoFile.py": 2.14,
+            "ProjectAnalyzer.py": 8.47,
+            "app.py": 2.48,
+            "analysis.py": 35.75,
+            "results.py": 31.03,
+            "ProcessMetricsCalculator.py": 3.16,
+            "HotspotPrioritizer.py": 3.01,
+            "Project.py": 2.67,
+            "ScatterPlotCreator.py": 5.26,
+            "__init__.py": 5.79
+          },
+          "projectName": "CodeInspectorFLASK"
+        },
+        {
+          "id": 2687,
+          "filePath": "/repos/CodeInspectorFLASK/app/blueprints/results.py",
+          "name": "results.py",
+          "stmts": 11,
+          "miss": 11,
+          "coverage": 0,
+          "tdInterest": 0.0,
+          "keywords": [],
+          "fileQualityMetrics": null,
+          "pythonClassMetrics": [],
+          "comments": [
+            {
+              "id": 5104,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/results.py:26:0: C0304: Final newline missing (missing-final-newline)"
+            },
+            {
+              "id": 5105,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/results.py:26:0: C0301: Line too long (108/100) (line-too-long)"
+            },
+            {
+              "id": 5106,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/results.py:1:0: C0114: Missing module docstring (missing-module-docstring)"
+            },
+            {
+              "id": 5107,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/results.py:1:0: E0401: Unable to import \\'flask\\' (import-error)"
+            },
+            {
+              "id": 5108,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/results.py:9:0: C0116: Missing function or method docstring (missing-function-docstring)"
+            },
+            {
+              "id": 5109,
+              "content": "/repos/CodeInspectorFLASK/app/blueprints/results.py:1:0: W0611: Unused session imported from flask (unused-import)"
+            }
+          ],
+          "rating": 0.0,
+          "previousRating": null,
+          "similarity": {
+            "application.py": 31.03,
+            "Analysis.py": 1.77,
+            "RepoDriller.py": 4.85,
+            "PriorityType.py": 3.48,
+            "RepoFile.py": 2.25,
+            "ProjectAnalyzer.py": 9.88,
+            "app.py": 1.91,
+            "analysis.py": 37.39,
+            "ProcessMetricsCalculator.py": 2.63,
+            "HotspotPrioritizer.py": 5.72,
+            "Project.py": 2.5,
+            "ScatterPlotCreator.py": 3.93,
+            "__init__.py": 6.05
+          },
+          "projectName": "CodeInspectorFLASK"
+        }
+      ],
+      "totalCoverage": 0,
+      "totalMiss": 364,
+      "totalStmts": 364,
+      "projectQualityMetrics": {
+        "id": 525,
+        "loc": 26,
+        "nom": 5,
+        "size2": 8,
+        "wac": 3,
+        "nocc": 0,
+        "dit": 0,
+        "wmpc1": 1.8544444444444441,
+        "wmpc2": 14,
+        "rfc": 6,
+        "cbo": 0,
+        "mpc": 1,
+        "lcom": 7
+      },
+      "sha": "9433c53e8cff0a2a108b38d628e2206a34706909"
+    }
+  ],
+  "sha": [
+    "9433c53e8cff0a2a108b38d628e2206a34706909"
+  ]
+}

@@ -2,6 +2,8 @@ package gr.uom.strategicplanning.models.domain;
 
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
+import gr.uom.strategicplanning.models.external.CodeInspectorProjectStats;
+import gr.uom.strategicplanning.models.external.PyAssessProjectStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -51,6 +53,21 @@ public class Project {
 
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
+
+    @OneToOne
+    private CodeInspectorProjectStats codeInspectorProjectStats = new CodeInspectorProjectStats(this);
+    @OneToOne
+    private PyAssessProjectStats pyAssessProjectStats = checkForPythonGitRepo();
+
+    private PyAssessProjectStats checkForPythonGitRepo() {
+        for (ProjectLanguage projectLanguage : this.languages) {
+            if (projectLanguage.getName().equalsIgnoreCase("Python")) {
+                return new PyAssessProjectStats(this);
+            }
+        }
+
+        return null;
+    }
 
     private String defaultBranchName;
 
