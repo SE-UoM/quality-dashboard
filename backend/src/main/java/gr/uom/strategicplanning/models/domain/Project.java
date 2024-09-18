@@ -61,6 +61,14 @@ public class Project {
         commit.setProject(this);
     }
 
+    public boolean commitsAlreadyAnalyzed(String sha) {
+        for (Commit commit : this.commits) {
+            if (commit.getHash().equals(sha)) return true;
+        }
+
+        return false;
+    }
+
     public void addDeveloper(Developer developer) {
         if (!developerExists(developer)) {
             this.developers.add(developer);
