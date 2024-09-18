@@ -44,13 +44,19 @@ public class GithubApiClient extends HttpClient {
      * @throws Exception if an I/O error occurs during the API request
      */
 
-    public Map<String, Object> fetchProjectData(Project project) throws Exception {
+    public Map<String, Object> fetchProjectData(Project project) {
 
         String username = extractUsername(project.getRepoUrl());
         String repoName = extractRepoName(project.getRepoUrl());
-        Map repoData = callReposAPI(username, repoName);
+        Map repoData = null;
+
+        while (repoData == null) {
+            repoData = callReposAPI(username, repoName);
+        }
 
         String description = (String) repoData.get("description");
+        if (description == null) description = "";
+
         String defaultBranch = (String) repoData.get("default_branch");
 
         Double forksD = (Double) repoData.get("forks_count");
@@ -62,6 +68,8 @@ public class GithubApiClient extends HttpClient {
         int totalCommits = getTotalCommits(project);
 
         Map<String, Object> data = Map.of(
+                "ownerName", username,
+            "projectName", repoName,
             "description", description,
             "defaultBranch", defaultBranch,
             "totalForks", totalForks,
@@ -118,7 +126,7 @@ public class GithubApiClient extends HttpClient {
         }
     }
 
-    public int getTotalCommits(Project project) throws IOException {
+    public int getTotalCommits(Project project) {
         String username = extractUsername(project.getRepoUrl());
         String repoName = extractRepoName(project.getRepoUrl());
 
@@ -126,7 +134,13 @@ public class GithubApiClient extends HttpClient {
         String url = String.format("https://api.github.com/repos/%s/%s/commits?per_page=1&page=1", username, repoName);
 
         // To find the total number of commits, we need to check the "Link" header.
-        Response response = sendGithubRequest(url);
+        Response response = null;
+        try {
+            response = sendGithubRequest(url);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         String linkHeader = response.header("Link");
 
         if (linkHeader == null) return 1;
@@ -163,7 +177,7 @@ public class GithubApiClient extends HttpClient {
      * @param repoUrl the URL of the GitHub repository
      * @return the username of the repository owner
      */
-    private static String extractUsername(String repoUrl) {
+    public static String extractUsername(String repoUrl) {
         String[] urlParts = repoUrl.split("/");
         return urlParts[urlParts.length - 2];
     }
@@ -174,7 +188,7 @@ public class GithubApiClient extends HttpClient {
      * @param repoUrl the URL of the GitHub repository
      * @return the name of the repository
      */
-    private static String extractRepoName(String repoUrl) {
+    public static String extractRepoName(String repoUrl) {
         String[] urlParts = repoUrl.split("/");
         return urlParts[urlParts.length - 1];
     }
