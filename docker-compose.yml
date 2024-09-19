@@ -1,8 +1,9 @@
 version: "2.2"
 services:
-
+  # --- PYASSESS SERVICE ---
+  # Pyassess service backend
   pyassess-dashboard:
-    image: geoapos/pyassess_raise
+    image: nikosnikolaidis/python-code-quality-assessment
     container_name: pyassess-dashboard
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-pyassess-dashboard:5432/test_db
@@ -11,6 +12,7 @@ services:
     ports:
       - '8091:8080'
 
+  # Pyassess service database
   db-pyassess-dashboard:
     image: postgres:16.2
     container_name: db-pyassess-dashboard
@@ -22,6 +24,8 @@ services:
       - pyassess_dashboard_postgresql:/var/lib/postgresql
       - pyassess_dashboard_postgresql_data:/var/lib/postgresql/data
 
+  # --- CODE INSPECTOR SERVICE ---
+  # Code inspector service backend
   code-inspector-dashboard:
     image: archontisk/codeinspector
     container_name: code-inspector-dashboard
@@ -35,6 +39,7 @@ services:
     ports:
       - '8092:8000'
 
+  # Code inspector service database
   db-code-inspector-dashboard:
     image: mysql:8.3
     container_name: db-code-inspector-dashboard
@@ -50,6 +55,21 @@ services:
     volumes:
       - code_inspector_dashboard_mysql:/var/lib/mysql
 
+  # --- QUALITY DASHBOARD SERVICE ---
+  # Database for the quality dashboard service
+  db-dashboard:
+    image: postgres:16.2
+    container_name: db-dashboard
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: dashboard-db
+    volumes:
+      - dashboard_postgresql:/var/lib/postgresql
+      - dashboard_postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5458:5432'
+
   backend-dashboard:
     build:
       context: ./backend/.
@@ -57,35 +77,38 @@ services:
     depends_on:
       - db-dashboard
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/test_db
+      # ---------- DASHBOARD DATABASE CONFIGURATION ----------
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-dashboard:5432/dashboard-db
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+
+      # ---------- EXTERNAL SERVICES CONFIGURATION ----------
       - EXTERNAL_SERVICES_ACTIVATED=false
       - SERVICES_EXTERNAL_PYASSESS_URL=http://localhost:8091
       - SERVICES_EXTERNAL_CODEINSPECTOR_URL=http://localhost:8092
       - SONAR_SONARQUBE_URL=http://localhost:9952
       - GITHUB_TOKEN=11206c8b5d19d77902bf96d9fde3b51f205813dc
+
+      # ---------- FRONTEND CONFIGURATION ----------
       - FRONTEND_URL=http://localhost:3000
-      - SUPERUSER_PASSWORD=xxx
+
+      # ---------- SUPERUSER CONFIGURATION ----------
+      # SUPERUSER CREDENTIALS
+      # TODO: Change these credentials on build to match your needs
       - SUPERUSER_EMAIL=xxx@gmail.com
-      - SPRING_MAIL_USERNAME=xx@gmail.com
-      - SPRING_MAIL_PASSWORD=xx
+      - SUPERUSER_PASSWORD=123456
+      # SPRING MAIL CONFIGURATION
+      # TODO: Change these credentials on build to match your needs
+      - SPRING_MAIL_USERNAME=
+      - SPRING_MAIL_PASSWORD=
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_PORT=25
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
     ports:
       - '8088:8080'
 
-  db-dashboard:
-    image: postgres:16.2
-    container_name: db-dashboard
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: test_db
-    volumes:
-      - dashboard_postgresql:/var/lib/postgresql
-      - dashboard_postgresql_data:/var/lib/postgresql/data
-    ports:
-      - '5458:5432'
-
+  # --- SONARQUBE SERVICE ---
   sonarqube-dashboard:
      image: sonarqube:9.9.1-community
      container_name: sonarqube-dashboard
@@ -103,6 +126,7 @@ services:
      ports:
        - '9952:9000'
 
+  # Database for the sonarqube service
   db-sonarqube-dashboard:
     image: postgres:16.2
     container_name: db-sonarqube-dashboard
@@ -113,21 +137,29 @@ services:
       - sonarqube_dashboard_postgresql:/var/lib/postgresql
       - sonarqube_dashboard_postgresql_data:/var/lib/postgresql/data
 
+  # --- FRONTEND SERVICE ---
   frontend-dashboard:
     build:
       context: ./frontend/SW-Quality-Dashboard/.
     container_name: frontend-dashboard
     environment:
-      VITE_API_BASE_URL: backend-dashboard:8088
+      VITE_API_BASE_URL: http://localhost:8088
     ports:
       - '3000:5173'
-    
+
 volumes:
-  pyassess_dashboard_postgresql:
-  pyassess_dashboard_postgresql_data:
-  code_inspector_dashboard_mysql:
+# DASHBOARD VOLUMES
   dashboard_postgresql:
   dashboard_postgresql_data:
+
+  # PYASSESS VOLUMES
+  pyassess_dashboard_postgresql:
+  pyassess_dashboard_postgresql_data:
+
+  # CODE INSPECTOR VOLUMES
+  code_inspector_dashboard_mysql:
+
+  # SONARQUBE VOLUMES
   sonarqube_dashboard_conf:
   sonarqube_dashboard_data:
   sonarqube_dashboard_postgresql:
