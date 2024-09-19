@@ -22,23 +22,17 @@ public class CodeInspectorProjectStats {
     @Id
     @GeneratedValue
     private Long id;
-
     private String projectName;
     private String projectUrl;
-    private Date fromDate;
-    private Date toDate;
-    private Long averageComplexity;
-    private Long averageChurn;
-    private Long averageNloc;
-    private Integer totalNloc;
-    private Integer totalFiles;
+    private String fromDate;
+    private String toDate;
+    private Double averageChurn;
     private Integer totalOutliers;
-    private Integer totalPrioritizedFiles;
+    private Integer totalHotspots;
     @OneToOne
     private Project project;
 
     public CodeInspectorProjectStats(Project project){
         this.project = project;
     }
-
 }
