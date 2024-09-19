@@ -10,13 +10,11 @@ import java.util.Map;
 
 @Service
 public class GithubService {
-    @Value("${github.token}")
-    private String githubToken;
     private final GithubApiClient githubApiClient;
     private final ProjectService projectService;
 
     @Autowired
-    public GithubService(ProjectService projectService) {
+    public GithubService(ProjectService projectService, @Value("${github.token}") String githubToken) {
         this.githubApiClient = new GithubApiClient(githubToken);
         this.projectService = projectService;
     }
@@ -29,6 +27,7 @@ public class GithubService {
         project.setForks((int) githubData.get("totalForks"));
         project.setStars((int) githubData.get("totalStars"));
         project.setTotalCommits((int) githubData.get("totalCommits"));
+        project.setCreatedAt((String) githubData.get("createdAt"));
 
         projectService.saveProject(project);
     }
