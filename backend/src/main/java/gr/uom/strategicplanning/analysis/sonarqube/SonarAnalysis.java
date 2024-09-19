@@ -70,6 +70,48 @@ public class SonarAnalysis {
         }
     }
 
+    private void startAnalysisForWindows(String sonnarScannerDir, String reposDir) throws IOException {
+        String batPath = sonnarScannerDir + File.separator + "sonar-scanner-5.0.1.3006-windows" + File.separator + "bin" + File.separator + "sonar-scanner.bat";
+        logger.info("batPath: " + batPath);
+
+        String command = "cmd /c cd " + reposDir + File.separator + projectName + " && " + batPath;
+        logger.info("command: " + command);
+
+        Process proc = Runtime.getRuntime().exec(command);
+
+        logger.info("SonarQube analysis started for project: " + projectName);
+        readProcessStreams(proc);
+    }
+
+    private void startAnalysisForLinux(String sonnarScannerDir, String reposDir) throws IOException {
+        String bashPath = sonnarScannerDir + File.separator + "sonar-scanner-5.0.1.3006-linux" + File.separator + "bin" + File.separator + "sonar-scanner";
+        logger.info("bashPath: " + bashPath);
+
+        String command = "cd '" + reposDir + File.separator + projectName + "' ; " + bashPath;
+        logger.info("command: " + command);
+
+        ProcessBuilder pbuilder = new ProcessBuilder("bash", "-c", command);
+
+        File err = new File("err.txt");
+        pbuilder.redirectError(err);
+        Process p = pbuilder.start();
+
+        logger.info("SonarQube analysis started for project: " + projectName);
+        readProcessStreams(p);
+    }
+
+    private void startAnalysisBasedOnOS(String sonnarScannerDir, String reposDir) {
+        try {
+            if (DashboardApplication.isWindows()) {
+                startAnalysisForWindows(sonnarScannerDir, reposDir);
+            } else {
+                startAnalysisForLinux(sonnarScannerDir, reposDir);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Start Analysis with sonar scanner
     private void makeSonarAnalysis() throws IOException, InterruptedException {
         String projectDir = System.getProperty("user.dir");
@@ -80,38 +122,7 @@ public class SonarAnalysis {
         logger.info("reposDir: " + reposDir);
         logger.info("sonnarScannerDir: " + sonnarScannerDir);
 
-        if (DashboardApplication.isWindows()) {
-            String batPath = sonnarScannerDir + File.separator + "sonar-scanner-5.0.1.3006-windows" + File.separator + "bin" + File.separator + "sonar-scanner.bat";
-            logger.info("batPath: " + batPath);
-
-            String command = "cmd /c cd " + reposDir + File.separator + projectName + " && " + batPath;
-            logger.info("command: " + command);
-
-            Process proc = Runtime.getRuntime().exec(command);
-
-            logger.info("SonarQube analysis started for project: " + projectName);
-            readProcessStreams(proc);
-        }
-        else {
-            try {
-                String bashPath = sonnarScannerDir + File.separator + "sonar-scanner-5.0.1.3006-linux" + File.separator + "bin" + File.separator + "sonar-scanner";
-                logger.info("bashPath: " + bashPath);
-
-                String command = "cd '" + reposDir + File.separator + projectName + "' ; " + bashPath;
-                logger.info("command: " + command);
-
-                ProcessBuilder pbuilder = new ProcessBuilder("bash", "-c", command);
-
-                File err = new File("err.txt");
-                pbuilder.redirectError(err);
-                Process p = pbuilder.start();
-
-                logger.info("SonarQube analysis started for project: " + projectName);
-                readProcessStreams(p);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        startAnalysisBasedOnOS(sonnarScannerDir, reposDir);
 
         //wait till sonarqube finishes analysing
         while (!isFinishedAnalyzing()) {
@@ -137,43 +148,7 @@ public class SonarAnalysis {
         }
     }
 
-    private void getMetricFromSonarQube() {
-        try {
-            URL url = new URL( sonarqubeUrl +"/api/measures/component?component=" + projectOwner + ":" + projectName+
-                    "&metricKeys=sqale_index,complexity,ncloc");
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-            int responsecode = conn.getResponseCode();
-            if(responsecode != 200)
-                System.err.println(responsecode);
-            else{
-                Scanner sc = new Scanner(url.openStream());
-                String inline="";
-                while(sc.hasNext()){
-                    inline+=sc.nextLine();
-                }
-                sc.close();
 
-                JSONParser parse = new JSONParser();
-                JSONObject jobj = (JSONObject)parse.parse(inline);
-                JSONObject jobj1= (JSONObject) jobj.get("component");
-                JSONArray jsonarr_1 = (JSONArray) jobj1.get("measures");
-
-                for(int i=0; i<jsonarr_1.size(); i++){
-                    JSONObject jsonobj_1 = (JSONObject)jsonarr_1.get(i);
-                    if(jsonobj_1.get("metric").toString().equals("sqale_index"))
-                        TD= Integer.parseInt(jsonobj_1.get("value").toString());
-                    if(jsonobj_1.get("metric").toString().equals("complexity"))
-                        Complexity= Integer.parseInt(jsonobj_1.get("value").toString());
-                    if(jsonobj_1.get("metric").toString().equals("ncloc"))
-                        LOC= Integer.parseInt(jsonobj_1.get("value").toString());
-                }
-            }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-    }
 
     /*
      * Returns if the project is finished being analyzed
