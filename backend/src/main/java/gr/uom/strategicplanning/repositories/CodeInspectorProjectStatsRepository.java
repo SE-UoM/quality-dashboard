@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface CodeInspectorProjectStatsRepository extends JpaRepository<CodeInspectorProjectStats, Long> {
     Optional<CodeInspectorProjectStats> findByProjectUrl(String gitUrl);
-
+    Optional<CodeInspectorProjectStats> findByProjectId(Long projectId);
     Optional<CodeInspectorStats> findStatsByProjectUrl(String projectUrl);
 }

@@ -67,14 +67,17 @@ public class GithubApiClient extends HttpClient {
 
         int totalCommits = getTotalCommits(project);
 
+        String createdAt = (String) repoData.get("created_at");
+
         Map<String, Object> data = Map.of(
-                "ownerName", username,
+            "ownerName", username,
             "projectName", repoName,
             "description", description,
             "defaultBranch", defaultBranch,
             "totalForks", totalForks,
             "totalStars", totalStars,
-                "totalCommits", totalCommits
+            "totalCommits", totalCommits,
+            "createdAt", createdAt
         );
 
         return data;

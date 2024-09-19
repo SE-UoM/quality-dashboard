@@ -3,9 +3,12 @@ package gr.uom.strategicplanning.services;
 import gr.uom.strategicplanning.analysis.external.strategies.CodeInspectorServiceStrategy;
 import gr.uom.strategicplanning.analysis.external.strategies.PyAssessServiceStrategy;
 import gr.uom.strategicplanning.enums.ProjectStatus;
+import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.exceptions.ExternalAnalysisException;
+import gr.uom.strategicplanning.models.external.CodeInspectorProjectStats;
 import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class ExternalAnalysisService {
     Logger logger = LoggerFactory.getLogger(ExternalAnalysisService.class);
     private final PyAssessServiceStrategy pyAssessServiceStrategy;
@@ -31,10 +35,7 @@ public class ExternalAnalysisService {
 
     @Value("${services.external.pyassess.url}")
     private String PYASSESS_URL;
-    @Value("${services.external.codeInspector.url}")
-    private String CODE_INSPECTOR_URL;
 
-    private String CODE_INSPECTOR_ANALYZE_HOTSPOTS = "/api/analysis/prioritize_hotspots";
     private String PYASSESS_ANALYZE_REPO = "/project_analysis";
 
     public ExternalAnalysisService(RestTemplate restTemplate) {
@@ -56,17 +57,17 @@ public class ExternalAnalysisService {
 
     private boolean analyzeHotspotsWithCodeInspector(Project project) {
         logger.info("Beggining analysis with CodeInspector");
-        Map<String, Object> params = new HashMap<>();
 
-        params.put("endpointUrl", CODE_INSPECTOR_URL + CODE_INSPECTOR_ANALYZE_HOTSPOTS);
-        params.put("gitUrl", project.getRepoUrl());
-        params.put("method", HttpMethod.GET);
+        // Analyze with CodeInspector
+        Map<String, Object> codeInspectorResponse = codeInspectorService.analyzeHotspots(project);
+        codeInspectorService.updateHotspotStats(project, codeInspectorResponse);
 
-        logger.info("Sending Analysis Request to CodeInspector");
-        ResponseEntity codeInspectorResponse = codeInspectorServiceStrategy.sendRequest(params);
+        // Update organization level stats
+        Organization org = project.getOrganization();
+        CodeInspectorProjectStats projectStats = project.getCodeInspectorProjectStats();
+        codeInspectorService.updateOrganizationHotspotStats(org, projectStats);
 
-        codeInspectorService.populateCodeInspectorModel(codeInspectorResponse);
-
+        // We are done with the analysis
         project.setCodeInspectorStatus(ProjectStatus.ANALYSIS_COMPLETED);
         logger.info("CodeInspector analysis completed");
 
@@ -104,9 +105,11 @@ public class ExternalAnalysisService {
     }
 
     public boolean analyzeWithExternalServices(Project project) {
+        log.info("AnalysisService - analyzeProject - External Analysis Started");
+
         try {
             analyzeHotspotsWithCodeInspector(project);
-            analyzeWithPyAssess(project, "master");
+            analyzeWithPyAssess(project, project.getDefaultBranchName());
         }
         catch (Exception e) {
             handleAnalysisException(e, project);

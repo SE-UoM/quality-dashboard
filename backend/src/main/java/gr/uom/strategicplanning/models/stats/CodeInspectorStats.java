@@ -23,15 +23,8 @@ public class CodeInspectorStats {
 
     @ElementCollection
     private Set<String> gitUrls;
-    private Date firstDateAnalysis;
-    private Date lastDateAnalysis;
-    private Long averageComplexity;
-    private Long averageChurn;
-    private Long averageNloc;
-    private Integer totalNloc;
-    private Integer totalFiles;
     private Integer totalOutliers;
-    private Integer totalPrioritizedFiles;
+    private Integer totalHotspots;
 
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;
@@ -40,4 +33,8 @@ public class CodeInspectorStats {
         this.organizationAnalysis = organizationAnalysis;
     }
 
+    public void addGitUrl(String gitUrl){
+        boolean exists = gitUrls.contains(gitUrl);
+        if (!exists) gitUrls.add(gitUrl);
+    }
 }

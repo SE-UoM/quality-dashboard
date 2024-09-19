@@ -25,11 +25,15 @@ public class CodeInspectorServiceStrategy extends ExternalServiceStrategyImpleme
     @Override
     public String constructUrl(Map<String, Object> params) {
         String endpointUrl = (String) params.get("endpointUrl");
-        String gitUrl = (String) params.get("gitUrl");
+        String gitUrl = (String) params.get("repo_url");
+        String from = (String) params.get("from_date");
+        String to = (String) params.get("to_date");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(endpointUrl);
 
         if (gitUrl != null) builder.queryParam("repo_url", gitUrl);
+        if (from != null) builder.queryParam("from_date", from);
+        if (to != null) builder.queryParam("to_date", to);
 
         return builder.toUriString();
     }
@@ -61,13 +65,4 @@ public class CodeInspectorServiceStrategy extends ExternalServiceStrategyImpleme
         return response;
     }
 
-    public static void main(String[] args) {
-        Map params = Map.of(
-                "endpointUrl", "http://localhost:8000/api/analysis/prioritize_hotspots",
-                "repoUrl", "https://github.com/GeorgeApos/pyassess"
-        );
-
-        CodeInspectorServiceStrategy caller = new CodeInspectorServiceStrategy(new RestTemplate());
-        caller.sendRequest(params);
-    }
 }

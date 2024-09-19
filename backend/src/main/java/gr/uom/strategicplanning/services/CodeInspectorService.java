@@ -1,120 +1,90 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.analysis.external.strategies.CodeInspectorServiceStrategy;
+import gr.uom.strategicplanning.exceptions.AnalysisException;
+import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.external.CodeInspectorProjectStats;
 import gr.uom.strategicplanning.models.stats.CodeInspectorStats;
 import gr.uom.strategicplanning.repositories.CodeInspectorProjectStatsRepository;
 import gr.uom.strategicplanning.repositories.CodeInspectorStatsRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class CodeInspectorService {
+    private CodeInspectorStatsService codeInspectorStatsService;
+    private CodeInspectorServiceStrategy codeInspectorServiceStrategy;
+
+    @Value("${services.external.codeInspector.url}")
+    private String CODE_INSPECTOR_URL = "http://localhost:8092";
+    private String CODE_INSPECTOR_ANALYZE_HOTSPOTS = "/api/analysis/prioritize_hotspots";
 
     @Autowired
-    private CodeInspectorProjectStatsRepository codeInspectorProjectStatsRepository;
-    @Autowired
-    private CodeInspectorStatsRepository codeInspectorStatsRepository;
-
-    public void populateCodeInspectorModel(ResponseEntity response) {
-
-        Object body = response.getBody();
-        if (body != null && body instanceof Map) {
-            Map<String, Object> bodyMap = (Map<String, Object>) body;
-            String gitUrl = (String) bodyMap.get("gitUrl");
-            if (gitUrl != null) {
-
-                Optional<CodeInspectorProjectStats> codeInspectorProjectStatsOptional = codeInspectorProjectStatsRepository.findByProjectUrl(gitUrl);
-                CodeInspectorProjectStats codeInspectorProjectStats;
-                codeInspectorProjectStats = codeInspectorProjectStatsOptional.orElseGet(CodeInspectorProjectStats::new);
-                populateModels(bodyMap, codeInspectorProjectStats);
-                populateOrganizationalStats(codeInspectorProjectStats);
-            } else {
-                // there was a problem with the response
-            }
-        } else {
-            System.out.println("Response body is null or not a Map");
-        }
-
+    public CodeInspectorService(
+            CodeInspectorStatsService codeInspectorStatsService,
+            RestTemplate restTemplate
+    ) {
+        this.codeInspectorStatsService = codeInspectorStatsService;
+        this.codeInspectorServiceStrategy = new CodeInspectorServiceStrategy(restTemplate);
     }
 
-    private void populateModels(Map<String, Object> bodyMap, CodeInspectorProjectStats codeInspectorProjectStats) {
-        codeInspectorProjectStats.setProjectName((String) bodyMap.get("project_name"));
-        codeInspectorProjectStats.setProjectUrl((String) bodyMap.get("repo_url"));
+    public Map<String, Object> analyzeHotspots(Project project) {
+        log.info("Beggining analysis with CodeInspector");
 
-        try {
-            String fromDateStr = (String) bodyMap.get("from_date");
-            String toDateStr = (String) bodyMap.get("to_date");
-            codeInspectorProjectStats.setFromDate(java.sql.Timestamp.valueOf(fromDateStr.replace("T", " ").substring(0, 19)));
-            codeInspectorProjectStats.setToDate(java.sql.Timestamp.valueOf(toDateStr.replace("T", " ").substring(0, 19)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Map<String, String> dateRange = calculateAnalysisDateRange(project);
+        Map<String, Object> params = Map.of(
+                "endpointUrl", CODE_INSPECTOR_URL + CODE_INSPECTOR_ANALYZE_HOTSPOTS,
+                "repo_url", project.getRepoUrl(),
+                "from_date", dateRange.get("from_date"),
+                "to_date", dateRange.get("to_date"),
+                "method", HttpMethod.GET
+        );
 
-        codeInspectorProjectStats.setAverageComplexity(((Number) bodyMap.get("avg_complexity")).longValue());
-        codeInspectorProjectStats.setAverageChurn(((Number) bodyMap.get("avg_churn")).longValue());
-        codeInspectorProjectStats.setAverageNloc(((Number) bodyMap.get("avg_nloc")).longValue());
+        log.info("Sending request to CodeInspector");
 
-        codeInspectorProjectStats.setTotalNloc(((Number) bodyMap.get("total_nloc")).intValue());
-        codeInspectorProjectStats.setTotalFiles(((Number) bodyMap.get("total_files")).intValue());
-        codeInspectorProjectStats.setTotalOutliers(((Number) bodyMap.get("total_outliers")).intValue());
-        codeInspectorProjectStats.setTotalPrioritizedFiles(((Number) bodyMap.get("total_prioritized_files")).intValue());
+        ResponseEntity response = codeInspectorServiceStrategy.sendRequest(params);
 
-        codeInspectorProjectStatsRepository.save(codeInspectorProjectStats);
+        log.info("Received response from CodeInspector");
+
+        checkIfResponseIsOK(response);
+
+        // Convert the response to a map and return it
+        return (Map<String, Object>) response.getBody();
     }
 
-
-    private void populateOrganizationalStats(CodeInspectorProjectStats codeInspectorProjectStats) {
-        // Fetch existing organizational stats based on project URL or create new
-        Optional<CodeInspectorStats> codeInspectorStatsOptional = codeInspectorProjectStatsRepository
-                .findStatsByProjectUrl(codeInspectorProjectStats.getProjectUrl());
-        CodeInspectorStats codeInspectorStats = codeInspectorStatsOptional.orElseGet(CodeInspectorStats::new);
-
-        if (codeInspectorStats.getAverageComplexity() != null) {
-            codeInspectorStats.setAverageComplexity(
-                    (codeInspectorStats.getAverageComplexity() + codeInspectorProjectStats.getAverageComplexity()) / 2
-            );
-        } else {
-            codeInspectorStats.setAverageComplexity(codeInspectorProjectStats.getAverageComplexity());
-        }
-
-        if (codeInspectorStats.getAverageChurn() != null) {
-            codeInspectorStats.setAverageChurn(
-                    (codeInspectorStats.getAverageChurn() + codeInspectorProjectStats.getAverageChurn()) / 2
-            );
-        } else {
-            codeInspectorStats.setAverageChurn(codeInspectorProjectStats.getAverageChurn());
-        }
-
-        if (codeInspectorStats.getAverageNloc() != null) {
-            codeInspectorStats.setAverageNloc(
-                    (codeInspectorStats.getAverageNloc() + codeInspectorProjectStats.getAverageNloc()) / 2
-            );
-        } else {
-            codeInspectorStats.setAverageNloc(codeInspectorProjectStats.getAverageNloc());
-        }
-
-        codeInspectorStats.setTotalNloc(
-                codeInspectorStats.getTotalNloc() + codeInspectorProjectStats.getTotalNloc()
-        );
-
-        codeInspectorStats.setTotalFiles(
-                codeInspectorStats.getTotalFiles() + codeInspectorProjectStats.getTotalFiles()
-        );
-
-        codeInspectorStats.setTotalOutliers(
-                codeInspectorStats.getTotalOutliers() + codeInspectorProjectStats.getTotalOutliers()
-        );
-
-        codeInspectorStats.setTotalPrioritizedFiles(
-                codeInspectorStats.getTotalPrioritizedFiles() + codeInspectorProjectStats.getTotalPrioritizedFiles()
-        );
-
-        codeInspectorStatsRepository.save(codeInspectorStats);
+    public void updateHotspotStats(Project project, Map data) {
+        codeInspectorStatsService.updateHotspotAnalysisProjectStats(project, data);
     }
 
+    public void updateOrganizationHotspotStats(Organization org, CodeInspectorProjectStats stats) {
+        codeInspectorStatsService.updateOrganizationStats(org);
+    }
 
+    public Map<String, String> calculateAnalysisDateRange(Project project) {
+        String fromDate = project.getCreatedAt().substring(0, 10);
+        String toDate = java.time.LocalDate.now().toString();
+
+        return Map.of("from_date", fromDate, "to_date", toDate);
+    }
+
+    private void checkIfResponseIsOK(ResponseEntity response) {
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            log.error("CodeInspector analysis failed with status code: " + response.getStatusCode());
+
+            throw new AnalysisException(
+                    response.getStatusCode(),
+                    "CodeInspector analysis failed with status code: " + response.getStatusCode()
+            );
+        }
+    }
 }

@@ -5,12 +5,8 @@ import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalysis;
 import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
-import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
-import gr.uom.strategicplanning.controllers.responses.ResponseInterface;
-import gr.uom.strategicplanning.controllers.responses.implementations.ErrorResponse;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.exceptions.AnalysisException;
-import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import gr.uom.strategicplanning.models.users.User;
@@ -19,13 +15,9 @@ import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -38,6 +30,7 @@ public class AnalysisService {
     private final ProjectService projectService;
     private final UserService userService;
     private SonarAnalysis sonarAnalysis;
+    private final ProjectValidationService projectValidationService;
 
     @Value("${sonar.sonarqube.url}")
     private String SONARQUBE_URL;
@@ -63,6 +56,8 @@ public class AnalysisService {
     @Autowired
     private ExternalAnalysisService externalAnalysisService;
 
+    public static final int COMMITS_ANALYZED_ALREADY_FLAG = -1;
+
     @Autowired
     public AnalysisService(
             CommitService commitService,
@@ -70,7 +65,7 @@ public class AnalysisService {
             @Value("${sonar.sonarqube.url}") String sonarApiUrl,
             ProjectService projectService,
             UserService userService,
-            GithubService githubService
+            GithubService githubService, ProjectValidationService projectValidationService
     ) {
         this.commitService = commitService;
         this.projectService = projectService;
@@ -78,22 +73,7 @@ public class AnalysisService {
         this.sonarApiClient = new SonarApiClient(sonarApiUrl);
         this.userService = userService;
         this.githubService = githubService;
-    }
-
-    public void fetchGithubData(Project project) throws Exception {
-        Map<String, Object> githubData = githubApiClient.fetchProjectData(project);
-
-        project.setProjectDescription((String) githubData.get("description"));
-        project.setDefaultBranchName((String) githubData.get("defaultBranch"));
-        project.setForks((int) githubData.get("totalForks"));
-        project.setStars((int) githubData.get("totalStars"));
-        project.setTotalCommits((int) githubData.get("totalCommits"));
-
-        projectService.saveProject(project);
-    }
-
-    public boolean validateUrlWithGithub(String url) {
-        return githubApiClient.repoFoundByGithubAPI(url);
+        this.projectValidationService = projectValidationService;
     }
 
     private void analyzeCommits(Project project) throws Exception {
@@ -114,6 +94,8 @@ public class AnalysisService {
             Commit commit = new Commit();
             commit.setHash(commitSHA);
 
+            System.out.println("SonarQube URL: " + SONARQUBE_URL);
+
             sonarAnalysis = new SonarAnalysis(project, commitSHA, SONARQUBE_URL);
 
             commitService.populateCommit(commit, project);
@@ -121,69 +103,39 @@ public class AnalysisService {
         }
     }
 
-    private void analyzeMaster(Project project) throws Exception {
-        GitClient.checkoutMaster(project);
-
-        sonarAnalysis = new SonarAnalysis(project, project.getDefaultBranchName(), SONARQUBE_URL);
-    }
-
     public Project analyzeProject(String url, User user) throws Exception {
-       log.info("AnalysisService - analyzeProject - url: " + url + " - user: " + user.getEmail());
+        log.info("AnalysisService - analyzeProject - url: " + url + " - user: " + user.getEmail());
 
-        boolean urlIsInvalid = url==null || url.isEmpty() || !url.matches("https://github.com/[^/]+/[^/]+" );
+        // Validate the URL
+        projectValidationService.validateGithubUrl(url);
 
-        if (urlIsInvalid || !validateUrlWithGithub(url)) {
-            log.error("AnalysisService - analyzeProject - Invalid github url");
-            throw new AnalysisException(HttpStatus.BAD_REQUEST, "Invalid github url");
-        }
-
+        // Get the organization of the user and create the project
         Organization organization = user.getOrganization();
         Project project = projectService.getOrCreateProject(url, organization);
 
-        if (project.getStatus() == ProjectStatus.ANALYSIS_STARTED || project.getStatus() == ProjectStatus.ANALYSIS_IN_PROGRESS) {
-            log.error("AnalysisService - analyzeProject - The project is already being analyzed");
-            throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project is already being analyzed");
-        }
+        // Check if the Project meets the status requirements for analysis
+        projectValidationService.validateProjectForAnalysis(project);
 
-        if (project.getStatus() == ProjectStatus.ANALYSIS_TO_BE_REVIEWED) {
-            log.error("AnalysisService - analyzeProject - The project has more commits than the threshold and needs to be reviewed");
-            throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project needs to be reviewed by an Admin first.");
-        }
+        // Call the Github API to fetch the project data
+        githubService.fetchGithubData(project);
 
-        Map<String, Object> githubData = githubApiClient.fetchProjectData(project);
+        // Make sure the project has less commits than the threshold
+        projectValidationService.validateCommitThreshold(project);
 
-        project.setProjectDescription((String) githubData.get("description"));
-        project.setDefaultBranchName((String) githubData.get("defaultBranch"));
-        project.setForks((int) githubData.get("totalForks"));
-        project.setStars((int) githubData.get("totalStars"));
-        project.setTotalCommits((int) githubData.get("totalCommits"));
-
-        projectService.saveProject(project);
-
-        if (!project.hasLessCommitsThanThreshold()) {
-            log.error("AnalysisService - analyzeProject - The project has more commits than the threshold and needs to be reviewed");
-            throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project has a lot of Commits.");
-        }
-
+        // Begin the analysis
         Integer analyzedCommits = startAnalysis(project);
 
-        if (analyzedCommits == 0) {
-            log.info("AnalysisService - analyzeProject - All commits are already analyzed, you can see the results on the dashboard");
+        if (analyzedCommits == COMMITS_ANALYZED_ALREADY_FLAG) {
             throw new AnalysisException(HttpStatus.OK, "All commits are already analyzed, you can see the results on the dashboard.");
         }
 
         log.info("AnalysisService - analyzeProject - Analysis Finished! " + analyzedCommits + " commits analyzed");
 
+        if (EXTERNAL_ANALYSIS_IS_ACTIVATED) externalAnalysisService.analyzeWithExternalServices(project);
+
         organizationAnalysisService.updateOrganizationAnalysis(organization);
         organizationService.saveOrganization(organization);
-
         log.info("AnalysisService - analyzeProject - Organization Analysis Updated");
-        log.info("AnalysisService - analyzeProject - External Analysis Activated: " + EXTERNAL_ANALYSIS_IS_ACTIVATED);
-
-        if (EXTERNAL_ANALYSIS_IS_ACTIVATED) {
-            log.info("AnalysisService - analyzeProject - External Analysis Started");
-             externalAnalysisService.analyzeWithExternalServices(project);
-        }
 
         log.info("AnalysisService - analyzeProject - External Analysis Finished");
 
@@ -253,15 +205,16 @@ public class AnalysisService {
                 clonedGit.close();
                 GitClient.deleteRepository(project);
 
-                return 0;
+                log.info("AnalysisService - analyzeProject - All commits are already analyzed, you can see the results on the dashboard");
+                return COMMITS_ANALYZED_ALREADY_FLAG;
             }
 
             project.setStatus(ProjectStatus.ANALYSIS_STARTED);
             projectService.saveProject(project);
 
-            String defaultBranch = project.getDefaultBranchName();
-            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
-            project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
+//            String defaultBranch = project.getDefaultBranchName();
+//            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
+//            project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
 
             analyzeCommits(project);
 
