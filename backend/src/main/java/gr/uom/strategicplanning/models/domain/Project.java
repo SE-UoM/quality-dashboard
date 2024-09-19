@@ -25,6 +25,7 @@ public class Project {
     private String name;
     private String ownerName;
     private String projectDescription;
+    private String createdAt;
     @ManyToOne
     @ToString.Exclude
     private Organization organization;
