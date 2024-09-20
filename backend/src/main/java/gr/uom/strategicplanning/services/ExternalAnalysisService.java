@@ -66,7 +66,7 @@ public class ExternalAnalysisService {
 
         // Analyze with CodeInspector
         Map<String, Object> codeInspectorResponse = codeInspectorService.analyzeCommitQuality(project);
-        codeInspectorService.updateCommitStats(project, codeInspectorResponse);
+        codeInspectorService.updateCommitStats(codeInspectorResponse);
 
         return true;
     }

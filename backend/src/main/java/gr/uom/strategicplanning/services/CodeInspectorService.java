@@ -102,7 +102,7 @@ public class CodeInspectorService {
         }
     }
 
-    public void updateCommitStats(Project project, Map<String, Object> codeInspectorResponse) {
+    public void updateCommitStats(Map<String, Object> codeInspectorResponse) {
         Map<String, Object> commitData = (Map<String, Object>) codeInspectorResponse.get("commit_analysis");
 
         Collection<Map> commits = (Collection<Map>) commitData.get("commits");
