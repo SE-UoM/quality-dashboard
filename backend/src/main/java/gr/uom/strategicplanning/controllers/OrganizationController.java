@@ -1,6 +1,7 @@
 package gr.uom.strategicplanning.controllers;
 
 import gr.uom.strategicplanning.controllers.dtos.ActivityStatsDTO;
+import gr.uom.strategicplanning.controllers.dtos.CommitDTO;
 import gr.uom.strategicplanning.controllers.dtos.GeneralStatsDTO;
 import gr.uom.strategicplanning.controllers.dtos.OrganizationCodeSmellDistribution;
 import gr.uom.strategicplanning.controllers.responses.ResponseFactory;
@@ -613,6 +614,64 @@ public class OrganizationController {
             ActivityStatsDTO activityStatsDTO = new ActivityStatsDTO(activityStats);
 
             return ResponseEntity.ok(activityStatsDTO);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/commits-details")
+    public ResponseEntity<Map> getOrganizationCommitsDetails(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            Collection<Project> projects = organization.getProjects();
+
+            Map<String, Object> response = new HashMap<>();
+
+            // Get all commits from the organization's projects and add them to the response
+            Collection<CommitDTO> allCommits = new ArrayList<>();
+            for (Project project : projects) {
+                Collection<Commit> commits = project.getCommits();
+
+                for (Commit commit : commits) {
+                    CommitDTO commitDTO = CommitDTO.from(commit);
+                    allCommits.add(commitDTO);
+                }
+            }
+
+            // Now based on all these commits calculate the organization's commits quality distribution
+            // Quality types are: EXCELLENT, GOOD, FAIR, POOR, UNKNOWN
+            Map<String, Integer> commitsQualityDistribution = new HashMap<>();
+            int excellentCommits = 0;
+            int goodCommits = 0;
+            int fairCommits = 0;
+            int poorCommits = 0;
+            int unknownCommits = 0;
+
+            for (CommitDTO commit : allCommits) {
+                String maintainabilityRating = commit.getMaintainabilityRating();
+
+                if (maintainabilityRating.equals("EXCELLENT")) excellentCommits++;
+                else if (maintainabilityRating.equals("GOOD")) goodCommits++;
+                else if (maintainabilityRating.equals("FAIR")) fairCommits++;
+                else if (maintainabilityRating.equals("POOR")) poorCommits++;
+                else unknownCommits++;
+            }
+
+            commitsQualityDistribution.put("EXCELLENT", excellentCommits);
+            commitsQualityDistribution.put("GOOD", goodCommits);
+            commitsQualityDistribution.put("FAIR", fairCommits);
+            commitsQualityDistribution.put("POOR", poorCommits);
+            commitsQualityDistribution.put("UNKNOWN", unknownCommits);
+
+            response.put("commits", allCommits);
+            response.put("totalCommits", allCommits.size());
+            response.put("organization", organization.getName());
+            response.put("commitsQuality", commitsQualityDistribution);
+
+
+            return ResponseEntity.ok(response);
         }
         catch (EntityNotFoundException e) {
             e.printStackTrace();
