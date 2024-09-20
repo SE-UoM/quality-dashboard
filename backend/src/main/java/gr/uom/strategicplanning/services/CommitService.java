@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class CommitService {
@@ -22,24 +23,18 @@ public class CommitService {
     private CommitRepository commitRepository;
     private DeveloperService developerService;
     private CodeSmellService codeSmellService;
-    private LanguageService languageService;
-    private GithubApiClient githubApiClient;
     private final SonarApiClient sonarApiClient;
 
     @Autowired
     public CommitService(
             DeveloperService developerService,
             CommitRepository commitRepository,
-            LanguageService languageService,
             CodeSmellService codeSmellService,
-            @Value("${github.token}") String githubToken,
             @Value("${sonar.sonarqube.url}") String sonarApiUrl
     ) {
         this.developerService = developerService;
         this.commitRepository = commitRepository;
         this.codeSmellService = codeSmellService;
-        this.languageService = languageService;
-        this.githubApiClient = new GithubApiClient(githubToken);
         this.sonarApiClient = new SonarApiClient(sonarApiUrl);
     }
 
@@ -63,8 +58,11 @@ public class CommitService {
         saveCommit(commit);
     }
 
+    public Optional<Commit> getCommitByHash(String hash) {
+        return commitRepository.findByHash(hash);
+    }
 
-    private void saveCommit(Commit commit) {
+    public void saveCommit(Commit commit) {
         commitRepository.save(commit);
     }
 }

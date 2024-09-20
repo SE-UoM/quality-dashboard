@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CommitRepository extends JpaRepository<Commit, Long> {
     Optional<Commit> findByProjectName(String projectName);
+    Optional<Commit> findByHash(String hash);
 }

@@ -13,21 +13,25 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 public class Commit {
-
     @Id
     @GeneratedValue
     private Long id;
     private String hash;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Developer developer;
     private Date commitDate;
-    @OneToMany
-    private Collection<CodeSmell> codeSmells;
     private double technicalDebt;
     private int totalFiles;
     private int totalLoC;
     private int totalCodeSmells;
     private double techDebtPerLoC;
+    private double dmmUnitSize;
+    private double dmmComplexity;
+    private double dmmInterfacing;
+    private String  maintainabilityRating = "UNKNOWN";
+
+    @OneToMany
+    private Collection<CodeSmell> codeSmells;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Developer developer;
     @ManyToOne
     private Project project;
 

@@ -61,8 +61,20 @@ public class ExternalAnalysisService {
         return true;
     }
 
+    private boolean analyzeCommitsWithCodeInspector(Project project) {
+        logger.info("Beggining analysis with CodeInspector");
+
+        // Analyze with CodeInspector
+        Map<String, Object> codeInspectorResponse = codeInspectorService.analyzeCommitQuality(project);
+        codeInspectorService.updateCommitStats(project, codeInspectorResponse);
+
+        return true;
+    }
+
     private boolean analyzeWithPyAssess(Project project) {
         logger.info("Beggining analysis with PyAssess");
+
+        if (!project.hasLanguage("python")) return false;
 
         int analysisStatus = pyAssessService.sendAnalysisRequest(project);
         // We get here if the project is a Python project and has not been analyzed before
@@ -84,6 +96,7 @@ public class ExternalAnalysisService {
 
         try {
             analyzeHotspotsWithCodeInspector(project);
+            analyzeCommitsWithCodeInspector(project);
             analyzeWithPyAssess(project);
         }
         catch (Exception e) {
