@@ -8,5 +8,4 @@ import java.util.Optional;
 
 @Repository
 public interface PyAssessProjectStatsRepository extends JpaRepository<PyAssessProjectStats, Long> {
-    Optional<PyAssessProjectStats> findByGitUrl(String gitUrl);
 }

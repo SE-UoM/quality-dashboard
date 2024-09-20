@@ -10,6 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface PyAssessStatsRepository extends JpaRepository<PyAssessStats, Long> {
-    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN TRUE ELSE FALSE END FROM PyAssessStats p JOIN p.gitUrls g WHERE g = :gitUrl")
-    Optional<PyAssessStats> existsInGitUrls(@Param("gitUrl") String gitUrl);
+    Optional<PyAssessStats> findByOrganizationAnalysisId(Long organizationAnalysisId);
 }

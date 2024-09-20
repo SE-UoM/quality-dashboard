@@ -56,7 +56,7 @@ public class Project {
     private ProjectStats projectStats = new ProjectStats(this);
 
     @OneToOne(cascade = CascadeType.PERSIST)
-            private CodeInspectorProjectStats codeInspectorProjectStats = new CodeInspectorProjectStats(this);
+    private CodeInspectorProjectStats codeInspectorProjectStats = new CodeInspectorProjectStats(this);
     @OneToOne(cascade = CascadeType.PERSIST)
     private PyAssessProjectStats pyAssessProjectStats = new PyAssessProjectStats(this);
 

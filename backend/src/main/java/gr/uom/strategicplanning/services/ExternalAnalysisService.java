@@ -20,29 +20,16 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class ExternalAnalysisService {
     Logger logger = LoggerFactory.getLogger(ExternalAnalysisService.class);
-    private final PyAssessServiceStrategy pyAssessServiceStrategy;
-    private final CodeInspectorServiceStrategy codeInspectorServiceStrategy;
-
     @Autowired
     private PyAssessService pyAssessService;
     @Autowired
     private CodeInspectorService codeInspectorService;
-
-    @Value("${services.external.pyassess.url}")
-    private String PYASSESS_URL;
-
-    private String PYASSESS_ANALYZE_REPO = "/project_analysis";
-
-    public ExternalAnalysisService(RestTemplate restTemplate) {
-        this.pyAssessServiceStrategy = new PyAssessServiceStrategy(restTemplate);
-        this.codeInspectorServiceStrategy = new CodeInspectorServiceStrategy(restTemplate);
-    }
-
 
     // Simulate analysis (just to make sure language finding works)
     private void fakeAnalysis(String name, int waitTime) {
@@ -74,32 +61,20 @@ public class ExternalAnalysisService {
         return true;
     }
 
-    private boolean analyzeWithPyAssess(Project project, String branch) {
-        // I get this from PyAssess
-        // 2023-11-10 14:09:06 2023-11-10 12:09:06.144
-        // WARN 1 --- [nio-8080-exec-4] .w.s.m.s.DefaultHandlerExceptionResolver :
-        // Resolved [org.springframework.web.bind.MissingServletRequestParameterException:
-        // Required request parameter 'branch' for method parameter type String is not present]
-        // I added the branch parameter to the method but how do we actually get the branch name?
-
-        if (!project.hasLanguage("Python")) return false;
-
-        // We won't get to this point if the project doesn't have Python as a language
-        Map<String, Object> params = new HashMap<>();
+    private boolean analyzeWithPyAssess(Project project) {
         logger.info("Beggining analysis with PyAssess");
-        params.put("endpointUrl", PYASSESS_URL + PYASSESS_ANALYZE_REPO);
-        params.put("gitUrl", project.getRepoUrl());
-        params.put("method", HttpMethod.POST);
-        params.put("token", null);
-        params.put("ciToken", null);
 
-        logger.info("Sending request to PyAssess");
-        ResponseEntity pyAssessResponse = pyAssessServiceStrategy.sendRequest(params);
+        int analysisStatus = pyAssessService.sendAnalysisRequest(project);
+        // We get here if the project is a Python project and has not been analyzed before
 
-        pyAssessService.populatePyAssessModel(pyAssessResponse);
+        Optional<Map<String, Object>> analysisResults = pyAssessService.getAnalysisResults(project);
 
-        project.setPyAssessStatus(ProjectStatus.ANALYSIS_COMPLETED);
-        logger.info("PyAssess analysis completed");
+        Map<String, Object> analysisItems = analysisResults.get();
+        pyAssessService.updateProjectStats(project, analysisItems);
+
+        // Update organization level stats
+        Organization org = project.getOrganization();
+        pyAssessService.updateOrganizationStats(org);
 
         return true;
     }
@@ -109,7 +84,7 @@ public class ExternalAnalysisService {
 
         try {
             analyzeHotspotsWithCodeInspector(project);
-            analyzeWithPyAssess(project, project.getDefaultBranchName());
+            analyzeWithPyAssess(project);
         }
         catch (Exception e) {
             handleAnalysisException(e, project);

@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,10 +21,9 @@ public class PyAssessProjectStats {
     @Id
     @GeneratedValue
     private Long id;
-
-    private String gitUrl;
     @ElementCollection
-    private List<String> dependencies;
+    private Set<String> dependencies = new HashSet<>();
+    private Integer totalDependenencies;
     private Integer totalCoverage;
     private Integer totalMiss;
     private Integer totalStmts;
@@ -31,7 +32,7 @@ public class PyAssessProjectStats {
     private Integer wac;
     private Integer nocc;
     private Integer dit;
-    private Integer wmpc1;
+    private Double wmpc1;
     private Integer wmpc2;
     private Integer rfc;
     private Integer cbo;
@@ -43,6 +44,11 @@ public class PyAssessProjectStats {
 
     public PyAssessProjectStats(Project project){
         this.project = project;
+    }
+
+    public boolean addDependency(String dependency){
+        if (dependencies.contains(dependency)) return false;
+        return dependencies.add(dependency);
     }
 
 }

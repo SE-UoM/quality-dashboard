@@ -62,6 +62,12 @@ public class CodeInspectorService {
         return (Map<String, Object>) response.getBody();
     }
 
+//    public Map<String, Object> analyzeCommitQuality(Project project) {
+//        log.info("Beggining Commit analysis with CodeInspector");
+//
+//
+//    }
+
     public void updateHotspotStats(Project project, Map data) {
         codeInspectorStatsService.updateHotspotAnalysisProjectStats(project, data);
     }

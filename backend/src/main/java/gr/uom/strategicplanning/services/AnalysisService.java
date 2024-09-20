@@ -24,12 +24,9 @@ import java.util.*;
 @Slf4j
 public class AnalysisService {
     private final SonarApiClient sonarApiClient;
-    private final GithubApiClient githubApiClient;
     private final GithubService githubService;
     private final CommitService commitService;
     private final ProjectService projectService;
-    private final UserService userService;
-    private SonarAnalysis sonarAnalysis;
     private final ProjectValidationService projectValidationService;
 
     @Value("${sonar.sonarqube.url}")
@@ -61,17 +58,13 @@ public class AnalysisService {
     @Autowired
     public AnalysisService(
             CommitService commitService,
-            @Value("${github.token}") String githubToken,
             @Value("${sonar.sonarqube.url}") String sonarApiUrl,
             ProjectService projectService,
-            UserService userService,
             GithubService githubService, ProjectValidationService projectValidationService
     ) {
         this.commitService = commitService;
         this.projectService = projectService;
-        this.githubApiClient = new GithubApiClient(githubToken);
         this.sonarApiClient = new SonarApiClient(sonarApiUrl);
-        this.userService = userService;
         this.githubService = githubService;
         this.projectValidationService = projectValidationService;
     }
@@ -96,7 +89,7 @@ public class AnalysisService {
 
             System.out.println("SonarQube URL: " + SONARQUBE_URL);
 
-            sonarAnalysis = new SonarAnalysis(project, commitSHA, SONARQUBE_URL);
+            SonarAnalysis sonarAnalysis = new SonarAnalysis(project, commitSHA, SONARQUBE_URL);
 
             commitService.populateCommit(commit, project);
             project.addCommit(commit);

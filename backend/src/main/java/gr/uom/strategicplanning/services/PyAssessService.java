@@ -1,116 +1,114 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.analysis.external.strategies.CodeInspectorServiceStrategy;
+import gr.uom.strategicplanning.analysis.external.strategies.PyAssessServiceStrategy;
+import gr.uom.strategicplanning.exceptions.AnalysisException;
+import gr.uom.strategicplanning.models.domain.Organization;
+import gr.uom.strategicplanning.models.domain.Project;
 import gr.uom.strategicplanning.models.external.PyAssessProjectStats;
 import gr.uom.strategicplanning.models.stats.PyAssessStats;
 import gr.uom.strategicplanning.repositories.PyAssessProjectStatsRepository;
 import gr.uom.strategicplanning.repositories.PyAssessStatsRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class PyAssessService {
+    private PyAssessStatsService pyAssessStatsService;
+
+    @Value("${services.external.pyassess.url}")
+    private String PYASSESS_URL;
+
+    private String PYASSESS_ANALYZE_REPO = "/project_analysis";
+
+    @Value("${github.token}")
+    private String GIT_TOKEN;
+
+    private final PyAssessServiceStrategy pyAssessServiceStrategy;
+
+    public static final int ALREADY_ANALYZED_FLAG = -2;
+    public static final int NOT_PYTHON_PROJECT_FLAG = -1;
+    public static final int ANALYSIS_COMPLETED_FLAG = 1;
 
     @Autowired
-    private PyAssessProjectStatsRepository pyAssessProjectStatsRepository;
-    @Autowired
-    private PyAssessStatsRepository pyAssessStatsRepository;
-
-    public void populatePyAssessModel(ResponseEntity response) {
-
-        Object body = response.getBody();
-        if (body != null && body instanceof Map) {
-            Map<String, Object> bodyMap = (Map<String, Object>) body;
-            String gitUrl = (String) bodyMap.get("gitUrl");
-            if (gitUrl != null) {
-
-                Optional<PyAssessProjectStats> pyAssessProjectStatsOptional = pyAssessProjectStatsRepository.findByGitUrl(gitUrl);
-                PyAssessProjectStats pyAssessProjectStats;
-                pyAssessProjectStats = pyAssessProjectStatsOptional.orElseGet(PyAssessProjectStats::new);
-                populateModels(bodyMap, pyAssessProjectStats);
-                populateOrganizationalStats(pyAssessProjectStats);
-            } else {
-                // there was a problem with the response
-            }
-        } else {
-            System.out.println("Response body is null or not a Map");
-        }
-
+    public PyAssessService(
+            PyAssessStatsService pyAssessStatsService,
+            RestTemplate restTemplate
+    ) {
+        this.pyAssessServiceStrategy = new PyAssessServiceStrategy(restTemplate);
+        this.pyAssessStatsService = pyAssessStatsService;
     }
 
-    private void populateModels(Map<String, Object> bodyMap, PyAssessProjectStats pyAssessProjectStats) {
-        pyAssessProjectStats.setGitUrl((String) bodyMap.get("gitUrl"));
+    public int sendAnalysisRequest(Project project) {
+        // If the project does not have PYTHON as a language, do not send the request
+        if (!project.hasLanguage("Python")) return NOT_PYTHON_PROJECT_FLAG;
 
-        List<Map<String, Object>> analyzedProjects = (List<Map<String, Object>>) bodyMap.get("singleAnalyzedProjectList");
-        if (analyzedProjects != null && !analyzedProjects.isEmpty()) {
-            Map<String, Object> projectDetails = analyzedProjects.get(0); // Assuming you want the first one
-            pyAssessProjectStats.setDependencies((List<String>) projectDetails.get("dependencies"));
-            pyAssessProjectStats.setTotalCoverage((Integer) projectDetails.get("totalCoverage"));
-            pyAssessProjectStats.setTotalMiss((Integer) projectDetails.get("totalMiss"));
-            pyAssessProjectStats.setTotalStmts((Integer) projectDetails.get("totalStmts"));
+        // Prepare the request
+        Map<String, Object> startAnalysisRParams = Map.of(
+                "endpointUrl", PYASSESS_URL + PYASSESS_ANALYZE_REPO,
+                "gitUrl", project.getRepoUrl(),
+                "token", GIT_TOKEN,
+                "method", "GET"
+        );
 
-            // Extract project quality metrics if available
-            Map<String, Object> projectQualityMetrics = (Map<String, Object>) projectDetails.get("projectQualityMetrics");
-            if (projectQualityMetrics != null) {
-                pyAssessProjectStats.setNom((Integer) projectQualityMetrics.get("nom"));
-                pyAssessProjectStats.setWac((Integer) projectQualityMetrics.get("wac"));
-                pyAssessProjectStats.setNocc((Integer) projectQualityMetrics.get("nocc"));
-                pyAssessProjectStats.setDit((Integer) projectQualityMetrics.get("dit"));
-                pyAssessProjectStats.setWmpc1((Integer) projectQualityMetrics.get("wmpc1"));
-                pyAssessProjectStats.setWmpc2((Integer) projectQualityMetrics.get("wmpc2"));
-                pyAssessProjectStats.setRfc((Integer) projectQualityMetrics.get("rfc"));
-                pyAssessProjectStats.setCbo((Integer) projectQualityMetrics.get("cbo"));
-                pyAssessProjectStats.setMpc((Integer) projectQualityMetrics.get("mpc"));
-                pyAssessProjectStats.setLcom((Integer) projectQualityMetrics.get("lcom"));
-            }
-        }
+        // Send the request
+        log.info("Sending request to PyAssess");
+        ResponseEntity response = pyAssessServiceStrategy.sendRequest(startAnalysisRParams);
 
-        pyAssessProjectStatsRepository.save(pyAssessProjectStats);
+        if (response.getStatusCode() == HttpStatus.CONFLICT) return ALREADY_ANALYZED_FLAG;
+        checkIfResponseIsOK(response);
+
+        // If we get here it means the response is OK and the analysis was successful
+        return ANALYSIS_COMPLETED_FLAG;
     }
 
-    private void populateOrganizationalStats(PyAssessProjectStats pyAssessProjectStats) {
-        Optional<PyAssessStats> pyAssessStatsOptional = pyAssessStatsRepository.existsInGitUrls(pyAssessProjectStats.getGitUrl());
-        if(pyAssessStatsOptional.isPresent()){
-            PyAssessStats pyAssessStats = pyAssessStatsOptional.get();
-            pyAssessStats.getGitUrls().add(pyAssessProjectStats.getGitUrl());
-            pyAssessStats.getDependencies().addAll(pyAssessProjectStats.getDependencies());
-            pyAssessStats.setAverageCoverage((pyAssessStats.getAverageCoverage() + pyAssessProjectStats.getTotalCoverage()) / 2);
-            pyAssessStats.setAverageMiss((pyAssessStats.getAverageMiss() + pyAssessProjectStats.getTotalMiss()) / 2);
-            pyAssessStats.setAverageStmts((pyAssessStats.getAverageStmts() + pyAssessProjectStats.getTotalStmts()) / 2);
-            pyAssessStats.setAverageNom((pyAssessStats.getAverageNom() + pyAssessProjectStats.getNom()) / 2);
-            pyAssessStats.setAverageWac((pyAssessStats.getAverageWac() + pyAssessProjectStats.getWac()) / 2);
-            pyAssessStats.setAverageNocc((pyAssessStats.getAverageNocc() + pyAssessProjectStats.getNocc()) / 2);
-            pyAssessStats.setAverageDit((pyAssessStats.getAverageDit() + pyAssessProjectStats.getDit()) / 2);
-            pyAssessStats.setAverageWmpc1((pyAssessStats.getAverageWmpc1() + pyAssessProjectStats.getWmpc1()) / 2);
-            pyAssessStats.setAverageWmpc2((pyAssessStats.getAverageWmpc2() + pyAssessProjectStats.getWmpc2()) / 2);
-            pyAssessStats.setAverageRfc((pyAssessStats.getAverageRfc() + pyAssessProjectStats.getRfc()) / 2);
-            pyAssessStats.setAverageCbo((pyAssessStats.getAverageCbo() + pyAssessProjectStats.getCbo()) / 2);
-            pyAssessStats.setAverageMpc((pyAssessStats.getAverageMpc() + pyAssessProjectStats.getMpc()) / 2);
-            pyAssessStats.setAverageLcom((pyAssessStats.getAverageLcom() + pyAssessProjectStats.getLcom()) / 2);
-            pyAssessStatsRepository.save(pyAssessStats);
-        } else {
-            PyAssessStats pyAssessStats = new PyAssessStats();
-            pyAssessStats.getGitUrls().add(pyAssessProjectStats.getGitUrl());
-            pyAssessStats.getDependencies().addAll(pyAssessProjectStats.getDependencies());
-            pyAssessStats.setAverageCoverage(Long.valueOf(pyAssessProjectStats.getTotalCoverage()));
-            pyAssessStats.setAverageMiss(Long.valueOf(pyAssessProjectStats.getTotalMiss()));
-            pyAssessStats.setAverageStmts(Long.valueOf(pyAssessProjectStats.getTotalStmts()));
-            pyAssessStats.setAverageNom(Long.valueOf(pyAssessProjectStats.getNom()));
-            pyAssessStats.setAverageWac(Long.valueOf(pyAssessProjectStats.getWac()));
-            pyAssessStats.setAverageNocc(Long.valueOf(pyAssessProjectStats.getNocc()));
-            pyAssessStats.setAverageDit(Long.valueOf(pyAssessProjectStats.getDit()));
-            pyAssessStats.setAverageWmpc1(Long.valueOf(pyAssessProjectStats.getWmpc1()));
-            pyAssessStats.setAverageWmpc2(Long.valueOf(pyAssessProjectStats.getWmpc2()));
-            pyAssessStats.setAverageRfc(Long.valueOf(pyAssessProjectStats.getRfc()));
-            pyAssessStats.setAverageCbo(Long.valueOf(pyAssessProjectStats.getCbo()));
-            pyAssessStats.setAverageMpc(Long.valueOf(pyAssessProjectStats.getMpc()));
-            pyAssessStats.setAverageLcom(Long.valueOf(pyAssessProjectStats.getLcom()));
-            pyAssessStatsRepository.save(pyAssessStats);
+    public Optional<Map<String, Object>> getAnalysisResults(Project project) {
+        // Prepare the request
+        Map<String, Object> getAnalysisResultsParams = Map.of(
+                "endpointUrl", PYASSESS_URL + PYASSESS_ANALYZE_REPO,
+                "gitUrl", project.getRepoUrl(),
+                "branch", project.getDefaultBranchName(),
+                "token", GIT_TOKEN,
+                "method", "GET"
+        );
+
+        // Send the request
+        log.info("Sending request to PyAssess");
+        ResponseEntity response = pyAssessServiceStrategy.sendRequest(getAnalysisResultsParams);
+
+        if (response.getStatusCode() == HttpStatus.NOT_FOUND) return Optional.empty();
+        checkIfResponseIsOK(response);
+
+        // Convert the response to a map and return it
+        return Optional.of((Map<String, Object>) response.getBody());
+    }
+
+    private void checkIfResponseIsOK(ResponseEntity response) {
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            log.error("PyAssess analysis failed with status code: " + response.getStatusCode());
+
+            throw new AnalysisException(
+                    response.getStatusCode(),
+                    "PyAssess analysis failed with status code: " + response.getStatusCode()
+            );
         }
     }
 
+    public void updateProjectStats(Project project, Map analysisItems) {
+        this.pyAssessStatsService.updateProjectStats(project, analysisItems);
+    }
+
+    public void updateOrganizationStats(Organization org) {
+        this.pyAssessStatsService.updateOrganizationStats(org);
+    }
 }

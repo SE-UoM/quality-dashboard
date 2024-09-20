@@ -23,20 +23,21 @@ public class PyAssessStats {
     private Set<String> gitUrls;
     @ElementCollection
     private Set<String> dependencies;
-    private Long averageCoverage;
-    private Long averageMiss;
-    private Long averageStmts;
+    private Double averageCoverage;
+    private Double averageMiss;
+    private Double averageStmts;
 
-    private Long averageNom;
-    private Long averageWac;
-    private Long averageNocc;
-    private Long averageDit;
-    private Long averageWmpc1;
-    private Long averageWmpc2;
-    private Long averageRfc;
-    private Long averageCbo;
-    private Long averageMpc;
-    private Long averageLcom;
+    private Double averageNom;
+    private Double averageWac;
+    private Double averageNocc;
+    private Double averageDit;
+    private Double averageWmpc1;
+    private Double averageWmpc2;
+    private Double averageRfc;
+    private Double averageCbo;
+    private Double averageMpc;
+    private Double averageLcom;
+    private Integer totalDependencies;
 
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;
@@ -45,4 +46,15 @@ public class PyAssessStats {
         this.organizationAnalysis = organizationAnalysis;
     }
 
+    public boolean addGitUrl(String gitUrl){
+        return gitUrls.add(gitUrl);
+    }
+
+    public boolean addDependency(String dependency){
+        return dependencies.add(dependency);
+    }
+
+    public boolean addMultipleDependencies(Set<String> dependencies){
+        return this.dependencies.addAll(dependencies);
+    }
 }
