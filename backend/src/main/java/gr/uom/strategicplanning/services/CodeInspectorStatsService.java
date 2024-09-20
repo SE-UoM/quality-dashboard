@@ -38,6 +38,21 @@ public class CodeInspectorStatsService {
         Collection<Map> hotspots = (Collection<Map>) analysis.get("prioritized_files");
         int totalHotspots = hotspots.size();
 
+        // Parse the hotspot files list and count the number of high, medium, normal and low priority hotspots
+        int highPriorityHotspots = 0;
+        int mediumPriorityHotspots = 0;
+        int normalPriorityHotspots = 0;
+        int lowPriorityHotspots = 0;
+
+        for (Map hotspot : hotspots) {
+            String priority = (String) hotspot.get("priority");
+
+            if (priority.equalsIgnoreCase("HIGH")) highPriorityHotspots++;
+            else if (priority.equalsIgnoreCase("MEDIUM")) mediumPriorityHotspots++;
+            else if (priority.equalsIgnoreCase("NORMAL")) normalPriorityHotspots++;
+            else if (priority.equalsIgnoreCase("LOW")) lowPriorityHotspots++;
+        }
+
         Collection<Map> outliers = (Collection<Map>) analysis.get("outliers");
         int totalOutliers = outliers.size();
 
@@ -49,6 +64,10 @@ public class CodeInspectorStatsService {
         updatedProjectStats.setAverageChurn((Double) analysis.get("avg_churn"));
         updatedProjectStats.setTotalOutliers(totalOutliers);
         updatedProjectStats.setTotalHotspots(totalHotspots);
+        updatedProjectStats.setHighPriorityHotspots(highPriorityHotspots);
+        updatedProjectStats.setMediumPriorityHotspots(mediumPriorityHotspots);
+        updatedProjectStats.setNormalPriorityHotspots(normalPriorityHotspots);
+        updatedProjectStats.setLowPriorityHotspots(lowPriorityHotspots);
 
         codeInspectorProjectStatsRepository.save(updatedProjectStats);
     }

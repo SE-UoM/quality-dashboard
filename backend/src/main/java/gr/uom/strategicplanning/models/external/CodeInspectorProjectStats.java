@@ -29,6 +29,10 @@ public class CodeInspectorProjectStats {
     private Double averageChurn;
     private Integer totalOutliers;
     private Integer totalHotspots;
+    private Integer highPriorityHotspots;
+    private Integer mediumPriorityHotspots;
+    private Integer normalPriorityHotspots;
+    private Integer lowPriorityHotspots;
     @OneToOne
     private Project project;
 
