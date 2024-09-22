@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -85,20 +82,22 @@ public class PyAssessStatsService {
         PyAssessStats updatedStats = pyAssessStats.get();
         Map<String, Object> organizationLevelMetrics = this.calculateOrganizationLevelMetrics(org);
 
-        updatedStats.setAverageCoverage((double) organizationLevelMetrics.get("AvgCoverage"));
-        updatedStats.setAverageMiss((double) organizationLevelMetrics.get("AvgMiss"));
-        updatedStats.setAverageStmts((double) organizationLevelMetrics.get("AvgMotalStmts"));
-        updatedStats.setAverageNom((double) organizationLevelMetrics.get("AvgNom"));
-        updatedStats.setAverageWac((double) organizationLevelMetrics.get("AvgWac"));
-        updatedStats.setAverageNocc((double) organizationLevelMetrics.get("AvgNocc"));
-        updatedStats.setAverageDit((double) organizationLevelMetrics.get("AvgDit"));
-        updatedStats.setAverageWmpc1((double) organizationLevelMetrics.get("AvgWmpc1"));
-        updatedStats.setAverageWmpc2((double) organizationLevelMetrics.get("AvgWmpc2"));
-        updatedStats.setAverageRfc((double) organizationLevelMetrics.get("AvgRfc"));
-        updatedStats.setAverageCbo((double) organizationLevelMetrics.get("AvgCbo"));
-        updatedStats.setAverageMpc((double) organizationLevelMetrics.get("AvgMpc"));
-        updatedStats.setAverageLcom((double) organizationLevelMetrics.get("AvgLcom"));
-        updatedStats.setTotalDependencies((int) organizationLevelMetrics.get("totalDependencies"));
+        updatedStats.setTotalCoverage((Double) organizationLevelMetrics.get("totalCoverage"));
+        updatedStats.setTotalMiss((Double) organizationLevelMetrics.get("totalMiss"));
+        updatedStats.setTotalStmts((Double) organizationLevelMetrics.get("totalStmts"));
+        updatedStats.setAverageNom((Double) organizationLevelMetrics.get("AvgNom"));
+        updatedStats.setAverageWac((Double) organizationLevelMetrics.get("AvgWac"));
+        updatedStats.setAverageNocc((Double) organizationLevelMetrics.get("AvgNocc"));
+        updatedStats.setAverageDit((Double) organizationLevelMetrics.get("AvgDit"));
+        updatedStats.setAverageWmpc1((Double) organizationLevelMetrics.get("AvgWmpc1"));
+        updatedStats.setAverageWmpc2((Double) organizationLevelMetrics.get("AvgWmpc2"));
+        updatedStats.setAverageRfc((Double) organizationLevelMetrics.get("AvgRfc"));
+        updatedStats.setAverageCbo((Double) organizationLevelMetrics.get("AvgCbo"));
+        updatedStats.setAverageMpc((Double) organizationLevelMetrics.get("AvgMpc"));
+        updatedStats.setAverageLcom((Double) organizationLevelMetrics.get("AvgLcom"));
+        updatedStats.setTotalDependencies((Integer) organizationLevelMetrics.get("totalDependencies"));
+        Set<String> allDependencies = (Set<String>) organizationLevelMetrics.get("allDependencies");
+        updatedStats.addMultipleDependencies(allDependencies);
 
         pyAssessStatsRepository.save(updatedStats);
     }
@@ -122,6 +121,8 @@ public class PyAssessStatsService {
         int totalLcom = 0;
         int totalDependencies = 0;
 
+        Set<String> allDependencies = new HashSet<>();
+
         for (Project project : orgProjects) {
             PyAssessProjectStats projectStats = project.getPyAssessProjectStats();
 
@@ -139,12 +140,15 @@ public class PyAssessStatsService {
             totalMpc += projectStats.getMpc();
             totalLcom += projectStats.getLcom();
             totalDependencies += projectStats.getTotalDependenencies();
+
+            Set<String> projectDependencies = projectStats.getDependencies();
+            allDependencies.addAll(projectDependencies);
         }
 
         Map<String, Object> metrics = new HashMap<>();
-        metrics.put("AvgCoverage", (double) totalCoverage / totalProjects);
-        metrics.put("AvgMiss", (double) totalMiss / totalProjects);
-        metrics.put("AvgMotalStmts", (double) totalStmts / totalProjects);
+        metrics.put("totalCoverage", (double) totalCoverage);
+        metrics.put("totalMiss", (double) totalMiss);
+        metrics.put("totalStmts", (double) totalStmts);
         metrics.put("AvgNom", (double) totalNom / totalProjects);
         metrics.put("AvgWac", (double) totalWac / totalProjects);
         metrics.put("AvgNocc", (double) totalNocc / totalProjects);
@@ -156,6 +160,7 @@ public class PyAssessStatsService {
         metrics.put("AvgMpc", (double) totalMpc / totalProjects);
         metrics.put("AvgLcom", (double) totalLcom / totalProjects);
         metrics.put("totalDependencies", totalDependencies);
+        metrics.put("allDependencies", allDependencies);
 
         return metrics;
     }

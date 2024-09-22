@@ -23,9 +23,9 @@ public class PyAssessStats {
     private Set<String> gitUrls;
     @ElementCollection
     private Set<String> dependencies;
-    private Double averageCoverage;
-    private Double averageMiss;
-    private Double averageStmts;
+    private Double totalCoverage;
+    private Double totalMiss;
+    private Double totalStmts;
 
     private Double averageNom;
     private Double averageWac;
@@ -52,6 +52,10 @@ public class PyAssessStats {
 
     public boolean addDependency(String dependency){
         return dependencies.add(dependency);
+    }
+
+    public boolean addMultipleGitUrls(Set<String> gitUrls){
+        return this.gitUrls.addAll(gitUrls);
     }
 
     public boolean addMultipleDependencies(Set<String> dependencies){
