@@ -10,14 +10,13 @@ import gr.uom.strategicplanning.controllers.responses.implementations.*;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
-import gr.uom.strategicplanning.models.stats.ActivityStats;
-import gr.uom.strategicplanning.models.stats.GeneralStats;
-import gr.uom.strategicplanning.models.stats.ProjectStats;
-import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import gr.uom.strategicplanning.models.stats.*;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
+import gr.uom.strategicplanning.services.CommitService;
 import gr.uom.strategicplanning.services.DeveloperService;
 import gr.uom.strategicplanning.services.OrganizationService;
 import gr.uom.strategicplanning.utils.TechDebtUtils;
+import org.eclipse.egit.github.core.Issue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +35,8 @@ public class OrganizationController {
     private OrganizationService organizationService;
     @Autowired
     private DeveloperService developerService;
+    @Autowired
+    private CommitService commitService;
 
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
@@ -621,7 +622,90 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/commits-details")
+    @GetMapping("/{id}/hotspots/distribution")
+    public Map<String, Object> getOrganizationHotspotsDistribution(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            CodeInspectorStats codeInspectorStats = organizationAnalysis.getCodeInspectorStats();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalOutliers", codeInspectorStats.getTotalOutliers());
+            response.put("totalHotspots", codeInspectorStats.getTotalHotspots());
+            response.put("highPriorityHotspots", codeInspectorStats.getHighPriorityHotspots());
+            response.put("mediumPriorityHotspots", codeInspectorStats.getMediumPriorityHotspots());
+            response.put("normalPriorityHotspots", codeInspectorStats.getNormalPriorityHotspots());
+            response.put("lowPriorityHotspots", codeInspectorStats.getLowPriorityHotspots());
+            response.put("unknownPriorityHotspots", codeInspectorStats.getUnknownPriorityHotspots());
+
+            return response;
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping("/{id}/coverage")
+    public ResponseEntity<Map> getOrganizationCoverageDetails(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            PyAssessStats pyAssessStats = organizationAnalysis.getPyAssessStats();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalCoverage", pyAssessStats.getTotalCoverage());
+            response.put("totalMiss", pyAssessStats.getTotalMiss());
+            response.put("totalStmts", pyAssessStats.getTotalStmts());
+
+            return ResponseEntity.ok(response);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/refactorings")
+    public ResponseEntity<Map> getOrganizationRefactorings(@PathVariable Long id) {
+        try {
+            Map<String, Object> refactoringsResponse = new HashMap<>();
+            refactoringsResponse.put("totalRefactorings", 50);
+            refactoringsResponse.put("totalRefactoringsPerCommit", 3);
+
+            return ResponseEntity.ok(refactoringsResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/dependencies")
+    public ResponseEntity<Map> getOrganizationDependencies(@PathVariable Long id) {
+        try {
+            Optional<Organization> organizationOptional = organizationRepository.findById(id);
+
+            if (organizationOptional.isEmpty())
+                return ResponseEntity.notFound().build();
+
+            Organization organization = organizationOptional.get();
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            PyAssessStats pyAssessStats = organizationAnalysis.getPyAssessStats();
+
+            Map<String, Object> dependenciesResponse = new HashMap<>();
+            dependenciesResponse.put("totalDependencies", pyAssessStats.getTotalDependencies());
+            dependenciesResponse.put("dependencies", pyAssessStats.getDependencies());
+
+            return ResponseEntity.ok(dependenciesResponse);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/commits/details")
     public ResponseEntity<Map> getOrganizationCommitsDetails(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -639,6 +723,18 @@ public class OrganizationController {
                     allCommits.add(commitDTO);
                 }
             }
+
+            // Sort the commits by date
+            allCommits = allCommits.stream()
+                    .sorted(Comparator.comparing(commit -> {
+                        try {
+                            return new SimpleDateFormat("yyyy-MM-dd").parse(commit.getDate());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }))
+                    .collect(Collectors.toList());
 
             // Now based on all these commits calculate the organization's commits quality distribution
             // Quality types are: EXCELLENT, GOOD, FAIR, POOR, UNKNOWN
@@ -676,6 +772,86 @@ public class OrganizationController {
         catch (EntityNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/issues")
+    public ResponseEntity<Map> getOrganizationIssues(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("openIssuesCount", organizationAnalysis.getTotalOpenIssues());
+            response.put("closedIssuesCount", organizationAnalysis.getTotalClosedIssues());
+            response.put("totalIssuesCount", organizationAnalysis.getTotalIssues());
+
+            return ResponseEntity.ok(response);
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/commits/year/{year}")
+    public Map getOrgCommitsPerYear(@PathVariable Long id, @PathVariable int year) {
+        try {
+            Collection<Commit> orgCommitsByYear = commitService.getOrgCommitsByYear(year, id);
+            Map<String, Object> response = new HashMap<>();
+
+            Collection<CommitDTO> commitsList = new ArrayList<>();
+            for (Commit commit : orgCommitsByYear) {
+                CommitDTO commitDTO = CommitDTO.from(commit);
+                commitsList.add(commitDTO);
+            }
+
+            commitsList = commitsList.stream()
+                    // Date is a string, so we need to convert it to a Date object
+                    .sorted(Comparator.comparing(commit -> {
+                        try {
+                            return new SimpleDateFormat("yyyy-MM-dd").parse(commit.getDate());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }))
+                    .collect(Collectors.toList());
+
+            response.put("year", year);
+            response.put("organization", organizationRepository.findById(id).get().getName());
+            response.put("totalCommits", commitsList.size());
+            response.put("commits", commitsList);
+
+            return response;
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping("/{id}/most-common-code-smell")
+    public Map<String, Object> getMostCommonCodeSmell(@PathVariable Long id) {
+        try {
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            TechDebtStats techDebtStats = organizationAnalysis.getTechDebtStats();
+
+            Map<String, Integer> codeSmells = techDebtStats.getCodeSmells();
+            Map.Entry<String, Integer> mostCommonCodeSmell = codeSmells.entrySet().stream()
+                    .max(Comparator.comparingInt(Map.Entry::getValue))
+                    .orElse(null);
+
+            Map<String, Object> mostCommonCodeSmellResponse = new HashMap<>();
+            mostCommonCodeSmellResponse.put("name", mostCommonCodeSmell.getKey());
+            mostCommonCodeSmellResponse.put("count", mostCommonCodeSmell.getValue());
+
+            return mostCommonCodeSmellResponse;
+        }
+        catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
