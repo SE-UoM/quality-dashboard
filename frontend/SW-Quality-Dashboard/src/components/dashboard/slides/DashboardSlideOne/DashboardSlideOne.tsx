@@ -1,21 +1,13 @@
 import './DashboardSlideOne.css';
 import '../DashboardSlideStyle.css';
 import LanguageRankCard from "../../cards/screen1/LanguageRankCard/LanguageRankCard.tsx";
-import totalProjectsIcon from "../../../../assets/svg/dashboardIcons/total_projects_icon.svg";
-import totalLanguagesIcon from "../../../../assets/svg/dashboardIcons/languages_icon.svg";
-import totalDevelopersIcon from "../../../../assets/svg/dashboardIcons/developers_icon.svg";
-import totalFilesIcon from "../../../../assets/svg/dashboardIcons/files_general_icon.svg";
-import totalLocIcon from "../../../../assets/svg/dashboardIcons/loc_icon.svg";
-import totalContributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 
 import IconCard from "../../cards/screen1/IconCard/IconCard.tsx";
 import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
 import LanguageDistributionCard from "../../cards/screen1/LanguageDistributionCard/LanguageDistributionCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
-import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
-import axios from "axios";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+
 import {jwtDecode} from "jwt-decode";
 import {formatText} from "../../../../utils/textUtils.ts";
 import useAxiosGet from "../../../../hooks/useAxios.ts";
