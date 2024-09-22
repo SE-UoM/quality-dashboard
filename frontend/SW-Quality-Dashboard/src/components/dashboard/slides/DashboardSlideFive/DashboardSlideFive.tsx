@@ -83,6 +83,7 @@ function DashboardSlideFive() {
                 <HotspotsRadar
                     gridArea='radarChart'
                     data={hotspotsData ? hotspotsQualityData : null}
+                    loading={hotspotsLoading}
                 />
 
                 <CoverageCard
@@ -98,6 +99,8 @@ function DashboardSlideFive() {
                     headC={"Missed"}
                     valueC={coverageData ? formatText(coverageData.totalMiss, 'k') : 0}
                     iconC={<i className={"bi bi-shield-x"} style={{fontSize: '6vh'}}> </i>}
+
+                    loading={coverageLoading}
                 />
 
                 <CoverageCard
@@ -114,6 +117,8 @@ function DashboardSlideFive() {
                     headC={"Python Deps"}
                     valueC={formatText(dependenciesData ? dependenciesData.totalDependencies : 0, "k")}
                     iconC={<i className={"bi bi-filetype-py text-accent"} style={{fontSize: '6vh'}}> </i>}
+
+                    loading={hotspotsLoading || refactoringsLoading || dependenciesLoading}
                 />
                 <CommitHeatmap gridArea='commitHeatmap'/>
                 <CommitsActivity gridArea='commitsTimeline'/>

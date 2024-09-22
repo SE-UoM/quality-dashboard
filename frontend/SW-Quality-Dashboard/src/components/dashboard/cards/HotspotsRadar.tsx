@@ -27,28 +27,36 @@ const state = {
 
 };
 
-function HotspotsRadar({gridArea, data}) {
+function HotspotsRadar({gridArea, data, loading}) {
     return (
         <>
-            <SimpleDashboardCard
-                className=""
-                id={"radarChart"}
-                style={{height: "100%", gridArea: gridArea}}
-            >
-                <h4 style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "0.5em"
-                }}>
-                    <TiRadar style={{height: "100%", justifySelf: "center"}}/> Hotspots Priority Radar
-                </h4>
-                {data && <ReactApexChart options={state.options} series={data} type="radar" height={
-                    // calculate height to be 10% of the screen height
-                    Math.round(window.innerHeight * 0.3)
-                }/>}
-            </SimpleDashboardCard>
+            {loading ? (
+                <SimpleDashboardCard
+                    className="skeleton"
+                    id={"radarChart"}
+                    style={{height: "100%", gridArea: gridArea}}
+                />
+                ) : (
+                <SimpleDashboardCard
+                    className=""
+                    id={"radarChart"}
+                    style={{height: "100%", gridArea: gridArea}}
+                >
+                    <h4 style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: "0.5em"
+                    }}>
+                        <TiRadar style={{height: "100%", justifySelf: "center"}}/> Hotspots Priority Radar
+                    </h4>
+                    {data && <ReactApexChart options={state.options} series={data} type="radar" height={
+                        // calculate height to be 10% of the screen height
+                        Math.round(window.innerHeight * 0.3)
+                    }/>}
+                </SimpleDashboardCard>
+            )}
         </>
     );
 }
