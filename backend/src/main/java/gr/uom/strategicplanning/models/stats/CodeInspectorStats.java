@@ -25,6 +25,11 @@ public class CodeInspectorStats {
     private Set<String> gitUrls;
     private Integer totalOutliers;
     private Integer totalHotspots;
+    private Integer highPriorityHotspots;
+    private Integer mediumPriorityHotspots;
+    private Integer normalPriorityHotspots;
+    private Integer lowPriorityHotspots;
+    private Integer unknownPriorityHotspots;
 
     @OneToOne
     private OrganizationAnalysis organizationAnalysis;

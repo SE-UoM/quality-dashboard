@@ -43,6 +43,7 @@ public class CodeInspectorStatsService {
         int mediumPriorityHotspots = 0;
         int normalPriorityHotspots = 0;
         int lowPriorityHotspots = 0;
+        int unknownPriorityHotspots = 0;
 
         for (Map hotspot : hotspots) {
             String priority = (String) hotspot.get("priority");
@@ -51,6 +52,7 @@ public class CodeInspectorStatsService {
             else if (priority.equalsIgnoreCase("MEDIUM")) mediumPriorityHotspots++;
             else if (priority.equalsIgnoreCase("NORMAL")) normalPriorityHotspots++;
             else if (priority.equalsIgnoreCase("LOW")) lowPriorityHotspots++;
+            else unknownPriorityHotspots++;
         }
 
         Collection<Map> outliers = (Collection<Map>) analysis.get("outliers");
@@ -68,6 +70,7 @@ public class CodeInspectorStatsService {
         updatedProjectStats.setMediumPriorityHotspots(mediumPriorityHotspots);
         updatedProjectStats.setNormalPriorityHotspots(normalPriorityHotspots);
         updatedProjectStats.setLowPriorityHotspots(lowPriorityHotspots);
+        updatedProjectStats.setUnknownPriorityHotspots(unknownPriorityHotspots);
 
         codeInspectorProjectStatsRepository.save(updatedProjectStats);
     }
@@ -86,6 +89,11 @@ public class CodeInspectorStatsService {
 
         int totalHotspots = 0;
         int totalOutliers = 0;
+        int highPriorityHotspots = 0;
+        int mediumPriorityHotspots = 0;
+        int normalPriorityHotspots = 0;
+        int lowPriorityHotspots = 0;
+        int unknownPriorityHotspots = 0;
 
         for(Project project : organizationProjects) {
             Long projectID = project.getId();
@@ -95,12 +103,22 @@ public class CodeInspectorStatsService {
 
             totalHotspots += projectStats.get().getTotalHotspots();
             totalOutliers += projectStats.get().getTotalOutliers();
+            highPriorityHotspots += projectStats.get().getHighPriorityHotspots();
+            mediumPriorityHotspots += projectStats.get().getMediumPriorityHotspots();
+            normalPriorityHotspots += projectStats.get().getNormalPriorityHotspots();
+            lowPriorityHotspots += projectStats.get().getLowPriorityHotspots();
+            unknownPriorityHotspots += projectStats.get().getUnknownPriorityHotspots();
 
             updatedStats.addGitUrl(project.getRepoUrl());
         }
 
         updatedStats.setTotalHotspots(totalHotspots);
         updatedStats.setTotalOutliers(totalOutliers);
+        updatedStats.setHighPriorityHotspots(highPriorityHotspots);
+        updatedStats.setMediumPriorityHotspots(mediumPriorityHotspots);
+        updatedStats.setNormalPriorityHotspots(normalPriorityHotspots);
+        updatedStats.setLowPriorityHotspots(lowPriorityHotspots);
+        updatedStats.setUnknownPriorityHotspots(unknownPriorityHotspots);
 
         codeInspectorStatsRepository.save(updatedStats);
     }

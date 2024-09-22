@@ -33,6 +33,7 @@ public class CodeInspectorProjectStats {
     private Integer mediumPriorityHotspots;
     private Integer normalPriorityHotspots;
     private Integer lowPriorityHotspots;
+    private Integer unknownPriorityHotspots;
     @OneToOne
     private Project project;
 
