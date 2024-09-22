@@ -1,5 +1,5 @@
 import {DonutChart} from "@tremor/react";
-import React from "react";
+import React, {useEffect} from "react";
 import {formatText} from "../../utils/textUtils.ts";
 
 const customTooltip = ({    payload, active, label  }) => {
@@ -49,7 +49,19 @@ const customTooltip = ({    payload, active, label  }) => {
     );
 };
 
-export default function DashboardDonutChart({data, colors, centerLabel}) {
+export default function DashboardDonutChart({data, colors, centerLabel, showLabel, labelStyle}) {
+    // Inject the label size to the css
+    useEffect(() => {
+        const style = document.createElement('style');
+        style.innerHTML = labelStyle ? labelStyle : '';
+
+        document.head.appendChild(style);
+
+        return () => {
+            document.head.removeChild(style);
+        }
+    }, []);
+
     return (
         <>
             <DonutChart
@@ -59,9 +71,11 @@ export default function DashboardDonutChart({data, colors, centerLabel}) {
                 colors={colors}
                 customTooltip={customTooltip}
                 variant="donut"
-                label={centerLabel}
+                // label={centerLabel}
+                showLabel={showLabel}
                 showAnimation={true}
-                className="h-full"
+                className="mx-auto"
+                valueFormatter={(value) => formatText(value, "k")}
             />
 
             <div className="donut-chart-legend">

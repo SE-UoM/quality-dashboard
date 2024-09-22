@@ -7,6 +7,7 @@ import DashboardSlideTwo from "../../../components/dashboard/slides/DashboardSli
 import DashboardSlideThree from "../../../components/dashboard/slides/DashboardSlideThree/DashboardSlideThree.tsx";
 import DashboardSlideFour from "../../../components/dashboard/slides/DashboardSlideFour/DashboardSlideFour.tsx";
 import ProtectedRoute from "../../../routes/ProtectedRoute.tsx";
+import DashboardSlideFive from "../../../components/dashboard/slides/DashboardSlideFive/DashboardSlideFive.tsx";
 
 function DashboardPage({isAuthenticated, isAdmin}) {
     const location = useLocation()
@@ -49,7 +50,7 @@ function DashboardPage({isAuthenticated, isAdmin}) {
                             isAdmin={isAdmin}
                             currentSlide={currentSlide}
                             setCurrentSlide={setCurrentSlide}
-                            totalSlides={4}
+                            totalSlides={5}
                         />
                         <div className="dashboard-page bg-base-100">
                             {(!currentSlide || currentSlide === 1) &&
@@ -66,6 +67,10 @@ function DashboardPage({isAuthenticated, isAdmin}) {
 
                             {currentSlide === 4 &&
                                 <DashboardSlideFour />
+                            }
+
+                            {currentSlide === 5 &&
+                                <DashboardSlideFive />
                             }
                         </div>
                     </div>
