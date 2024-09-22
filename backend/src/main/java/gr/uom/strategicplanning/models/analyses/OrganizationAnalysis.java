@@ -27,6 +27,9 @@ public class OrganizationAnalysis {
     private Long id;
     private String orgName;
     private Date analysisDate;
+    private int totalOpenIssues;
+    private int totalClosedIssues;
+    private int totalIssues;
     @OneToOne(cascade = CascadeType.PERSIST)
     private GeneralStats generalStats = new GeneralStats(this);
     @OneToOne(cascade = CascadeType.PERSIST)

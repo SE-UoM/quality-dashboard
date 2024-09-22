@@ -28,6 +28,9 @@ public class GithubService {
         project.setStars((int) githubData.get("totalStars"));
         project.setTotalCommits((int) githubData.get("totalCommits"));
         project.setCreatedAt((String) githubData.get("createdAt"));
+        project.setOpenIssues((int) githubData.get("openIssues"));
+        project.setClosedIssues((int) githubData.get("closedIssues"));
+        project.setTotalIssues((int) githubData.get("totalIssues"));
 
         projectService.saveProject(project);
     }

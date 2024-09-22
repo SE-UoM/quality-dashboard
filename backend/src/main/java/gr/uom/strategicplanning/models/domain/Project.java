@@ -26,6 +26,9 @@ public class Project {
     private String ownerName;
     private String projectDescription;
     private String createdAt;
+    private int openIssues;
+    private int closedIssues;
+    private int totalIssues;
     @ManyToOne
     @ToString.Exclude
     private Organization organization;

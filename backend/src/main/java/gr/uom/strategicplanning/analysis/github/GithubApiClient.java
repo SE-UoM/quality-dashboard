@@ -43,7 +43,6 @@ public class GithubApiClient extends HttpClient {
      * @param project the Project object to populate with project data
      * @throws Exception if an I/O error occurs during the API request
      */
-
     public Map<String, Object> fetchProjectData(Project project) {
 
         String username = extractUsername(project.getRepoUrl());
@@ -67,18 +66,23 @@ public class GithubApiClient extends HttpClient {
 
         int totalCommits = getTotalCommits(project);
 
+        Map<String, Integer> issues = getRepoIssueCount(project);
+        int openIssues = issues.get("openIssues");
+        int closedIssues = issues.get("closedIssues");
+        int totalIssues = openIssues + closedIssues;
+
         String createdAt = (String) repoData.get("created_at");
 
-        Map<String, Object> data = Map.of(
-            "ownerName", username,
-            "projectName", repoName,
-            "description", description,
-            "defaultBranch", defaultBranch,
-            "totalForks", totalForks,
-            "totalStars", totalStars,
-            "totalCommits", totalCommits,
-            "createdAt", createdAt
-        );
+        Map<String, Object> data = new HashMap<>();
+        data.put("description", description);
+        data.put("defaultBranch", defaultBranch);
+        data.put("totalForks", totalForks);
+        data.put("totalStars", totalStars);
+        data.put("totalCommits", totalCommits);
+        data.put("totalIssues", totalIssues);
+        data.put("openIssues", openIssues);
+        data.put("closedIssues", closedIssues);
+        data.put("createdAt", createdAt);
 
         return data;
     }
@@ -137,6 +141,50 @@ public class GithubApiClient extends HttpClient {
         String url = String.format("https://api.github.com/repos/%s/%s/commits?per_page=1&page=1", username, repoName);
 
         // To find the total number of commits, we need to check the "Link" header.
+        Response response = null;
+        try {
+            response = sendGithubRequest(url);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String linkHeader = response.header("Link");
+
+        if (linkHeader == null) return 1;
+
+        return findLastPageNumber(linkHeader);
+    }
+
+    public Map<String, Integer> getRepoIssueCount(Project project) {
+        String username = extractUsername(project.getRepoUrl());
+        String repoName = extractRepoName(project.getRepoUrl());
+
+        String issuesAPI = String.format("https://api.github.com/repos/%s/%s/issues?per_page=1&state=", username, repoName);
+        String openIssuesAPI = issuesAPI + "open";
+        String closedIssuesAPI = issuesAPI + "closed";
+
+        // In order for us to not make a lot of requests to the GitHub API, we will only fetch the number of open and closed issues
+        // We can't actually do that. But we can set the page size to 1, and only fetch the first page, then check the total number of pages.
+        // That is the total number of issues.
+        int openIssues = getTotalIssues(openIssuesAPI);
+        int closedIssues = getTotalIssues(closedIssuesAPI);
+
+        return Map.of("openIssues", openIssues, "closedIssues", closedIssues);
+    }
+
+    public static void main(String[] args) {
+        GithubApiClient client = new GithubApiClient("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");
+        String url = "https://github.com/SE-UoM/quality-dashboard";
+
+        Project testProject = new Project();
+        testProject.setRepoUrl(url);
+
+        Map<String, Integer> issues = client.getRepoIssueCount(testProject);
+
+        System.out.println(issues);
+    }
+
+    private int getTotalIssues(String url) {
         Response response = null;
         try {
             response = sendGithubRequest(url);
