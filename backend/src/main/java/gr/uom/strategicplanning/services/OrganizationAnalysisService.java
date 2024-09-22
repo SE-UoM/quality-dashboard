@@ -59,7 +59,33 @@ public class OrganizationAnalysisService {
 
         organization.getOrganizationAnalysis().findTopLanguages();
 
+        Map<String, Object> totalOrgIssuesDistribution = findTotalOrgIssuesDistribution(organization);
+        organizationAnalysis.setTotalOpenIssues((int) totalOrgIssuesDistribution.get("totalOpenIssues"));
+        organizationAnalysis.setTotalClosedIssues((int) totalOrgIssuesDistribution.get("totalClosedIssues"));
+        organizationAnalysis.setTotalIssues((int) totalOrgIssuesDistribution.get("totalIssues"));
+
         saveOrganizationAnalysis(organizationAnalysis);
+    }
+
+    public Map<String, Object> findTotalOrgIssuesDistribution(Organization organization) {
+        Collection<Project> organizationProjects = organization.getProjects();
+        Map<String, Object> totalIssuesDistribution = new HashMap<>();
+
+        int totalOpenIssues = 0;
+        int totalClosedIssues = 0;
+        int totalIssues = 0;
+
+        for (Project project : organizationProjects) {
+            totalOpenIssues += project.getOpenIssues();
+            totalClosedIssues += project.getClosedIssues();
+            totalIssues += project.getTotalIssues();
+        }
+
+        totalIssuesDistribution.put("totalOpenIssues", totalOpenIssues);
+        totalIssuesDistribution.put("totalClosedIssues", totalClosedIssues);
+        totalIssuesDistribution.put("totalIssues", totalIssues);
+
+        return totalIssuesDistribution;
     }
 
     public void updatedAnalysisAndSaveOrganization(Organization organization) {
