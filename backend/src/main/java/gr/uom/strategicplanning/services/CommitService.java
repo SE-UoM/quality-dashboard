@@ -62,6 +62,10 @@ public class CommitService {
         return commitRepository.findByHash(hash);
     }
 
+    public Collection<Commit> getOrgCommitsByYear(int year, Long orgId) {
+        return commitRepository.findOrgCommitsByYear(year, orgId);
+    }
+
     public void saveCommit(Commit commit) {
         commitRepository.save(commit);
     }
