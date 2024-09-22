@@ -55,7 +55,14 @@
       "mostActiveProject": "/api/organizations/:organizationId/most-active-project",
       "mostStarredProject": "/api/organizations/:organizationId/most-starred-project",
       "mostForkedProject": "/api/organizations/:organizationId/most-forked-project",
-      "developers": "/api/organizations/:organizationId/developers-info"
+      "developers": "/api/organizations/:organizationId/developers-info",
+      "commitDetails": "/api/organizations/:organizationId/commits/details",
+      "commitsByYear": "/api/organizations/:organizationId/commits/year/:year",
+      "hotspotsDistribution": "/api/organizations/:organizationId/hotspots/distribution",
+      "issues": "/api/organizations/:organizationId/issues",
+      "coverage": "/api/organizations/:organizationId/coverage",
+      "refactorings": "/api/organizations/:organizationId/refactorings",
+      "dependencies": "/api/organizations/:organizationId/dependencies"
     }
   }
 }
