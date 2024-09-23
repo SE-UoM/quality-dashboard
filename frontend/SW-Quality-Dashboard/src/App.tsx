@@ -36,6 +36,14 @@ function App() {
 
     const [loading, setLoading] = useState<boolean>(false)
 
+    // Make sure the isAuthenticated state is true. If not remove the tokens from the local storage
+    useEffect(() => {
+        if (!isAuthenticated) {
+            localStorage.removeItem('accessToken')
+            localStorage.removeItem('refreshToken')
+        }
+    }, [isAuthenticated])
+
     // Decode the token to check if the user is an admin
     useEffect(() => {
         if (!isAuthenticated)
