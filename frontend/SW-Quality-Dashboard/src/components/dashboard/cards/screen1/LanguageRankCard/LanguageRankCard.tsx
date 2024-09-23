@@ -18,6 +18,8 @@ const languageImagesApiUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon@lates
 const noneImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/640px-Blue_question_mark_icon.svg.png"
 
 function extractLangImageName(langName) {
+    if (!langName) return "None";
+
     if (langName === "CSS") langName = "css3";
     if (langName === "WEB" || langName === "HTML") langName = "html5";
     if (langName === "CXX") langName = "cplusplus";
@@ -26,6 +28,8 @@ function extractLangImageName(langName) {
 }
 
 function resetLangImageName(langName, resetTo) {
+    if (!langName) return "None";
+
     if (langName === "css3") langName = "CSS";
     if (langName === "html5") langName = "HTML";
     if (langName === "cplusplus") langName = "C++";
@@ -34,6 +38,13 @@ function resetLangImageName(langName, resetTo) {
 }
 
 function createLangComponentObject(langName, langImg) {
+    if (!langName) {
+        return {
+            name: "None",
+            image: noneImageUrl
+        }
+    }
+
     return {
         name: langName,
         image: langImg
