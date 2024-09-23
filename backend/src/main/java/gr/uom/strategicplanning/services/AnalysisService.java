@@ -105,6 +105,8 @@ public class AnalysisService {
         // Get the organization of the user and create the project
         Organization organization = user.getOrganization();
         Project project = projectService.getOrCreateProject(url, organization);
+        project.setSubmittedByUserId(user.getId());
+        projectService.saveProject(project);
 
         // Check if the Project meets the status requirements for analysis
         projectValidationService.validateProjectForAnalysis(project);

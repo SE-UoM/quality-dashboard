@@ -104,4 +104,7 @@ public class ProjectService {
     }
 
 
+    public Collection<Project> getProjectsByUser(Long userId) {
+        return projectRepository.findAllBySubmittedByUserId(userId);
+    }
 }

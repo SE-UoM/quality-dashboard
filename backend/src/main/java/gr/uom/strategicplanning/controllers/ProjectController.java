@@ -150,4 +150,15 @@ public class ProjectController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<Collection<SimpleProjectResponse>> getProjectsByUser(@PathVariable Long user_id) {
+        Collection<Project> projects = projectService.getProjectsByUser(user_id);
+
+        Collection<SimpleProjectResponse> projectResponses = projects.stream()
+                .map(SimpleProjectResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(projectResponses);
+    }
 }
