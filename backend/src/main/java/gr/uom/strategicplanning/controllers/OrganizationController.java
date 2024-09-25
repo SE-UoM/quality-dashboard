@@ -53,7 +53,7 @@ public class OrganizationController {
             }
     }
 
-    @GetMapping("/names")
+    @GetMapping("/public/names")
     public ResponseEntity<List<Map>> getPublicOrganizations() {
         try {
             List<Organization> organizations = organizationRepository.findAll();
@@ -64,6 +64,7 @@ public class OrganizationController {
                 Map<String, Object> organizationMap = new HashMap<>();
                 organizationMap.put("id", organization.getId());
                 organizationMap.put("name", organization.getName());
+                organizationMap.put("imgURL", organization.getImgURL());
 
                 publicOrganizations.add(organizationMap);
             }
@@ -76,7 +77,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/public/{id}")
     public ResponseEntity<OrganizationResponse> getOrganizationById(@PathVariable Long id) {
             Optional<Organization> organizationOptional = organizationRepository.findById(id);
             Organization organization = organizationOptional.orElseThrow(() -> new RuntimeException("Organization not found"));
@@ -85,7 +86,7 @@ public class OrganizationController {
             return ResponseEntity.ok(organizationResponse);
         }
 
-    @GetMapping("/{id}/projects-info")
+    @GetMapping("/public/{id}/projects-info")
     public ResponseEntity<Collection<Map>> getOrganizationProjectsInfo(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -118,7 +119,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/project-names")
+    @GetMapping("/public/{id}/project-names")
     public ResponseEntity<Collection<Map>> getOrganizationProjectNames(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -143,7 +144,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/general-stats")
+    @GetMapping("/public/{id}/general-stats")
     public ResponseEntity<GeneralStatsDTO> getOrganizationAnalysisGeneralStats(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -161,7 +162,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/organization-analysis")
+    @GetMapping("/public/{id}/organization-analysis")
     public ResponseEntity<OrganizationAnalysisResponse> getOrganizationAnalysis(@PathVariable Long id) {
             Optional<Organization> organizationOptional = organizationRepository.findById(id);
 
@@ -175,7 +176,7 @@ public class OrganizationController {
             return ResponseEntity.ok(organizationAnalysisResponse);
         }
 
-    @GetMapping("/{id}/top-developers")
+    @GetMapping("/public/{id}/top-developers")
     public ResponseEntity<Collection<DeveloperResponse>> getTopDevelopersByOrganizationId(@PathVariable Long id) {
         try {
             Collection<Developer> allDevelopers  = developerService.findAllByOrganizationId(id);
@@ -195,7 +196,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/top-contributors")
+    @GetMapping("/public/{id}/top-contributors")
     public ResponseEntity<Collection> getTopContributors(@PathVariable Long id) {
         try {
             Collection<Developer> allDevelopers  = developerService.findAllByOrganizationId(id);
@@ -215,7 +216,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/language-names")
+    @GetMapping("/public/{id}/language-names")
     public ResponseEntity<Collection<String>> getOrganizationLanguageNames(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -237,7 +238,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/top-projects")
+    @GetMapping("/public/{id}/top-projects")
     public ResponseEntity<Collection<Map>> getOrganizationTopProjects(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -277,7 +278,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/developers-info")
+    @GetMapping("/public/{id}/developers-info")
     public ResponseEntity<Collection<Map>> getOrganizationDevelopersInfo(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -307,7 +308,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/most-active-developer")
+    @GetMapping("/public/{id}/most-active-developer")
     public ResponseEntity<Map> getMostActiveDeveloper(@PathVariable Long id) {
         try{
             Organization organization = organizationService.getOrganizationById(id);
@@ -333,7 +334,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/most-active-project")
+    @GetMapping("/public/{id}/most-active-project")
     public ResponseEntity<Map> getMostActiveProject(@PathVariable Long id) {
         try{
             Organization organization = organizationService.getOrganizationById(id);
@@ -353,7 +354,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/most-starred-project")
+    @GetMapping("/public/{id}/most-starred-project")
     public ResponseEntity<Map> getMostStarredProject(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -371,7 +372,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/most-forked-project")
+    @GetMapping("/public/{id}/most-forked-project")
     public ResponseEntity<Map> getMostForkedProject(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -389,7 +390,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/last-analysis-date")
+    @GetMapping("/public/{id}/last-analysis-date")
     public ResponseEntity<Map<String, String>> getLastAnalysisDate(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -412,7 +413,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/top-languages")
+    @GetMapping("/public/{id}/top-languages")
     public ResponseEntity<Map> getTopOrganizationLanguages(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -437,7 +438,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/total-tech-debt")
+    @GetMapping("/public/{id}/total-tech-debt")
     public ResponseEntity<Map> getTotalTechDebt(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -464,7 +465,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/tech-debt-statistics")
+    @GetMapping("/public/{id}/tech-debt-statistics")
     public ResponseEntity<Map> getTechDebtStats(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -506,7 +507,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/language-distribution")
+    @GetMapping("/public/{id}/language-distribution")
     public ResponseEntity<ResponseInterface> getOrganizationLanguageDistribution(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -545,7 +546,7 @@ public class OrganizationController {
         return languageDistribution;
     }
 
-    @GetMapping("/{id}/code-smells-distribution")
+    @GetMapping("/public/{id}/code-smells-distribution")
     public ResponseEntity<Map> getCodeSmellsDistribution(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -574,7 +575,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/all-commits")
+    @GetMapping("/public/{id}/all-commits")
     public ResponseEntity<Collection<Map>> getAllOrganizationCommits(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -605,7 +606,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/activity")
+    @GetMapping("/public/{id}/activity")
     public ResponseEntity<ActivityStatsDTO> getOrganizationActivityStats(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -622,7 +623,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/hotspots/distribution")
+    @GetMapping("/public/{id}/hotspots/distribution")
     public Map<String, Object> getOrganizationHotspotsDistribution(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -646,7 +647,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/coverage")
+    @GetMapping("/public/{id}/coverage")
     public ResponseEntity<Map> getOrganizationCoverageDetails(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -666,7 +667,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/refactorings")
+    @GetMapping("/public/{id}/refactorings")
     public ResponseEntity<Map> getOrganizationRefactorings(@PathVariable Long id) {
         try {
             Map<String, Object> refactoringsResponse = new HashMap<>();
@@ -681,7 +682,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/dependencies")
+    @GetMapping("/public/{id}/dependencies")
     public ResponseEntity<Map> getOrganizationDependencies(@PathVariable Long id) {
         try {
             Optional<Organization> organizationOptional = organizationRepository.findById(id);
@@ -705,7 +706,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/commits/details")
+    @GetMapping("/public/{id}/commits/details")
     public ResponseEntity<Map> getOrganizationCommitsDetails(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -775,7 +776,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/issues")
+    @GetMapping("/public/{id}/issues")
     public ResponseEntity<Map> getOrganizationIssues(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);
@@ -794,7 +795,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/commits/year/{year}")
+    @GetMapping("/public/{id}/commits/year/{year}")
     public Map getOrgCommitsPerYear(@PathVariable Long id, @PathVariable int year) {
         try {
             Collection<Commit> orgCommitsByYear = commitService.getOrgCommitsByYear(year, id);
@@ -831,7 +832,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/{id}/most-common-code-smell")
+    @GetMapping("/public/{id}/most-common-code-smell")
     public Map<String, Object> getMostCommonCodeSmell(@PathVariable Long id) {
         try {
             Organization organization = organizationService.getOrganizationById(id);

@@ -48,7 +48,7 @@ public class SecurityConfig {
             "/api/user/verify",
             "/api/user/verify/resend",
             "/api/user/reset-password/request",
-            "/api/organizations/names",
+            "/api/organizations/public/**",
             "/login",
             "/api/organizations",
             "/api/best-practices",
