@@ -22,6 +22,7 @@ public class Organization {
     @GeneratedValue
     private Long id;
     private String name;
+    private String imgURL;
     @OneToMany(mappedBy = "organization")
     private List<User> users = new ArrayList<>();
     @OneToMany(mappedBy = "organization")

@@ -1,19 +1,17 @@
-import DashboardDonutChart from "../../charts/DashboardDonutChart.tsx";
-import SimpleDashboardCard from "./SimpleDashboardCard.tsx";
+import DashboardDonutChart from "../../../charts/DashboardDonutChart.tsx";
+import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
 import React, {useEffect} from "react";
-import useLocalStorage from "../../../hooks/useLocalStorage.ts";
-import useAxiosGet from "../../../hooks/useAxios.ts";
-import apiUrls from "../../../assets/data/api_urls.json";
+import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
+import useAxiosGet from "../../../../hooks/useAxios.ts";
+import apiUrls from "../../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
 
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function CommitsQualityPie({gridArea}) {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
+function CommitsQualityPie({gridArea, orgID}) {
     const {data: commitsData, loading: commitsLoading, error: commitsError, errorMessage: commitsErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.commitDetails.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.commitDetails.replace(":organizationId", orgID), "");
 
     const [commitQualityData, setCommitQualityData] = React.useState(null);
 
@@ -56,7 +54,17 @@ function CommitsQualityPie({gridArea}) {
                               <strong>Commits Quality</strong>
                           </h4>
 
-                          <div className="lang-distribution-chart">
+                          <div
+                            className="commmit-quality-distribution-chart"
+                            style={{
+                                height: "100%",
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gap: "1em"
+                          }}
+                          >
                               <DashboardDonutChart
                                   data={commitQualityData}
                                   colors={['#5fc828', '#3bb0d5', '#fbe83a', '#fe3839', '#a4abb6']}

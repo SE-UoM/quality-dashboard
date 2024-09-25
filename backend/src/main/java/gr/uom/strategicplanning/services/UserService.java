@@ -171,6 +171,18 @@ public class UserService {
         return organizationRepository.save(organization);
     }
 
+    public boolean setOrganizationImage(Long id, String imgURL) {
+        Optional<Organization> organizationOptional = organizationRepository.findById(id);
+        boolean organizationNotFound = organizationOptional.isEmpty();
+
+        if(organizationNotFound) return false;
+
+        Organization organization = organizationOptional.get();
+        organization.setImgURL(imgURL);
+        organizationRepository.save(organization);
+        return true;
+    }
+
     public User getUserByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         boolean userNotFound = userOptional.isEmpty();

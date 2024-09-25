@@ -48,6 +48,7 @@ public class Config {
                 if(!userOptional.isPresent()){
                     User admin = new User(superuserName, superuserEmail, superuserPassword);
                     Organization organization1 = userService.createOrganization(superuserOrganization, admin);
+                    userService.setOrganizationImage(organization1.getId(), "https://www.uom.gr/site/images/logos/UOMLOGOEN.png");
 
                     UserRegistrationRequest registrationRequest = new UserRegistrationRequest();
                     registrationRequest.setEmail(superuserEmail);
