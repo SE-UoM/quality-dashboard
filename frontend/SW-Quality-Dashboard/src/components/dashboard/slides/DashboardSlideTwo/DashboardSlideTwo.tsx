@@ -29,23 +29,22 @@ const colorsCodeSmells = {
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function DashboardSlideTwo() {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+function DashboardSlideTwo({orgID}) {
     const [codeSmellChartData, setCodeSmellChartData] = useState([]);
     const [codeSmellChartColors, setCodeSmellChartColors] = useState([]);
     const [trackerData, setTrackerData] = useState([]);
 
     const {data: totalTechDebtData, error: totalTdError, loading: totalTdLoading, errorMessage: totalTdErrorMsg} =
-        useAxios(baseApiUrl + apiUrls.routes.dashboard.getTotalTD.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxios(baseApiUrl + apiUrls.routes.dashboard.getTotalTD.replace(":organizationId", orgID), "");
 
     const {data: techDebtStatsData, error: tdStatsError, loading: tdStatsLoading, errorMessage: tdStatsErrorMsg} =
-        useAxios(baseApiUrl + apiUrls.routes.dashboard.getTdStats.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxios(baseApiUrl + apiUrls.routes.dashboard.getTdStats.replace(":organizationId", orgID), "");
 
     const {data: codeSmellData, error: codeSmellError, loading: codeSmellLoading, errorMessage: codeSmellErrorMsg} =
-        useAxios(baseApiUrl + apiUrls.routes.dashboard.codeSmellDistribution.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxios(baseApiUrl + apiUrls.routes.dashboard.codeSmellDistribution.replace(":organizationId", orgID), "");
 
     const {data: bestPracticesData, error: bestPracticesError, loading: bestPracticesLoading, errorMessage: bestPracticesErrorMsg} =
-        useAxios(baseApiUrl + apiUrls.routes.dashboard.bestPractices.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxios(baseApiUrl + apiUrls.routes.dashboard.bestPractices.replace(":organizationId", orgID), "");
 
     // ------ CODE SMELL DISTRIBUTION CHART DATA SETUP ------
     useEffect(() => {

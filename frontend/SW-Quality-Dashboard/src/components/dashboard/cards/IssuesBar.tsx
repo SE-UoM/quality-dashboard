@@ -9,8 +9,7 @@ import apiUrls from "../../../assets/data/api_urls.json";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function IssuesBar({gridArea}) {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+function IssuesBar({gridArea, orgID}) {
     const [totalIssues, setTotalIssues] = React.useState(0);
     const [openIssues, setOpenIssues] = React.useState(0);
     const [closedIssues, setClosedIssues] = React.useState(0);
@@ -19,7 +18,7 @@ function IssuesBar({gridArea}) {
     const [openIssuesPercentage, setOpenIssuesPercentage] = React.useState(0);
 
     const {data: issuesData, loading: issuesLoading, error: issuesError, errorMessage: issuesErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.issues.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.issues.replace(":organizationId", orgID), "");
 
     // Effect to transform the issues data once issuesData is fetched
     React.useEffect(() => {

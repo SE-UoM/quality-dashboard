@@ -44,9 +44,11 @@
     justify-content: center;
     align-items: center;
     gap: 1em;
-    padding: 7vh;
 }
 
+.lang-distribution-chart div {
+    height: 30vh !important;
+}
 
 text.fill-tremor-content-emphasis {
     fill: var(--text-primary);

@@ -16,23 +16,21 @@ import useAxiosGet from "../../../../hooks/useAxios.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function DashboardSlideFour() {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
+function DashboardSlideFour({orgID}) {
     const {data: mostActiveDevData, loading: mostActiveDevLoading, error: mostActiveDevError, errorMessage: mostActiveDevErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostActiveDeveloper.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostActiveDeveloper.replace(":organizationId", orgID), "");
 
     const {data: developersData, loading: developersLoading, error: developersError, errorMessage: developersErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.developers.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.developers.replace(":organizationId", orgID), "");
 
     const {data: mostActiveProjData, loading: mostActiveProjLoading, error: mostActiveProjError, errorMessage: mostActiveProjErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostActiveProject.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostActiveProject.replace(":organizationId", orgID), "");
 
     const {data: mostStarredProjData, loading: mostStarredProjLoading, error: mostStarredProjError, errorMessage: mostStarredProjErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostStarredProject.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostStarredProject.replace(":organizationId", orgID), "");
 
     const {data: mostForkedProjData, loading: mostForkedProjLoading, error: mostForkedProjError, errorMessage: mostForkedProjErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostForkedProject.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.mostForkedProject.replace(":organizationId", orgID), "");
 
     const [currentDeveloper, setCurrentDeveloper] = useState({});
     const [developerWords, setDeveloperWords] = useState([]);

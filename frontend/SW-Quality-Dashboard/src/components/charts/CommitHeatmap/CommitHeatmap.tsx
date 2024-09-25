@@ -32,17 +32,16 @@ const aggregateCommitsByDate = (data) => {
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-const CommitHeatmap = ({gridArea }) => {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+const CommitHeatmap = ({gridArea, orgID}) => {
     const [heatmapData, setHeatmapData] = React.useState(null);
     const [totalCommits, setTotalCommits] = React.useState(0);
     const [year, setYear] = React.useState(2021);
 
     const {data: commitsData, loading: commitsLoading, error: commitsError, errorMessage: commitsErrorMessage} = useAxiosGet(
         baseApiUrl + apiUrls.routes.dashboard.commitsByYear
-            .replace(":organizationId", jwtDecode(accessToken).organizationId)
+            .replace(":organizationId", orgID)
             .replace(":year", year)
-        , accessToken);
+        , "");
 
     // Effect to aggregate the commits by date once the commitsData is fetched
     React.useEffect(() => {

@@ -262,14 +262,19 @@ function CollabsibleNavbar({isAuthenticated, isAdmin, currentSlide, setCurrentSl
                                     </a>
                                 </li>
                             )}
-                            <li>
-                                <a href="/submit-project" className="tooltip tooltip-bottom" data-tip="Submit a Project">
-                                    <i className="bi bi-plus-circle"></i>
-                                </a>
-                            </li>
+                            {isAuthenticated && (
+                                <li>
+                                    <a href="/submit-project" className="tooltip tooltip-bottom"
+                                       data-tip="Submit a Project">
+                                        <i className="bi bi-plus-circle"></i>
+                                    </a>
+                                </li>
+                            )}
 
                             <li>
-                                <a className="tooltip tooltip-bottom" data-tip={"Auto-cycle Slides (" + (autoCycle ? "On" : "Off") + ")"} onClick={toggleAutoCycle}>
+                                <a className="tooltip tooltip-bottom"
+                                   data-tip={"Auto-cycle Slides (" + (autoCycle ? "On" : "Off") + ")"}
+                                   onClick={toggleAutoCycle}>
                                     <i className="bi bi-arrow-repeat"></i>
                                 </a>
                             </li>

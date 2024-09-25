@@ -14,8 +14,9 @@ function DashboardPage({isAuthenticated, isAdmin}) {
     const navigate = useNavigate()
     const urlParams = new URLSearchParams(location.search)
     const slideNumber = urlParams.get('p')
+    const orgId = urlParams.get('orgID')
 
-    const [loadingAuth, setLoadingAuth] = useState<boolean>(true)
+    const [loadingAuth, setLoadingAuth] = useState<boolean>(false)
 
     const [currentSlide, setCurrentSlide] = useState<number>(
         slideNumber ? parseInt(slideNumber) : 1
@@ -23,13 +24,11 @@ function DashboardPage({isAuthenticated, isAdmin}) {
 
     // Update URL when slide changes
     useEffect(() => {
-        navigate(`?p=${currentSlide}`)
+        navigate(`?p=${currentSlide}&orgID=${orgId}`)
     }, [currentSlide, history]);
 
     return (
         <>
-            <ProtectedRoute loadingAuth={loadingAuth} setLoadingAuth={setLoadingAuth} />
-
             {loadingAuth ? (
                 <div
                     className="loading-item"
@@ -54,23 +53,23 @@ function DashboardPage({isAuthenticated, isAdmin}) {
                         />
                         <div className="dashboard-page bg-base-100">
                             {(!currentSlide || currentSlide === 1) &&
-                                <DashboardSlideOne />
+                                <DashboardSlideOne orgID={orgId} />
                             }
 
                             {currentSlide === 2 &&
-                                <DashboardSlideTwo />
+                                <DashboardSlideTwo orgID={orgId} />
                             }
 
                             {currentSlide === 3 &&
-                                <DashboardSlideThree />
+                                <DashboardSlideThree orgID={orgId} />
                             }
 
                             {currentSlide === 4 &&
-                                <DashboardSlideFour />
+                                <DashboardSlideFour orgID={orgId} />
                             }
 
                             {currentSlide === 5 &&
-                                <DashboardSlideFive />
+                                <DashboardSlideFive orgID={orgId} />
                             }
                         </div>
                     </div>

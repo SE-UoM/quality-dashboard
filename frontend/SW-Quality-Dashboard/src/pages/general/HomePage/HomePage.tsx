@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import bgImg from '../../../assets/img/screen-mockup.png';
 import axios from "axios";
 import backendRoutes from "../../../assets/data/api_urls.json"
+import useAxiosGet from "../../../hooks/useAxios.ts";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -18,6 +19,9 @@ function HomePage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [userRole, setUserRole] = useState<string>('')
     const [loadingAuth, setLoadingAuth] = useState<boolean>(true)
+
+    const {data: orgNames, loading: orgNamesLoading, error: orgNamesError, errorMessage: orgNamesErrorMessage} =
+        useAxiosGet(baseUrl + backendRoutes.routes.getAllOrganizationNames, "");
 
     useEffect(() => {
         setLoadingAuth(true)
@@ -66,27 +70,35 @@ function HomePage() {
                     }}>
                     <div className="hero-overlay bg-opacity-85"></div>
                     <div className="hero-content text-center text-neutral-content">
-                        <div className="max-w-md">
-                            <h1 className="mb-5 text-5xl font-bold"
-                                style={{color: 'white'}}
-                            >
-                                {homeText.heroHeader}
-                            </h1>
-                            <p style={{color: 'white'}}>
-                                {homeText.heroText}
-                            </p>
+                        <div className="">
+                            {orgNames &&
+                                <div style={{textAlign: "left"}} className="orgs">
+                                    {orgNames.map((org: any) => (
+                                        <div className="hero min-h-screen">
+                                            <div className="hero-content flex-col lg:flex-row">
+                                                <img
+                                                    src={org.imgURL}
+                                                    className="max-w-sm rounded-lg shadow-2xl bg-neutral-content"/>
+                                                <div >
+                                                    <h1 className="text-5xl font-bold">{org.name}</h1>
+                                                    <p style={{textAlign: "left"}} className="py-6">
 
-                            {!isAuthenticated &&
-                                <a href="/login" className="btn">
-                                    {homeText.heroButton}
-                                </a>
+                                                    </p>
+                                                    <button className="btn btn-primary">
+                                                        <Link to={`/dashboard?orgID=${org.id}`}>View Organization's Dashboard</Link>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             }
 
-                            {isAuthenticated &&
-                                <a href="/dashboard" className="btn">
-                                    {homeText.heroButton}
-                                </a>
-                            }
+                            {/*{isAuthenticated &&*/}
+                            {/*    <a href="/dashboard" className="btn">*/}
+                            {/*        {homeText.heroButton}*/}
+                            {/*    </a>*/}
+                            {/*}*/}
                         </div>
                     </div>
                 </div>

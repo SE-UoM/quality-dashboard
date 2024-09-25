@@ -74,7 +74,7 @@ export default function DashboardDonutChart({data, colors, centerLabel, showLabe
                 // label={centerLabel}
                 showLabel={showLabel}
                 showAnimation={true}
-                className="mx-auto"
+                className=""
                 valueFormatter={(value) => formatText(value, "k")}
             />
 

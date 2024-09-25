@@ -19,6 +19,7 @@ import NotFoundPage from "./pages/general/NotFoundPage/NotFoundPage.tsx";
 import PasswordResetPage from "./pages/auth/PasswordResetPage/PasswordResetPage.tsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage/ForgotPasswordPage.tsx";
 import LoadingPage from "./pages/general/LoadingPage/LoadingPage.tsx";
+import SimpleUserPanel from "./pages/simpleUser/SimpleUserPanel/SimpleUserPanel.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -37,12 +38,12 @@ function App() {
     const [loading, setLoading] = useState<boolean>(false)
 
     // Make sure the isAuthenticated state is true. If not remove the tokens from the local storage
-    useEffect(() => {
-        if (!isAuthenticated) {
-            localStorage.removeItem('accessToken')
-            localStorage.removeItem('refreshToken')
-        }
-    }, [isAuthenticated])
+    // useEffect(() => {
+    //     if (!isAuthenticated) {
+    //         localStorage.removeItem('accessToken')
+    //         localStorage.removeItem('refreshToken')
+    //     }
+    // }, [accessToken, isAuthenticated])
 
     // Decode the token to check if the user is an admin
     useEffect(() => {

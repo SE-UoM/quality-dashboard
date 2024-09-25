@@ -11,7 +11,7 @@ import React, {useEffect} from "react";
 import {BarList, CategoryBar, LineChart} from "@tremor/react";
 import {VscIssues} from "react-icons/vsc";
 import IconCard from "../../cards/screen1/IconCard/IconCard.tsx";
-import CommitsQualityPie from "../../cards/CommitsQualityPie.tsx";
+import CommitsQualityPie from "../../cards/CommitsQualityPie/CommitsQualityPie.tsx";
 import useAxiosGet from "../../../../hooks/useAxios.ts";
 import apiUrls from "../../../../assets/data/api_urls.json";
 import {jwtDecode} from "jwt-decode";
@@ -25,23 +25,21 @@ import CoverageCard from "../../cards/CoverageCard.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function DashboardSlideFive() {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
+function DashboardSlideFive({orgID}) {
     const {data: hotspotsData, loading: hotspotsLoading, error: hotspotsError, errorMessage: hotspotsErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.hotspotsDistribution.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.hotspotsDistribution.replace(":organizationId", orgID), "");
 
     const [hotspotsQualityData, setHotspotsQualityData] = React.useState(null);
     const [totalHotspots, setTotalHotspots] = React.useState(0);
 
     const {data: coverageData, loading: coverageLoading, error: coverageError, errorMessage: coverageErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.coverage.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.coverage.replace(":organizationId", orgID), "");
 
     const {data: refactoringsData, loading: refactoringsLoading, error: refactoringsError, errorMessage: refactoringsErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.refactorings.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.refactorings.replace(":organizationId", orgID), "");
 
     const {data: dependenciesData, loading: dependenciesLoading, error: dependenciesError, errorMessage: dependenciesErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.dependencies.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.dependencies.replace(":organizationId", orgID), "");
 
     // Effect to transform the hotspots data once hotspotsData is fetched
     React.useEffect(() => {
@@ -79,7 +77,7 @@ function DashboardSlideFive() {
     return (
         <>
             <div className="dashboard-slide" id="slide5">
-                <CommitsQualityPie gridArea='commitQualityDistribution'/>
+                <CommitsQualityPie orgID={orgID} gridArea='commitQualityDistribution'/>
                 <HotspotsRadar
                     gridArea='radarChart'
                     data={hotspotsData ? hotspotsQualityData : null}
@@ -120,9 +118,9 @@ function DashboardSlideFive() {
 
                     loading={hotspotsLoading || refactoringsLoading || dependenciesLoading}
                 />
-                <CommitHeatmap gridArea='commitHeatmap'/>
-                <CommitsActivity gridArea='commitsTimeline'/>
-                <IssuesBar gridArea='issues'/>
+                <CommitHeatmap gridArea='commitHeatmap' orgID={orgID}/>
+                <CommitsActivity gridArea='commitsTimeline' orgID={orgID}/>
+                <IssuesBar gridArea='issues' orgID={orgID}/>
 
                 {/*Make it cover the whole row*/}
                 <FooterCard

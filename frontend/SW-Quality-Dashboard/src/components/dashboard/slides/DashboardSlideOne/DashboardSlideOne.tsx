@@ -15,17 +15,16 @@ import apiRoutes from "../../../../assets/data/api_urls.json";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function DashboardSlideOne() {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
+function DashboardSlideOne({orgID}) {
     const {data: generalStats, loading: generalStatsLoading, error: generalStatsError, errorMessage: generalStatsErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.generalStats.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.generalStats.replace(":organizationId", orgID), "");
+
 
     const {data: topLanguages, loading: topLanguagesLoading, error: topLanguagesError, errorMessage: topLanguagesErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topLanguages.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topLanguages.replace(":organizationId", orgID), "");
 
     const {data: languageDistributionData, loading: languageDistributionLoading, error: languageDistributionError, errorMessage: languageDistributionErrorMessage} =
-        useAxiosGet(baseApiUrl + apiRoutes.routes.dashboard.languageDistribution.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiRoutes.routes.dashboard.languageDistribution.replace(":organizationId", orgID), "");
 
     return (
         <>

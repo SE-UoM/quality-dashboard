@@ -1,5 +1,6 @@
 import DashboardDonutChart from "../../../charts/DashboardDonutChart.tsx";
 import SimpleDashboardCard from "../SimpleDashboardCard.tsx";
+import './CommitsQualityPie.css';
 import React, {useEffect} from "react";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
 import useAxiosGet from "../../../../hooks/useAxios.ts";
@@ -54,17 +55,7 @@ function CommitsQualityPie({gridArea, orgID}) {
                               <strong>Commits Quality</strong>
                           </h4>
 
-                          <div
-                            className="commmit-quality-distribution-chart"
-                            style={{
-                                height: "100%",
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                gap: "1em"
-                          }}
-                          >
+                          <div className="commit-quality-distribution-chart">
                               <DashboardDonutChart
                                   data={commitQualityData}
                                   colors={['#5fc828', '#3bb0d5', '#fbe83a', '#fe3839', '#a4abb6']}

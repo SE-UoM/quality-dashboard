@@ -51,7 +51,7 @@ export default function ProtectedRoute({loadingAuth, setLoadingAuth}) {
 
                 setUserRole('')
             })
-    }, []);
+    }, [isAuthenticated]);
 
     return (
         <>

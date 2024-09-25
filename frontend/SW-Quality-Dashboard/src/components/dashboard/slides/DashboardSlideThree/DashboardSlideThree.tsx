@@ -16,18 +16,17 @@ import useAxiosGet from "../../../../hooks/useAxios.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function DashboardSlideThree() {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+function DashboardSlideThree({orgID}) {
     const [words, setWords] = useState([]);
 
     const {data: topContributorsData, error: topContributorsError, loading: topContributorsLoading, errorMessage: topContributorsErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topContributors.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topContributors.replace(":organizationId", orgID), "");
 
     const {data: langNamesData, error: langNamesError, loading: langNamesLoading, errorMessage: langNamesErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.languageNames.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.languageNames.replace(":organizationId", orgID), "");
 
     const {data: bestProjectsData, error: bestProjectsError, loading: bestProjectsLoading, errorMessage: bestProjectsErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topProjects.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topProjects.replace(":organizationId", orgID), "");
 
     useEffect(() => {
         if (!langNamesData) return;
@@ -60,7 +59,7 @@ function DashboardSlideThree() {
                     loadingTopContributors={topContributorsLoading}
                 />
 
-                <SubmittedProjectsCard />
+                <SubmittedProjectsCard orgID={orgID} />
 
                 <FooterCard
                     gridAreaName="footerCard"

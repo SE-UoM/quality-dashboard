@@ -12,10 +12,9 @@ const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 //const date = new Date().getFullYear();
 const date = 2021;
 
-function CommitsActivity({gridArea}) {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
+function CommitsActivity({gridArea, orgID}) {
     const {data: commitsActivity, loading: commitsActivityLoading, error: commitsActivityError, errorMessage: commitsActivityErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.commitsByYear.replace(":organizationId", jwtDecode(accessToken).organizationId).replace(":year", date), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.commitsByYear.replace(":organizationId", orgID).replace(":year", date), "");
 
     // State to manage chart data
     const [chartdata, setChartdata] = useState(
