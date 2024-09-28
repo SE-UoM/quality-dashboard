@@ -48,6 +48,8 @@ public class OrganizationAnalysis {
     private CodeInspectorStats codeInspectorStats = new CodeInspectorStats(this);
     @OneToOne(cascade = CascadeType.PERSIST)
     private PyAssessStats pyAssessStats = new PyAssessStats(this);
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private RefactoringMinerStats refactoringMinerStats = new RefactoringMinerStats(this);
 
     @OneToOne
     private Organization organization;

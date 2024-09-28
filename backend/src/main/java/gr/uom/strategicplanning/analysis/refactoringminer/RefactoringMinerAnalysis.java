@@ -1,6 +1,10 @@
 package gr.uom.strategicplanning.analysis.refactoringminer;
 
+import gr.uom.strategicplanning.models.domain.Commit;
+import gr.uom.strategicplanning.models.domain.RefactoringModel;
+import gr.uom.strategicplanning.services.CommitService;
 import gr.uom.strategicplanning.services.RefactoringMinerService;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.refactoringminer.api.GitHistoryRefactoringMiner;
 import org.refactoringminer.api.GitService;
@@ -19,13 +23,15 @@ public class RefactoringMinerAnalysis {
     private String branch;
     private String projectName;
     private RefactoringMinerService refactoringMinerService;
+    private CommitService commitService;
 
-    public RefactoringMinerAnalysis(String gitUrl, String branch, String projectName, RefactoringMinerService refactoringMinerService) {
+    public RefactoringMinerAnalysis(String gitUrl, String branch, String projectName, RefactoringMinerService refactoringMinerService, CommitService commitService) {
         numberOfRefactorings = 0;
         this.refactoringMinerService = refactoringMinerService;
         this.gitUrl = gitUrl;
         this.branch = branch;
         this.projectName = projectName;
+        this.commitService = commitService;
     }
 
     public int getTotalNumberOfRefactorings() throws Exception {
@@ -40,15 +46,10 @@ public class RefactoringMinerAnalysis {
                 public void handle(String commitId, List<Refactoring> refactorings) {
                     for (Refactoring ref : refactorings) {
                         numberOfRefactorings++;
-
-                        String refactoringType = ref.getRefactoringType().toString();
-                        String refactoringName = ref.getName();
-                        String refactoringDescription = ref.toString();
-                        String refactoringClassesBefore = ref.getInvolvedClassesBeforeRefactoring().toString();
-                        String refactoringClassesAfter = ref.getInvolvedClassesAfterRefactoring().toString();
-
-                        refactoringMinerService.saveRefactoring(projectName, commitId, refactoringType, refactoringName, refactoringDescription, refactoringClassesBefore, refactoringClassesAfter);
-
+                        Commit commit = commitService.getCommitByCommitId(commitId);
+                        RefactoringModel refactoringModel = new RefactoringModel(ref);
+                        refactoringMinerService.saveRefactoring(refactoringModel);
+                        commit.getRefactoringModels().add(refactoringModel);
                     }
                 }
             });

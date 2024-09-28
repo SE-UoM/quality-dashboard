@@ -67,4 +67,8 @@ public class CommitService {
     private void saveCommit(Commit commit) {
         commitRepository.save(commit);
     }
+
+    public Commit getCommitByCommitId(String commitId) {
+        return commitRepository.findById(commitId).orElse(null);
+    }
 }

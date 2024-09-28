@@ -1,12 +1,17 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.models.domain.RefactoringModel;
+import gr.uom.strategicplanning.repositories.RefactoringModelRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class RefactoringMinerService {
 
+    @Autowired
+    private RefactoringModelRepository refactoringModelRepository;
 
-    public void saveRefactoring(String projectName, String commitId, String refactoringType, String refactoringName, String refactoringDescription, String refactoringClassesBefore, String refactoringClassesAfter) {
-        // Save refactoring to database
+    public void saveRefactoring(RefactoringModel ref) {
+        refactoringModelRepository.save(ref);
     }
 }
