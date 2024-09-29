@@ -51,6 +51,21 @@ function createLangComponentObject(langName, langImg) {
     }
 }
 
+let defaultTopLanguages = [
+    {
+        name: "None",
+        image: noneImageUrl
+    },
+    {
+        name: "None",
+        image: noneImageUrl
+    },
+    {
+        name: "None",
+        image: noneImageUrl
+    }
+]
+
 function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError, topLanguagesErrorMessage}) {
     const [firstLanguage, setFirstLanguage] = useState("");
     const [secondLanguage, setSecondLanguage] = useState("");
@@ -87,9 +102,22 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
         let secondLang = createLangComponentObject(secondLanguageName, secondLangImg);
         let thirdLang = createLangComponentObject(thirdLanguageName, thirdLangImg);
 
+        // if the language is none, set the image to noneImageUrl
+        if (firstLanguageName === "None") {
+            firstLang.image = noneImageUrl;
+        }
+        if (secondLanguageName === "None") {
+            secondLang.image = noneImageUrl;
+        }
+        if (thirdLanguageName === "None") {
+            thirdLang.image = noneImageUrl;
+        }
+
         setFirstLanguage(firstLang);
         setSecondLanguage(secondLang);
         setThirdLanguage(thirdLang);
+
+        console.log(secondLanguage.image)
     }, [topLanguages]);
 
     return (
@@ -115,8 +143,8 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
                             <div className="language-rank">
                         <span className={"lang-name-rank"}>
                              <>
-                                 <img src={secondLanguage.image}/>
-                                 {secondLanguage.name.toUpperCase()}
+                                 <img src={secondLanguage.image !== '' ? secondLanguage.image : noneImageUrl}/>
+                                 {secondLanguage.name ? secondLanguage.name.toUpperCase() : "None"}
                              </>
                         </span>
                                 <div className="language-rank-line glass" id={"second"}>
