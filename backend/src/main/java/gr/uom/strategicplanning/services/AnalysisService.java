@@ -53,6 +53,9 @@ public class AnalysisService {
     @Autowired
     private ExternalAnalysisService externalAnalysisService;
 
+    @Autowired
+    private RefactoringMinerService refactoringMinerService;
+
     public static final int COMMITS_ANALYZED_ALREADY_FLAG = -1;
 
     @Autowired
@@ -207,9 +210,9 @@ public class AnalysisService {
             project.setStatus(ProjectStatus.ANALYSIS_STARTED);
             projectService.saveProject(project);
 
-//            String defaultBranch = project.getDefaultBranchName();
-//            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName());
-//            project.setTotalRefactorings(refactoringMinerAnalysis.getTotalNumberOfRefactorings());
+            String defaultBranch = project.getDefaultBranchName();
+            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName(), refactoringMinerService, commitService);
+            refactoringMinerAnalysis.getTotalNumberOfRefactorings();
 
             analyzeCommits(project);
 
