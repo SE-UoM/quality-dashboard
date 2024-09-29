@@ -46,8 +46,8 @@
     gap: 1em;
 }
 
-.lang-distribution-chart div {
-    height: 30vh !important;
+.lang-distribution-chart div.w-full.h-40 {
+    height: 30vh;
 }
 
 text.fill-tremor-content-emphasis {
