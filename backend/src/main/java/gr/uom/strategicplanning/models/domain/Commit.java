@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,6 +35,8 @@ public class Commit {
     private Developer developer;
     @ManyToOne
     private Project project;
+    @OneToMany
+    private List<RefactoringModel> refactoringModels;
 
     public void setCodeSmells(Collection<CodeSmell> codeSmells) {
         this.codeSmells = codeSmells;
