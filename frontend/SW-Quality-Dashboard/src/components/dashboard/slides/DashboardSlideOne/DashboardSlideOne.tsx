@@ -42,7 +42,7 @@ function DashboardSlideOne({orgID}) {
                     <>
                         <IconCard
                             icon="bi bi-laptop"
-                            headerText={formatText(generalStats.totalProjects, "k")}
+                            headerText={generalStats.totalProjects ? formatText(generalStats.totalProjects, "k") : 0}
                             caption="Projects"
                             gridAreaName="totalProjects"
                             loading={generalStatsLoading}
@@ -50,7 +50,7 @@ function DashboardSlideOne({orgID}) {
 
                         <IconCard
                             icon="bi bi-code-slash"
-                            headerText={formatText(generalStats.totalLanguages, "k")}
+                            headerText={generalStats.totalLanguages ? formatText(generalStats.totalLanguages, "k") : 0}
                             caption="Languages"
                             gridAreaName="totalLanguages"
                             loading={generalStatsLoading}
@@ -58,7 +58,7 @@ function DashboardSlideOne({orgID}) {
 
                         <IconCard
                             icon="bi bi-person"
-                            headerText={formatText(generalStats.totalDevs, "k")}
+                            headerText={generalStats.totalDevelopers ? formatText(generalStats.totalDevelopers, "k") : 0}
                             caption="Developers"
                             gridAreaName="totalDevelopers"
                             loading={generalStatsLoading}
@@ -66,7 +66,7 @@ function DashboardSlideOne({orgID}) {
 
                         <IconCard
                             icon="bi bi-file-earmark-binary"
-                            headerText={formatText(generalStats.totalFiles, "k")}
+                            headerText={generalStats.totalFiles ? formatText(generalStats.totalFiles, "k") : 0}
                             caption="Files"
                             gridAreaName="totalFiles"
                             loading={generalStatsLoading}
@@ -74,7 +74,7 @@ function DashboardSlideOne({orgID}) {
 
                         <IconCard
                             icon="bi bi-bezier2"
-                            headerText={formatText(generalStats.totalCommits, "k")}
+                            headerText={generalStats.totalCommits ? formatText(generalStats.totalCommits, "k") : 0}
                             caption="Contributions"
                             gridAreaName="totalContributions"
                             loading={generalStatsLoading}
@@ -82,7 +82,7 @@ function DashboardSlideOne({orgID}) {
 
                         <IconCard
                             icon="bi bi-body-text"
-                            headerText={formatText(generalStats.totalLinesOfCode, "k")}
+                            headerText={generalStats.totalLinesOfCode ? formatText(generalStats.totalLinesOfCode, "k") : 0}
                             caption="Lines of Code"
                             gridAreaName="totalLinesOfCode"
                             loading={generalStatsLoading}
