@@ -1,11 +1,11 @@
 .dashboard-slide#slide5 {
+    display: grid; /* Ensure the grid display is set */
     grid-template-columns: repeat(6, 1fr) !important;
     grid-template-areas:
         "commitQualityDistribution commitQualityDistribution radarChart coverageCard coverageCard coverageCard"
-        "commitQualityDistribution commitQualityDistribution radarChart statCard statCard statCard"
+        "commitQualityDistribution commitQualityDistribution radarChart hotspotsTotal refactoringsTotal refactoringsTotal"
         "commitsTimeline commitsTimeline commitsTimeline commitHeatmap commitHeatmap commitHeatmap"
         "commitsTimeline commitsTimeline commitsTimeline issues issues issues"
-
         "footerCard footerCard footerCard footerCard footerCard footerCard";
 }
 
