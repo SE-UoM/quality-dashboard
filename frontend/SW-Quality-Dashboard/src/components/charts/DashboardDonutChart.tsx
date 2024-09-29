@@ -14,8 +14,8 @@ const customTooltip = ({    payload, active, label  }) => {
             style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 9fr",
-                minHeight: "5vh",
-                padding: "0.5rem"
+                padding: "0.5rem",
+                height: "4vh !important",
             }}
         >
             <div className="card-line"
