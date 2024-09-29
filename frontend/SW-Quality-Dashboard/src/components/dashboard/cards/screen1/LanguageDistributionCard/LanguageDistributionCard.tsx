@@ -19,6 +19,13 @@ const colors = [
     "#f7a35cff"
 ];
 
+const landDistDefaultData = [
+    {name: "Java", value: 40, color: colors[0]},
+    {name: "Python", value: 30, color: colors[1]},
+    {name: "JavaScript", value: 20, color: colors[2]},
+    {name: "Other", value: 10, color: colors[3]}
+]
+
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 
 export default function LanguageDistributionCard({languageDistributionData, languageDistributionLoading, languageDistributionError, languageDistributionErrorMessage}) {
@@ -59,6 +66,8 @@ export default function LanguageDistributionCard({languageDistributionData, lang
         }
     });
 
+    console.log(data)
+
     return (
         <>
             {languageDistributionLoading ? (
@@ -83,7 +92,8 @@ export default function LanguageDistributionCard({languageDistributionData, lang
 
                         <div className="lang-distribution-chart">
                             <DashboardDonutChart
-                                data={data}
+                                // If data is empty, return dummy data
+                                data={data.length > 1 ? data : landDistDefaultData}
                                 colors={colors}
                                 centerLabel={formatText(totalLanguages, "k")}
                             />
