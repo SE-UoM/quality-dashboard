@@ -83,8 +83,12 @@ public class AnalysisService {
         }
         Collections.reverse(commitListFinal);
 
+        int totalCommits = commitListFinal.size();
+        int analyzedCommits = 0;
+
         for (String commitSHA : commitListFinal) {
-            System.out.println("Analyzing " + commitListFinal.indexOf(commitSHA)+1 + " out of " + commitListFinal.size() + " commits");
+            analyzedCommits++;
+            System.out.println("Analyzing " + analyzedCommits + " out of " + totalCommits + " commits");
             GitClient.checkoutCommit(project, commitSHA);
 
             Commit commit = new Commit();
