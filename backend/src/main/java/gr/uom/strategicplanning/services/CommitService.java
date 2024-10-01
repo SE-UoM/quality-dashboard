@@ -71,6 +71,6 @@ public class CommitService {
     }
 
     public Commit getCommitByCommitId(String commitId) {
-        return commitRepository.findById(commitId).orElse(null);
+        return commitRepository.findByHash(commitId).orElseGet(Commit::new);
     }
 }

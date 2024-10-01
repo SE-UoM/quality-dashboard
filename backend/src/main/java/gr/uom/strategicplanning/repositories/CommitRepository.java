@@ -12,10 +12,6 @@ import java.util.Optional;
 public interface CommitRepository extends JpaRepository<Commit, Long> {
     Optional<Commit> findByProjectName(String projectName);
 
-    default Optional<Commit> findById(String commitId){
-        Long id = Long.parseLong(commitId);
-        return findById(id);
-    }
     Optional<Commit> findByHash(String hash);
 
     // Finds organization commits by year (use ORG_ID and YEAR)
