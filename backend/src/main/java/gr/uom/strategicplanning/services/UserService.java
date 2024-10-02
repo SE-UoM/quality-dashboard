@@ -162,11 +162,7 @@ public class UserService {
     }
 
     @Transactional
-    public Organization createOrganization(String name, User admin) {
-        Organization organization = new Organization();
-        organization.setName(name);
-        organization.addUser(admin);
-        admin.setOrganization(organization);
+    public Organization createOrganization(Organization organization) {
         organizationAnalysisService.saveOrganizationAnalysis(organization.getOrganizationAnalysis());
         return organizationRepository.save(organization);
     }
