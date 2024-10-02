@@ -50,6 +50,12 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                 </div>
 
                 <div className="flex-none">
+                    {!isAuthenticated && (
+                        <a href="/login" className="btn btn-primary" style={{marginRight: '1em'}}>
+                            <i className={"bi bi-box-arrow-in-right"}></i>
+                            Login
+                        </a>
+                    )}
                         {/* Theme Controller */}
                         <div className="dropdown dropdown-end">
                             <label className="swap swap-rotate">
