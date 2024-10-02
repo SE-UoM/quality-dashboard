@@ -12,6 +12,7 @@ import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.models.stats.*;
 import gr.uom.strategicplanning.repositories.OrganizationRepository;
+import gr.uom.strategicplanning.repositories.RefactoringModelRepository;
 import gr.uom.strategicplanning.services.CommitService;
 import gr.uom.strategicplanning.services.DeveloperService;
 import gr.uom.strategicplanning.services.OrganizationService;
@@ -37,6 +38,8 @@ public class OrganizationController {
     private DeveloperService developerService;
     @Autowired
     private CommitService commitService;
+    @Autowired
+    private RefactoringModelRepository refactoringModelRepository;
 
     @GetMapping
     public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
@@ -555,9 +558,6 @@ public class OrganizationController {
 
             Map<String, Object> codeSmellsDistributionResponse = new HashMap<>();
 
-            int totalCodeSmells = techDebtStats.getTotalCodeSmells();
-            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
-
             Map<String, Integer> codeSmellsDistributionMap = techDebtStats.getCodeSmells();
             List<OrganizationCodeSmellDistribution> codeSmellsDistribution = new ArrayList<>();
             
@@ -565,7 +565,13 @@ public class OrganizationController {
                 codeSmellsDistribution.add(new OrganizationCodeSmellDistribution(entry.getKey(),entry.getValue()));
             }
 
+            int totalCodeSmells = 0;
+            for (OrganizationCodeSmellDistribution codeSmell : codeSmellsDistribution) {
+                totalCodeSmells += codeSmell.getCount();
+            }
+
             codeSmellsDistributionResponse.put("codeSmellsDistribution", codeSmellsDistribution);
+            codeSmellsDistributionResponse.put("totalCodeSmells", totalCodeSmells);
 
             return ResponseEntity.ok(codeSmellsDistributionResponse);
         }
@@ -671,8 +677,32 @@ public class OrganizationController {
     public ResponseEntity<Map> getOrganizationRefactorings(@PathVariable Long id) {
         try {
             Map<String, Object> refactoringsResponse = new HashMap<>();
-            refactoringsResponse.put("totalRefactorings", 50);
-            refactoringsResponse.put("totalRefactoringsPerCommit", 3);
+
+            Organization organization = organizationService.getOrganizationById(id);
+            OrganizationAnalysis organizationAnalysis = organization.getOrganizationAnalysis();
+            RefactoringMinerStats refactoringMinerStats = organizationAnalysis.getRefactoringMinerStats();
+
+            // Get the refactoring types distribution for all projects
+//            Map<String, Long> refactoringsDistribution = allOrgProjects.stream()
+//                    .flatMap(project -> project.getCommits().stream())
+//                    .flatMap(commit -> commit.getRefactoringModels().stream())
+//                    .collect(Collectors.groupingBy(
+//                        RefactoringModel::getRefactoringType,
+//                        Collectors.counting()
+//                    ));
+
+            // Find how many projects have refactorings
+//            Collection<Project> allOrgProjects = organization.getProjects();
+//            Collection<Project> projectsWithRefactorings =
+//                    allOrgProjects.stream()
+//                            .filter(project -> project.getCommits().stream()
+//                                    .anyMatch(commit -> !commit.getRefactoringModels().isEmpty())
+//                            )
+//                            .collect(Collectors.toList());
+
+            // Create the Response
+            refactoringsResponse.put("totalRefactorings", refactoringMinerStats.getTotalDifferentRefactorings());
+            refactoringsResponse.put("totalRefactoringTypes", refactoringMinerStats.getTotalRefactoringTypes());
 
             return ResponseEntity.ok(refactoringsResponse);
         }

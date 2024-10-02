@@ -1,7 +1,6 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GitClient;
-import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.domain.CodeSmell;
 import gr.uom.strategicplanning.models.domain.Commit;
@@ -70,7 +69,15 @@ public class CommitService {
         commitRepository.save(commit);
     }
 
-    public Commit getCommitByCommitId(String commitId) {
-        return commitRepository.findByHash(commitId).orElseGet(Commit::new);
+    public Commit getCommitByCommitHashOrCreate(String commitId) {
+        Optional<Commit> commit = getCommitByHash(commitId);
+
+        if (commit.isPresent()) return commit.get();
+
+        Commit newCommit = new Commit();
+        newCommit.setHash(commitId);
+        commitRepository.save(newCommit);
+
+        return newCommit;
     }
 }

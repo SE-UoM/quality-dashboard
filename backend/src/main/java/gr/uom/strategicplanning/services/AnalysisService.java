@@ -1,9 +1,7 @@
 package gr.uom.strategicplanning.services;
 
 import gr.uom.strategicplanning.analysis.github.GitClient;
-import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarAnalysis;
-import gr.uom.strategicplanning.analysis.refactoringminer.RefactoringMinerAnalysis;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.exceptions.AnalysisException;
@@ -89,14 +87,17 @@ public class AnalysisService {
         for (String commitSHA : commitListFinal) {
             analyzedCommits++;
             System.out.println("Analyzing " + analyzedCommits + " out of " + totalCommits + " commits");
+
             GitClient.checkoutCommit(project, commitSHA);
 
-            Commit commit = new Commit();
-            commit.setHash(commitSHA);
+            Commit commit = commitService.getCommitByCommitHashOrCreate(commitSHA);
 
             System.out.println("SonarQube URL: " + SONARQUBE_URL);
 
-            SonarAnalysis sonarAnalysis = new SonarAnalysis(project, commitSHA, SONARQUBE_URL);
+            SonarAnalysis sonarAnalysis =
+                    new SonarAnalysis(project, commitSHA, SONARQUBE_URL)
+                    .createSonarFile()
+                    .startSonarAnalysis();
 
             commitService.populateCommit(commit, project);
             project.addCommit(commit);
@@ -214,9 +215,8 @@ public class AnalysisService {
             project.setStatus(ProjectStatus.ANALYSIS_STARTED);
             projectService.saveProject(project);
 
-            String defaultBranch = project.getDefaultBranchName();
-            RefactoringMinerAnalysis refactoringMinerAnalysis = new RefactoringMinerAnalysis(project.getRepoUrl(), defaultBranch, project.getName(), refactoringMinerService, commitService);
-            refactoringMinerAnalysis.getTotalNumberOfRefactorings();
+            // Analyze the project with RefactoringMiner
+            refactoringMinerService.analyzeProject(project);
 
             analyzeCommits(project);
 

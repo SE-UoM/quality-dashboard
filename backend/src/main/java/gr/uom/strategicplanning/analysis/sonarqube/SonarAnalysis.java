@@ -1,23 +1,15 @@
 package gr.uom.strategicplanning.analysis.sonarqube;
 
-import com.nimbusds.jose.shaded.json.JSONArray;
-import com.nimbusds.jose.shaded.json.parser.JSONParser;
-import com.nimbusds.jose.shaded.json.parser.ParseException;
-import com.sun.istack.NotNull;
 import gr.uom.strategicplanning.DashboardApplication;
 import gr.uom.strategicplanning.models.domain.Project;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -31,10 +23,6 @@ public class SonarAnalysis {
 
     String projectName;
     String projectOwner;
-    String sha;
-    Integer TD;
-    Integer Complexity;
-    Integer LOC;
     String version;
     Logger logger = Logger.getLogger(SonarAnalysis.class.getName());
     private String sonarqubeUrl;
@@ -46,13 +34,16 @@ public class SonarAnalysis {
         this.sonarqubeUrl = sonarqubeUrl;
 
         System.out.println("SonarAnalysis Version: " + version);
+    }
 
-        createSonarFile();
-        makeSonarAnalysis();
+    private boolean attributesAreEmpty() {
+        return projectName.isEmpty() || projectOwner.isEmpty() || version.isEmpty();
     }
 
     // Create Sonar Properties file
-    private void createSonarFile() throws IOException {
+    public SonarAnalysis createSonarFile() throws IOException {
+        if (this.attributesAreEmpty()) throw new RuntimeException("Attributes are empty");
+
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(new File(System.getProperty("user.dir")+"/repos/" + projectName + "/sonar-project.properties")));
@@ -68,6 +59,8 @@ public class SonarAnalysis {
         } finally {
             writer.close();
         }
+
+        return this;
     }
 
     private void startAnalysisForWindows(String sonnarScannerDir, String reposDir) throws IOException {
@@ -113,7 +106,7 @@ public class SonarAnalysis {
     }
 
     // Start Analysis with sonar scanner
-    private void makeSonarAnalysis() throws IOException, InterruptedException {
+    public SonarAnalysis startSonarAnalysis() throws IOException, InterruptedException {
         String projectDir = System.getProperty("user.dir");
         String reposDir = projectDir + File.separator + "repos";
         String sonnarScannerDir = projectDir + File.separator + "sonar-scanner";
@@ -129,6 +122,8 @@ public class SonarAnalysis {
             Thread.sleep(1000);
         }
         Thread.sleep(500);
+
+        return this;
     }
 
     private void readProcessStreams(Process process) throws IOException {
