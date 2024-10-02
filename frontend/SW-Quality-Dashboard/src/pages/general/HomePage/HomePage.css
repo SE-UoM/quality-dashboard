@@ -14,13 +14,21 @@
     margin-bottom: 1rem;
     font-weight: bold;
 }
+.orgs {
+    display: flex;
+    flex-direction: column;
+    //justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
 
-.home-page p {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: var(--org-color-secondary);
-    font-style: italic;
-    text-align: center;
+.org-card {
+    padding: 0 !important;
+}
+
+.org-card .card-body {
+    padding: 1rem;
 }
 
 .homepage-images {

@@ -62,45 +62,58 @@ function HomePage() {
             {loadingAuth ? (
                 <span className="loading loading-infinity loading-lg"></span>
             ) : (
-                <div
-                    className="hero min-h-screen"
-                    style={{
-                        backgroundImage: `url(${bgImg})`
+                <div className="bg-base-300" style={{width: '100%'}}>
+                    <h1 className="text-5xl font-bold text-center mt-12 text-base-content">
+                        Welcome to the Software Quality Dashboard
+                    </h1>
 
-                    }}>
-                    <div className="hero-overlay bg-opacity-85"></div>
-                    <div className="hero-content text-center text-neutral-content">
-                        <div className="">
-                            {orgNames &&
-                                <div style={{textAlign: "left"}} className="orgs">
-                                    {orgNames.map((org: any) => (
-                                        <div className="hero min-h-screen">
-                                            <div className="hero-content flex-col lg:flex-row">
-                                                <img
-                                                    src={org.imgURL}
-                                                    className="max-w-sm rounded-lg shadow-2xl bg-neutral-content"/>
-                                                <div >
-                                                    <h1 className="text-5xl font-bold">{org.name}</h1>
-                                                    <p style={{textAlign: "left"}} className="py-6">
+                    <p style={{fontSize: "1.2em"}} className={"text-base-content"}>
+                        To view a dashboard, select a University from the list below, and click on the button.
+                    </p>
 
-                                                    </p>
-                                                    <button className="btn btn-primary">
-                                                        <Link to={`/dashboard?orgID=${org.id}`}>View Organization's Dashboard</Link>
-                                                    </button>
-                                                </div>
+                    {orgNames &&
+                        <div style={{textAlign: "left", minHeight: '60vh', paddingTop: '1em'}} className="orgs text-base-content">
+                            {orgNames.map((org: any) => (
+                                <>
+                                    <div className="card card-side bg-base-100 org-card">
+                                        <figure style={{height: '30vh'}}>
+                                            <img
+                                                src={org.imgURL}
+                                                style={{height: '30vh', backgroundColor: 'white'}}
+                                                alt="Organization Logo"/>
+                                        </figure>
+                                        <div className="card-body">
+                                            <h2 className="card-title">{org.name}</h2>
+
+                                            <p style={{textAlign: "left", fontSize: "1em"}}>
+                                                <ul>
+                                                    <li>
+                                                        <i className="bi bi-geo-alt-fill"></i> {org.location}
+                                                    </li>
+
+                                                    <li>
+                                                        <i className="bi bi-person-fill"></i> {org.totalDevelopers} Developers
+                                                    </li>
+
+                                                    <li>
+                                                        <i className="bi bi-cup-hot-fill"></i> {org.totalProjects} Projects
+                                                    </li>
+                                                </ul>
+                                            </p>
+
+                                            <div className="card-actions justify-end">
+                                                <button className="btn btn-primary"
+                                                    onClick={() => window.location.href = `/dashboard?orgID=${org.id}`}>
+                                                    <i className={"bi bi-arrow-right"}> </i>
+                                                    View Dashboard
+                                                </button>
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
-                            }
-
-                            {/*{isAuthenticated &&*/}
-                            {/*    <a href="/dashboard" className="btn">*/}
-                            {/*        {homeText.heroButton}*/}
-                            {/*    </a>*/}
-                            {/*}*/}
+                                    </div>
+                                </>
+                            ))}
                         </div>
-                    </div>
+                    }
                 </div>
             )}
         </div>
