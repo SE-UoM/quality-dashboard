@@ -51,17 +51,24 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
 
                 <div className="flex-none">
                     {!isAuthenticated && (
-                        <a href="/login" className="btn btn-primary" style={{marginRight: '1em'}}>
-                            <i className={"bi bi-box-arrow-in-right"}></i>
-                            Login
-                        </a>
+                        <>
+                            <a href="/register" className="btn btn-outline" style={{marginRight: '1em'}}>
+                                <i className={"bi bi-person-plus-fill"}></i>
+                                Sign Up
+                            </a>
+
+                            <a href="/login" className="btn btn-primary" style={{marginRight: '1em'}}>
+                                <i className={"bi bi-box-arrow-in-right"}></i>
+                                Login
+                            </a>
+                        </>
                     )}
 
                     {/* Theme Controller */}
                     <div className="dropdown dropdown-end">
                         <label className="swap swap-rotate">
 
-                            {/* this hidden checkbox controls the state */}
+                        {/* this hidden checkbox controls the state */}
                             <input type="checkbox" className="theme-controller" value="light" />
 
                             {/* sun icon */}
