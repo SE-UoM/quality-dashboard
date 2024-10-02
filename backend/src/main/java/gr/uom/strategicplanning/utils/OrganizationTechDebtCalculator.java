@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.utils;
 
+import gr.uom.strategicplanning.models.domain.Commit;
 import gr.uom.strategicplanning.models.domain.Project;
 
 import java.util.*;
@@ -63,9 +64,18 @@ public class OrganizationTechDebtCalculator {
     }
 
     public static int calculateTotalCodeSmells(Collection<Project> projects) {
-        return projects.stream()
-                .map(project -> project.getProjectStats().getTotalCodeSmells())
-                .reduce(0, Integer::sum);
+        int totalCodeSmells = 0;
+
+        for (Project project : projects) {
+            Collection<Commit> commits = project.getCommits();
+
+            for (Commit commit : commits) {
+                Collection codeSmells = commit.getCodeSmells();
+                totalCodeSmells += codeSmells.size();
+            }
+        }
+
+        return totalCodeSmells;
     }
 
     public static Map<String, Integer> findCodeSmellsDistribution(Collection<Project> projects) {
