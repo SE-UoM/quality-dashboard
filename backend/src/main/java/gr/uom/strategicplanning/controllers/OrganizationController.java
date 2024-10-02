@@ -64,10 +64,16 @@ public class OrganizationController {
             List<Map> publicOrganizations = new ArrayList<>();
 
             for (Organization organization : organizations) {
+                GeneralStats generalStats = organization.getOrganizationAnalysis().getGeneralStats();
+
                 Map<String, Object> organizationMap = new HashMap<>();
                 organizationMap.put("id", organization.getId());
                 organizationMap.put("name", organization.getName());
                 organizationMap.put("imgURL", organization.getImgURL());
+                organizationMap.put("location", organization.getLocation());
+                organizationMap.put("totalProjects", generalStats.getTotalProjects());
+                organizationMap.put("totalDevelopers", generalStats.getTotalDevs());
+
 
                 publicOrganizations.add(organizationMap);
             }
