@@ -75,7 +75,7 @@ function ForgotPasswordPage() {
                 </p>
             </h1>
 
-            <div className="card glass w-96 bg-primary text-primary-content shrink-0 max-w-sm">
+            <div className="card w-96 bg-base-300 text-primary-content shrink-0 max-w-sm">
                 {error &&
                     <div role="alert" className="alert alert-error w-50">
                         <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -83,7 +83,7 @@ function ForgotPasswordPage() {
                     </div>
                 }
 
-                <form className="card-body w-100">
+                <form className="card-body w-100 p-0">
                     <div className="form-control">
                         <label
                             className="input input-bordered flex items-center gap-2 text-neutral-content bg-base-100 rounded-lg"
@@ -100,7 +100,7 @@ function ForgotPasswordPage() {
                     </div>
 
                     <div className="form-control">
-                        <label className="label bg-base-100 cursor-pointer rounded">
+                        <label className="label bg-base-300 cursor-pointer rounded">
                                 <span style={{color: "#949ba8"}} className="label-text">
                                     I am not a <i style={{fontSize: "1em", color: "#949ba8"}} className={"bi bi-robot"}> </i> (robot).
                                 </span>
@@ -112,8 +112,8 @@ function ForgotPasswordPage() {
                         </label>
                     </div>
 
-                    <button className="btn btn-dark w-full" onClick={handleSubmit}>
-                        {!loading && <i style={{fontSize: "1em"}} className="bi bi-envelope-fill"> </i>}
+                    <button className="btn btn-accent w-full" onClick={handleSubmit}>
+                        {!loading && <i style={{fontSize: "1em", color: "black"}} className="bi bi-envelope"> </i>}
                         {loading && <span className="loading loading-dots loading-xs"></span>}
                         Send Password Reset Link
                     </button>
