@@ -32,16 +32,20 @@ const aggregateCommitsByDate = (data) => {
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
+const thisYear = new Date().getFullYear();
+// Array of years to display in the dropdown
+const years = Array.from({ length: thisYear - 2007 + 1 }, (_, index) => 2007 + index).reverse();
+
 const CommitHeatmap = ({gridArea, orgID}) => {
+    const [selectedYear, setSelectedYear] = React.useState(thisYear); // State for selected year
     const [heatmapData, setHeatmapData] = React.useState(null);
     const [totalCommits, setTotalCommits] = React.useState(0);
-    const [year, setYear] = React.useState(2021);
 
     const {data: commitsData, loading: commitsLoading, error: commitsError, errorMessage: commitsErrorMessage} = useAxiosGet(
         baseApiUrl + apiUrls.routes.dashboard.commitsByYear
             .replace(":organizationId", orgID)
-            .replace(":year", year)
-        , "");
+            .replace(":year", selectedYear), ""
+    );
 
     // Effect to aggregate the commits by date once the commitsData is fetched
     React.useEffect(() => {
@@ -49,6 +53,8 @@ const CommitHeatmap = ({gridArea, orgID}) => {
             const heatmapData = aggregateCommitsByDate(commitsData.commits);
             setHeatmapData(heatmapData);
             setTotalCommits(commitsData.commits.length);
+            console.log(commitsData)
+            console.log(heatmapData)
         }
     }, [commitsData]);
 
@@ -56,11 +62,22 @@ const CommitHeatmap = ({gridArea, orgID}) => {
     const getClassForValue = (value) => {
         if (!value) {
             return 'color-empty';
-        } else if (value.count >= 1 && value.count <= 10) {
+        }
+
+        const commitCount = value.count;
+
+        // Define dynamic thresholds based on totalCommits
+        const thresholds = {
+            scale1: totalCommits * 0.05, // 5% of total commits
+            scale2: totalCommits * 0.2,  // 20% of total commits
+            scale3: totalCommits * 0.5,  // 50% of total commits
+        };
+
+        if (commitCount <= thresholds.scale1) {
             return 'color-scale-1';
-        } else if (value.count >= 10 && value.count <= 50) {
+        } else if (commitCount <= thresholds.scale2) {
             return 'color-scale-2';
-        } else if (value.count >= 50 && value.count <= 100) {
+        } else if (commitCount <= thresholds.scale3) {
             return 'color-scale-3';
         } else {
             return 'color-scale-4';
@@ -79,13 +96,42 @@ const CommitHeatmap = ({gridArea, orgID}) => {
                 <SimpleDashboardCard
                     className=""
                     id={"commitHeatmap"}
-                    style={{height: "100%", gridArea: gridArea}}
+                    style={{height: "100%", gridArea: gridArea, padding: '1em 1em 0 1em'}}
                 >
-                    <h2 style={{paddingBottom: '1em'}}>Commit Heatmap ({year})</h2>
-                    <div style={{height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <div
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: '1em'
+                        }}
+                    >
+                        <h2 style={{paddingBottom: '1em'}}><strong>Commit Heatmap ({selectedYear})</strong></h2>
+
+                        <select
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                            className="select select-bordered max-w-xs"
+                        >
+                            {years.map(year => (
+                                // <option key={year} value={year}>{year}</option>
+                                // Also set the selected year as selected
+                                <option key={year} value={year} selected={year === selectedYear}>{year}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div style={{
+                        height: '100%',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
                         <CalendarHeatmap
-                            startDate={new Date('2021-01-01')}
-                            endDate={new Date('2021-12-31')}
+                            startDate={new Date(selectedYear, 0)}
+                            endDate={new Date(selectedYear, 11, 31)}
                             values={heatmapData}
                             classForValue={getClassForValue}
                             showWeekdayLabels={true}

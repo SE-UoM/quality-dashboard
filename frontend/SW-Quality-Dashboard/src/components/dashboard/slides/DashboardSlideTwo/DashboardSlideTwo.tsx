@@ -93,6 +93,8 @@ function DashboardSlideTwo({orgID}) {
         setTrackerData(trackerDATA);
     }
 
+
+    console.log(codeSmellData)
     return (
         <>
             <div className="dashboard-slide" id="slide2">

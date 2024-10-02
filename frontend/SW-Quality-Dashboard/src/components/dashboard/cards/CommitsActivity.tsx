@@ -9,12 +9,16 @@ import {LineChart} from "@tremor/react";
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
 
-//const date = new Date().getFullYear();
-const date = 2021;
+const thisYear = new Date().getFullYear();
+
+// Array of years to display in the dropdown
+const years = Array.from({ length: thisYear - 2007 + 1 }, (_, index) => 2007 + index).reverse();
 
 function CommitsActivity({gridArea, orgID}) {
+    const [selectedYear, setSelectedYear] = useState(thisYear); // State for selected year
+
     const {data: commitsActivity, loading: commitsActivityLoading, error: commitsActivityError, errorMessage: commitsActivityErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.commitsByYear.replace(":organizationId", orgID).replace(":year", date), "");
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.commitsByYear.replace(":organizationId", orgID).replace(":year", selectedYear), "");
 
     // State to manage chart data
     const [chartdata, setChartdata] = useState(
@@ -54,9 +58,30 @@ function CommitsActivity({gridArea, orgID}) {
                     id={"commitsTimeline"}
                     style={{height: "100%", gridArea: "commitsTimeline"}}
                 >
-                    <h4 style={{width:"100%"}}>
+                    <div
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
+                        <h4 style={{width: "100%"}}>
                             <strong>Commits Activity</strong>
                         </h4>
+
+                        <select
+                            value={selectedYear}
+                            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                            className="select select-bordered max-w-xs"
+                        >
+                            {years.map(year => (
+                                // <option key={year} value={year}>{year}</option>
+                                // Also set the selected year as selected
+                                <option key={year} value={year} selected={year === selectedYear}>{year}</option>
+                            ))}
+                        </select>
+                    </div>
 
                     <LineChart className="h-80" data={chartdata} index="month" categories={["commits"]}
                                valueFormatter={(number: number) => `${Intl.NumberFormat("us").format(number).toString()}`}
