@@ -58,12 +58,12 @@ function HomePage() {
 
     return (
 
-        <div className="home-page">
+        <div className="home-page bg-base-300 p-4">
             {loadingAuth ? (
                 <span className="loading loading-infinity loading-lg"></span>
             ) : (
                 <div className="bg-base-300" style={{width: '100%'}}>
-                    <h1 className="text-5xl font-bold text-center mt-12 text-base-content">
+                    <h1 className="text-5xl font-bold text-center text-base-content">
                         Welcome to the Software Quality Dashboard
                     </h1>
 
@@ -72,7 +72,7 @@ function HomePage() {
                     </p>
 
                     {orgNames &&
-                        <div style={{textAlign: "left", minHeight: '60vh', paddingTop: '1em'}} className="orgs text-base-content">
+                        <div style={{textAlign: "left", paddingTop: '1em'}} className="orgs text-base-content">
                             {orgNames.map((org: any) => (
                                 <>
                                     <div className="card card-side bg-base-100 org-card">

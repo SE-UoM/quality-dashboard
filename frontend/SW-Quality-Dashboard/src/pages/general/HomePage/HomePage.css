@@ -4,7 +4,6 @@
     align-items: center;
     justify-content: center;
     min-height: 60vh;
-    background-color: var(--org-color-primary);
     color: white;
     text-align: center;
 }
@@ -14,10 +13,10 @@
     margin-bottom: 1rem;
     font-weight: bold;
 }
+
 .orgs {
     display: flex;
     flex-direction: column;
-    //justify-content: center;
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
