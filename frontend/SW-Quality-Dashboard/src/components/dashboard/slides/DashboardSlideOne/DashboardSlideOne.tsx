@@ -26,6 +26,8 @@ function DashboardSlideOne({orgID}) {
     const {data: languageDistributionData, loading: languageDistributionLoading, error: languageDistributionError, errorMessage: languageDistributionErrorMessage} =
         useAxiosGet(baseApiUrl + apiRoutes.routes.dashboard.languageDistribution.replace(":organizationId", orgID), "");
 
+    console.log(generalStats)
+
     return (
         <>
             <div className="dashboard-slide" id="slide1">
@@ -58,7 +60,7 @@ function DashboardSlideOne({orgID}) {
 
                         <IconCard
                             icon="bi bi-person"
-                            headerText={generalStats.totalDevelopers ? formatText(generalStats.totalDevelopers, "k") : 0}
+                            headerText={generalStats.totalDevs ? formatText(generalStats.totalDevs, "k") : 0}
                             caption="Developers"
                             gridAreaName="totalDevelopers"
                             loading={generalStatsLoading}

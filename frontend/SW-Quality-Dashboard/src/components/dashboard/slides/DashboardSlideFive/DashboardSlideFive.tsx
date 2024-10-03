@@ -105,14 +105,14 @@ function DashboardSlideFive({ orgID }) {
             title: "Refactorings",
             value: formatText(refactoringsData ? refactoringsData.totalRefactorings : 0, "k"),
             color: "success",
-            desc: "by RefactoringMiner"
+            desc: "*for Java files"
         },
         {
             icon: <i className={"bi bi-boxes text-info"} style={{ fontSize: '6vh' }}></i>,
             title: "Refactoring Types",
             value: formatText(refactoringsData ? refactoringsData.totalRefactoringTypes : 0, "k"),
             color: "success",
-            desc: "by RefactoringMiner"
+            desc: "*for Java files"
         }
     ]
 
