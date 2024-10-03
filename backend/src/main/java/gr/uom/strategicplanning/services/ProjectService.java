@@ -50,6 +50,13 @@ public class ProjectService {
         saveProject(project);
     }
 
+    public void setProjectPendingReview(Long id) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+        project.setStatus(ProjectStatus.ANALYSIS_TO_BE_REVIEWED);
+        saveProject(project);
+    }
+
+
     public Collection<Project> getProjectsByOrganization(Long organizationId) {
         // First make sure that the organization exists
         boolean organizationExists = organizationService.organizationExistsById(organizationId);
