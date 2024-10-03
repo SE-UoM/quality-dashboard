@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrganizationAnalysis {
-    public static final int COMMITS_THRESHOLD = 1000;
+    public static final int COMMITS_THRESHOLD = 50;
     public static final int TOP_LANGUAGES_COUNT = 3;
 
     @Id
