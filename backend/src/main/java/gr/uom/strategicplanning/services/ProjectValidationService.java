@@ -30,7 +30,7 @@ public class ProjectValidationService {
         if (!project.hasLessCommitsThanThreshold()) {
             log.error("AnalysisService - analyzeProject - The project has more commits than the threshold and needs to be reviewed");
 
-            projectService.authorizeProjectForAnalysis(project.getId());
+            projectService.unauthorizeProjectForAnalysis(project.getId());
 
             throw new AnalysisException(HttpStatus.BAD_REQUEST, "The project has a lot of Commits.");
         }
