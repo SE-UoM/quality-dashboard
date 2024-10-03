@@ -30,7 +30,7 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
                     return;
                 }
 
-                const apiURL = baseApiUrl + apiRoutes.routes.getAllOrganizations;
+                const apiURL = baseApiUrl + apiRoutes.routes.checkAuth;
 
                 let headers = {
                     'Content-Type': 'application/json',

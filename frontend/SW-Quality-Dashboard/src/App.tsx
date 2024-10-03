@@ -37,6 +37,8 @@ function App() {
 
     const [loading, setLoading] = useState<boolean>(false)
 
+    console.log(isAuthenticated)
+
     // Make sure the isAuthenticated state is true. If not remove the tokens from the local storage
     // useEffect(() => {
     //     if (!isAuthenticated) {
@@ -47,8 +49,10 @@ function App() {
 
     // Decode the token to check if the user is an admin
     useEffect(() => {
-        if (!isAuthenticated)
+        if (!isAuthenticated) {
+            setIsAdmin(false)
             return
+        }
 
         let decoded : DecodedToken = jwtDecode(accessToken)
 

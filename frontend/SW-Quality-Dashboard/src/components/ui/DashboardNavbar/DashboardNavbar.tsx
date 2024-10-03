@@ -8,6 +8,7 @@ import useLocalStorage from "../../../hooks/useLocalStorage.ts";
 function DashboardNavbar({isAuthenticated, isAdmin}) {
     const accessToken = useLocalStorage('accessToken', '')
     const [userName, setUserName] = useState('')
+    const [orgID, setOrgID] = useState(null)
 
     useEffect(() => {
         let accessTokenIsEmpty = accessToken[0] === "" || accessToken[0] === null
@@ -22,7 +23,9 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
         }
 
         let name = decoded.name;
+        let orgID = decoded.organizationId;
         setUserName(name)
+        setOrgID(orgID)
     }, [accessToken]);
 
     let handleLogout = () => {
@@ -92,7 +95,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                                 className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                             >
                                 <li>
-                                    <a href="/dashboard">
+                                    <a href={"/dashboard?p=1&orgID=" + orgID}>
                                         <i className="bi bi-speedometer2"> </i>
                                         Go to Dashboard
                                     </a>
