@@ -162,13 +162,21 @@ public class UserService {
     }
 
     @Transactional
-    public Organization createOrganization(String name, User admin) {
-        Organization organization = new Organization();
-        organization.setName(name);
-        organization.addUser(admin);
-        admin.setOrganization(organization);
+    public Organization createOrganization(Organization organization) {
         organizationAnalysisService.saveOrganizationAnalysis(organization.getOrganizationAnalysis());
         return organizationRepository.save(organization);
+    }
+
+    public boolean setOrganizationImage(Long id, String imgURL) {
+        Optional<Organization> organizationOptional = organizationRepository.findById(id);
+        boolean organizationNotFound = organizationOptional.isEmpty();
+
+        if(organizationNotFound) return false;
+
+        Organization organization = organizationOptional.get();
+        organization.setImgURL(imgURL);
+        organizationRepository.save(organization);
+        return true;
     }
 
     public User getUserByEmail(String email) {

@@ -273,7 +273,7 @@ function SignUpForm() {
                     </div>
 
                     <div className="form-control mt-6">
-                        Don't have an account? <a href="/login" className="link">Login Here.</a>
+                        Do you already have an account? <a href="/login" className="link">Login Here.</a>
                     </div>
                 </form>
             </div>

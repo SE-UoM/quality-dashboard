@@ -19,6 +19,7 @@ import NotFoundPage from "./pages/general/NotFoundPage/NotFoundPage.tsx";
 import PasswordResetPage from "./pages/auth/PasswordResetPage/PasswordResetPage.tsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage/ForgotPasswordPage.tsx";
 import LoadingPage from "./pages/general/LoadingPage/LoadingPage.tsx";
+import SimpleUserPanel from "./pages/simpleUser/SimpleUserPanel/SimpleUserPanel.tsx";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
@@ -36,10 +37,22 @@ function App() {
 
     const [loading, setLoading] = useState<boolean>(false)
 
+    console.log(isAuthenticated)
+
+    // Make sure the isAuthenticated state is true. If not remove the tokens from the local storage
+    // useEffect(() => {
+    //     if (!isAuthenticated) {
+    //         localStorage.removeItem('accessToken')
+    //         localStorage.removeItem('refreshToken')
+    //     }
+    // }, [accessToken, isAuthenticated])
+
     // Decode the token to check if the user is an admin
     useEffect(() => {
-        if (!isAuthenticated)
+        if (!isAuthenticated) {
+            setIsAdmin(false)
             return
+        }
 
         let decoded : DecodedToken = jwtDecode(accessToken)
 
@@ -90,8 +103,8 @@ function App() {
                             {/* Non Logged in Routes */}
                             {!isAuthenticated && (
                                 <>
-                                    <Route path="/login" element={<AuthPage />} />
-                                    <Route path="/register" element={<AuthPage />} />
+                                    <Route path="/login" element={<AuthPage isAuth={isAuthenticated} />} />
+                                    <Route path="/register" element={<AuthPage isAuth={isAuthenticated} />} />
                                 </>
                             )}
                         </Route>

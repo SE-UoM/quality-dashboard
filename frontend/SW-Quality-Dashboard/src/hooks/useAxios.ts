@@ -11,9 +11,18 @@ function useAxiosGet(apiURL: string, token: string) {
         async function fetchData() {
             setLoading(true);
 
-            let headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+            let headers = {}
+
+            if (token === '') {
+                headers = {
+                    'Content-Type': 'application/json'
+                }
+            }
+            else {
+                headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
             }
 
             try {

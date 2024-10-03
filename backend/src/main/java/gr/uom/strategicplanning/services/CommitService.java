@@ -1,6 +1,6 @@
 package gr.uom.strategicplanning.services;
 
-import gr.uom.strategicplanning.analysis.github.GithubApiClient;
+import gr.uom.strategicplanning.analysis.github.GitClient;
 import gr.uom.strategicplanning.analysis.sonarqube.SonarApiClient;
 import gr.uom.strategicplanning.models.domain.CodeSmell;
 import gr.uom.strategicplanning.models.domain.Commit;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class CommitService {
@@ -21,29 +22,23 @@ public class CommitService {
     private CommitRepository commitRepository;
     private DeveloperService developerService;
     private CodeSmellService codeSmellService;
-    private LanguageService languageService;
-    private GithubApiClient githubApiClient;
     private final SonarApiClient sonarApiClient;
 
     @Autowired
     public CommitService(
             DeveloperService developerService,
             CommitRepository commitRepository,
-            LanguageService languageService,
             CodeSmellService codeSmellService,
-            @Value("${github.token}") String githubToken,
             @Value("${sonar.sonarqube.url}") String sonarApiUrl
     ) {
         this.developerService = developerService;
         this.commitRepository = commitRepository;
         this.codeSmellService = codeSmellService;
-        this.languageService = languageService;
-        this.githubApiClient = new GithubApiClient(githubToken);
         this.sonarApiClient = new SonarApiClient(sonarApiUrl);
     }
 
     public void populateCommit(Commit commit, Project project) throws IOException, InterruptedException {
-        Date commitDate = githubApiClient.fetchCommitDate(project, commit);
+        Date commitDate = GitClient.fetchCommitDate(project, commit);
         commit.setCommitDate(commitDate);
 
         Developer developer = developerService.populateDeveloperData(project, commit);
@@ -62,8 +57,27 @@ public class CommitService {
         saveCommit(commit);
     }
 
+    public Optional<Commit> getCommitByHash(String hash) {
+        return commitRepository.findByHash(hash);
+    }
 
-    private void saveCommit(Commit commit) {
+    public Collection<Commit> getOrgCommitsByYear(int year, Long orgId) {
+        return commitRepository.findOrgCommitsByYear(year, orgId);
+    }
+
+    public void saveCommit(Commit commit) {
         commitRepository.save(commit);
+    }
+
+    public Commit getCommitByCommitHashOrCreate(String commitId) {
+        Optional<Commit> commit = getCommitByHash(commitId);
+
+        if (commit.isPresent()) return commit.get();
+
+        Commit newCommit = new Commit();
+        newCommit.setHash(commitId);
+        commitRepository.save(newCommit);
+
+        return newCommit;
     }
 }

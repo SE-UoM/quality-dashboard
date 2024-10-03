@@ -5,6 +5,7 @@ import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.repositories.OrganizationLanguageRepository;
 import gr.uom.strategicplanning.repositories.ProjectLanguageRepository;
+import gr.uom.strategicplanning.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.*;
 public class LanguageService {
 
     private final SonarApiClient sonarApiClient;
+    private final ProjectRepository projectRepository;
     private ProjectLanguageRepository projectLanguageRepository;
     private OrganizationLanguageRepository organizationLanguageRepository;
 
@@ -23,11 +25,12 @@ public class LanguageService {
     public LanguageService(
             @Value("${sonar.sonarqube.url}") String sonarApiUrl,
             ProjectLanguageRepository projectLanguageRepository,
-            OrganizationLanguageRepository organizationLanguageRepository
-    ) {
+            OrganizationLanguageRepository organizationLanguageRepository,
+            ProjectRepository projectRepository) {
         this.sonarApiClient = new SonarApiClient(sonarApiUrl);
         this.projectLanguageRepository = projectLanguageRepository;
         this.organizationLanguageRepository = organizationLanguageRepository;
+        this.projectRepository = projectRepository;
     }
 
     public void updateOrganizationLanguages(Organization organization) {
@@ -98,7 +101,26 @@ public class LanguageService {
             }
         }
 
+        String mainLang = findProjectMainLanguage(project);
+        project.setMainLang(mainLang);
+        projectRepository.save(project);
+
         return languages;
+    }
+
+    private String findProjectMainLanguage(Project project) {
+        Collection<ProjectLanguage> languages = project.getLanguages();
+        int maxLoc = 0;
+        String mainLang = "";
+
+        for (ProjectLanguage language : languages) {
+            if (language.getLinesOfCode() > maxLoc) {
+                maxLoc = language.getLinesOfCode();
+                mainLang = language.getName();
+            }
+        }
+
+        return mainLang;
     }
 
     public Collection<OrganizationLanguage> getOrganizationLanguages() {

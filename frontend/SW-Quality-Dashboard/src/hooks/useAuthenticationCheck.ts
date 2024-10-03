@@ -5,6 +5,11 @@ import {jwtDecode} from "jwt-decode";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
+const resetTokens = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+}
+
 const useAuthenticationCheck = (accessToken: string | null): [boolean | null, React.Dispatch<React.SetStateAction<boolean | null>>] => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
@@ -13,6 +18,7 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
             try {
                 if (!accessToken) {
                     setIsAuthenticated(false);
+                    resetTokens();
                     return;
                 }
 
@@ -20,10 +26,11 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
                 let decoded = jwtDecode(accessToken);
                 if (!decoded) {
                     setIsAuthenticated(false);
+                    resetTokens();
                     return;
                 }
 
-                const apiURL = baseApiUrl + apiRoutes.routes.getAllOrganizations;
+                const apiURL = baseApiUrl + apiRoutes.routes.checkAuth;
 
                 let headers = {
                     'Content-Type': 'application/json',
@@ -36,13 +43,18 @@ const useAuthenticationCheck = (accessToken: string | null): [boolean | null, Re
                     setIsAuthenticated(true);
                 } else {
                     setIsAuthenticated(false);
+                    resetTokens();
                 }
             } catch (error) {
                 let status = error.response.status;
                 setIsAuthenticated(false);
 
-                if (status === 403)
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+
+                if (status === 403) {
                     console.warn("The user is not authenticated.");
+                }
                 else
                     console.warn("Authentication Check Failed due to an unexpected error. " + error);
             }

@@ -1,7 +1,7 @@
 {
   "routes": {
     "login": "/login",
-    "getAllOrganizationNames": "/api/organizations/names",
+    "getAllOrganizationNames": "/api/organizations/public/names",
     "createUser": "/api/user/register",
     "resendUserVerification": "/api/user/verify/resend",
     "startAnalysis": "/api/analysis/start?github_url=${githubUrl}",
@@ -28,7 +28,8 @@
     "projects": {
       "allByOrgId": "/api/projects/organization/:organizationId",
       "allByOrgIdAndStatus": "/api/projects/organization/:organizationId/status/:status",
-      "getTotalPending": "/api/projects/pending/total/org/:organizationId"
+      "getTotalPending": "/api/projects/pending/total/org/:organizationId",
+      "getByUserId": "/api/projects/user/:userId"
     },
 
     "admin": {
@@ -39,23 +40,30 @@
     },
 
     "dashboard": {
-      "generalStats": "/api/organizations/:organizationId/general-stats",
-      "languageDistribution": "/api/organizations/:organizationId/language-distribution",
-      "topLanguages": "/api/organizations/:organizationId/top-languages",
-      "codeSmellDistribution": "/api/organizations/:organizationId/code-smells-distribution",
-      "getTotalTD": "/api/organizations/:organizationId/total-tech-debt",
-      "getTdStats": "/api/organizations/:organizationId/tech-debt-statistics",
+      "generalStats": "/api/organizations/public/:organizationId/general-stats",
+      "languageDistribution": "/api/organizations/public/:organizationId/language-distribution",
+      "topLanguages": "/api/organizations/public/:organizationId/top-languages",
+      "codeSmellDistribution": "/api/organizations/public/:organizationId/code-smells-distribution",
+      "getTotalTD": "/api/organizations/public/:organizationId/total-tech-debt",
+      "getTdStats": "/api/organizations/public/:organizationId/tech-debt-statistics",
       "randomBestPractice": "/api/best-practices/random",
       "bestPractices": "/api/best-practices",
-      "topProjects": "/api/organizations/:organizationId/top-projects",
-      "languageNames": "/api/organizations/:organizationId/language-names",
-      "topContributors": "/api/organizations/:organizationId/top-developers",
-      "projectsInfo": "/api/organizations/:organizationId/projects-info",
-      "mostActiveDeveloper": "/api/organizations/:organizationId/most-active-developer",
-      "mostActiveProject": "/api/organizations/:organizationId/most-active-project",
-      "mostStarredProject": "/api/organizations/:organizationId/most-starred-project",
-      "mostForkedProject": "/api/organizations/:organizationId/most-forked-project",
-      "developers": "/api/organizations/:organizationId/developers-info"
+      "topProjects": "/api/organizations/public/:organizationId/top-projects",
+      "languageNames": "/api/organizations/public/:organizationId/language-names",
+      "topContributors": "/api/organizations/public/:organizationId/top-developers",
+      "projectsInfo": "/api/organizations/public/:organizationId/projects-info",
+      "mostActiveDeveloper": "/api/organizations/public/:organizationId/most-active-developer",
+      "mostActiveProject": "/api/organizations/public/:organizationId/most-active-project",
+      "mostStarredProject": "/api/organizations/public/:organizationId/most-starred-project",
+      "mostForkedProject": "/api/organizations/public/:organizationId/most-forked-project",
+      "developers": "/api/organizations/public/:organizationId/developers-info",
+      "commitDetails": "/api/organizations/public/:organizationId/commits/details",
+      "commitsByYear": "/api/organizations/public/:organizationId/commits/year/:year",
+      "hotspotsDistribution": "/api/organizations/public/:organizationId/hotspots/distribution",
+      "issues": "/api/organizations/public/:organizationId/issues",
+      "coverage": "/api/organizations/public/:organizationId/coverage",
+      "refactorings": "/api/organizations/public/:organizationId/refactorings",
+      "dependencies": "/api/organizations/public/:organizationId/dependencies"
     }
   }
 }

@@ -33,18 +33,15 @@ public class PyAssessServiceStrategy extends ExternalServiceStrategyImplementati
     public String constructUrl(Map<String, Object> params) {
         String endpointUrl = (String) params.get("endpointUrl");
         String gitUrl = (String) params.get("gitUrl");
+        String branch = (String) params.get("branch");
         String token = (String) params.get("token");
-        String ciToken = (String) params.get("ciToken");
 
         // Construct the URL with query parameters
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(endpointUrl);
         builder.queryParam("gitUrl", gitUrl);
-        if (token != null) {
-            builder.queryParam("token", token);
-        }
-        if (ciToken != null) {
-            builder.queryParam("ciToken", ciToken);
-        }
+
+        if (token != null) builder.queryParam("token", token);
+        if (branch != null) builder.queryParam("branch", branch);
 
         String analysisEndpointUrl = builder.toUriString();
 
@@ -60,20 +57,21 @@ public class PyAssessServiceStrategy extends ExternalServiceStrategyImplementati
     public ResponseEntity sendRequest(Map<String, Object> params) {
         String analysisEndpointUrl = constructUrl(params);
         HttpHeaders headers = createJsonHttpHeaders();
-        HttpMethod method = (HttpMethod) params.get("method");
+        String method = (String) params.get("method");
+
+        HttpMethod httpMethod = HttpMethod.resolve(method);
 
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = super.getRestTemplate();
-        ResponseEntity<Project> response = restTemplate.exchange(
+        ResponseEntity<Map> response = restTemplate.exchange(
                 analysisEndpointUrl,
-                method,
+                httpMethod,
                 requestEntity,
-                Project.class
+                Map.class
         );
 
         boolean responseFailed = response.getStatusCode() != HttpStatus.OK;
-
         if (responseFailed) throw new ExternalAnalysisException("PYASSESS");
 
         return response;

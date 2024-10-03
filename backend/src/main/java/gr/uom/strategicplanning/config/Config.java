@@ -47,13 +47,22 @@ public class Config {
                 Optional<User> userOptional = userRepository.findByEmail(superuserEmail);
                 if(!userOptional.isPresent()){
                     User admin = new User(superuserName, superuserEmail, superuserPassword);
-                    Organization organization1 = userService.createOrganization(superuserOrganization, admin);
+                    Organization newOrganization = new Organization();
+                    newOrganization.setName(superuserOrganization);
+                    newOrganization.setLocation("Thessaloniki, Greece");
+                    newOrganization.setImgURL("https://www.uom.gr/site/images/logos/UOMLOGOEN.png");
+                    newOrganization.addUser(admin);
+                    admin.setOrganization(newOrganization);
+
+                    Organization savedOrg = userService.createOrganization(newOrganization);
+                    savedOrg.setLocation("Thessaloniki, Greece");
+                    userService.setOrganizationImage(savedOrg.getId(), "https://www.uom.gr/site/images/logos/UOMLOGOEN.png");
 
                     UserRegistrationRequest registrationRequest = new UserRegistrationRequest();
                     registrationRequest.setEmail(superuserEmail);
                     registrationRequest.setName(superuserName);
                     registrationRequest.setPassword(superuserPassword);
-                    registrationRequest.setOrganizationId(organization1.getId());
+                    registrationRequest.setOrganizationId(savedOrg.getId());
 
                     userService.createUser(registrationRequest);
                     userPrivilegedService.verifyUser(superuserEmail);

@@ -17,7 +17,7 @@ const languageImagesApiUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon@lates
 const noneImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/640px-Blue_question_mark_icon.svg.png"
 
 
-function SubmittedProjectsCard() {
+function SubmittedProjectsCard({orgID}) {
     const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
     const [error, setError] = useState(false);
     const [errorTitle, setErrorTitle] = useState("");
@@ -32,15 +32,13 @@ function SubmittedProjectsCard() {
     const [selectedProjectContributions, setSelectedProjectContributions] = useState(0);
     const [selectedProjectLanguage, setSelectedProjectLanguage] = useState("");
 
+
     useEffect(() => {
-        // Extract the organization id from the access token
-        const organizationId = jwtDecode(accessToken).organizationId;
         let url = baseApiUrl + apiUrls.routes.dashboard.projectsInfo;
 
         // Replace the organization id in the URL
-        url = url.replace(":organizationId", organizationId);
+        url = url.replace(":organizationId", orgID);
         let headers = {
-            'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         };
 
@@ -52,6 +50,8 @@ function SubmittedProjectsCard() {
                 setTimeout(() => {
                     setLoading(false);
                 }, 1000);
+
+                console.log(data);
 
                 setSubmittedProjects(data);
                 getRandomProject(data);
@@ -75,6 +75,7 @@ function SubmittedProjectsCard() {
     function getRandomProject(data) {
         const randomIndex = Math.floor(Math.random() * data.length);
         const randomProject = data[randomIndex];
+
         setSelectedProjectName(randomProject.name);
         setSelectedProjectOwner(randomProject.owner);
         setSelectedProjectStars(randomProject.stars);
@@ -138,26 +139,19 @@ function SubmittedProjectsCard() {
                                         paddingTop: "1vh"
                             }}
                             >
-                                {/*<div className="avatar">*/}
-                                {/*    <div className="w-8 rounded-full">*/}
-                                {/*        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
-
                                 By: <a className="link link-hover" href={"https://github.com/" + selectedProjectOwner}>@{selectedProjectOwner}</a>
                             </div>
 
                             <div className="stat-figure">
                                 {/*<i className="bi bi-github" style={{fontSize: "10vh"}}> </i>*/}
 
-                                <div className="avatar">
-                                    <div className="w-24 mask mask-squircle p-5 bg-base-300">
+                                <div className="mask mask-squircle" >
                                         <img
-                                            src={selectedProjectLanguage ? (languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg") : noneImageUrl}
+                                            // src={selectedProjectLanguage ? (languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg") : noneImageUrl}
+                                            src={languageImagesApiUrl + selectedProjectLanguage.toLowerCase() + "/" + selectedProjectLanguage.toLowerCase() + "-original.svg"}
                                             alt={selectedProjectLanguage}
-
+                                            style={{height: "15vh"}}
                                         />
-                                    </div>
                                 </div>
                             </div>
                         </div>

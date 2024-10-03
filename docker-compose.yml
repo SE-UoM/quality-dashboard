@@ -102,7 +102,7 @@ services:
       - SPRING_MAIL_USERNAME=
       - SPRING_MAIL_PASSWORD=
       - SPRING_MAIL_HOST=smtp.gmail.com
-      - SPRING_MAIL_PORT=25
+      - SPRING_MAIL_PORT=587
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
       - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
     ports:
@@ -147,39 +147,6 @@ services:
     ports:
       - '3000:5173'
 
-  # --- WIKI.JS SERVICE ---
-  wikijs:
-    image: requarks/wiki:2
-    container_name: wikijs
-    environment:
-      - DB_TYPE=postgres
-      - DB_HOST=db-wikijs
-      - DB_PORT=5432
-      - DB_USER=root
-      - DB_PASS=root
-      - DB_NAME=wikijs
-    ports:
-      - '3001:3000'
-    volumes:
-      # Mounts wiki.js data inside a 'wikijs' folder
-      - ./wikijs/data:/var/wiki
-    depends_on:
-      - db-wikijs
-
-  # Database for the Wiki.js service
-  db-wikijs:
-    image: postgres:16.2
-    container_name: db-wikijs
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wikijs
-    volumes:
-      # Mount PostgreSQL data in the 'wikijs' folder
-      - ./wikijs/db:/var/lib/postgresql
-      - ./wikijs/db_data:/var/lib/postgresql/data
- 
-
 volumes:
 # DASHBOARD VOLUMES
   dashboard_postgresql:
@@ -197,8 +164,3 @@ volumes:
   sonarqube_dashboard_data:
   sonarqube_dashboard_postgresql:
   sonarqube_dashboard_postgresql_data:
-
-  # # WIKI.JS VOLUMES
-  # wikijs_data:
-  # wikijs_postgresql:
-  # wikijs_postgresql_data:

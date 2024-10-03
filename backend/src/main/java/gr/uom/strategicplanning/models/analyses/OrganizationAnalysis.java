@@ -3,9 +3,7 @@ package gr.uom.strategicplanning.models.analyses;
 import gr.uom.strategicplanning.models.domain.Organization;
 import gr.uom.strategicplanning.models.domain.OrganizationLanguage;
 import gr.uom.strategicplanning.models.domain.Project;
-import gr.uom.strategicplanning.models.stats.ActivityStats;
-import gr.uom.strategicplanning.models.stats.GeneralStats;
-import gr.uom.strategicplanning.models.stats.TechDebtStats;
+import gr.uom.strategicplanning.models.stats.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +27,9 @@ public class OrganizationAnalysis {
     private Long id;
     private String orgName;
     private Date analysisDate;
+    private int totalOpenIssues;
+    private int totalClosedIssues;
+    private int totalIssues;
     @OneToOne(cascade = CascadeType.PERSIST)
     private GeneralStats generalStats = new GeneralStats(this);
     @OneToOne(cascade = CascadeType.PERSIST)
@@ -45,6 +46,13 @@ public class OrganizationAnalysis {
 
     @ManyToMany
     private Map<Integer, OrganizationLanguage> topLanguages = new HashMap<>();
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private CodeInspectorStats codeInspectorStats = new CodeInspectorStats(this);
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private PyAssessStats pyAssessStats = new PyAssessStats(this);
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private RefactoringMinerStats refactoringMinerStats = new RefactoringMinerStats(this);
 
     @OneToOne
     private Organization organization;

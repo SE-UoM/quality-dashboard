@@ -17,4 +17,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Collection<Project> findAllByOrganizationId(Long organizationId);
 
     Collection<Project> findAllByOrganizationIdAndStatus(Long organizationId, ProjectStatus status);
+
+    Collection<Project> findAllBySubmittedByUserId(Long userId);
 }

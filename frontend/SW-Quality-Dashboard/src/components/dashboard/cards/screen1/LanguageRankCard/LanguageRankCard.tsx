@@ -18,6 +18,8 @@ const languageImagesApiUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon@lates
 const noneImageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Blue_question_mark_icon.svg/640px-Blue_question_mark_icon.svg.png"
 
 function extractLangImageName(langName) {
+    if (!langName) return "None";
+
     if (langName === "CSS") langName = "css3";
     if (langName === "WEB" || langName === "HTML") langName = "html5";
     if (langName === "CXX") langName = "cplusplus";
@@ -26,19 +28,43 @@ function extractLangImageName(langName) {
 }
 
 function resetLangImageName(langName, resetTo) {
-    if (langName === "css3") langName = resetTo;
-    if (langName === "html5") langName = resetTo;
-    if (langName === "cplusplus") langName = resetTo;
+    if (!langName) return "None";
+
+    if (langName === "css3") langName = "CSS";
+    if (langName === "html5") langName = "HTML";
+    if (langName === "cplusplus") langName = "C++";
 
     return langName;
 }
 
 function createLangComponentObject(langName, langImg) {
+    if (!langName) {
+        return {
+            name: "None",
+            image: noneImageUrl
+        }
+    }
+
     return {
         name: langName,
         image: langImg
     }
 }
+
+let defaultTopLanguages = [
+    {
+        name: "None",
+        image: noneImageUrl
+    },
+    {
+        name: "None",
+        image: noneImageUrl
+    },
+    {
+        name: "None",
+        image: noneImageUrl
+    }
+]
 
 function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError, topLanguagesErrorMessage}) {
     const [firstLanguage, setFirstLanguage] = useState("");
@@ -51,9 +77,9 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
             return
         }
 
-        let firstLanguageName = topLanguages ? topLanguages[1].name : "";
-        let secondLanguageName = topLanguages ? topLanguages[2].name : "";
-        let thirdLanguageName = topLanguages ? topLanguages[3].name : "";
+        let firstLanguageName = topLanguages[1] ? topLanguages[1].name : "";
+        let secondLanguageName = topLanguages[2] ? topLanguages[2].name : "";
+        let thirdLanguageName = topLanguages[3] ? topLanguages[3].name : "";
 
         let firstLangImg = "";
         let secondLangImg = "";
@@ -76,9 +102,22 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
         let secondLang = createLangComponentObject(secondLanguageName, secondLangImg);
         let thirdLang = createLangComponentObject(thirdLanguageName, thirdLangImg);
 
+        // if the language is none, set the image to noneImageUrl
+        if (firstLanguageName === "None") {
+            firstLang.image = noneImageUrl;
+        }
+        if (secondLanguageName === "None") {
+            secondLang.image = noneImageUrl;
+        }
+        if (thirdLanguageName === "None") {
+            thirdLang.image = noneImageUrl;
+        }
+
         setFirstLanguage(firstLang);
         setSecondLanguage(secondLang);
         setThirdLanguage(thirdLang);
+
+        console.log(secondLanguage.image)
     }, [topLanguages]);
 
     return (
@@ -104,8 +143,8 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
                             <div className="language-rank">
                         <span className={"lang-name-rank"}>
                              <>
-                                 <img src={secondLanguage.image}/>
-                                 {secondLanguage.name}
+                                 <img src={secondLanguage.image !== '' ? secondLanguage.image : noneImageUrl}/>
+                                 {secondLanguage.name ? secondLanguage.name.toUpperCase() : "None"}
                              </>
                         </span>
                                 <div className="language-rank-line glass" id={"second"}>
@@ -122,7 +161,7 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
                         <span className={"lang-name-rank"}>
                             <>
                                 <img src={firstLanguage.image}/>
-                                {firstLanguage.name}
+                                {firstLanguage.name.toUpperCase()}
                             </>
                         </span>
                                 <div className="language-rank-line glass" id={"first"}>
@@ -139,7 +178,7 @@ function LanguageRankCard({topLanguages, topLanguagesLoading, topLanguagesError,
                         <span className={"lang-name-rank"}>
                             <>
                                 <img src={thirdLanguage.image}/>
-                                {thirdLanguage.name}
+                                {thirdLanguage.name.toUpperCase()}
                             </>
                         </span>
                                 <div className="language-rank-line glass" id={"third"}>

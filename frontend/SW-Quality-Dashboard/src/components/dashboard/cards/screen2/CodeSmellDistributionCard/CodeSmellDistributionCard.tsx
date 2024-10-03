@@ -8,7 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import SimpleDashboardCard from "../../SimpleDashboardCard.tsx";
 import DashboardDonutChart from "../../../../charts/DashboardDonutChart.tsx";
 import {formatText} from "../../../../../utils/textUtils.ts";
-import {fetchCodeSmellDistribution} from "../../../../../utils/api/backendUtils..ts";
+import {fetchCodeSmellDistribution} from "../../../../../utils/api/backendUtils.ts";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL;
 

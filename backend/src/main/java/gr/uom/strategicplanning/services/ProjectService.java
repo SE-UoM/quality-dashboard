@@ -1,5 +1,6 @@
 package gr.uom.strategicplanning.services;
 
+import gr.uom.strategicplanning.analysis.github.GithubApiClient;
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.domain.*;
 import gr.uom.strategicplanning.repositories.ProjectRepository;
@@ -66,4 +67,44 @@ public class ProjectService {
         return projectRepository.findAllByOrganizationIdAndStatus(orgId, status);
     }
 
+    public Project getProjectById(Long id) {
+        return projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Project with id " + id + " not found"));
+    }
+
+    public Project getOrCreateProject(String repoUrl, Organization organization) {
+        Optional<Project> projectOptional = projectRepository.findFirstByRepoUrl(repoUrl);
+
+        if (projectOptional.isPresent()) {
+            return projectOptional.get();
+        }
+
+        String username = GithubApiClient.extractUsername(repoUrl);
+        String repoName = GithubApiClient.extractRepoName(repoUrl);
+
+        Project project = new Project();
+        project.setName(repoName);
+        project.setOwnerName(username);
+        project.setRepoUrl(repoUrl);
+        project.setOrganization(organization);
+        project.setStatus(ProjectStatus.ANALYSIS_NOT_STARTED);
+
+        projectRepository.save(project);
+        organizationService.addProjectToOrganization(organization.getId(), project);
+
+        return project;
+    }
+
+    public void updateProjectStatus(Long projectId, ProjectStatus status) {
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Project with id " + projectId + " not found"));
+        project.setStatus(status);
+        saveProject(project);
+
+        // Also update the organization to reflect the change
+        organizationService.saveOrganization(project.getOrganization());
+    }
+
+
+    public Collection<Project> getProjectsByUser(Long userId) {
+        return projectRepository.findAllBySubmittedByUserId(userId);
+    }
 }

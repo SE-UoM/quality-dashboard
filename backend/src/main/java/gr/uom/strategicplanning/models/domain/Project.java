@@ -2,6 +2,8 @@ package gr.uom.strategicplanning.models.domain;
 
 import gr.uom.strategicplanning.enums.ProjectStatus;
 import gr.uom.strategicplanning.models.analyses.OrganizationAnalysis;
+import gr.uom.strategicplanning.models.external.CodeInspectorProjectStats;
+import gr.uom.strategicplanning.models.external.PyAssessProjectStats;
 import gr.uom.strategicplanning.models.stats.ProjectStats;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -20,9 +22,14 @@ public class Project {
     @Id
     @GeneratedValue
     private Long id;
+    private Long submittedByUserId;
     private String name;
     private String ownerName;
     private String projectDescription;
+    private String createdAt;
+    private int openIssues;
+    private int closedIssues;
+    private int totalIssues;
     @ManyToOne
     @ToString.Exclude
     private Organization organization;
@@ -52,11 +59,36 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ProjectStats projectStats = new ProjectStats(this);
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private CodeInspectorProjectStats codeInspectorProjectStats = new CodeInspectorProjectStats(this);
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private PyAssessProjectStats pyAssessProjectStats = new PyAssessProjectStats(this);
+
+    private PyAssessProjectStats checkForPythonGitRepo() {
+        for (ProjectLanguage projectLanguage : this.languages) {
+            if (projectLanguage.getName().equalsIgnoreCase("Python")) {
+                return new PyAssessProjectStats(this);
+            }
+        }
+
+        return null;
+    }
+
     private String defaultBranchName;
+
+    private String mainLang;
 
     public void addCommit(Commit commit) {
         this.commits.add(commit);
         commit.setProject(this);
+    }
+
+    public boolean commitsAlreadyAnalyzed(String sha) {
+        for (Commit commit : this.commits) {
+            if (commit.getHash().equals(sha)) return true;
+        }
+
+        return false;
     }
 
     public void addDeveloper(Developer developer) {
@@ -79,5 +111,9 @@ public class Project {
 
     private boolean developerExists(Developer developer) {
         return this.developers.contains(developer);
+    }
+
+    public boolean hasLessCommitsThanThreshold() {
+        return totalCommits < OrganizationAnalysis.COMMITS_THRESHOLD;
     }
 }

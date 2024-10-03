@@ -34,11 +34,22 @@ public abstract class HttpClient {
                 .url(url)
                 .build();
 
-        Response response = client
-                .newCall(request)
-                .execute();
+        Response response;
 
-        return response;
+        try {
+            response = client
+                    .newCall(request)
+                    .execute();
+
+            if (response.body() == null) {
+                throw new IOException("Response body is null");
+            }
+
+            return response;
+        }
+        catch (IOException e) {
+            throw new IOException("Failed to send GET request to " + url, e);
+        }
     }
 
     public Response sentPostAuthRequest(String url) throws IOException {
@@ -49,16 +60,32 @@ public abstract class HttpClient {
                 .post(RequestBody.create(null, new byte[0]))
                 .build();
 
-        Response response = client
-                .newCall(request)
-                .execute();
+        Response response;
 
-        return response;
+        try {
+            response = client
+                    .newCall(request)
+                    .execute();
+
+            if (response.body() == null) {
+                throw new IOException("Response body is null");
+            }
+
+            response.body().close();
+            return response;
+        }
+        catch (IOException e) {
+            throw new IOException("Failed to send POST request to " + url, e);
+        }
     }
 
     public JSONObject convertResponseToJson(Response response) throws IOException {
         Map<String, Object> jsonMap = this.gson.fromJson(response.body().string(), Map.class);
         JSONObject jsonObject = new JSONObject(jsonMap);
+
+        // Close the response body
+        response.body().close();
+
         return jsonObject;
     }
 }

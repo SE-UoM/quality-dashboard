@@ -1,21 +1,13 @@
 import './DashboardSlideOne.css';
 import '../DashboardSlideStyle.css';
 import LanguageRankCard from "../../cards/screen1/LanguageRankCard/LanguageRankCard.tsx";
-import totalProjectsIcon from "../../../../assets/svg/dashboardIcons/total_projects_icon.svg";
-import totalLanguagesIcon from "../../../../assets/svg/dashboardIcons/languages_icon.svg";
-import totalDevelopersIcon from "../../../../assets/svg/dashboardIcons/developers_icon.svg";
-import totalFilesIcon from "../../../../assets/svg/dashboardIcons/files_general_icon.svg";
-import totalLocIcon from "../../../../assets/svg/dashboardIcons/loc_icon.svg";
-import totalContributionsIcon from "../../../../assets/svg/dashboardIcons/contributions_icon.svg";
 
 import IconCard from "../../cards/screen1/IconCard/IconCard.tsx";
 import FooterCard from "../../cards/general/FooterCard/FooterCard.tsx";
 import LanguageDistributionCard from "../../cards/screen1/LanguageDistributionCard/LanguageDistributionCard.tsx";
 import useLocalStorage from "../../../../hooks/useLocalStorage.ts";
-import {useEffect, useState} from "react";
 import apiUrls from "../../../../assets/data/api_urls.json";
-import axios from "axios";
-import ErrorModal from "../../../modals/ErrorModal/ErrorModal.tsx";
+
 import {jwtDecode} from "jwt-decode";
 import {formatText} from "../../../../utils/textUtils.ts";
 import useAxiosGet from "../../../../hooks/useAxios.ts";
@@ -23,17 +15,18 @@ import apiRoutes from "../../../../assets/data/api_urls.json";
 
 const baseApiUrl = import.meta.env.VITE_API_BASE_URL
 
-function DashboardSlideOne() {
-    const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
-
+function DashboardSlideOne({orgID}) {
     const {data: generalStats, loading: generalStatsLoading, error: generalStatsError, errorMessage: generalStatsErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.generalStats.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.generalStats.replace(":organizationId", orgID), "");
+
 
     const {data: topLanguages, loading: topLanguagesLoading, error: topLanguagesError, errorMessage: topLanguagesErrorMessage} =
-        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topLanguages.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiUrls.routes.dashboard.topLanguages.replace(":organizationId", orgID), "");
 
     const {data: languageDistributionData, loading: languageDistributionLoading, error: languageDistributionError, errorMessage: languageDistributionErrorMessage} =
-        useAxiosGet(baseApiUrl + apiRoutes.routes.dashboard.languageDistribution.replace(":organizationId", jwtDecode(accessToken).organizationId), accessToken);
+        useAxiosGet(baseApiUrl + apiRoutes.routes.dashboard.languageDistribution.replace(":organizationId", orgID), "");
+
+    console.log(generalStats)
 
     return (
         <>
@@ -51,7 +44,7 @@ function DashboardSlideOne() {
                     <>
                         <IconCard
                             icon="bi bi-laptop"
-                            headerText={formatText(generalStats.totalProjects, "k")}
+                            headerText={generalStats.totalProjects ? formatText(generalStats.totalProjects, "k") : 0}
                             caption="Projects"
                             gridAreaName="totalProjects"
                             loading={generalStatsLoading}
@@ -59,7 +52,7 @@ function DashboardSlideOne() {
 
                         <IconCard
                             icon="bi bi-code-slash"
-                            headerText={formatText(generalStats.totalLanguages, "k")}
+                            headerText={generalStats.totalLanguages ? formatText(generalStats.totalLanguages, "k") : 0}
                             caption="Languages"
                             gridAreaName="totalLanguages"
                             loading={generalStatsLoading}
@@ -67,7 +60,7 @@ function DashboardSlideOne() {
 
                         <IconCard
                             icon="bi bi-person"
-                            headerText={formatText(generalStats.totalDevs, "k")}
+                            headerText={generalStats.totalDevs ? formatText(generalStats.totalDevs, "k") : 0}
                             caption="Developers"
                             gridAreaName="totalDevelopers"
                             loading={generalStatsLoading}
@@ -75,7 +68,7 @@ function DashboardSlideOne() {
 
                         <IconCard
                             icon="bi bi-file-earmark-binary"
-                            headerText={formatText(generalStats.totalFiles, "k")}
+                            headerText={generalStats.totalFiles ? formatText(generalStats.totalFiles, "k") : 0}
                             caption="Files"
                             gridAreaName="totalFiles"
                             loading={generalStatsLoading}
@@ -83,7 +76,7 @@ function DashboardSlideOne() {
 
                         <IconCard
                             icon="bi bi-bezier2"
-                            headerText={formatText(generalStats.totalCommits, "k")}
+                            headerText={generalStats.totalCommits ? formatText(generalStats.totalCommits, "k") : 0}
                             caption="Contributions"
                             gridAreaName="totalContributions"
                             loading={generalStatsLoading}
@@ -91,7 +84,7 @@ function DashboardSlideOne() {
 
                         <IconCard
                             icon="bi bi-body-text"
-                            headerText={formatText(generalStats.totalLinesOfCode, "k")}
+                            headerText={generalStats.totalLinesOfCode ? formatText(generalStats.totalLinesOfCode, "k") : 0}
                             caption="Lines of Code"
                             gridAreaName="totalLinesOfCode"
                             loading={generalStatsLoading}

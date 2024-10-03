@@ -3,19 +3,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 80vh;
-    background-color: var(--org-color-primary);
+    height: 100vh;
     color: var(--light-gray);
+    gap: 3vh;
 }
 
-.not-found-page img {
-    height: 50%;
-    background-color: var(--light-gray);
-    padding: 2em;
-    border-radius: 5em;
+.not-found-page i {
+    font-size: 15vh;
+    height: 14vh;
 }
 
 .not-found-page h2 {
-    font-size: 2em;
-    margin-top: 1em;
+    font-size: 15vh;
 }
