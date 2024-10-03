@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class ProjectValidationService {
     @Autowired
     private GithubService githubService;
+    @Autowired
     private ProjectService projectService;
 
     public void validateProjectForAnalysis(Project project) {
