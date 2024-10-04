@@ -23,10 +23,11 @@ function CommitsActivity({gridArea, orgID}) {
     // State to manage chart data
     const [chartdata, setChartdata] = useState(
         Array(12).fill(0).map((_, index) => ({
-            month: new Date(0, index).toLocaleString('default', { month: 'long' }).toUpperCase(),
+            month: new Date(0, index).toLocaleString('en', { month: 'long' }).toUpperCase(),
             commits: 0
         }))
     );
+
 
     // Effect to transform the commitsActivity data once commitsActivity is fetched
     useEffect(() => {
