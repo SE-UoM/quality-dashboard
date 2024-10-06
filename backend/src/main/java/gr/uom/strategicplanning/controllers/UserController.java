@@ -153,7 +153,7 @@ public class UserController {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         boolean authHeaderIsNotPresent = authorizationHeader == null || !authorizationHeader.startsWith("Bearer ");
 
-        if(authHeaderIsNotPresent) throw new RuntimeException("Refresh token is missing");
+        if(authHeaderIsNotPresent) throw new RuntimeException("Token is missing");
 
         try {
             DecodedJWT decodedJWT = TokenUtil.getDecodedJWTfromToken(authorizationHeader);

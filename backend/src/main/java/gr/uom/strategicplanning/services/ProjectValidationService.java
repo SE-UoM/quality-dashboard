@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class ProjectValidationService {
     @Autowired
     private GithubService githubService;
+    @Autowired
     private ProjectService projectService;
 
     public void validateProjectForAnalysis(Project project) {
@@ -25,7 +26,7 @@ public class ProjectValidationService {
     }
 
     public void validateCommitThreshold(Project project) throws Exception {
-        if (!project.hasLessCommitsThanThreshold()) {
+        if (!project.hasLessCommitsThanThreshold() && project.getStatus() != ProjectStatus.ANALYSIS_READY) {
             log.error("AnalysisService - analyzeProject - The project has more commits than the threshold and needs to be reviewed");
 
             projectService.setProjectPendingReview(project.getId());
