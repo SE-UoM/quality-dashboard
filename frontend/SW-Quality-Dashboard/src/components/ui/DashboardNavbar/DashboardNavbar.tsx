@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import DecodedToken from "../../../interfaces/DecodedToken.ts";
 import useLocalStorage from "../../../hooks/useLocalStorage.ts";
+import {anonymizeCreators} from "../../../assets/data/config.json";
 
 function DashboardNavbar({isAuthenticated, isAdmin}) {
     const accessToken = useLocalStorage('accessToken', '')
@@ -46,8 +47,16 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                     <a href="/" className="navbar-brand">
                         <img src={logo}/>
                         <section className="navbar-brand-text">
-                            <span>University of Macedonia</span>
-                            <h1>Quality Dashboard</h1>
+                            {// If annonimizeCreators is true, then make the span have a anonymized class
+                            }
+                            <div className="tooltip tooltip-bottom" data-tip={anonymizeCreators ? 'Omitted for Anonymity' : ''} style={{textAlign: "left"}}>
+                                <span
+                                    className={anonymizeCreators ? 'anonymized' : ''}
+                                >
+                                    University of Macedonia
+                                </span>
+                            </div>
+                                <h1>Quality Dashboard</h1>
                         </section>
                     </a>
                 </div>
@@ -87,7 +96,7 @@ function DashboardNavbar({isAuthenticated, isAdmin}) {
                         <div className="dropdown dropdown-end">
                             <div tabIndex="0" role="button" className="btn btn-ghost btn-circle avatar">
                                 <div className="w-10 rounded-full">
-                                    <img alt="Tailwind CSS Navbar component"
+                                    <img alt="Tailwind CSS Navbar component" className={anonymizeCreators ? "anonymized-light" : ""}
                                          src={"https://ui-avatars.com/api/?name=" + userName + "&background=random"}/>
                                 </div>
                             </div>
