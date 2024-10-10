@@ -52,8 +52,8 @@
 
 text.fill-tremor-content-emphasis {
     fill: var(--text-primary);
-    font-size: 10vh;
-    transform: translateY(+2vh);
+    font-size: 7vh;
+    transform: translateY(+1vh);
     font-weight: bold;
 }
 .pie-chart-container {
