@@ -42,7 +42,7 @@ const customTooltip = ({    payload, active, label  }) => {
                         textAlign: "left"
                     }}
                 >
-                    {categoryPayload.name}: {formatText(categoryPayload.value, "k")} Lines of Code.
+                    {categoryPayload.name}: {formatText(categoryPayload.value, "k")}
                 </p>
             </div>
         </div>
