@@ -10,6 +10,8 @@ import bgImg from '../../../assets/img/screen-mockup.png';
 import axios from "axios";
 import backendRoutes from "../../../assets/data/api_urls.json"
 import useAxiosGet from "../../../hooks/useAxios.ts";
+import OrganizationDashboardCard from "../../../components/ui/OrganizationDashboardCard/OrganizationDashboardCard.tsx";
+import {anonymizeCreators} from '../../../assets/data/config.json'
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -75,41 +77,28 @@ function HomePage() {
                         <div style={{textAlign: "left", paddingTop: '1em'}} className="orgs text-base-content">
                             {orgNames.map((org: any) => (
                                 <>
-                                    <div className="card card-side bg-base-100 org-card">
-                                        <figure style={{height: '30vh'}}>
-                                            <img
-                                                src={org.imgURL}
-                                                style={{height: '30vh', backgroundColor: 'white'}}
-                                                alt="Organization Logo"/>
-                                        </figure>
-                                        <div className="card-body">
-                                            <h2 className="card-title">{org.name}</h2>
+                                    <OrganizationDashboardCard
+                                        org={org}
+                                        btnText={"View Dashboard"}
+                                        btnIcon={<i className={"bi bi-arrow-right"}> </i>}
+                                        onClick={() => {window.location.href = `/dashboard?p=1&orgID=${org.id}`}}
+                                    >
+                                        <p style={{textAlign: "left", fontSize: "1em"}}>
+                                            <ul>
+                                                <li className={anonymizeCreators ? "anonymized" : ""}>
+                                                    <i className="bi bi-geo-alt-fill"></i> {org.location}
+                                                </li>
 
-                                            <p style={{textAlign: "left", fontSize: "1em"}}>
-                                                <ul>
-                                                    <li>
-                                                        <i className="bi bi-geo-alt-fill"></i> {org.location}
-                                                    </li>
+                                                <li>
+                                                    <i className="bi bi-person-fill"></i> {org.totalDevelopers} Developers
+                                                </li>
 
-                                                    <li>
-                                                        <i className="bi bi-person-fill"></i> {org.totalDevelopers} Developers
-                                                    </li>
-
-                                                    <li>
-                                                        <i className="bi bi-cup-hot-fill"></i> {org.totalProjects} Projects
-                                                    </li>
-                                                </ul>
-                                            </p>
-
-                                            <div className="card-actions justify-end">
-                                                <button className="btn btn-primary"
-                                                    onClick={() => window.location.href = `/dashboard?orgID=${org.id}`}>
-                                                    <i className={"bi bi-arrow-right"}> </i>
-                                                    View Dashboard
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                <li>
+                                                    <i className="bi bi-cup-hot-fill"></i> {org.totalProjects} Projects
+                                                </li>
+                                            </ul>
+                                        </p>
+                                    </OrganizationDashboardCard>
                                 </>
                             ))}
                         </div>
