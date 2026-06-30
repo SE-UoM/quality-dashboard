@@ -34,6 +34,7 @@ public class SecurityConfig {
     private String frontend;
 
     private static final String[] AUTH_WHITELIST = {
+            "/api/metadata/**",
             "/api",
             "/api-ui",
 
